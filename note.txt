@@ -1,0 +1,2 @@
+maybe a proper .md files should be made
+screen resolution: 256x224, raylib window size should be 1024x896
