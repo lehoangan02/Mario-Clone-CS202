@@ -2,6 +2,7 @@
 #include <vector>
 #include <raylib.h>
 #include <unordered_map>
+#include <iostream>
 class EnvironmentObject
 {
     public:
@@ -15,10 +16,11 @@ class EnvironmentObject
 };
 class EnvironmentObjectFactory // Singleton Factory
 {
+    public:
     enum EnvironmentObjectType
     {
-        WARP_PIPE,
         GROUND,
+        WARP_PIPE,
         BRICK,
         QUESTION_BLOCK
     };
@@ -26,8 +28,8 @@ class EnvironmentObjectFactory // Singleton Factory
         EnvironmentObjectFactory() = default;
         ~EnvironmentObjectFactory() = default;
     public:
-        EnvironmentObjectFactory& GetEnvironmentFactory();
-        EnvironmentObject& CreateEnvironmentObject(int Type);
+        static EnvironmentObjectFactory& GetEnvironmentFactory();
+        EnvironmentObject* CreateEnvironmentObject(int Type, Vector2 Position);
 };
 class Ground : public EnvironmentObject // Singleton
 {
@@ -39,46 +41,43 @@ class Ground : public EnvironmentObject // Singleton
         void render() override;
         void update() override;
     public:
-        static EnvironmentObject& GetGround();
+        static EnvironmentObject* GetGround();
 };
 class WarpPipe : public EnvironmentObject
 {
     public:
-    WarpPipe();
+    WarpPipe(Vector2 Position, Vector2 Size);
     ~WarpPipe();
+    void render() override;
+    void update() override;
 };
 class WarpPipeTextureFlyWeight // Singleton Flyweight
 {
     private:
+        Texture2D m_Texture;
+    private:
         WarpPipeTextureFlyWeight();
         ~WarpPipeTextureFlyWeight();
     public:
-        Texture2D& GetWarpPipeTexture();
+        static WarpPipeTextureFlyWeight* GetWarpPipeTextureFlyweight();
         void render(Vector2 Position);
 };
 class Brick : public EnvironmentObject
 {
-    private:
-    
     public:
-    Brick();
+    Brick(Vector2 Position, Vector2 Size);
     ~Brick();
+    void render() override;
+    void update() override;
 };
 class BrickTextureFlyWeight // Singleton Flyweight
 {
     private:
+        Texture2D m_Texture;
+    private:
         BrickTextureFlyWeight();
         ~BrickTextureFlyWeight();
     public:
-        Texture2D& GetBrickTexture();
+        static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
         void render(Vector2 Position);
-};
-class TextureFlyweightFactory // Singleton Factory
-{
-    private:
-        TextureFlyweightFactory();
-        ~TextureFlyweightFactory();
-    public:
-        Texture2D& GetTextureFlyweight();
-        Texture2D& CreateTextureFlyweight(const char* TexturePath);
 };

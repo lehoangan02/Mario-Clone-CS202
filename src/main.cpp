@@ -1,6 +1,6 @@
 #include <iostream>
 #include <raylib.h>
-#include "levels/Environment.hpp"
+#include "levels/Level.hpp"
 int main() {
     const int screenWidth = 1024;
     const int screenHeight = 896;
@@ -8,14 +8,15 @@ int main() {
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
     SetTargetFPS(60);
-    EnvironmentObject& ground = Ground::GetGround();
+    LevelFactory& factory = LevelFactory::GetLevelFactory();
+    Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
 
     while (!WindowShouldClose()) {
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
-        ground.render();
+        level->render();
         EndDrawing();
     }
 
