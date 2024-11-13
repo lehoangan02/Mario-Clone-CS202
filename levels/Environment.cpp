@@ -28,7 +28,7 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
 }
 Ground::Ground() : EnvironmentObject(Vector2{0, 746}, Vector2{1024, 200})
 {
-    m_Texture = LoadTexture("assets/textures/ground.png");
+    m_Texture = LoadTexture("../assets/textures/ground.png");
 }
 Ground::~Ground()
 {
@@ -47,7 +47,7 @@ void Ground::update()
 }
 WarpPipeTextureFlyWeight::WarpPipeTextureFlyWeight()
 {
-    m_Texture = LoadTexture("assets/textures/pipe.png");
+    m_Texture = LoadTexture("../assets/textures/pipe.png");
 }
 WarpPipeTextureFlyWeight::~WarpPipeTextureFlyWeight()
 {
@@ -76,7 +76,7 @@ void WarpPipe::update()
 }
 BrickTextureFlyWeight::BrickTextureFlyWeight()
 {
-    m_Texture = LoadTexture("assets/textures/brick.png");
+    m_Texture = LoadTexture("../assets/textures/brick.png");
 }
 BrickTextureFlyWeight::~BrickTextureFlyWeight()
 {
