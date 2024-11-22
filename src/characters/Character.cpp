@@ -32,9 +32,9 @@ void Character::Update(float deltaTime)
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
-		velocity.y = -sqrtf(2.0f * 0.981f * jumpHeight);
+		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
-	velocity.y += 0.981f * deltaTime;
+	velocity.y += 9.81f;
 	if (velocity.x == 0.0f) {
 		state = 0;
 	}
@@ -49,7 +49,7 @@ void Character::Update(float deltaTime)
 	}
 	animation.Update(state, deltaTime, faceRight);
 	position.x += (velocity.x);
-	position.y += 0;
+	position.y += 0; // velocity.y
 }
 
 void Character::Draw()

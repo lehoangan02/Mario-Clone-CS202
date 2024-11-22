@@ -8,6 +8,7 @@ public:
 	~Character();
 	void Update(float deltaTime);
 	void Draw();
+	void setPosition(Vector2 position) { this->position = position; };
 	Vector2 GetPosition() { return position; };
 	Vector2 GetSize() { return size; };
 	Vector2 GetCenter();
