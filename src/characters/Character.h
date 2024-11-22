@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "../Animation.h"
+#include "../animation/Animation.h"
 
 class Character {
 public:

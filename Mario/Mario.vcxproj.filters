@@ -15,42 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\levels\Environment.cpp">
+    <ClCompile Include="..\src\animation\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\levels\Level.cpp">
+    <ClCompile Include="..\src\characters\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\characters\Character.cpp">
+    <ClCompile Include="..\src\levels\Environment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
+    <ClCompile Include="..\src\levels\Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\levels\Environment.hpp">
+    <ClInclude Include="..\src\characters\Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\levels\Level.hpp">
+    <ClInclude Include="..\src\characters\Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\characters\Character.h">
+    <ClInclude Include="..\src\characters\Luigi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\characters\Enemy.h">
+    <ClInclude Include="..\src\characters\Mario.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\characters\Luigi.h">
+    <ClInclude Include="..\src\levels\Environment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\characters\Mario.h">
+    <ClInclude Include="..\src\levels\Level.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="..\src\animation\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,8 +1,8 @@
 #include "raylib.h"
 #include <iostream>
-#include "../characters/Character.h"
-#include "../levels/Level.hpp"
-#include "../Animation.h"
+#include "characters/Character.h"
+#include "levels/Level.hpp"
+#include "animation/Animation.h"
 int main(void)
 {
     const int screenWidth = 1024;
@@ -16,6 +16,11 @@ int main(void)
 
     float deltatime = 0.5f;
 	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+
+
+
+    ///nextime you here rember to fix the deltatime when u suspense the mario 
+	// and also make animation.h and animation.cpp in the same folder
     while (!WindowShouldClose())
     {
 
