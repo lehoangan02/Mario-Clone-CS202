@@ -21,7 +21,6 @@ class EnvironmentObjectFactory // Singleton Factory
     public:
     enum EnvironmentObjectType
     {
-        GROUND,
         WARP_PIPE,
         BRICK,
         QUESTION_BLOCK
@@ -33,17 +32,23 @@ class EnvironmentObjectFactory // Singleton Factory
         static EnvironmentObjectFactory& GetEnvironmentFactory();
         EnvironmentObject* CreateEnvironmentObject(int Type, Vector2 Position);
 };
-class Ground : public EnvironmentObject // Singleton
+class Ground// Singleton
 {
+    public:
+        Vector2 m_Position;
+    protected:
+        Vector2 m_Size;
     private:
         Texture2D m_Texture;
+        std::vector<std::pair<float, int>> m_Holes;
     private:
         Ground();
         ~Ground();
-        void render() override;
-        void update() override;
+        void update();
     public:
-        static EnvironmentObject* GetGround();
+        void render(Vector2 CameraPosition);
+        static Ground* GetGround();
+        void addHole(float x, int y); // y is how many bricks wide the hole is
 };
 class WarpPipe : public EnvironmentObject
 {

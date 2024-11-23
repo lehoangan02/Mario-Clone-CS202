@@ -52,5 +52,12 @@
         "unordered_map": "cpp",
         "variant": "cpp",
         "algorithm": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin",
+            "binaryPath": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin/main",
+            "binaryArgs": []
+        }
+    ]
 }

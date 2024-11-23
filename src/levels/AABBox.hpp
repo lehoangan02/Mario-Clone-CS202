@@ -14,8 +14,11 @@ class AABBox
         bool m_Fixed = false;
     friend void resolveCollisions(AABBox &AABBox1, AABBox &AABBox2);
     friend bool isColliding(const AABBox &AABBox1, const AABBox &AABBox2);
+    friend bool isCollidingOnVertically(const AABBox &AABBox1, const AABBox &AABBox2);
     friend bool isCollidingOnTop(const AABBox &AABBox1, const AABBox &AABBox2);
+
 };
 void resolveCollisions(AABBox &AABBox1, AABBox &AABBox2);
 bool isColliding(const AABBox &AABBox1, const AABBox &AABBox2);
+bool isCollidingOnVertically(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingOnTop(const AABBox &AABBox1, const AABBox &AABBox2);

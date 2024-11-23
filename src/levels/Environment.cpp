@@ -8,42 +8,55 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
 {
     switch (Type)
     {
-        case 0:
-            return Ground::GetGround();
-            break;
-        case 1:
+        case EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE:
         {
             std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
             WarpPipe* pipe = new WarpPipe(Position, Vector2{208, 195});
             return pipe;
         }
-        case 2:
+        case EnvironmentObjectFactory::EnvironmentObjectType::BRICK:
         {
             Brick* brick = new Brick(Position, Vector2{100, 100});
             return brick;
         }
         break;
-        
     }
 }
-Ground::Ground() : EnvironmentObject(Vector2{0, 746}, Vector2{1024, 200})
+Ground::Ground() : m_Position(Vector2{0, 746}), m_Size(Vector2{994, 200})
 {
     m_Texture = LoadTexture("assets/textures/ground.png");
 }
 Ground::~Ground()
 {
 }
-EnvironmentObject* Ground::GetGround()
+Ground* Ground::GetGround()
 {
     static Ground ground;
     return &ground;
 }
-void Ground::render()
+void Ground::render(Vector2 CameraPosition)
 {
-    DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
+    // std::cout << "Camera Position: " << CameraPosition.x << ", " << CameraPosition.y << std::endl;
+    // std::cout << "Size: " << m_Size.x << ", " << m_Size.y << std::endl;
+    int PositionX = static_cast<int>(CameraPosition.x / m_Size.x);
+    // std::cout << "PositionX: " << PositionX << std::endl;
+    DrawTexture(m_Texture, PositionX * m_Size.x, m_Position.y, WHITE);
+    DrawTexture(m_Texture, (PositionX + 1) * m_Size.x, m_Position.y, WHITE);
+    DrawTexture(m_Texture, (PositionX + 2) * m_Size.x, m_Position.y, WHITE);
+    for (auto& hole : m_Holes)
+    {
+        int Width = hole.second * 100;
+
+        DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
+    }
 }
 void Ground::update()
 {
+
+}
+void Ground::addHole(float x, int y)
+{
+    m_Holes.push_back(std::make_pair(x, y));
 }
 WarpPipeTextureFlyWeight::WarpPipeTextureFlyWeight()
 {

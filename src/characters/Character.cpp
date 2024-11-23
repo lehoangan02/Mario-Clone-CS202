@@ -32,7 +32,6 @@ void Character::Update(float deltaTime)
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
-		std::cout << "jump" << std::endl;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
 	velocity.y += 9.81f * deltaTime;

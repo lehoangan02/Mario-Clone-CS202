@@ -15,6 +15,7 @@ class Level
     Character* m_Player;
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition;
+    Ground* m_Ground;
     const float m_PlayerOffset = 500;
     protected:
         Level();
@@ -23,7 +24,7 @@ class Level
         void attachPlayer(Character* Player);
         virtual void load() = 0;
         virtual void update(float DeltaTime) = 0;
-        virtual void render() = 0;
+        virtual void render();
     protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
