@@ -2,6 +2,7 @@
 #include <vector>
 #include "Environment.hpp"
 #include "../characters/Character.h"
+#include "AABBox.hpp"
 class Enemy;
 class Item;
 class Level
@@ -23,9 +24,10 @@ class Level
         virtual void load() = 0;
         virtual void update(float DeltaTime) = 0;
         virtual void render() = 0;
-    private:
+    protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
+        void applyBoundaries();
 };
 class LevelFactory
 {

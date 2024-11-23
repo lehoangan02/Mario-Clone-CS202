@@ -23,7 +23,7 @@ Vector2 Character::GetCenter() {
 void Character::Update(float deltaTime)
 {
 	 //change for slowing down
-	velocity = { 0.0f, 0.0f };
+	velocity.x = 0;
 	if (IsKeyDown(KEY_RIGHT)) {
 		velocity.x += speed;
 	}
@@ -32,9 +32,10 @@ void Character::Update(float deltaTime)
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
-		velocity.y = -sqrtf(2.0f * 0.981f * jumpHeight);
+		std::cout << "jump" << std::endl;
+		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
-	velocity.y += 0.981f * deltaTime;
+	velocity.y += 9.81f * deltaTime;
 	if (velocity.x == 0.0f) {
 		state = 0;
 	}
@@ -49,7 +50,7 @@ void Character::Update(float deltaTime)
 	}
 	animation.Update(state, deltaTime, faceRight);
 	position.x += (velocity.x);
-	position.y += (velocity.y);
+	position.y += (velocity.y); // velocity.y
 }
 
 void Character::Draw()

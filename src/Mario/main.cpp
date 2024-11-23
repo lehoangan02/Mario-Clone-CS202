@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../characters/Character.h"
 #include "../levels/Level.hpp"
-#include "../Animation.h"
+#include "../animation/Animation.h"
 int main(void)
 {
     const int screenWidth = 1024;
@@ -21,7 +21,7 @@ int main(void)
         deltatime = GetFrameTime();
         level->update(deltatime);
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        ClearBackground(Color{105, 147, 245, 255});
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);

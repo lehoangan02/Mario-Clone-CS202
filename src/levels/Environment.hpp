@@ -10,8 +10,10 @@ class EnvironmentObject
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         virtual void render() = 0;
-    protected:
+        Vector2 getSize() { return m_Size; };
+    public:
         Vector2 m_Position;
+    protected:
         Vector2 m_Size;
 };
 class EnvironmentObjectFactory // Singleton Factory
