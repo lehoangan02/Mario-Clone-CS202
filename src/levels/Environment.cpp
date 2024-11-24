@@ -11,7 +11,7 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
         case EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE:
         {
             std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
-            WarpPipe* pipe = new WarpPipe(Position, Vector2{209, 195});
+            WarpPipe* pipe = new WarpPipe(Position);
             return pipe;
         }
         case EnvironmentObjectFactory::EnvironmentObjectType::BRICK:
@@ -77,7 +77,7 @@ void WarpPipeTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
-WarpPipe::WarpPipe(Vector2 Position, Vector2 Size) : EnvironmentObject(Position, Size)
+WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
 }
 WarpPipe::~WarpPipe()

@@ -3,10 +3,27 @@
 #include <raylib.h>
 #include <unordered_map>
 #include <iostream>
-class EnvironmentObject
+class MapObject
+{
+    protected:
+        Vector2 m_Position;
+        Vector2 m_Size;
+    public:
+        MapObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
+        virtual void render();
+};
+class DrawableObject : public MapObject
 {
     public:
-        EnvironmentObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
+        DrawableObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
+        virtual ~DrawableObject() = default;
+        virtual void update() = 0;
+        virtual void render() = 0;
+};
+class EnvironmentObject : public MapObject
+{
+    public:
+        EnvironmentObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         virtual void render() = 0;
@@ -16,12 +33,30 @@ class EnvironmentObject
     protected:
         Vector2 m_Size;
 };
+class DrawableObjectFactory
+{
+    public:
+    enum DrawableObjectType
+    {
+        GRASS,
+        CLOUD,
+        MOUNTAIN
+    };
+    private:
+        DrawableObjectFactory() = default;
+        ~DrawableObjectFactory() = default;
+    public:
+        static DrawableObjectFactory& GetDrawableObjectFactory();
+        DrawableObject* CreateDrawableObject(int Type, Vector2 Position);
+};
 class EnvironmentObjectFactory // Singleton Factory
 {
     public:
     enum EnvironmentObjectType
     {
         WARP_PIPE,
+        WARP_PIPE_SHORT,
+        WARP_PIPE_TINY,
         BRICK,
         QUESTION_BLOCK
     };
@@ -32,12 +67,9 @@ class EnvironmentObjectFactory // Singleton Factory
         static EnvironmentObjectFactory& GetEnvironmentFactory();
         EnvironmentObject* CreateEnvironmentObject(int Type, Vector2 Position);
 };
-class Ground// Singleton
+class Ground : public MapObject // Singleton
 {
-    public:
-        Vector2 m_Position;
-    protected:
-        Vector2 m_Size;
+    friend class Level;
     private:
         Texture2D m_Texture;
         std::vector<std::pair<float, int>> m_Holes;
@@ -55,7 +87,7 @@ class Ground// Singleton
 class WarpPipe : public EnvironmentObject
 {
     public:
-    WarpPipe(Vector2 Position, Vector2 Size);
+    WarpPipe(Vector2 Position);
     ~WarpPipe();
     void render() override;
     void update() override;
