@@ -11,7 +11,7 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
         case EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE:
         {
             std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
-            WarpPipe* pipe = new WarpPipe(Position, Vector2{208, 195});
+            WarpPipe* pipe = new WarpPipe(Position, Vector2{209, 195});
             return pipe;
         }
         case EnvironmentObjectFactory::EnvironmentObjectType::BRICK:
@@ -22,9 +22,9 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
         break;
     }
 }
-Ground::Ground() : m_Position(Vector2{0, 746}), m_Size(Vector2{994, 200})
+Ground::Ground() : m_Position(Vector2{0, 746}), m_Size(Vector2{100, 100})
 {
-    m_Texture = LoadTexture("assets/textures/ground.png");
+    m_Texture = LoadTexture("assets/textures/ground1x1.png");
 }
 Ground::~Ground()
 {
@@ -40,9 +40,12 @@ void Ground::render(Vector2 CameraPosition)
     // std::cout << "Size: " << m_Size.x << ", " << m_Size.y << std::endl;
     int PositionX = static_cast<int>(CameraPosition.x / m_Size.x);
     // std::cout << "PositionX: " << PositionX << std::endl;
-    DrawTexture(m_Texture, PositionX * m_Size.x, m_Position.y, WHITE);
-    DrawTexture(m_Texture, (PositionX + 1) * m_Size.x, m_Position.y, WHITE);
-    DrawTexture(m_Texture, (PositionX + 2) * m_Size.x, m_Position.y, WHITE);
+    for (int i = 0; i < 20; ++i)
+    {
+        DrawTexture(m_Texture, i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+        DrawTexture(m_Texture, i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+    }
+
     for (auto& hole : m_Holes)
     {
         int Width = hole.second * 100;
@@ -54,7 +57,7 @@ void Ground::update()
 {
 
 }
-void Ground::addHole(float x, int y)
+void Ground::addHole(float x, unsigned int y)
 {
     m_Holes.push_back(std::make_pair(x, y));
 }

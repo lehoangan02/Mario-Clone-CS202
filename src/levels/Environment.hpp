@@ -48,7 +48,9 @@ class Ground// Singleton
     public:
         void render(Vector2 CameraPosition);
         static Ground* GetGround();
-        void addHole(float x, int y); // y is how many bricks wide the hole is
+        void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
+        std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
+        int getHoleCount() { return m_Holes.size(); };
 };
 class WarpPipe : public EnvironmentObject
 {

@@ -17,18 +17,21 @@ class Level
     Vector2 m_CameraPosition;
     Ground* m_Ground;
     const float m_PlayerOffset = 500;
+    bool isPlayerFinished = false;
     protected:
         Level();
         ~Level();
     public:
         void attachPlayer(Character* Player);
         virtual void load() = 0;
-        virtual void update(float DeltaTime) = 0;
+        virtual void update(float DeltaTime);
         virtual void render();
     protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
         void applyBoundaries();
+        bool isInHole();
+        void resolveHoleCollisions();
 };
 class LevelFactory
 {

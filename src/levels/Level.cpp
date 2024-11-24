@@ -13,7 +13,6 @@ Level* LevelFactory::CreateLevel(LevelType Type)
             break;
     }
 }
-
 Level::Level()
 {
     m_CameraPosition = {0, 0};
@@ -55,7 +54,11 @@ void Level::resolveEnvironmentCollisions()
 }
 void Level::applyBoundaries()
 {
-    if (m_Player->GetPosition().y > m_Ground->m_Position.y - m_Player->GetSize().y)
+    if (isInHole())
+    {
+        // std::cout << "In Hole" << std::endl;
+    }
+    else if (m_Player->GetPosition().y > m_Ground->m_Position.y - m_Player->GetSize().y)
     {
         m_Player->setPosition(Vector2{m_Player->GetPosition().x, m_Ground->m_Position.y - m_Player->GetSize().y});
         m_Player->resetVelocity();
@@ -78,25 +81,10 @@ void Level::render()
     m_Player->Draw();
     EndMode2D();
 }
-Level101::Level101()
+void Level::update(float DeltaTime)
 {
-    load();
-}
-Level101::~Level101()
-{
-}
-void Level101::load()
-{
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{600, 600}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{1200, 600}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{1500, 600}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{2000, 500}));
-    m_Ground->addHole(1200, 2);
-    m_Ground->addHole(300, 3);
-}
-void Level101::update(float DeltaTime)
-{
-    m_Player -> Update(DeltaTime);
+    isPlayerFinished = isInHole();
+    if (!isPlayerFinished) m_Player -> Update(DeltaTime);
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
         m_CameraPosition.x = m_Player->GetPosition().x - m_PlayerOffset;
@@ -107,8 +95,50 @@ void Level101::update(float DeltaTime)
         m_Player->setPosition(NewPosition);
     }
     applyBoundaries();
-    // checkEnvironmentCollisions();
     resolveEnvironmentCollisions();
+}
+bool Level::isInHole()
+{
+    for (int i = 0; i < m_Ground -> getHoleCount(); i++)
+    {
+        auto hole = m_Ground -> getHole(i);
+        if (m_Player->GetPosition().x > hole.first)
+        {
+            // std::cout << "BIGGER THAN HOLE" << std::endl;
+            // std::cout << "Hole: " << hole.first << ", " << hole.second << std::endl;
+            if (m_Player->GetPosition().x + m_Player -> GetSize().x < hole.first + hole.second * 100)
+            {
+                // std::cout << "SMALLER THAN HOLE" << std::endl;
+                if (m_Player->GetPosition().y + m_Player -> GetSize().y > m_Ground->m_Position.y)
+                {
+                    // std::cout << "LOWER THAN HOLE" << std::endl;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+Level101::Level101()
+{
+    load();
+}
+Level101::~Level101()
+{
+}
+void Level101::load()
+{
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{2300, m_Ground->m_Position.y - 135}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3100, m_Ground->m_Position.y - 175}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3700, m_Ground->m_Position.y - 195}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{4600, 500}));
+    m_Ground->addHole(5300, 2);
+    m_Ground->addHole(6900, 3);
+}
+void Level101::update(float DeltaTime)
+{
+    Level::update(DeltaTime);
 }
 void Level101::render()
 {
