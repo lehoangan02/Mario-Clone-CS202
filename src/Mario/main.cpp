@@ -4,6 +4,7 @@
 #include "../levels/Level.hpp"
 #include "../animation/Animation.h"
 #include "../Obstacle/Obstacle.h"
+#include "../Item/Item.h"
 
 int main(void)
 {
@@ -12,8 +13,8 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     
-    Texture2D obstacleTexture = LoadTexture("assets/textures/brick.png");
-    DynamicObstacle dynamicObstacle(Vector2{ 300, 300 }, Vector2{ 50, 50 }, obstacleTexture, Vector2{ 200, 0 });
+    Texture2D coinTexture = LoadTexture("assets/textures/cloud.png");
+    Coin* coin = new Coin(Vector2{ 300, 300 }, Vector2{ 50, 50 }, coinTexture, Vector2{150, 0});
     
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -27,7 +28,7 @@ int main(void)
     {
         deltatime = GetFrameTime();
 
-        dynamicObstacle.Update(deltatime);
+        coin->Update(deltatime);
 
 
         level->update(deltatime);
@@ -37,7 +38,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
 
-        dynamicObstacle.Draw();
+        coin->Draw();
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
