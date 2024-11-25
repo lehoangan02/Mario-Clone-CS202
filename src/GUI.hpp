@@ -1,5 +1,5 @@
-#ifndef GUI_h
-#define GUI_h
+#ifndef GUI_hpp
+#define GUI_hpp
 
 #include "raylib.h"
 #include "raymath.h"
@@ -16,10 +16,9 @@
 #include <functional>
 #include <stdint.h>
 
-int SCREEN_WIDTH = 1228;
-int SCREEN_HEIGHT = 896;
-Font FONT = LoadFont("./Font/SF.otf");
-    
+int SCREEN_WIDTH = 1024;
+int SCREEN_HEIGHT = 768;
+
 
 class Button {
     protected:
@@ -31,27 +30,27 @@ class Button {
         float fontSize;
         bool isHovered;
     public:
-        Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT);
+        Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf"));
         Button() : Button({0,0,0,0}, "", 0.0f, BLUE, 0) {}
         virtual void draw(float radius = 15);
         int handle();
         bool getIsHovered() {return this->isHovered;}
         int isClicked();
-        
+
         virtual ~Button() = default;
 };
 
 class PlayButton : public Button {
 public:
     PlayButton() = default;
-    PlayButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    PlayButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
     void draw(float radius = 15);
 };
 
 class SettingButton : public Button {
 public:
     SettingButton() = default;
-    SettingButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    SettingButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 15);
 };
@@ -59,7 +58,7 @@ public:
 class HighScoreButton : public Button {
 public:
     HighScoreButton() = default;
-    HighScoreButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    HighScoreButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 15);
 };
@@ -67,9 +66,9 @@ public:
 class InforButton : public Button {
 public:
     InforButton() = default;
-    InforButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    InforButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 15);
 };
 
-#endif /* GUI_h */
+#endif /* GUI_hpp */

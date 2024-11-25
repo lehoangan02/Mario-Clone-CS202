@@ -1,6 +1,5 @@
 #include "GUI.hpp"
 
-
 Button::Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font) {
     this->outerRect = rect;
     this->content = text;
@@ -14,8 +13,6 @@ Button::Button(Rectangle rect, const std::string text, float yText, Color textCo
 
 void Button::draw(float radius) {
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
-//    DrawRectangleRounded(this->outerRect, radius/55, 32, this->isHovered ? THEME.HOVER_BUTTON : THEME.BUTTON);
-//    DrawTextPro(this->font, this->content.c_str(), this->contentPos, ORIGIN, 0, this->fontSize, 2, this->contentColor);
 }
 
 int Button::handle() {
@@ -50,7 +47,5 @@ void InforButton::draw(float radius) {
     DrawRectangleRounded(this->outerRect, radius/55, 32, this->isHovered ? Color{255, 75, 78 ,255} : Color{70, 231, 193, 255});
     DrawTextPro(this->font, this->content.c_str(), this->contentPos, {0,0}, 0, this->fontSize, 2, this->contentColor);
 }
-
-
 
 
