@@ -12,7 +12,9 @@ constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
 #include "../animation/Animation.h"
 #include "../characters/Character.h"
 
-
+enum State {
+	RISING, FALLING, DISAPPEARED
+};
 
 class Item {
 protected:
@@ -25,9 +27,14 @@ protected:
 	int currentFrame;
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
+
 	Vector2 velocity;
+	Vector2	startPosition;
+	Vector2 endPosition;
+	State state;
+
 public:
-	Item(Vector2 pos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
+	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;
 	virtual void Update(float deltaTime);
@@ -43,19 +50,19 @@ public:
 };
 class Coin : public Item {
 public:
-	Coin(Vector2 pos, Vector2 size, Texture2D tex, Vector2 velocity);
+	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* Character) override;
 
 };
 class Mushroom : public Item {
 public:
-	Mushroom(Vector2 pos, Vector2 size, Texture2D tex, Vector2 velocity);
+	Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* character);
 
 };
 class FireFlower : public Item {
 public:
-	FireFlower(Vector2 pos, Vector2 size, Texture2D tex, Vector2 velocity);
+	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* character);
 };
 

@@ -14,8 +14,13 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     
     Texture2D coinTexture = LoadTexture("assets/textures/cloud.png");
-    Coin* coin = new Coin(Vector2{ 300, 300 }, Vector2{ 50, 50 }, coinTexture, Vector2{150, 0});
-    
+    Coin* coin = new Coin(
+        Vector2{ 100, 100 },   
+        Vector2{ 100, 200 },   
+        Vector2{ 32, 32 },     
+        coinTexture,       
+        Vector2{ 0, 100 }    
+    );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
