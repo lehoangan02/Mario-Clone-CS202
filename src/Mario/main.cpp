@@ -6,7 +6,7 @@
 int main(void)
 {
     const int screenWidth = 1024;
-    const int screenHeight = 896;
+    const int screenHeight = 768;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     LevelFactory& factory = LevelFactory::GetLevelFactory();

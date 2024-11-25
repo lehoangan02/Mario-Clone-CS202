@@ -32,8 +32,32 @@ void Level::resolveEnvironmentCollisions()
 {
     for (int i = 0; i < m_Environment.size(); i++)
     {
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        AABBox EnvironmentBox = AABBox(m_Environment[i]->m_Position, m_Environment[i]->getSize());
+        EnvironmentBox.setFixed(true);
+        if (isColliding(PlayerBox, EnvironmentBox))
+        {
+            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+            {
+                m_Player->resetVelocity();
+                if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+                {
+                    m_Player->onPlatform();
+                }
+            }
+            resolveCollisions(PlayerBox, EnvironmentBox);
+            m_Player->setPosition(PlayerBox.getPosition());
+            m_Environment[i]->m_Position = EnvironmentBox.getPosition();
+        }
+    }
+    
+}
+void Level::resolveInteractiveEnvironmentCollisions()
+{
+    for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
+    {
             AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
-            AABBox EnvironmentBox = AABBox(m_Environment[i]->m_Position, m_Environment[i]->getSize());
+            AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i]->m_Position, m_EnvironmentInteractive[i]->getSize());
             EnvironmentBox.setFixed(true);
             if (isColliding(PlayerBox, EnvironmentBox))
             {
@@ -44,10 +68,14 @@ void Level::resolveEnvironmentCollisions()
                     {
                         m_Player->onPlatform();
                     }
+                    if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
+                    {
+                        m_EnvironmentInteractive[i]->onNotify();
+                    }
                 }
                 resolveCollisions(PlayerBox, EnvironmentBox);
                 m_Player->setPosition(PlayerBox.getPosition());
-                m_Environment[i]->m_Position = EnvironmentBox.getPosition();
+                m_EnvironmentInteractive[i]->m_Position = EnvironmentBox.getPosition();
                 
             }
     }
@@ -77,6 +105,10 @@ void Level::render()
     {
         object->render();
     }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        object->render();
+    }
     for (auto& object : m_Drawables)
     {
         object->render();
@@ -102,8 +134,13 @@ void Level::update(float DeltaTime)
     {
         object->update();
     }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        object->update();
+    }
     applyBoundaries();
     resolveEnvironmentCollisions();
+    resolveInteractiveEnvironmentCollisions();
 }
 bool Level::isInHole()
 {
@@ -140,15 +177,15 @@ void Level101::load()
     m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{2300, m_Ground->m_Position.y - 135}));
     m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3100, m_Ground->m_Position.y - 175}));
     m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3700, m_Ground->m_Position.y - 195}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1500, 500}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1700, 500}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1900, 500}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::QUESTION_BLOCK, Vector2{1600, 500}));
-    // m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::QUESTION_BLOCK, Vector2{0, 0}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1500, 300}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1700, 300}));
+    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1900, 300}));
+    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{1600, 300}));
+    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{1800, 300}));
 
     m_Ground->addHole(5300, 2);
     m_Ground->addHole(6900, 3);
-    m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 200}));
+    m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 100}));
 
 }
 void Level101::update(float DeltaTime)

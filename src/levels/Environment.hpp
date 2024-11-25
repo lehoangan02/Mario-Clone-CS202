@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "../animation/Animation.h"
+#include "../Oberver/Observer.hpp"
 class MapObject
 {
     public:
@@ -11,7 +12,6 @@ class MapObject
         Vector2 m_Size;
     public:
         MapObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
-        virtual void render();
 };
 class DrawableObject : public MapObject
 {
@@ -28,6 +28,14 @@ class EnvironmentObject : public MapObject
         virtual void update() = 0;
         virtual void render() = 0;
         Vector2 getSize() { return m_Size; };
+};
+class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
+{
+    public:
+        EnvironmentObjectInteractive(Vector2 Position, Vector2 Size) : EnvironmentObject(Position, Size) {};
+        virtual ~EnvironmentObjectInteractive() = default;
+    protected:
+        void move(Vector2 Position);
 };
 class DrawableObjectFactory
 {
@@ -54,7 +62,6 @@ class EnvironmentObjectFactory // Singleton Factory
         WARP_PIPE_SHORT,
         WARP_PIPE_TINY,
         BRICK,
-        QUESTION_BLOCK
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -62,6 +69,20 @@ class EnvironmentObjectFactory // Singleton Factory
     public:
         static EnvironmentObjectFactory& GetEnvironmentFactory();
         EnvironmentObject* CreateEnvironmentObject(int Type, Vector2 Position);
+};
+class EnvironmentInteractiveObjectFactory // Singleton Factory
+{
+    public:
+    enum EnvironmentInteractiveObjectType
+    {
+        QUESTION_BLOCK
+    };
+    private:
+        EnvironmentInteractiveObjectFactory() = default;
+        ~EnvironmentInteractiveObjectFactory() = default;
+    public:
+        static EnvironmentInteractiveObjectFactory& GetEnvironmentInteractiveFactory();
+        EnvironmentObjectInteractive* CreateEnvironmentInteractiveObject(int Type, Vector2 Position);
 };
 class Ground : public MapObject // Singleton
 {
@@ -118,16 +139,32 @@ class BrickTextureFlyWeight // Singleton Flyweight
         static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
         void render(Vector2 Position);
 };
-class QuestionBlock : public EnvironmentObject
+class QuestionBlock : public EnvironmentObjectInteractive
 {
+    class HitAnimationCommander
+    {
+        private:
+        bool m_HitTop = false;
+        bool m_Finished = false;
+        float m_MoveUpDistance = 0;
+        float m_TopPosition = 0;
+        float m_BottomPosition = 0;
+        float m_Speed = 70;
+        public:
+        HitAnimationCommander(float MoveUpDistance, float BottomPosition);
+        ~HitAnimationCommander();
+        Vector2 giveMovementCommand(Vector2 CurrentPosition);
+    };
     public:
     QuestionBlock(Vector2 Position);
     ~QuestionBlock();
     void render() override;
     void update() override;
+    void onNotify() override;
     private:
     bool m_IsHit = false;
-    Animation m_Animation;
+    Animation m_IdleAnimation;
+    HitAnimationCommander m_HitAnimation;
     Rectangle getCurrentTextureRect();
 };
 class QuestionBlockTextureFlyWeight // Singleton Flyweight

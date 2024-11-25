@@ -26,7 +26,7 @@ void Animation::Update(int state, float deltaTime, bool faceRight) {
 		if (totalTime >= switchTime) {
 			totalTime = 0;
 			currentImage.x++;
-			if (currentImage.x >= 4) currentImage.x = 0;
+			if (currentImage.x >= 4) currentImage.x = 1;
 		}
 	}
 	if (faceRight) {

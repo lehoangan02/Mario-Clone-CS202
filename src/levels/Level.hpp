@@ -12,6 +12,7 @@ class Level
     std::vector<Enemy*> m_Enemies;
     std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
+    std::vector<EnvironmentObjectInteractive*> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
     Character* m_Player;
     Vector2 m_PlayerSpawn;
@@ -30,6 +31,7 @@ class Level
     protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
+        void resolveInteractiveEnvironmentCollisions();
         void applyBoundaries();
         bool isInHole();
         void resolveHoleCollisions();
