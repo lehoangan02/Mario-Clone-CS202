@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{CF4923CD-E222-4CE1-AC2D-2222A4BDDDF5}</ProjectGuid>
+    <ProjectGuid>{EDD516C5-518C-4C16-B7DA-825E9179F30A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -119,9 +119,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Item.cpp" />
     <ClCompile Include="src\animation\Animation.cpp" />
     <ClCompile Include="src\characters\Character.cpp" />
+    <ClCompile Include="src\item\Item.cpp" />
     <ClCompile Include="src\levels\AABBox.cpp" />
     <ClCompile Include="src\levels\Environment.cpp" />
     <ClCompile Include="src\levels\Level.cpp" />
@@ -131,12 +131,12 @@
     <ClInclude Include="include\raylib.h" />
     <ClInclude Include="include\raymath.h" />
     <ClInclude Include="include\rlgl.h" />
-    <ClInclude Include="Item.h" />
     <ClInclude Include="src\animation\Animation.h" />
     <ClInclude Include="src\characters\Character.h" />
     <ClInclude Include="src\characters\Enemy.h" />
     <ClInclude Include="src\characters\Luigi.h" />
     <ClInclude Include="src\characters\Mario.h" />
+    <ClInclude Include="src\item\Item.h" />
     <ClInclude Include="src\levels\AABBox.hpp" />
     <ClInclude Include="src\levels\Environment.hpp" />
     <ClInclude Include="src\levels\Level.hpp" />

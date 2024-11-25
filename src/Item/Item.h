@@ -9,8 +9,8 @@ constexpr float MUSHROOM_FRAME_TIME = 0.08f;
 constexpr int FIREFLOWER_FRAME_COUNT = 5;
 constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
 
-#include "src/animation/Animation.h"
-#include "src/characters/Character.h"
+#include "../animation/Animation.h"
+#include "../characters/Character.h"
 
 
 
