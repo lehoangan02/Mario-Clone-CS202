@@ -21,9 +21,6 @@
     <ClCompile Include="src\characters\Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\item\Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\levels\AABBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,6 +31,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\mario\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,9 +62,6 @@
     <ClInclude Include="src\characters\Mario.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\item\Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\levels\AABBox.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\oberver\Observer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Item\Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
