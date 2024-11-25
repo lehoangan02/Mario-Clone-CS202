@@ -195,7 +195,7 @@ Vector2 QuestionBlock::HitAnimationCommander::giveMovementCommand(Vector2 Curren
         if (CurrentPosition.y < m_TopPosition)
         {
             m_HitTop = true;
-            std::cout << "Hit Top\n";
+            // std::cout << "Hit Top\n";
             return Vector2{0, m_TopPosition - CurrentPosition.y};
         }
         else
@@ -227,7 +227,8 @@ QuestionBlock::~QuestionBlock()
 void QuestionBlock::render()
 {
     // std::cout << "Rendering Question Block at " << m_Position.x << ", " << m_Position.y << std::endl;
-    QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
+    if (!m_IsHit) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
+    else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
 }
 void QuestionBlock::update()
 {

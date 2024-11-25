@@ -55,9 +55,9 @@ class Level101 : public Level
     private:
         Level101();
         ~Level101();
-        void load();
-        void update(float DeltaTime);
-        void render();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
     public:
         static Level101* GetLevel101();
 };

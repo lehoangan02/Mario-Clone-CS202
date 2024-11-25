@@ -149,7 +149,8 @@ class QuestionBlock : public EnvironmentObjectInteractive
         float m_MoveUpDistance = 0;
         float m_TopPosition = 0;
         float m_BottomPosition = 0;
-        float m_Speed = 70;
+        float m_Speed = 120;
+       
         public:
         HitAnimationCommander(float MoveUpDistance, float BottomPosition);
         ~HitAnimationCommander();
@@ -165,6 +166,8 @@ class QuestionBlock : public EnvironmentObjectInteractive
     bool m_IsHit = false;
     Animation m_IdleAnimation;
     HitAnimationCommander m_HitAnimation;
+    Rectangle HittedTextureRect = {100, 0, 100, 100};
+    private:
     Rectangle getCurrentTextureRect();
 };
 class QuestionBlockTextureFlyWeight // Singleton Flyweight
