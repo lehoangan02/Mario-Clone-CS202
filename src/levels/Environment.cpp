@@ -24,6 +24,11 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
             Brick* brick = new Brick(Position);
             return brick;
         }
+        case EnvironmentObjectFactory::EnvironmentObjectType::QUESTION_BLOCK:
+        {
+            QuestionBlock* block = new QuestionBlock(Position);
+            return block;
+        }
         break;
     }
 }
@@ -124,6 +129,43 @@ void Brick::render()
 }
 void Brick::update()
 {
+}
+QuestionBlockTextureFlyWeight::QuestionBlockTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/question_block.png");
+}
+QuestionBlockTextureFlyWeight::~QuestionBlockTextureFlyWeight()
+{
+}
+QuestionBlockTextureFlyWeight* QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()
+{
+    static QuestionBlockTextureFlyWeight texture;
+    return &texture;
+}
+void QuestionBlockTextureFlyWeight::render(Vector2 Position, Rectangle TextureRect)
+{
+    // std::cout << "Rendering Question Block at " << Position.x << ", " << Position.y << std::endl;
+    DrawTexturePro(m_Texture, TextureRect, Rectangle{Position.x, Position.y, 100, 100}, Vector2{0, 0}, 0.0f, WHITE);
+}
+QuestionBlock::QuestionBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100}), m_Animation(&(QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->m_Texture), Vector2{4, 1}, 0.2f)
+{
+}
+QuestionBlock::~QuestionBlock()
+{
+}
+void QuestionBlock::render()
+{
+    QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
+}
+void QuestionBlock::update()
+{
+    std::cout << "Updating Question Block" << std::endl;
+    float DeltaTime = GetFrameTime();
+    m_Animation.Update(DeltaTime);
+}
+Rectangle QuestionBlock::getCurrentTextureRect()
+{
+    return m_Animation.uvRect;
 }
 DrawableObjectFactory& DrawableObjectFactory::GetDrawableObjectFactory()
 {

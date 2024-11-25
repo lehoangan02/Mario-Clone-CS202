@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <unordered_map>
 #include <iostream>
+#include "../animation/Animation.h"
 class MapObject
 {
     public:
@@ -116,6 +117,30 @@ class BrickTextureFlyWeight // Singleton Flyweight
     public:
         static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
         void render(Vector2 Position);
+};
+class QuestionBlock : public EnvironmentObject
+{
+    public:
+    QuestionBlock(Vector2 Position);
+    ~QuestionBlock();
+    void render() override;
+    void update() override;
+    private:
+    bool m_IsHit = false;
+    Animation m_Animation;
+    Rectangle getCurrentTextureRect();
+};
+class QuestionBlockTextureFlyWeight // Singleton Flyweight
+{
+    friend class QuestionBlock;
+    private:
+        Texture2D m_Texture;
+    private:
+        QuestionBlockTextureFlyWeight();
+        ~QuestionBlockTextureFlyWeight();
+    public:
+        static QuestionBlockTextureFlyWeight* GetQuestionBlockTextureFlyWeight();
+        void render(Vector2 Position, Rectangle TextureRect);
 };
 class Cloud : public DrawableObject
 {

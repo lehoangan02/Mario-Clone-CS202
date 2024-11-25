@@ -12,7 +12,7 @@ int main(void)
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
-	Character player(&t, Vector2{ 4, 1 }, 0.1f, 4.0f, 3.0f);
+	Character player(&t, Vector2{ 10, 1 }, 0.1f, 4.0f, 3.0f);
     player.setPosition(Vector2{20 , 0});
     level->attachPlayer(&player);
     float deltatime;
