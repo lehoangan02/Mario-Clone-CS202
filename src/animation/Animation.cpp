@@ -37,4 +37,17 @@ void Animation::Update(int state, float deltaTime, bool faceRight) {
 		uvRect.width = -fabs(uvRect.width);
 	} 
 }
-;
+void Animation::Update(int state, float deltaTime) {
+	currentImage.y = 0; // modify this if texture having states
+	totalTime += deltaTime;
+	if (state == 0) currentImage.x = 0;
+	else {
+		if (totalTime >= switchTime) {
+			totalTime = 0;
+			currentImage.x++;
+			if (currentImage.x >= 4) currentImage.x = 1;
+		}
+	}
+	uvRect.x = currentImage.x * uvRect.width;
+	uvRect.width = fabs(uvRect.width);
+}

@@ -5,7 +5,7 @@
 #include <iostream>
 class MapObject
 {
-    protected:
+    public:
         Vector2 m_Position;
         Vector2 m_Size;
     public:
@@ -17,21 +17,16 @@ class DrawableObject : public MapObject
     public:
         DrawableObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
         virtual ~DrawableObject() = default;
-        virtual void update() = 0;
         virtual void render() = 0;
 };
 class EnvironmentObject : public MapObject
 {
     public:
-        EnvironmentObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
+        EnvironmentObject(Vector2 Position, Vector2 Size) : MapObject(Position, Size) {};
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         virtual void render() = 0;
         Vector2 getSize() { return m_Size; };
-    public:
-        Vector2 m_Position;
-    protected:
-        Vector2 m_Size;
 };
 class DrawableObjectFactory
 {
@@ -106,7 +101,7 @@ class WarpPipeTextureFlyWeight // Singleton Flyweight
 class Brick : public EnvironmentObject
 {
     public:
-    Brick(Vector2 Position, Vector2 Size);
+    Brick(Vector2 Position);
     ~Brick();
     void render() override;
     void update() override;
@@ -120,5 +115,23 @@ class BrickTextureFlyWeight // Singleton Flyweight
         ~BrickTextureFlyWeight();
     public:
         static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class Cloud : public DrawableObject
+{
+    public:
+    Cloud(Vector2 Position);
+    ~Cloud();
+    void render() override;
+};
+class CloudTextureFlyWeight // Singleton Flyweight
+{
+    private:
+        Texture2D m_Texture;
+    private:
+        CloudTextureFlyWeight();
+        ~CloudTextureFlyWeight();
+    public:
+        static CloudTextureFlyWeight* GetCloudTextureFlyWeight();
         void render(Vector2 Position);
 };

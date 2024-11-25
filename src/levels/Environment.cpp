@@ -1,4 +1,8 @@
 #include "Environment.hpp"
+void MapObject::render()
+{
+    std::cerr << "Nothing to draw\n";
+}
 EnvironmentObjectFactory& EnvironmentObjectFactory::GetEnvironmentFactory()
 {
     static EnvironmentObjectFactory Factory;
@@ -12,17 +16,18 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
         {
             std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
             WarpPipe* pipe = new WarpPipe(Position);
+            // std::cout << "Current Position: " << pipe->m_Position.x << ", " << pipe->m_Position.y << std::endl;
             return pipe;
         }
         case EnvironmentObjectFactory::EnvironmentObjectType::BRICK:
         {
-            Brick* brick = new Brick(Position, Vector2{100, 100});
+            Brick* brick = new Brick(Position);
             return brick;
         }
         break;
     }
 }
-Ground::Ground() : m_Position(Vector2{0, 746}), m_Size(Vector2{100, 100})
+Ground::Ground() : MapObject((Vector2{0, 746}), (Vector2{100, 100}))
 {
     m_Texture = LoadTexture("assets/textures/ground1x1.png");
 }
@@ -85,6 +90,7 @@ WarpPipe::~WarpPipe()
 }
 void WarpPipe::render()
 {
+    // std::cout << "Rendering Warp Pipe at " << m_Position.x << ", " << m_Position.y << std::endl;
     WarpPipeTextureFlyWeight::GetWarpPipeTextureFlyweight()->render(m_Position);
 }
 void WarpPipe::update()
@@ -106,7 +112,7 @@ void BrickTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
-Brick::Brick(Vector2 Position, Vector2 Size) : EnvironmentObject(Position, Size)
+Brick::Brick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
 }
 Brick::~Brick()
@@ -119,6 +125,50 @@ void Brick::render()
 void Brick::update()
 {
 }
+DrawableObjectFactory& DrawableObjectFactory::GetDrawableObjectFactory()
+{
+    static DrawableObjectFactory Factory;
+    return Factory;
+}
+DrawableObject* DrawableObjectFactory::CreateDrawableObject(int Type, Vector2 Position)
+{
+    switch (Type)
+    {
+        case DrawableObjectFactory::DrawableObjectType::CLOUD:
+        {
+            DrawableObject* cloud = new Cloud(Position);
+            return cloud;
+        }
+        break;
+    }
+}
+CloudTextureFlyWeight::CloudTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/cloud.png");
+}
+CloudTextureFlyWeight::~CloudTextureFlyWeight()
+{
+}
+CloudTextureFlyWeight* CloudTextureFlyWeight::GetCloudTextureFlyWeight()
+{
+    static CloudTextureFlyWeight texture;
+    return &texture;
+}
+void CloudTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+Cloud::Cloud(Vector2 Position) : DrawableObject(Position)
+{
+}
+Cloud::~Cloud()
+{
+}
+void Cloud::render()
+{
+    CloudTextureFlyWeight::GetCloudTextureFlyWeight()->render(m_Position);
+}
+
 
 
 
