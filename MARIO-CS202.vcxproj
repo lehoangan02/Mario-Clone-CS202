@@ -126,6 +126,7 @@
     <ClCompile Include="src\levels\Environment.cpp" />
     <ClCompile Include="src\levels\Level.cpp" />
     <ClCompile Include="src\mario\main.cpp" />
+    <ClCompile Include="src\Obstacle\Obstacle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\raylib.h" />
@@ -143,9 +144,6 @@
     <ClInclude Include="src\levels\Level.hpp" />
     <ClInclude Include="src\oberver\Observer.hpp" />
     <ClInclude Include="src\Obstacle\Obstacle.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="MARIO-CS202.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

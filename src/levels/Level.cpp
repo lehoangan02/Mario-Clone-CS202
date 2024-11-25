@@ -98,7 +98,7 @@ void Level::render()
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
     camera.target = target;
-    camera.offset = (Vector2){0, 0};
+    camera.offset = {0, 0};
     camera.zoom = 1.0f;
     BeginMode2D(camera);
     for (auto& object : m_Environment)
