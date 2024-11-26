@@ -5,10 +5,11 @@
 #include "../animation/Animation.h"
 int main(void)
 {
-    const int screenWidth = 1024;
-    const int screenHeight = 768;
+    const int screenWidth = 1200;
+    const int screenHeight = 900;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
