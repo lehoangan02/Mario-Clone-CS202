@@ -16,7 +16,34 @@
 int SCREEN_WIDTH = 1024;
 int SCREEN_HEIGHT = 768;
 
-Font FONT = LoadFont("./assets/Font/InterBold.ttf");
+
+class ResourceManager {
+private:
+    static ResourceManager* instance;
+    Font commonFont;
+
+    ResourceManager() {
+        commonFont = LoadFont("./assets/Font/InterBold.ttf");
+    }
+
+    ~ResourceManager() {
+        UnloadFont(commonFont);
+    }
+
+public:
+    static ResourceManager* GetInstance() {
+        if (instance == nullptr) {
+            instance = new ResourceManager();
+        }
+        return instance;
+    }
+
+    Font GetFont() {
+        return commonFont;
+    }
+};
+
+ResourceManager* ResourceManager::instance = nullptr;
 
 class Button {
     protected:
@@ -28,7 +55,7 @@ class Button {
         float fontSize;
         bool isHovered;
     public:
-        Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT);
+        Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont());
         Button() : Button({0,0,0,0}, "", 0.0f, BLUE, 0) {}
         virtual void draw(float radius = 50);
         int handle();
@@ -41,14 +68,14 @@ class Button {
 class PlayButton : public Button {
 public:
     PlayButton() = default;
-    PlayButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    PlayButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont()) : Button(rect, text, yText, textColor, fontSize) {}
     void draw(float radius = 50);
 };
 
 class SettingButton : public Button {
 public:
     SettingButton() = default;
-    SettingButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    SettingButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont()) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 50);
 };
@@ -56,7 +83,7 @@ public:
 class HighScoreButton : public Button {
 public:
     HighScoreButton() = default;
-    HighScoreButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    HighScoreButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont()) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 50);
 };
@@ -64,7 +91,7 @@ public:
 class InforButton : public Button {
 public:
     InforButton() = default;
-    InforButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    InforButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont()) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 50);
 };
@@ -72,7 +99,7 @@ public:
 class CircleButton : public Button {
 public:
     CircleButton() = default;
-    CircleButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = FONT) : Button(rect, text, yText, textColor, fontSize) {}
+    CircleButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = ResourceManager::GetInstance()->GetFont()) : Button(rect, text, yText, textColor, fontSize) {}
 
     void draw(float radius = 50);
 };
