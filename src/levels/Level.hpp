@@ -20,6 +20,7 @@ class Level
     Ground* m_Ground;
     const float m_PlayerOffset = 500;
     bool isPlayerFinished = false;
+    Vector2 m_ScreenSize = {1200, 900};
     protected:
         Level();
         ~Level();
@@ -28,6 +29,7 @@ class Level
         virtual void load() = 0;
         virtual void update(float DeltaTime);
         virtual void render();
+        void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
     protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();

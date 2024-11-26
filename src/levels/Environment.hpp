@@ -62,6 +62,7 @@ class EnvironmentObjectFactory // Singleton Factory
         WARP_PIPE_SHORT,
         WARP_PIPE_TINY,
         BRICK,
+        HARD_BLOCK
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -137,6 +138,25 @@ class BrickTextureFlyWeight // Singleton Flyweight
         ~BrickTextureFlyWeight();
     public:
         static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class HardBlock : public EnvironmentObject
+{
+    public:
+    HardBlock(Vector2 Position);
+    ~HardBlock();
+    void render() override;
+    void update() override;
+};
+class HardBlockTextureFlyWeight // Singleton Flyweight
+{
+    private:
+        Texture2D m_Texture;
+    private:
+        HardBlockTextureFlyWeight();
+        ~HardBlockTextureFlyWeight();
+    public:
+        static HardBlockTextureFlyWeight* GetHardBlockTextureFlyWeight();
         void render(Vector2 Position);
 };
 class QuestionBlock : public EnvironmentObjectInteractive

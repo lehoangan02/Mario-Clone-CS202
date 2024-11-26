@@ -25,10 +25,10 @@ void Character::Update(float deltaTime)
 	 //change for slowing down
 	velocity.x = 0;
 	if (IsKeyDown(KEY_RIGHT)) {
-		velocity.x += speed;
+		velocity.x += speed * deltaTime;
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		velocity.x -= speed;
+		velocity.x -= speed * deltaTime;
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;

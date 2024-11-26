@@ -21,6 +21,11 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
             return brick;
         }
         break;
+        case EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK:
+        {
+            HardBlock* block = new HardBlock(Position);
+            return block;
+        }
         default:
         {
             std::cerr << "Invalid Environment Object Type\n";
@@ -56,7 +61,7 @@ void EnvironmentObjectInteractive::move(Vector2 Position)
     m_Position = {m_Position.x + Position.x, m_Position.y + Position.y};
     // std::cout << "New Position x: " << m_Position.x << ", y: " << m_Position.y << std::endl;
 }
-Ground::Ground() : MapObject((Vector2{0, 618}), (Vector2{100, 100}))
+Ground::Ground() : MapObject((Vector2{0, 750}), (Vector2{100, 100}))
 {
     m_Texture = LoadTexture("assets/textures/ground1x1.png");
 }
@@ -70,10 +75,12 @@ Ground* Ground::GetGround()
 }
 void Ground::render(Vector2 CameraPosition)
 {
+    // DrawCircle(0, 800, 10, RED);
     // std::cout << "Camera Position: " << CameraPosition.x << ", " << CameraPosition.y << std::endl;
     // std::cout << "Size: " << m_Size.x << ", " << m_Size.y << std::endl;
     int PositionX = static_cast<int>(CameraPosition.x / m_Size.x);
     // std::cout << "PositionX: " << PositionX << std::endl;
+    // std::cout << "Ground Position: " << m_Position.x << ", " << m_Position.y << std::endl;
     for (int i = 0; i < 20; ++i)
     {
         DrawTexture(m_Texture, i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
@@ -152,6 +159,35 @@ void Brick::render()
     BrickTextureFlyWeight::GetBrickTextureFlyWeight()->render(m_Position);
 }
 void Brick::update()
+{
+}
+HardBlockTextureFlyWeight::HardBlockTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/hard_block.png");
+}
+HardBlockTextureFlyWeight::~HardBlockTextureFlyWeight()
+{
+}
+HardBlockTextureFlyWeight* HardBlockTextureFlyWeight::GetHardBlockTextureFlyWeight()
+{
+    static HardBlockTextureFlyWeight texture;
+    return &texture;
+}
+void HardBlockTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+HardBlock::HardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+}
+HardBlock::~HardBlock()
+{
+}
+void HardBlock::render()
+{
+    HardBlockTextureFlyWeight::GetHardBlockTextureFlyWeight()->render(m_Position);
+}
+void HardBlock::update()
 {
 }
 
