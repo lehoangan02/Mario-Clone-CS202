@@ -16,59 +16,77 @@
 #include <functional>
 #include <stdint.h>
 
-int SCREEN_WIDTH = 1024;
-int SCREEN_HEIGHT = 768;
+#include "ResourceManager.hpp"
+#include "raylib.h"
+#include <string>
 
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
 
 class Button {
-    protected:
-        Rectangle outerRect;
-        std::string content;
-        Vector2 contentPos;
-        Color contentColor;
-        Font font;
-        float fontSize;
-        bool isHovered;
-    public:
-        Button(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf"));
-        Button() : Button({0,0,0,0}, "", 0.0f, BLUE, 0) {}
-        virtual void draw(float radius = 15);
-        int handle();
-        bool getIsHovered() {return this->isHovered;}
-        int isClicked();
+protected:
+    Rectangle outerRect;
+    std::string content;
+    Vector2 contentPos;
+    Color contentColor;
+    Font font;
+    float fontSize;
+    bool isHovered;
+    Color defaultColor;
+    Color hoverColor;
+    bool isChoose;
 
-        virtual ~Button() = default;
-};
-
-class PlayButton : public Button {
 public:
-    PlayButton() = default;
-    PlayButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
-    void draw(float radius = 15);
+    Button(Rectangle rect, Color defaultColor ,const std::string& text, Color textColor, float fontSize, Font font, bool isChoose);
+    Button() = default;
+    virtual void draw(float radius = 50);
+
+    bool isClicked();
+
+    bool getChoose() const;
+
+    void setChoose(bool newChoose);
 };
 
-class SettingButton : public Button {
+class CircleButton : public Button {
 public:
-    SettingButton() = default;
-    SettingButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
-
-    void draw(float radius = 15);
+    CircleButton(Rectangle rect, Color defaultColor, const std::string& text, Color textColor, float fontSize, Font font, bool isChoose) :Button(rect, defaultColor, text, textColor, fontSize, font, isChoose) {}
+    CircleButton() = default;
+    void draw();
 };
 
-class HighScoreButton : public Button {
+class Menu {
+private:
+    Texture2D pageTexture;
+    
+    Button playButton;
+    Button settingButton;
+    Button highScoreButton;
+    Button inforButton;
+
+    Texture2D playTexture;
+    Button continueButton;
+    Button newGameButton;
+    Button quit1Button;
+
+    Texture2D settingTexture;
+    Button characterButton[2];
+    CircleButton levelButton[3];
+    Button saveButton;
+    Button quit2Button;
+
+    Texture2D highScoreTexture;
+    Button quitButton;
+
+    Texture2D inforTexture;
+    int type;
+
 public:
-    HighScoreButton() = default;
-    HighScoreButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
+    Menu();
+    void draw();
 
-    void draw(float radius = 15);
+    int handle();
 };
 
-class InforButton : public Button {
-public:
-    InforButton() = default;
-    InforButton(Rectangle rect, const std::string text, float yText, Color textColor, float fontSize, Font font = LoadFont("./assets/Font/InterBold.ttf")) : Button(rect, text, yText, textColor, fontSize) {}
 
-    void draw(float radius = 15);
-};
-
-#endif /* GUI_hpp */
+#endif // GUI_HPP

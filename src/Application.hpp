@@ -1,31 +1,27 @@
+//
+//  Application.hpp
+//  project
+//
+//  Created by Ngọc Bảo on 26/11/2024.
+//
 
 #ifndef Application_hpp
 #define Application_hpp
 
 #include "GUI.hpp"
 
-class Menu {
-private:
-    PlayButton play;
-    SettingButton setting;
-    HighScoreButton highScore;
-    InforButton infor;
-public:
-    Menu();
-    void draw();
-    void hanlde();
-    int8_t clicked();
-};
-
-
-
 class Application {
-private:
-    int tab;
-public:
-    Application(): tab(0) {}
-    void run();
-    int menu();
+    private:
+        int tab;
+        Menu menu;
+    public:
+        Application() {
+            tab = 0;
+            menu = Menu();
+        }
+        void run();
+        int handle();
 };
+
 
 #endif /* Application_hpp */
