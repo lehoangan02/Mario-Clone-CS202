@@ -127,20 +127,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\animation\Animation.cpp" />
     <ClCompile Include="..\characters\Character.cpp" />
+    <ClCompile Include="..\levels\AABBox.cpp" />
     <ClCompile Include="..\levels\Environment.cpp" />
     <ClCompile Include="..\levels\Level.cpp" />
-    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\animation\Animation.h" />
     <ClInclude Include="..\characters\Character.h" />
     <ClInclude Include="..\characters\Enemy.h" />
     <ClInclude Include="..\characters\Luigi.h" />
     <ClInclude Include="..\characters\Mario.h" />
+    <ClInclude Include="..\levels\AABBox.hpp" />
     <ClInclude Include="..\levels\Environment.hpp" />
     <ClInclude Include="..\levels\Level.hpp" />
-    <ClInclude Include="Animation.h" />
+    <ClInclude Include="..\levels\Serialization.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
