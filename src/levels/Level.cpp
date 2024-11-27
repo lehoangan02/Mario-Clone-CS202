@@ -98,7 +98,7 @@ void Level::render()
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
     camera.target = target;
-    camera.offset = (Vector2){0, 0};
+    camera.offset = Vector2{0, 0};
     int CurrentHeight = GetScreenHeight();
     int CurrentWidth = GetScreenWidth();
     float Zoom;
