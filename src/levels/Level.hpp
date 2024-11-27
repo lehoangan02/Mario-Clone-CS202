@@ -64,6 +64,9 @@ class LevelFactory
             LEVEL_101 = 0,
             HIDDEN_LEVEL_101,
             LEVEL_102,
+            HIDDEN_LEVEL_102,
+            LEVEL_103,
+            HIDDEN_LEVEL_103,
             
         };
     private:

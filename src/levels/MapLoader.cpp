@@ -13,7 +13,7 @@ MapLoader::~MapLoader()
 }
 void MapLoader::LoadMap(Level* Level, int MapID)
 {
-    std::string FileName = std::to_string(MapID) + ".txt";
+    std::string FileName = "Maps/" + std::to_string(MapID) + ".txt";
     std::ifstream fin;
     fin.open(FileName);
     if (!fin.is_open())
