@@ -13,6 +13,8 @@ public:
 	Vector2 GetSize() { return size; };
 	Vector2 GetCenter();
 
+	void control(float& accX, bool enabled);
+	void accelerate(Vector2 acceleration, float deltaTime);
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity = { 0,0 }; }; // lehoangan added, if there are any issues, please contact me
 protected:
