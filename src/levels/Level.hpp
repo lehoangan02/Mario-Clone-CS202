@@ -1,8 +1,9 @@
 #pragma once
 #include <vector>
 #include "Environment.hpp"
+#include "../characters/Character.h"
+#include "AABBox.hpp"
 class Enemy;
-class Player;
 class Item;
 class Level
 {
@@ -11,17 +12,31 @@ class Level
     std::vector<Enemy*> m_Enemies;
     std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
-    Player* m_Player;
+    std::vector<EnvironmentObjectInteractive*> m_EnvironmentInteractive;
+    std::vector<DrawableObject*> m_Drawables;
+    Character* m_Player;
+    Vector2 m_PlayerSpawn;
+    Vector2 m_CameraPosition;
+    Ground* m_Ground;
+    const float m_PlayerOffset = 500;
+    bool isPlayerFinished = false;
+    Vector2 m_ScreenSize = {1200, 900};
     protected:
         Level();
         ~Level();
     public:
+        void attachPlayer(Character* Player);
         virtual void load() = 0;
-        virtual void update() = 0;
-        virtual void render() = 0;
-    private:
+        virtual void update(float DeltaTime);
+        virtual void render();
+        void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
+    protected:
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
+        void resolveInteractiveEnvironmentCollisions();
+        void applyBoundaries();
+        bool isInHole();
+        void resolveHoleCollisions();
 };
 class LevelFactory
 {
@@ -42,9 +57,9 @@ class Level101 : public Level
     private:
         Level101();
         ~Level101();
-        void load();
-        void update();
-        void render();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
     public:
         static Level101* GetLevel101();
 };

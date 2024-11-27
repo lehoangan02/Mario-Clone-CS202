@@ -1,5 +1,6 @@
 #include "Character.h"
 #include <iostream>
+#define scale 3 //scale of character
 using namespace std;
 Character::Character(Texture2D* texture, Vector2 imageCount, float switchTime, float speed, float jumpHeight) : animation(texture, imageCount, switchTime)
 {
@@ -7,11 +8,11 @@ Character::Character(Texture2D* texture, Vector2 imageCount, float switchTime, f
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
 	this->faceRight = true;
-	this->state = 0;;
+	this->state = 0;
+	this->velocity = { 0.0f, 0.0f };
+	this->canJump = false;
 	position = { 350.0f, 280.0f };
-	int scale = 3;
 	size = { (float) (*texture).width/10 * scale, (float) texture->height *scale };
-
 }
 
 Character::~Character()
@@ -23,18 +24,19 @@ Vector2 Character::GetCenter() {
 void Character::Update(float deltaTime)
 {
 	 //change for slowing down
-	velocity = { 0.0f, 0.0f };
+	velocity.x = 0;
 	if (IsKeyDown(KEY_RIGHT)) {
-		velocity.x += speed;
+		velocity.x += speed * deltaTime;
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		velocity.x -= speed;
+		velocity.x -= speed * deltaTime;
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
-	velocity.y += 9.81f;
+	velocity.y += 9.81f * deltaTime;
+	if (velocity.y > 0.02f) canJump = false; //handle double jump 
 	if (velocity.x == 0.0f) {
 		state = 0;
 	}
@@ -49,12 +51,11 @@ void Character::Update(float deltaTime)
 	}
 	animation.Update(state, deltaTime, faceRight);
 	position.x += (velocity.x);
-	position.y += 0; // velocity.y
+	position.y += (velocity.y); // velocity.y
 }
 
 void Character::Draw()
 {
-	int scale = 3;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;

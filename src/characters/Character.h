@@ -12,6 +12,9 @@ public:
 	Vector2 GetPosition() { return position; };
 	Vector2 GetSize() { return size; };
 	Vector2 GetCenter();
+
+	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
+	void resetVelocity() { velocity = { 0,0 }; }; // lehoangan added, if there are any issues, please contact me
 protected:
 	Texture2D texture;
 	Animation animation;
@@ -26,7 +29,7 @@ protected:
 	float jumpHeight;
 
 	bool faceRight;
-	bool canJump;
+	bool canJump = true;
 };
 
 //enum CharacterType {
