@@ -225,54 +225,12 @@ Level101::~Level101()
 }
 void Level101::load()
 {
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{2300, m_Ground->m_Position.y - 135}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3100, m_Ground->m_Position.y - 175}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{3700, m_Ground->m_Position.y - 195}));
-    
-    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{1200, 400}));
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1500, 400}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1700, 400}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{1900, 400}));
-    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{1600, 400}));
-    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{1800, 400}));
+    // m_Ground->addHole(5300, 2);
+    // m_Ground->addHole(6900, 3);
+    // m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 100}));
 
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6300, 500}));
-    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{6400, 500}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6500, 500}));
-
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6600, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6700, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6800, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{6900, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{7000, 300}));
-
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{7300, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{7400, 300}));
-    m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::BRICK, Vector2{7500, 300}));
-    m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK, Vector2{7600, 300}));
-
-    for (int i = 0; i < 3; ++i)
-    {
-        for (int j = i; j < 3; ++j)
-        {
-            m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK, Vector2{(float)(11000 - i * 100), (float)(450 + j * 100)}));
-            std::cout << "4 " << 11000 - i * 100 << " " << 450 + j * 100 << std::endl;
-        }
-    }
-
-    for (int i = 0; i < 3; ++i)
-    {
-        for (int j = i; j < 3; ++j)
-        {
-            m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK, Vector2{(float)(11300 + i * 100), (float)(450 + j * 100)}));
-            std::cout << "4 " << 11300 + i * 100 << " " << 450 + j * 100 << std::endl;
-        }
-    }
-
-    m_Ground->addHole(5300, 2);
-    m_Ground->addHole(6900, 3);
-    m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 100}));
 
 }
 unsigned int Level101::update(float DeltaTime)

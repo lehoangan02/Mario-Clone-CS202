@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../animation/Animation.h"
 #include "../Oberver/Observer.hpp"
+#include "Flyweight.hpp"
 class MapObject
 {
     public:
@@ -96,6 +97,7 @@ class Ground : public MapObject // Singleton
         ~Ground();
         void update();
     public:
+        void clearHoles() { m_Holes.clear(); };
         void render(Vector2 CameraPosition);
         static Ground* GetGround();
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
@@ -110,17 +112,7 @@ class WarpPipe : public EnvironmentObject
     void render() override;
     void update() override;
 };
-class WarpPipeTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        WarpPipeTextureFlyWeight();
-        ~WarpPipeTextureFlyWeight();
-    public:
-        static WarpPipeTextureFlyWeight* GetWarpPipeTextureFlyweight();
-        void render(Vector2 Position);
-};
+
 class Brick : public EnvironmentObject
 {
     public:
@@ -129,17 +121,6 @@ class Brick : public EnvironmentObject
     void render() override;
     void update() override;
 };
-class BrickTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        BrickTextureFlyWeight();
-        ~BrickTextureFlyWeight();
-    public:
-        static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
-        void render(Vector2 Position);
-};
 class HardBlock : public EnvironmentObject
 {
     public:
@@ -147,17 +128,6 @@ class HardBlock : public EnvironmentObject
     ~HardBlock();
     void render() override;
     void update() override;
-};
-class HardBlockTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        HardBlockTextureFlyWeight();
-        ~HardBlockTextureFlyWeight();
-    public:
-        static HardBlockTextureFlyWeight* GetHardBlockTextureFlyWeight();
-        void render(Vector2 Position);
 };
 class QuestionBlock : public EnvironmentObjectInteractive
 {
@@ -190,33 +160,10 @@ class QuestionBlock : public EnvironmentObjectInteractive
     private:
     Rectangle getCurrentTextureRect();
 };
-class QuestionBlockTextureFlyWeight // Singleton Flyweight
-{
-    friend class QuestionBlock;
-    private:
-        Texture2D m_Texture;
-    private:
-        QuestionBlockTextureFlyWeight();
-        ~QuestionBlockTextureFlyWeight();
-    public:
-        static QuestionBlockTextureFlyWeight* GetQuestionBlockTextureFlyWeight();
-        void render(Vector2 Position, Rectangle TextureRect);
-};
 class Cloud : public DrawableObject
 {
     public:
     Cloud(Vector2 Position);
     ~Cloud();
     void render() override;
-};
-class CloudTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        CloudTextureFlyWeight();
-        ~CloudTextureFlyWeight();
-    public:
-        static CloudTextureFlyWeight* GetCloudTextureFlyWeight();
-        void render(Vector2 Position);
 };

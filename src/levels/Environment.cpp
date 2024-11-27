@@ -102,22 +102,7 @@ void Ground::addHole(float x, unsigned int y)
 {
     m_Holes.push_back(std::make_pair(x, y));
 }
-WarpPipeTextureFlyWeight::WarpPipeTextureFlyWeight()
-{
-    m_Texture = LoadTexture("assets/textures/pipe.png");
-}
-WarpPipeTextureFlyWeight::~WarpPipeTextureFlyWeight()
-{
-}
-WarpPipeTextureFlyWeight* WarpPipeTextureFlyWeight::GetWarpPipeTextureFlyweight()
-{
-    static WarpPipeTextureFlyWeight texture;
-    return &texture;
-}
-void WarpPipeTextureFlyWeight::render(Vector2 Position)
-{
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
-}
+
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
 }
@@ -127,26 +112,10 @@ WarpPipe::~WarpPipe()
 void WarpPipe::render()
 {
     // std::cout << "Rendering Warp Pipe at " << m_Position.x << ", " << m_Position.y << std::endl;
-    WarpPipeTextureFlyWeight::GetWarpPipeTextureFlyweight()->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::WARP_PIPE)->render(m_Position);
 }
 void WarpPipe::update()
 {
-}
-BrickTextureFlyWeight::BrickTextureFlyWeight()
-{
-    m_Texture = LoadTexture("assets/textures/brick.png");
-}
-BrickTextureFlyWeight::~BrickTextureFlyWeight()
-{
-}
-BrickTextureFlyWeight* BrickTextureFlyWeight::GetBrickTextureFlyWeight()
-{
-    static BrickTextureFlyWeight texture;
-    return &texture;
-}
-void BrickTextureFlyWeight::render(Vector2 Position)
-{
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
 Brick::Brick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
@@ -156,27 +125,12 @@ Brick::~Brick()
 }
 void Brick::render()
 {
-    BrickTextureFlyWeight::GetBrickTextureFlyWeight()->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::BRICK)->render(m_Position);
 }
 void Brick::update()
 {
 }
-HardBlockTextureFlyWeight::HardBlockTextureFlyWeight()
-{
-    m_Texture = LoadTexture("assets/textures/hard_block.png");
-}
-HardBlockTextureFlyWeight::~HardBlockTextureFlyWeight()
-{
-}
-HardBlockTextureFlyWeight* HardBlockTextureFlyWeight::GetHardBlockTextureFlyWeight()
-{
-    static HardBlockTextureFlyWeight texture;
-    return &texture;
-}
-void HardBlockTextureFlyWeight::render(Vector2 Position)
-{
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
-}
+
 HardBlock::HardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
 }
@@ -185,28 +139,10 @@ HardBlock::~HardBlock()
 }
 void HardBlock::render()
 {
-    HardBlockTextureFlyWeight::GetHardBlockTextureFlyWeight()->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::HARD_BLOCK)->render(m_Position);
 }
 void HardBlock::update()
 {
-}
-
-QuestionBlockTextureFlyWeight::QuestionBlockTextureFlyWeight()
-{
-    m_Texture = LoadTexture("assets/textures/question_block.png");
-}
-QuestionBlockTextureFlyWeight::~QuestionBlockTextureFlyWeight()
-{
-}
-QuestionBlockTextureFlyWeight* QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()
-{
-    static QuestionBlockTextureFlyWeight texture;
-    return &texture;
-}
-void QuestionBlockTextureFlyWeight::render(Vector2 Position, Rectangle TextureRect)
-{
-    // std::cout << "Rendering Question Block at " << Position.x << ", " << Position.y << std::endl;
-    DrawTexturePro(m_Texture, TextureRect, Rectangle{Position.x, Position.y, 100, 100}, Vector2{0, 0}, 0.0f, WHITE);
 }
 
 QuestionBlock::HitAnimationCommander::HitAnimationCommander(float MoveUpDistance, float BottomPosition) : m_MoveUpDistance(MoveUpDistance), m_BottomPosition(BottomPosition)
@@ -254,7 +190,7 @@ Vector2 QuestionBlock::HitAnimationCommander::giveMovementCommand(Vector2 Curren
     }
     return Vector2{0, 0};
 }
-QuestionBlock::QuestionBlock(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}), m_IdleAnimation(&(QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->m_Texture), Vector2{4, 1}, 0.17f), m_HitAnimation(20, m_Position.y)
+QuestionBlock::QuestionBlock(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}), m_IdleAnimation(&(AnimatedFlyweightFactory::GetAnimatedFlyweightFactory()->getFlyweight(TextureType::QUESTION_BLOCK)->getTexture()), Vector2{4, 1}, 0.17f), m_HitAnimation(20, m_Position.y)
 {
 }
 QuestionBlock::~QuestionBlock()
@@ -301,22 +237,7 @@ DrawableObject* DrawableObjectFactory::CreateDrawableObject(int Type, Vector2 Po
         break;
     }
 }
-CloudTextureFlyWeight::CloudTextureFlyWeight()
-{
-    m_Texture = LoadTexture("assets/textures/cloud.png");
-}
-CloudTextureFlyWeight::~CloudTextureFlyWeight()
-{
-}
-CloudTextureFlyWeight* CloudTextureFlyWeight::GetCloudTextureFlyWeight()
-{
-    static CloudTextureFlyWeight texture;
-    return &texture;
-}
-void CloudTextureFlyWeight::render(Vector2 Position)
-{
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
-}
+
 Cloud::Cloud(Vector2 Position) : DrawableObject(Position)
 {
 }
@@ -325,7 +246,7 @@ Cloud::~Cloud()
 }
 void Cloud::render()
 {
-    CloudTextureFlyWeight::GetCloudTextureFlyWeight()->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::CLOUD)->render(m_Position);
 }
 
 

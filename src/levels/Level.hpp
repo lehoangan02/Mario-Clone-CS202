@@ -3,6 +3,7 @@
 #include "Environment.hpp"
 #include "../characters/Character.h"
 #include "AABBox.hpp"
+#include "MapLoader.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -18,6 +19,7 @@ enum LEVEL_RETURN_MESSAGE
 
 class Level
 {
+    friend class MapLoader;
     protected:
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
@@ -32,6 +34,7 @@ class Level
     const float m_PlayerOffset = 500;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
+    MapLoader* m_MapLoader;
     private:
         bool m_Paused = false;
     public:
