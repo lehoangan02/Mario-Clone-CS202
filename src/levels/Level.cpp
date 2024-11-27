@@ -130,8 +130,13 @@ void Level::render()
     DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth / Zoom - HidePositionX, m_ScreenSize.y, BLACK);
     EndMode2D();
 }
-void Level::update(float DeltaTime)
+unsigned int Level::update(float DeltaTime)
 {
+    unsigned int ReturnResult = doPauseLogic();
+    if (ReturnResult != LEVEL_RETURN_MESSAGE::RUNNING)
+    {
+        return ReturnResult;
+    }
     isPlayerFinished = isInHole();
     if (!isPlayerFinished) m_Player -> Update(DeltaTime);
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
@@ -154,6 +159,7 @@ void Level::update(float DeltaTime)
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
+    return LEVEL_RETURN_MESSAGE::RUNNING;
 }
 bool Level::isInHole()
 {
@@ -176,6 +182,38 @@ bool Level::isInHole()
         }
     }
     return false;
+}
+void Level::pauseLevel()
+{
+    m_Paused = true;
+}
+void Level::continueLevel()
+{
+    m_Paused = false;
+}
+unsigned int Level::doPauseLogic()
+{
+    if (IsKeyPressed(KEY_P))
+    {
+        if (m_Paused)
+        {
+            continueLevel();
+            return LEVEL_RETURN_MESSAGE::CONTINUE;
+        }
+        else
+        {
+            pauseLevel();
+            return LEVEL_RETURN_MESSAGE::PAUSE;
+        }
+    }
+    if (m_Paused)
+    {
+        if (IsKeyPressed(KEY_Q))
+        {
+            return LEVEL_RETURN_MESSAGE::QUIT;
+        }
+    }
+    return LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
 Level101::Level101()
@@ -219,6 +257,7 @@ void Level101::load()
         for (int j = i; j < 3; ++j)
         {
             m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK, Vector2{(float)(11000 - i * 100), (float)(450 + j * 100)}));
+            std::cout << "4 " << 11000 - i * 100 << " " << 450 + j * 100 << std::endl;
         }
     }
 
@@ -227,6 +266,7 @@ void Level101::load()
         for (int j = i; j < 3; ++j)
         {
             m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK, Vector2{(float)(11300 + i * 100), (float)(450 + j * 100)}));
+            std::cout << "4 " << 11300 + i * 100 << " " << 450 + j * 100 << std::endl;
         }
     }
 
@@ -235,9 +275,9 @@ void Level101::load()
     m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 100}));
 
 }
-void Level101::update(float DeltaTime)
+unsigned int Level101::update(float DeltaTime)
 {
-    Level::update(DeltaTime);
+    return Level::update(DeltaTime);
 }
 void Level101::render()
 {
