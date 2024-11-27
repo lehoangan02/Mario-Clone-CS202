@@ -21,21 +21,39 @@ Character::~Character()
 Vector2 Character::GetCenter() {
 	return Vector2{ position.x + size.x / 2, position.y + size.y / 2 };
 }
-void Character::Update(float deltaTime)
-{
-	 //change for slowing down
-	velocity.x = 0;
-	if (IsKeyDown(KEY_RIGHT)) {
-		velocity.x += speed * deltaTime;
+void Character::accelerate(Vector2 acceleration, float deltaTime) {
+	velocity.x += acceleration.x * deltaTime;
+	if (velocity.x > 10.0f)
+			velocity.x = 10.0f;
+	else if (velocity.x < -10.0f)
+		velocity.x = -10.0f;
+	velocity.y += acceleration.y * deltaTime;
+}
+void Character::control(float& accX, bool enabled) {
+	if (!enabled) {
+		velocity.x = 0;
+		return;
 	}
-	if (IsKeyDown(KEY_LEFT)) {
-		velocity.x -= speed * deltaTime;
+	if (IsKeyDown(KEY_RIGHT)) {
+		accX = fabs(speed);
+	}
+	else if (IsKeyDown(KEY_LEFT)) {
+		accX = -fabs(speed);
+	}
+	else {
+		velocity.x = 0.0f;
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
-	velocity.y += 9.81f * deltaTime;
+}
+void Character::Update(float deltaTime)
+{
+	 //change for slowing down
+	/*float accX = 0;
+	control(accX);
+	accelerate({ accX, 9.81f }, deltaTime);*/
 	if (velocity.y > 0.02f) canJump = false; //handle double jump 
 	if (velocity.x == 0.0f) {
 		state = 0;
@@ -50,8 +68,7 @@ void Character::Update(float deltaTime)
 		}
 	}
 	animation.Update(state, deltaTime, faceRight);
-	position.x += (velocity.x);
-	position.y += (velocity.y); // velocity.y
+	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
 }
 
 void Character::Draw()
