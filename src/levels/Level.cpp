@@ -124,7 +124,7 @@ void Level::render()
     {
         object->render();
     }
-    Ground::GetGround()->render(m_CameraPosition);
+    Ground::GetGround()->render();
     m_Player->Draw();
     float HidePositionX = m_ScreenSize.x;
     DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth / Zoom - HidePositionX, m_ScreenSize.y, BLACK);
@@ -132,6 +132,7 @@ void Level::render()
 }
 unsigned int Level::update(float DeltaTime)
 {
+    m_Ground->update(m_CameraPosition);
     unsigned int ReturnResult = doPauseLogic();
     if (ReturnResult != LEVEL_RETURN_MESSAGE::RUNNING)
     {

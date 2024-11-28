@@ -12,14 +12,18 @@ class MapObject
         Vector2 m_Position;
         Vector2 m_Size;
     public:
+        virtual void render() = 0;
+    protected:
         MapObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
+        
 };
 class DrawableObject : public MapObject
 {
-    public:
+    protected:
         DrawableObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
         virtual ~DrawableObject() = default;
-        virtual void render() = 0;
+    public:
+        // virtual void render() = 0;
 };
 class EnvironmentObject : public MapObject
 {
@@ -27,7 +31,7 @@ class EnvironmentObject : public MapObject
         EnvironmentObject(Vector2 Position, Vector2 Size) : MapObject(Position, Size) {};
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
-        virtual void render() = 0;
+        // virtual void render() = 0;
         Vector2 getSize() { return m_Size; };
 };
 class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
@@ -92,13 +96,14 @@ class Ground : public MapObject // Singleton
     private:
         Texture2D m_Texture;
         std::vector<std::pair<float, int>> m_Holes;
+        Vector2 m_CameraPosition;
     private:
         Ground();
         ~Ground();
-        void update();
+        void update(Vector2 CameraPosition);
     public:
         void clearHoles() { m_Holes.clear(); };
-        void render(Vector2 CameraPosition);
+        void render();
         static Ground* GetGround();
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };

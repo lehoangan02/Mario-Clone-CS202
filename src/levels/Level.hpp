@@ -39,13 +39,13 @@ class Level
         bool m_Paused = false;
     public:
         void attachPlayer(Character* Player);
-        virtual void load() = 0;
         virtual unsigned int update(float DeltaTime);
         virtual void render();
-        void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         void pauseLevel();
         void continueLevel();
     protected:
+        void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
+        virtual void load() = 0;
         Level();
         ~Level();
         void checkEnvironmentCollisions();
@@ -65,6 +65,7 @@ class LevelFactory
             HIDDEN_LEVEL_101,
             LEVEL_102,
             HIDDEN_LEVEL_102,
+            HIDDEN_LEVEL_112,
             LEVEL_103,
             HIDDEN_LEVEL_103,
             
@@ -78,13 +79,13 @@ class LevelFactory
 };
 class Level101 : public Level
 {
+    friend class LevelFactory;
     private:
         Level101();
         ~Level101();
         void load() override;
         unsigned int update(float DeltaTime) override;
         void render() override;
-    public:
         static Level101* GetLevel101();
 };
 class HiddenLevel101 : public Level

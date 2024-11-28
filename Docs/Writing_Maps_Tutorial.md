@@ -46,6 +46,7 @@ class LevelFactory
             HIDDEN_LEVEL_101,
             LEVEL_102,
             HIDDEN_LEVEL_102,
+            HIDDEN_LEVEL_112,
             LEVEL_103,
             HIDDEN_LEVEL_103,
             

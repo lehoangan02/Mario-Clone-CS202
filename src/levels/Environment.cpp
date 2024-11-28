@@ -73,12 +73,12 @@ Ground* Ground::GetGround()
     static Ground ground;
     return &ground;
 }
-void Ground::render(Vector2 CameraPosition)
+void Ground::render()
 {
     // DrawCircle(0, 800, 10, RED);
     // std::cout << "Camera Position: " << CameraPosition.x << ", " << CameraPosition.y << std::endl;
     // std::cout << "Size: " << m_Size.x << ", " << m_Size.y << std::endl;
-    int PositionX = static_cast<int>(CameraPosition.x / m_Size.x);
+    int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
     // std::cout << "PositionX: " << PositionX << std::endl;
     // std::cout << "Ground Position: " << m_Position.x << ", " << m_Position.y << std::endl;
     for (int i = 0; i < 20; ++i)
@@ -94,9 +94,9 @@ void Ground::render(Vector2 CameraPosition)
         DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
     }
 }
-void Ground::update()
+void Ground::update(Vector2 CameraPosition)
 {
-
+    m_CameraPosition = CameraPosition;
 }
 void Ground::addHole(float x, unsigned int y)
 {
