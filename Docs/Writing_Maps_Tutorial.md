@@ -66,13 +66,14 @@ Every enity is represented in one line.
 The first number is the type of that entity. The type number is relevant with the type of the list (please use enums for reference).
 Following this number, there should be a pair of integer (**not float**) specifying the location.
 
-*Note: Normally, the location of an entity is relative to the origin of the window (which is its top left corner). However, some entity (like the warp pipe), the Y position is relative to the ground (decreasing from the 750 at the ground).*
-
 Example:
+
 ![Example_1](/Docs/Images/Figure1.png)
 Explanation:
 - This map doesn't have any enemy or item
 - There are 28 static environment object
+
+*Note: Normally, the location of an entity is relative to the origin of the window (which is its top left corner). However, some entity (like the warp pipe), the Y position is relative to the ground (decreasing from the 750 at the ground).*
 
 ### Order of entities types (list order)
 
@@ -93,7 +94,7 @@ Example:
 Explanation:
 - There are 5 animated environment objects
 - All of them are type 0 (QUESTION_BLOCK)
-- There are 1 drawble (the type is CLOUD)
+- There is 1 drawble (the type is CLOUD)
 - There are 2 holes
 
 *Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide)
