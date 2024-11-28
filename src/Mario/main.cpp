@@ -12,10 +12,8 @@ int main(void)
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
-    Texture t = LoadTexture("assets/textures/mario.png");
-	Character player(&t, Vector2{ 10, 1 }, 0.1f, 500.0f, 3.0f);
-    player.setPosition(Vector2{20 , 0});
-    level->attachPlayer(&player);
+	Character* player = CharacterFactory::createCharacter(MARIO);
+    level->attachPlayer(player);
     float deltatime;
 	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     while (!WindowShouldClose())

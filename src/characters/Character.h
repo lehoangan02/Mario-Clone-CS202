@@ -4,9 +4,9 @@
 
 class Character {
 public:
-	Character(Texture2D* texture,Vector2 imageCount, float switchTime, float speed, float jumpHeight);
+	Character(float speed, float jumpHeight);
 	~Character();
-	void Update(float deltaTime);
+	virtual void Update(float deltaTime)=0;
 	void Draw();
 	void setPosition(Vector2 position) { this->position = position; };
 	Vector2 GetPosition() { return position; };
@@ -34,16 +34,29 @@ protected:
 	bool canJump = true;
 };
 
-//enum CharacterType {
-//	MARIO,
-//	LUIGI
-//};
-//class CharacterFactory {
-//public:
-//	static Character* createCharacter(CharacterType type);
-//	static void deleteCharacter();
-//	static Character* getCharacter();
-//
-//private:
-//	static Character* currentCharacter;
-//};
+//CharacterFactory
+enum CharacterType {
+	MARIO,
+	LUIGI
+};
+class CharacterFactory {
+public:
+	static Character* createCharacter(CharacterType type);
+	static void deleteCharacter();
+
+private:
+	static Character* currentCharacter;
+};
+class Mario : public Character {
+public:
+	Mario() ;
+	void Update(float deltaTime) override;
+
+};
+
+class Luigi : public Character {
+public:
+	Luigi();
+	void Update(float deltaTime) override;
+
+};
