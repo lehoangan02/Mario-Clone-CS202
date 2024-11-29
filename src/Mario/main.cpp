@@ -15,7 +15,7 @@ int main(void)
 	Character* player = CharacterFactory::createCharacter(MARIO);
     level->attachPlayer(player);
     float deltatime;
-	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+	SetTargetFPS(60); 
     while (!WindowShouldClose())
     {
         deltatime = GetFrameTime();
@@ -23,8 +23,6 @@ int main(void)
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
         level->render();
-        // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
-        // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
         EndDrawing();
 
     }

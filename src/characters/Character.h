@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "vector"
 #include "../animation/Animation.h"
 
 class Character {
@@ -18,7 +19,8 @@ public:
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity = { 0,0 }; }; // lehoangan added, if there are any issues, please contact me
 protected:
-	Texture2D texture;
+	std::vector<Texture2D> textures;
+	int form; //small = 0, big = 1
 	Animation animation;
 
 	Vector2 position;
@@ -32,6 +34,8 @@ protected:
 
 	bool faceRight;
 	bool canJump = true;
+
+	float scale ;
 };
 
 //CharacterFactory

@@ -22,7 +22,7 @@ void Animation::Update(int state, float deltaTime, bool faceRight) {
 	currentImage.y = 0; // modify this if texture having states
 	totalTime += deltaTime;
 	if (state == 0) currentImage.x = 0;
-	else if (state == 2) currentImage.x = 8;
+	else if (state == 2) currentImage.x = 5;
 	else if (state == 1) {
 		if (totalTime >= switchTime) {
 			totalTime = 0;

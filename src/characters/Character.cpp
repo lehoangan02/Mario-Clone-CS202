@@ -1,15 +1,16 @@
 #include "Character.h"
 #include <iostream>
-#define scale 3 //scale of character
 using namespace std;
 Character::Character(float speed, float jumpHeight) 
 {
+	this->form = 0;
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
 	this->faceRight = true;
 	this->state = 0;
 	this->velocity = { 0.0f, 0.0f };
 	this->canJump = false;
+	this->scale = 3.0f;
 	position = Vector2{ 20 , 0 };
 }
 
@@ -45,6 +46,11 @@ void Character::control(float& accX, bool enabled) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
+	if (IsKeyPressed(KEY_J)) {
+		form = 1;
+		size = { (float)textures[form].width / 6 * scale, (float)textures[form].height * scale };
+		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / 6, (float)textures[form].height };
+	}
 }
 
 void Character::Draw()
@@ -53,22 +59,24 @@ void Character::Draw()
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f, 0.0f };
-	DrawTexturePro(texture, sourceRec, destRec, origin, rotation, WHITE);
+	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
 Mario::Mario() : Character(500.0f, 3.0f) {
-	texture = LoadTexture("assets/textures/mario.png");
-	Vector2 imageCount = { 10,1 };
+	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
+	Vector2 imageCount = { 6,1 };
 	float switchTime = 0.1f;
-	animation = Animation(&texture, imageCount, switchTime);
-	size = { (float) texture.width /10 * scale, (float)texture.height * scale };
+	animation = Animation(&textures[form], imageCount, switchTime);
+	size = { (float) textures[form].width / (imageCount.x) * scale, (float)textures[form].height * scale};
 }
 Luigi::Luigi() : Character(500.0f, 3.0f) {
-	texture = LoadTexture("assets/textures/luigi.png");
-	Vector2 imageCount = { 10,1 };
+	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
+	Vector2 imageCount = { 6,1 };
 	float switchTime = 0.1f;
-	animation = Animation(&texture, imageCount, switchTime);
-	size = { (float)texture.width / 10 * scale, (float)texture.height * scale };
+	animation = Animation(&textures[form], imageCount, switchTime);
+	size = { (float)textures[form].width / (imageCount.x) * scale, (float)textures[form].height * scale };
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > 0.2f) canJump = false; //handle double jump 
