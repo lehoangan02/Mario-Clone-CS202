@@ -72,5 +72,9 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         Level -> m_Ground -> addHole(X, Y);
     }
+    int LevelType;
+    fin >> LevelType;
+    Level -> m_LevelType = LevelType;
+    Level -> m_Ground -> setLevelType(LevelType);
     fin.close();
 }

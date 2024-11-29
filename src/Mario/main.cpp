@@ -23,7 +23,6 @@ int main(void)
         deltatime = GetFrameTime();
         level->update(deltatime);
         BeginDrawing();
-        ClearBackground(Color{105, 147, 245, 255});
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);

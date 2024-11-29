@@ -98,7 +98,7 @@ class Ground : public MapObject // Singleton
         Texture2D m_Texture[2] = {LoadTexture("assets/textures/ground1x1.png"), LoadTexture("assets/textures/ground_blue1x1.png")};
         std::vector<std::pair<float, int>> m_Holes;
         Vector2 m_CameraPosition;
-        bool m_Underground = false;
+        int m_LevelType = 0;
     private:
         Ground();
         ~Ground();
@@ -110,6 +110,7 @@ class Ground : public MapObject // Singleton
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
         int getHoleCount() { return m_Holes.size(); };
+        void setLevelType(int Type) { m_LevelType = Type; };
 };
 class WarpPipe : public EnvironmentObject
 {

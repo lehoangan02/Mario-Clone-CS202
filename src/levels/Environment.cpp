@@ -80,20 +80,11 @@ Ground* Ground::GetGround()
 }
 void Ground::render()
 {
-    int Index;
-    if (m_Underground)
-    {
-        Index = 1;
-    }
-    else
-    {
-        Index = 0;
-    }
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
     for (int i = 0; i < 20; ++i)
     {
-        DrawTexture(m_Texture[Index], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
-        DrawTexture(m_Texture[Index], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        DrawTexture(m_Texture[m_LevelType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+        DrawTexture(m_Texture[m_LevelType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
     }
 
     for (auto& hole : m_Holes)

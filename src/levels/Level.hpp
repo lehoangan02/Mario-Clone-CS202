@@ -36,6 +36,7 @@ class Level
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
+    int m_LevelType;
     const float m_PlayerOffset = 500;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};

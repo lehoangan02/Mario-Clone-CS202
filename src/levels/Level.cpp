@@ -98,6 +98,21 @@ void Level::applyBoundaries()
 }
 void Level::render()
 {
+    // printf("Rendering Level\n");
+    switch (m_LevelType)
+    {
+        case Level::LevelType::OVERWORLD:
+        {
+            // printf("Overworld\n");
+            ClearBackground(Color{105, 147, 245, 255});
+            break;
+        }
+        case Level::UNDERGROUND:
+        {
+            ClearBackground(BLACK);
+            break;
+        }
+    }
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
     camera.target = target;
