@@ -12,9 +12,7 @@ constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
 #include "../animation/Animation.h"
 #include "../characters/Character.h"
 
-enum State {
-	RISING, FALLING, DISAPPEARED
-};
+
 
 class Item {
 protected:
@@ -31,7 +29,8 @@ protected:
 	Vector2 velocity;
 	Vector2	startPosition;
 	Vector2 endPosition;
-	State state;
+	bool APPEARED;
+	int moves;
 
 public:
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
@@ -65,5 +64,4 @@ public:
 	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* character);
 };
-
 

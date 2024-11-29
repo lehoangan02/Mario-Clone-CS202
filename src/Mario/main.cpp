@@ -13,13 +13,13 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     
-    Texture2D coinTexture = LoadTexture("assets/textures/cloud.png");
+    Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
     Coin* coin = new Coin(
-        Vector2{ 100, 100 },   
-        Vector2{ 100, 200 },   
-        Vector2{ 32, 32 },     
+        Vector2{ 100 , 200 },   //Start position
+        Vector2{ 100, 400 },    //End position
+        Vector2{ 50, 50 },      // size of coin
         coinTexture,       
-        Vector2{ 0, 100 }    
+        Vector2{ 0, 100 }     //velocity
     );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
