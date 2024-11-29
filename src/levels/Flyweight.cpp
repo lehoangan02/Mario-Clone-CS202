@@ -22,6 +22,10 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return CloudTextureFlyWeight::GetCloudTextureFlyWeight();
         }
+        case TextureType::BLUE_BRICK:
+        {
+            return BlueBrickTextureFlyWeight::GetBlueBrickTextureFlyWeight();
+        }
         break;
     }
     return nullptr;
@@ -93,6 +97,22 @@ HardBlockTextureFlyWeight* HardBlockTextureFlyWeight::GetHardBlockTextureFlyWeig
     return &texture;
 }
 void HardBlockTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+BlueBrickTextureFlyWeight::BlueBrickTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/blue_brick.png");
+}
+BlueBrickTextureFlyWeight::~BlueBrickTextureFlyWeight()
+{
+}
+BlueBrickTextureFlyWeight* BlueBrickTextureFlyWeight::GetBlueBrickTextureFlyWeight()
+{
+    static BlueBrickTextureFlyWeight texture;
+    return &texture;
+}
+void BlueBrickTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }

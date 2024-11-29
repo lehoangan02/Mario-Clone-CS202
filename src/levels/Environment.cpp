@@ -26,6 +26,11 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
             HardBlock* block = new HardBlock(Position);
             return block;
         }
+        case EnvironmentObjectFactory::EnvironmentObjectType::BLUE_BRICK:
+        {
+            BlueBrick* blueBrick = new BlueBrick(Position);
+            return blueBrick;
+        }
         default:
         {
             std::cerr << "Invalid Environment Object Type\n";
@@ -63,7 +68,7 @@ void EnvironmentObjectInteractive::move(Vector2 Position)
 }
 Ground::Ground() : MapObject((Vector2{0, 750}), (Vector2{100, 100}))
 {
-    m_Texture = LoadTexture("assets/textures/ground1x1.png");
+    // m_Texture = LoadTexture("assets/textures/ground1x1.png");
 }
 Ground::~Ground()
 {
@@ -75,16 +80,20 @@ Ground* Ground::GetGround()
 }
 void Ground::render()
 {
-    // DrawCircle(0, 800, 10, RED);
-    // std::cout << "Camera Position: " << CameraPosition.x << ", " << CameraPosition.y << std::endl;
-    // std::cout << "Size: " << m_Size.x << ", " << m_Size.y << std::endl;
+    int Index;
+    if (m_Underground)
+    {
+        Index = 1;
+    }
+    else
+    {
+        Index = 0;
+    }
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
-    // std::cout << "PositionX: " << PositionX << std::endl;
-    // std::cout << "Ground Position: " << m_Position.x << ", " << m_Position.y << std::endl;
     for (int i = 0; i < 20; ++i)
     {
-        DrawTexture(m_Texture, i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
-        DrawTexture(m_Texture, i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        DrawTexture(m_Texture[Index], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+        DrawTexture(m_Texture[Index], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
     }
 
     for (auto& hole : m_Holes)
@@ -142,6 +151,19 @@ void HardBlock::render()
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::HARD_BLOCK)->render(m_Position);
 }
 void HardBlock::update()
+{
+}
+BlueBrick::BlueBrick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+}
+BlueBrick::~BlueBrick()
+{
+}
+void BlueBrick::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::BLUE_BRICK)->render(m_Position);
+}
+void BlueBrick::update()
 {
 }
 
@@ -248,7 +270,6 @@ void Cloud::render()
 {
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::CLOUD)->render(m_Position);
 }
-
 
 
 

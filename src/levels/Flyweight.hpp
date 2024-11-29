@@ -8,7 +8,8 @@ enum TextureType
     BRICK,
     HARD_BLOCK,
     QUESTION_BLOCK,
-    CLOUD
+    CLOUD,
+    BLUE_BRICK
 };
 class Flyweight
 {
@@ -69,6 +70,15 @@ class HardBlockTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
         ~HardBlockTextureFlyWeight();
     public:
         static HardBlockTextureFlyWeight* GetHardBlockTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class BlueBrickTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        BlueBrickTextureFlyWeight();
+        ~BlueBrickTextureFlyWeight();
+    public:
+        static BlueBrickTextureFlyWeight* GetBlueBrickTextureFlyWeight();
         void render(Vector2 Position);
 };
 class QuestionBlockTextureFlyWeight : public AniamtedFlyweight // Singleton Flyweight

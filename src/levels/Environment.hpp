@@ -67,7 +67,8 @@ class EnvironmentObjectFactory // Singleton Factory
         WARP_PIPE_SHORT,
         WARP_PIPE_TINY,
         BRICK,
-        HARD_BLOCK
+        HARD_BLOCK,
+        BLUE_BRICK
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -94,9 +95,10 @@ class Ground : public MapObject // Singleton
 {
     friend class Level;
     private:
-        Texture2D m_Texture;
+        Texture2D m_Texture[2] = {LoadTexture("assets/textures/ground1x1.png"), LoadTexture("assets/textures/ground_blue1x1.png")};
         std::vector<std::pair<float, int>> m_Holes;
         Vector2 m_CameraPosition;
+        bool m_Underground = false;
     private:
         Ground();
         ~Ground();
@@ -131,6 +133,14 @@ class HardBlock : public EnvironmentObject
     public:
     HardBlock(Vector2 Position);
     ~HardBlock();
+    void render() override;
+    void update() override;
+};
+class BlueBrick : public EnvironmentObject
+{
+    public:
+    BlueBrick(Vector2 Position);
+    ~BlueBrick();
     void render() override;
     void update() override;
 };

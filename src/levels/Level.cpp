@@ -11,6 +11,9 @@ Level* LevelFactory::CreateLevel(LevelType Type)
         case LEVEL_101:
             return Level101::GetLevel101();
             break;
+        case LEVEL_TESTING:
+            return LevelTesting::GetLevelTesting();
+            break;
     }
 }
 Level::Level()
@@ -233,12 +236,6 @@ Level101::~Level101()
 void Level101::load()
 {
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
-
-    // m_Ground->addHole(5300, 2);
-    // m_Ground->addHole(6900, 3);
-    // m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(DrawableObjectFactory::DrawableObjectType::CLOUD, Vector2{700, 100}));
-
-
 }
 unsigned int Level101::update(float DeltaTime)
 {
@@ -251,5 +248,29 @@ void Level101::render()
 Level101* Level101::GetLevel101()
 {
     static Level101 level;
+    return &level;
+}
+LevelTesting::LevelTesting()
+{
+    load();
+}
+LevelTesting::~LevelTesting()
+{
+}
+void LevelTesting::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+}
+unsigned int LevelTesting::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void LevelTesting::render()
+{
+    Level::render();
+}
+LevelTesting* LevelTesting::GetLevelTesting()
+{
+    static LevelTesting level;
     return &level;
 }

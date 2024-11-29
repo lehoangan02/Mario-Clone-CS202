@@ -99,4 +99,16 @@ Explanation:
 
 *Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide)
 
+## Type of level
 
+After the list of entities, you should input the type of level.
+
+```cpp
+class Level
+{
+    enum LevelType
+    {
+        OVERWORLD,
+        UNDERGROUND
+    };
+```

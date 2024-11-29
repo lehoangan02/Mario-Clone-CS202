@@ -19,6 +19,11 @@ enum LEVEL_RETURN_MESSAGE
 
 class Level
 {
+    enum LevelType
+    {
+        OVERWORLD,
+        UNDERGROUND
+    };
     friend class MapLoader;
     protected:
     int m_LevelID;
@@ -68,6 +73,7 @@ class LevelFactory
             HIDDEN_LEVEL_112,
             LEVEL_103,
             HIDDEN_LEVEL_103,
+            LEVEL_TESTING,
             
         };
     private:
@@ -98,4 +104,16 @@ class HiddenLevel101 : public Level
         void render() override;
     public:
         static HiddenLevel101* GetHiddenLevel101();
+};
+class LevelTesting : public Level
+{
+    friend class LevelFactory;
+    private:
+        LevelTesting();
+        ~LevelTesting();
+        void load() override;
+        unsigned int update(float DeltaTime) override;
+        void render() override;
+    public:
+        static LevelTesting* GetLevelTesting();
 };

@@ -11,7 +11,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     LevelFactory& factory = LevelFactory::GetLevelFactory();
-    Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
+    Level* level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
     Texture t = LoadTexture("assets/textures/mario.png");
 	Character player(&t, Vector2{ 10, 1 }, 0.1f, 500.0f, 3.0f);
     player.setPosition(Vector2{20 , 0});
