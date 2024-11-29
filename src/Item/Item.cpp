@@ -1,14 +1,16 @@
+
 #include "Item.h"
 #include <iostream>
 #include <math.h>
 Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
-     elapsedTime(0), currentFrame(0), APPEARED(true)
+     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false)
 {
     position = startPosition;
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
+
     if (startPosition.x < endPosition.x) {
         this->velocity.x = fabs(this->velocity.x);
     }
@@ -34,6 +36,11 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
 Item::~Item() {
     UnloadTexture(texture);
 }
+float Item::norm(Vector2 vector1, Vector2 vector2) {
+    float result = sqrt(pow(vector1.x - vector2.x, 2) +
+        pow(vector1.y - vector2.y, 2));
+    return result;
+}
 void Item::Update(float deltaTime) {
     if (!APPEARED) {
         return;
@@ -52,12 +59,44 @@ void Item::Update(float deltaTime) {
     if (fabs(position.x - startPosition.x) <= fabs(velocity.x * deltaTime) &&
         fabs(position.y - startPosition.y) <= fabs(velocity.y * deltaTime)) {
         if (moves >= 1) {
-            APPEARED = false; 
+            APPEARED = false;
         }
     }
-    
-    
+
+
 }
+void Item::Update1(float deltaTime) {
+    if (!APPEARED) {
+        return;
+    }
+    if (velocity.y > 0) velocity.y += 10;
+    else velocity.y -= 10;
+    position.x += velocity.x * deltaTime;
+    position.y += velocity.y * deltaTime;
+ 
+   
+    if (!isReturning) {
+        if (fabs(position.x - endPosition.x) <= fabs(velocity.x * deltaTime) &&
+            fabs(position.y - endPosition.y) <= fabs(velocity.y * deltaTime)) {
+            position = endPosition;
+            isReturning = true;
+            
+            velocity.x *= -1;
+            velocity.y *= -1;
+        }
+    }
+    else {
+        float distToEnd = norm(position, endPosition);
+        if (distToEnd > 75.0f) {
+            APPEARED = false;
+        }
+    }
+  
+}
+
+    
+    
+
 void Item::Draw() {
     if (APPEARED) {
         Rectangle destRect = { position.x, position.y, size.x, size.y }; 

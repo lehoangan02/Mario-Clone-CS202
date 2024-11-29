@@ -14,12 +14,13 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     
     Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+  
     Coin* coin = new Coin(
-        Vector2{ 100 , 200 },   //Start position
-        Vector2{ 100, 400 },    //End position
-        Vector2{ 50, 50 },      // size of coin
+        Vector2{ 0, 300 },   //Start position
+        Vector2{ 0, 100 },    //End position
+        Vector2{ 40, 40},      // size of coin
         coinTexture,       
-        Vector2{ 0, 100 }     //velocity
+        Vector2{ 0, 50 }     //velocity
     );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -28,12 +29,12 @@ int main(void)
     player.setPosition(Vector2{20 , 0});
     level->attachPlayer(&player);
     float deltatime;
-	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+	SetTargetFPS(120);               // Set our game to run at 60 frames-per-second
     while (!WindowShouldClose())
     {
         deltatime = GetFrameTime();
 
-        coin->Update(deltatime);
+        coin->Update1(deltatime);
 
 
         level->update(deltatime);
