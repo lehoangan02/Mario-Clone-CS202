@@ -71,7 +71,7 @@ Luigi::Luigi() : Character(500.0f, 3.0f) {
 	size = { (float)texture.width / 10 * scale, (float)texture.height * scale };
 }
 void Mario::Update(float deltaTime) {
-	if (velocity.y > 0.02f) canJump = false; //handle double jump 
+	if (velocity.y > 0.2f) canJump = false; //handle double jump 
 	if (velocity.x == 0.0f) {
 		state = 0;
 	}
@@ -84,6 +84,7 @@ void Mario::Update(float deltaTime) {
 			faceRight = false;
 		}
 	}
+	if (!canJump) state = 2;
 	animation.Update(state, deltaTime, faceRight);
 	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
 }
