@@ -5,8 +5,11 @@
 Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
-     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false)
+     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false), 
+    rotation(0.0f), rotationSpeed(180.0f), framesPerRotation(25)
+    
 {
+    rotationPerFrame = 360.0f / framesPerRotation;
     position = startPosition;
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
@@ -41,7 +44,7 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
         pow(vector1.y - vector2.y, 2));
     return result;
 }
-void Item::Update(float deltaTime) {
+void Item::Update(float deltaTime) { // not accerleration
     if (!APPEARED) {
         return;
     }
@@ -65,16 +68,21 @@ void Item::Update(float deltaTime) {
 
 
 }
-void Item::Update1(float deltaTime) {
+void Item::Update1(float deltaTime) { //acceleration
     if (!APPEARED) {
         return;
     }
-    if (velocity.y > 0) velocity.y += 10;
-    else velocity.y -= 10;
+    
+    if (velocity.y > 0) velocity.y += 5.0f ;
+    else velocity.y -= 5.0f ;
     position.x += velocity.x * deltaTime;
     position.y += velocity.y * deltaTime;
- 
-   
+    rotation += rotationPerFrame;
+    rotation += rotationSpeed * deltaTime;
+    if (rotation >= 360.0f) {
+        rotation -= 360.0f; 
+    }
+
     if (!isReturning) {
         if (fabs(position.x - endPosition.x) <= fabs(velocity.x * deltaTime) &&
             fabs(position.y - endPosition.y) <= fabs(velocity.y * deltaTime)) {
@@ -91,18 +99,34 @@ void Item::Update1(float deltaTime) {
             APPEARED = false;
         }
     }
-  
+    std::cout << position.x << " " << position.y << std::endl;
 }
 
     
     
 
-void Item::Draw() {
+void Item::Draw() { // Not animation
     if (APPEARED) {
         Rectangle destRect = { position.x, position.y, size.x, size.y }; 
         Rectangle sourceRect = { 0.0f, 0.0f, (float)texture.width, (float)texture.height }; 
-        Vector2 origin = { 0, 0 }; 
+        Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE); 
+    }
+}
+void Item::Draw1(float deltaTime) {
+    if (APPEARED) {
+        float perspectiveScale = std::max(0.2f, fabs(cos(rotation * DEG2RAD)));
+        Rectangle destRect = {
+            position.x - (size.x * perspectiveScale) / 2.0f,
+            position.y,                
+            size.x * perspectiveScale,   
+            size.y                     
+        };
+
+        Rectangle sourceRect = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+        Vector2 origin = { size.x / 2.0f , size.y / 2.0f };
+
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)

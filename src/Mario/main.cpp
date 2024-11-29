@@ -16,8 +16,8 @@ int main(void)
     Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
   
     Coin* coin = new Coin(
-        Vector2{ 0, 300 },   //Start position
-        Vector2{ 0, 100 },    //End position
+        Vector2{ 100, 500 },   //Start position
+        Vector2{ 100, 300 },    //End position
         Vector2{ 40, 40},      // size of coin
         coinTexture,       
         Vector2{ 0, 50 }     //velocity
@@ -29,13 +29,13 @@ int main(void)
     player.setPosition(Vector2{20 , 0});
     level->attachPlayer(&player);
     float deltatime;
-	SetTargetFPS(120);               // Set our game to run at 60 frames-per-second
+	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     while (!WindowShouldClose())
     {
         deltatime = GetFrameTime();
 
         coin->Update1(deltatime);
-
+        
 
         level->update(deltatime);
 
@@ -44,7 +44,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
 
-        coin->Draw();
+        coin->Draw1(deltatime);
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);

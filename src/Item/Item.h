@@ -26,6 +26,12 @@ protected:
 	int currentFrame;
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
+	float rotation;
+	float rotationSpeed;
+	int framesPerRotation;
+	float rotationPerFrame;
+
+	
 
 	Vector2 velocity;
 	Vector2	startPosition;
@@ -38,9 +44,10 @@ public:
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;
-	virtual void Update1(float deltaTime);
-	virtual void Update(float deltaTime);
-	virtual void Draw();
+	virtual void Update1(float deltaTime); //acceleration
+	virtual void Update(float deltaTime); // not acceleration
+	virtual void Draw(); // not animation
+	virtual void Draw1(float deltaTime); // animation
 	float norm(Vector2 vector1, Vector2 vector2);
 	Vector2 GetPosition() const {
 		return position;
