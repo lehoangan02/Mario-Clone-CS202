@@ -10,7 +10,8 @@ Character::Character(float speed, float jumpHeight)
 	this->state = 0;
 	this->velocity = { 0.0f, 0.0f };
 	this->canJump = false;
-	this->scale = 3.0f;
+	this->scale = 3.5f;
+	this->fire = false;
 	position = Vector2{ 20 , 0 };
 }
 
@@ -20,6 +21,7 @@ Character::~Character()
 Vector2 Character::GetCenter() {
 	return Vector2{ position.x + size.x / 2, position.y + size.y / 2 };
 }
+
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
 	if (velocity.x > 10.0f)
@@ -56,7 +58,9 @@ void Character::control(float& accX, bool enabled) {
 		size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
 		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
 	}
-	if (form == 2 && IsKeyPressed(KEY_M)) {
+	if (form==2 && IsKeyPressed(KEY_M)) {
+		//autoMove(0.05f);
+		fire = true;
 	}
 }
 
@@ -69,7 +73,7 @@ void Character::Draw()
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
-Mario::Mario() : Character(500.0f, 3.0f) {
+Mario::Mario() : Character(500.0f, 5.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire.png"));
@@ -79,14 +83,6 @@ Mario::Mario() : Character(500.0f, 3.0f) {
 	float switchTime = 0.1f;
 	animation = Animation(&textures[form], imageCounts[form], switchTime);
 	size = { (float) textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale};
-}
-Luigi::Luigi() : Character(500.0f, 3.0f) {
-	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
-	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
-	Vector2 imageCount = { 6,1 };
-	float switchTime = 0.1f;
-	animation = Animation(&textures[form], imageCount, switchTime);
-	size = { (float)textures[form].width / (imageCount.x) * scale, (float)textures[form].height * scale };
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > 0.2f) canJump = false; //handle double jump 
@@ -102,26 +98,29 @@ void Mario::Update(float deltaTime) {
 			faceRight = false;
 		}
 	}
-	animation.Update(state, deltaTime, faceRight);
+	if (!canJump) {
+		state = 2;
+	}
+	if (fire) {
+		state = 3;
+	}
+	animation.Update(state, deltaTime, faceRight, fire);
 	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
+}
+
+void Character::autoMove(float deltaTime) {
+	accelerate(Vector2{ 1.0f, 0.0f }, deltaTime);
+
+}
+Luigi::Luigi() : Character(500.0f, 3.0f) {
+	
 }
 void Luigi::Update(float deltaTime) {
-	if (velocity.y > 0.02f) canJump = false; //handle double jump 
-	if (velocity.x == 0.0f) {
-		state = 0;
-	}
-	else {
-		state = 1;
-		if (velocity.x > 0.0f) {
-			faceRight = true;
-		}
-		else {
-			faceRight = false;
-		}
-	}
-	animation.Update(state, deltaTime, faceRight);
-	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
+
 }
+
+
+
 Character* CharacterFactory::currentCharacter = nullptr;
 void CharacterFactory::deleteCharacter() {
 	delete currentCharacter;

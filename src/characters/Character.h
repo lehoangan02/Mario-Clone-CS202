@@ -14,6 +14,7 @@ public:
 	Vector2 GetSize() { return size; };
 	Vector2 GetCenter();
 
+	void autoMove(float deltaTime);
 	void control(float& accX, bool enabled);
 	void accelerate(Vector2 acceleration, float deltaTime);
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
@@ -35,6 +36,7 @@ protected:
 
 	bool faceRight;
 	bool canJump = true;
+	bool fire;
 
 	float scale ;
 };
