@@ -12,7 +12,8 @@ enum TextureType
     BLUE_BRICK,
     LIFT,
     GRASS,
-    MOUNTAIN
+    MOUNTAIN,
+    END_PIPE
 };
 class Flyweight
 {
@@ -128,5 +129,14 @@ class MountainTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
         ~MountainTextureFlyWeight();
     public:
         static MountainTextureFlyWeight* GetMountainTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class EndPipeTopTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        EndPipeTopTextureFlyWeight();
+        ~EndPipeTopTextureFlyWeight();
+    public:
+        static EndPipeTopTextureFlyWeight* GetEndPipeTextureFlyWeight();
         void render(Vector2 Position);
 };

@@ -80,6 +80,16 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         Level -> m_Lifts.push_back(new Lift(Vector2{X, Y}));
     }
+    int NumberOfEndPipes;
+    fin >> NumberOfEndPipes;
+    for (int i = 0; i < NumberOfEndPipes; i++)
+    {
+        int Type;
+        fin >> Type;
+        float X, Y;
+        fin >> X >> Y;
+        Level -> m_EndPipes.push_back(new EndPipeTop(Vector2{X, 750 - Y}));
+    }
     int WorldType;
     fin >> WorldType;
     Level -> m_WorldType = WorldType;

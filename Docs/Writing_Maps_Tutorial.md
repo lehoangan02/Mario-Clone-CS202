@@ -10,11 +10,11 @@ class EnvironmentObjectFactory
     enum EnvironmentObjectType
     {
         WARP_PIPE, // 0
-        WARP_PIPE_NO_TOP, // 1
-        WARP_PIPE_END, // 2
+        WARP_PIPE_SHORT, // 1
+        WARP_PIPE_TINY, // 2
         BRICK, // so on & so on
         HARD_BLOCK,
-        BLUE_BRICK
+        BLUE_BRICK,
     };
 ```
 ```cpp
@@ -53,6 +53,15 @@ class LevelFactory
             
         };
 ```
+
+```
+enum EndPipeType
+{
+    TOP,
+    SIDE
+};
+```
+
 ## Format of the map file
 All map files should be .txt files, with their name corresponding with the enum specified.
 
@@ -88,6 +97,7 @@ You have to input lists in a specified order (shown after this part). Each list 
 5. Drawable
 6. Hole
 7. Lift
+8. End Pipe
 
 Example:
 

@@ -34,6 +34,14 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return GrassTextureFlyWeight::GetGrassTextureFlyWeight();
         }
+        case TextureType::MOUNTAIN:
+        {
+            return MountainTextureFlyWeight::GetMountainTextureFlyWeight();
+        }
+        case TextureType::END_PIPE:
+        {
+            return EndPipeTopTextureFlyWeight::GetEndPipeTextureFlyWeight();
+        }
         break;
     }
     return nullptr;
@@ -206,3 +214,21 @@ void MountainTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
+EndPipeTopTextureFlyWeight::EndPipeTopTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/end_pipe.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+}
+EndPipeTopTextureFlyWeight::~EndPipeTopTextureFlyWeight()
+{
+}
+EndPipeTopTextureFlyWeight* EndPipeTopTextureFlyWeight::GetEndPipeTextureFlyWeight()
+{
+    static EndPipeTopTextureFlyWeight texture;
+    return &texture;
+}
+void EndPipeTopTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0.0f, 3.125, WHITE);
+}
+

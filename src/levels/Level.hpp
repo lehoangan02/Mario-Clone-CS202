@@ -17,7 +17,7 @@ enum LEVEL_RETURN_MESSAGE
     QUIT
 };
 
-class Level
+class Level : public Subject
 {
     public:
         enum WorldType
@@ -34,6 +34,7 @@ class Level
     std::vector<EnvironmentObjectInteractive*> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
     std::vector<Lift*> m_Lifts;
+    std::vector<EndPipeTop*> m_EndPipes;
     Character* m_Player;
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};

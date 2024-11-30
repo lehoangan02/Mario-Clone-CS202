@@ -27,6 +27,27 @@ Level::Level()
 }
 Level::~Level()
 {
+    for (auto& object : m_Environment)
+    {
+        delete object;
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        delete object;
+    }
+    for (auto& object : m_Drawables)
+    {
+        delete object;
+    }
+    for (auto& object : m_Lifts)
+    {
+        delete object;
+    }
+    for (auto& object : m_EndPipes)
+    {
+        delete object;
+    }
+
 }
 void Level::attachPlayer(Character* Player)
 {
@@ -77,7 +98,30 @@ void Level::resolveEnvironmentCollisions()
             m_Lifts[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
-    
+    for (int i = 0; i < m_EndPipes.size(); ++i)
+    {
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        AABBox EnvironmentBox = AABBox(m_EndPipes[i]->m_Position, m_EndPipes[i]->getSize());
+        EnvironmentBox.setFixed(true);
+        if (isColliding(PlayerBox, EnvironmentBox))
+        {
+            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+            {
+                m_Player->resetVelocity();
+                if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+                {
+                    m_Player->onPlatform();
+                }
+            }
+            else if (isCollidingLeft(PlayerBox, EnvironmentBox))
+            {
+                // std::cout << "End Pipe Working!" << std::endl;
+            }
+            resolveCollisions(PlayerBox, EnvironmentBox);
+            m_Player->setPosition(PlayerBox.getPosition());
+            m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+        }
+    }
 }
 void Level::resolveInteractiveEnvironmentCollisions()
 {
@@ -172,6 +216,10 @@ void Level::render()
         object->render();
     }
     m_Player->Draw();
+    for (auto& object : m_EndPipes)
+    {
+        object->render();
+    }
     float HidePositionX = m_ScreenSize.x;
     DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth / Zoom - HidePositionX, m_ScreenSize.y, BLACK);
     EndMode2D();

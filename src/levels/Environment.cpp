@@ -332,6 +332,21 @@ void Castle::render()
     DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
 }
 
+EndPipeTop::EndPipeTop(Vector2 Position) : EnvironmentObject(Position, Vector2{200, 100})
+{
+}
+EndPipeTop::~EndPipeTop()
+{
+}
+void EndPipeTop::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+}
+void EndPipeTop::update()
+{
+}
+
+
 
 
 

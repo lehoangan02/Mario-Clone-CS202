@@ -22,9 +22,10 @@ class DrawableObject : public MapObject
 {
     protected:
         DrawableObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
-        virtual ~DrawableObject() = default;
+        
     public:
         // virtual void render() = 0;
+        virtual ~DrawableObject() = default;
 };
 class EnvironmentObject : public MapObject
 {
@@ -65,11 +66,11 @@ class EnvironmentObjectFactory // Singleton Factory
     enum EnvironmentObjectType
     {
         WARP_PIPE, // 0
-        WARP_PIPE_NO_TOP, // 1
-        WARP_PIPE_END, // 2
+        WARP_PIPE_SHORT, // 1
+        WARP_PIPE_TINY, // 2
         BRICK, // so on & so on
         HARD_BLOCK,
-        BLUE_BRICK
+        BLUE_BRICK,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -216,4 +217,17 @@ class Mountain : public DrawableObject
     Mountain(Vector2 Position);
     ~Mountain();
     void render() override;
+};
+enum EndPipeType
+{
+    TOP,
+    SIDE
+};
+class EndPipeTop : public EnvironmentObject
+{
+    public:
+    EndPipeTop(Vector2 Position);
+    ~EndPipeTop();
+    void render() override;
+    void update() override;
 };
