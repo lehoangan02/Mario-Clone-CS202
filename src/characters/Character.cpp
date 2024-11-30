@@ -46,10 +46,17 @@ void Character::control(float& accX, bool enabled) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
+	if (IsKeyPressed(KEY_K)) {
+		form = 2;
+		size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
+		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
+	}
 	if (IsKeyPressed(KEY_J)) {
 		form = 1;
-		size = { (float)textures[form].width / 6 * scale, (float)textures[form].height * scale };
-		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / 6, (float)textures[form].height };
+		size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
+		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
+	}
+	if (form == 2 && IsKeyPressed(KEY_M)) {
 	}
 }
 
@@ -65,10 +72,13 @@ void Character::Draw()
 Mario::Mario() : Character(500.0f, 3.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
-	Vector2 imageCount = { 6,1 };
+	textures.push_back(LoadTexture("assets/textures/marioFire.png"));
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
 	float switchTime = 0.1f;
-	animation = Animation(&textures[form], imageCount, switchTime);
-	size = { (float) textures[form].width / (imageCount.x) * scale, (float)textures[form].height * scale};
+	animation = Animation(&textures[form], imageCounts[form], switchTime);
+	size = { (float) textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale};
 }
 Luigi::Luigi() : Character(500.0f, 3.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
@@ -92,7 +102,6 @@ void Mario::Update(float deltaTime) {
 			faceRight = false;
 		}
 	}
-	if (!canJump) state = 2;
 	animation.Update(state, deltaTime, faceRight);
 	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
 }

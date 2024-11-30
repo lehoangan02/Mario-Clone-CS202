@@ -20,7 +20,8 @@ public:
 	void resetVelocity() { velocity = { 0,0 }; }; // lehoangan added, if there are any issues, please contact me
 protected:
 	std::vector<Texture2D> textures;
-	int form; //small = 0, big = 1
+	std::vector<Vector2> imageCounts;
+	int form; //small = 0, big = 1, fire = 2
 	Animation animation;
 
 	Vector2 position;
