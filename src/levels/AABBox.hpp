@@ -17,6 +17,8 @@ class AABBox
     friend bool isCollidingOnVertically(const AABBox &AABBox1, const AABBox &AABBox2);
     friend bool isCollidingOnTop(const AABBox &AABBox1, const AABBox &AABBox2);
     friend bool isCollidingOnBottom(const AABBox &AABBox1, const AABBox &AABBox2);
+    friend bool isCollidingLeft(const AABBox &AABBox1, const AABBox &AABBox2);
+
 
 };
 void resolveCollisions(AABBox &AABBox1, AABBox &AABBox2);
@@ -24,3 +26,4 @@ bool isColliding(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingOnVertically(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingOnTop(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingOnBottom(const AABBox &AABBox1, const AABBox &AABBox2);
+bool isCOllidingOnLeft(const AABBox &AABBox1, const AABBox &AABBox2);

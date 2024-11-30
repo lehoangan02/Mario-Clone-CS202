@@ -10,11 +10,11 @@ class EnvironmentObjectFactory
     enum EnvironmentObjectType
     {
         WARP_PIPE, // 0
-        WARP_PIPE_SHORT, // 1
-        WARP_PIPE_TINY, // 2
+        WARP_PIPE_NO_TOP, // 1
+        WARP_PIPE_END, // 2
         BRICK, // so on & so on
         HARD_BLOCK,
-        BLUE_BLICK
+        BLUE_BRICK
     };
 ```
 ```cpp

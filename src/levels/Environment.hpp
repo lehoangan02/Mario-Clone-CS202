@@ -64,10 +64,10 @@ class EnvironmentObjectFactory // Singleton Factory
     public:
     enum EnvironmentObjectType
     {
-        WARP_PIPE,
-        WARP_PIPE_SHORT,
-        WARP_PIPE_TINY,
-        BRICK,
+        WARP_PIPE, // 0
+        WARP_PIPE_NO_TOP, // 1
+        WARP_PIPE_END, // 2
+        BRICK, // so on & so on
         HARD_BLOCK,
         BLUE_BRICK
     };
@@ -201,5 +201,19 @@ class Castle : public DrawableObject
     public:
     Castle(Vector2 Position);
     ~Castle();
+    void render() override;
+};
+class Grass : public DrawableObject
+{
+    public:
+    Grass(Vector2 Position);
+    ~Grass();
+    void render() override;
+};
+class Mountain : public DrawableObject
+{
+    public:
+    Mountain(Vector2 Position);
+    ~Mountain();
     void render() override;
 };

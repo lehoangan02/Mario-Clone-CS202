@@ -271,6 +271,21 @@ DrawableObject* DrawableObjectFactory::CreateDrawableObject(int Type, Vector2 Po
             DrawableObject* castle = new Castle(Position);
             return castle;
         }
+        case DrawableObjectFactory::DrawableObjectType::GRASS:
+        {
+            DrawableObject* grass = new Grass(Position);
+            return grass;
+        }
+        case DrawableObjectFactory::DrawableObjectType::MOUNTAIN:
+        {
+            DrawableObject* mountain = new Mountain(Position);
+            return mountain;
+        }
+        default:
+        {
+            std::cerr << "Invalid Drawable Object Type\n";
+            return nullptr;
+        }
         break;
     }
 }
@@ -285,6 +300,27 @@ void Cloud::render()
 {
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::CLOUD)->render(m_Position);
 }
+Grass::Grass(Vector2 Position) : DrawableObject(Position)
+{
+}
+Grass::~Grass()
+{
+}
+void Grass::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::GRASS)->render(m_Position);
+}
+Mountain::Mountain(Vector2 Position) : DrawableObject(Position)
+{
+}
+Mountain::~Mountain()
+{
+}
+void Mountain::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::MOUNTAIN)->render(m_Position);
+}
+
 Castle::Castle(Vector2 Position) : DrawableObject(Position)
 {
 }

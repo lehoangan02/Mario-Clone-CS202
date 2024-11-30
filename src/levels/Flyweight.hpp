@@ -10,7 +10,9 @@ enum TextureType
     QUESTION_BLOCK,
     CLOUD,
     BLUE_BRICK,
-    LIFT
+    LIFT,
+    GRASS,
+    MOUNTAIN
 };
 class Flyweight
 {
@@ -108,5 +110,23 @@ class CloudTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
         ~CloudTextureFlyWeight();
     public:
         static CloudTextureFlyWeight* GetCloudTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class GrassTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        GrassTextureFlyWeight();
+        ~GrassTextureFlyWeight();
+    public:
+        static GrassTextureFlyWeight* GetGrassTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class MountainTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        MountainTextureFlyWeight();
+        ~MountainTextureFlyWeight();
+    public:
+        static MountainTextureFlyWeight* GetMountainTextureFlyWeight();
         void render(Vector2 Position);
 };

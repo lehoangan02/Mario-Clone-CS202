@@ -30,6 +30,10 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return LiftTextureFlyWeight::GetLiftTextureFlyWeight();
         }
+        case TextureType::GRASS:
+        {
+            return GrassTextureFlyWeight::GetGrassTextureFlyWeight();
+        }
         break;
     }
     return nullptr;
@@ -167,6 +171,38 @@ CloudTextureFlyWeight* CloudTextureFlyWeight::GetCloudTextureFlyWeight()
     return &texture;
 }
 void CloudTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+GrassTextureFlyWeight::GrassTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/grass.png");
+}
+GrassTextureFlyWeight::~GrassTextureFlyWeight()
+{
+}
+GrassTextureFlyWeight* GrassTextureFlyWeight::GetGrassTextureFlyWeight()
+{
+    static GrassTextureFlyWeight texture;
+    return &texture;
+}
+void GrassTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+MountainTextureFlyWeight::MountainTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/mountain.png");
+}
+MountainTextureFlyWeight::~MountainTextureFlyWeight()
+{
+}
+MountainTextureFlyWeight* MountainTextureFlyWeight::GetMountainTextureFlyWeight()
+{
+    static MountainTextureFlyWeight texture;
+    return &texture;
+}
+void MountainTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
