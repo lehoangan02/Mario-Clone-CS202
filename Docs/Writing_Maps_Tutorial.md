@@ -13,7 +13,8 @@ class EnvironmentObjectFactory
         WARP_PIPE_SHORT, // 1
         WARP_PIPE_TINY, // 2
         BRICK, // so on & so on
-        HARD_BLOCK
+        HARD_BLOCK,
+        BLUE_BLICK
     };
 ```
 ```cpp

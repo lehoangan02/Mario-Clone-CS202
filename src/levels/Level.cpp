@@ -14,6 +14,10 @@ Level* LevelFactory::CreateLevel(LevelType Type)
         case LEVEL_TESTING:
             return LevelTesting::GetLevelTesting();
             break;
+        case LEVEL_103:
+            return Level103::GetLevel103();
+            break;
+        
     }
 }
 Level::Level()
@@ -316,4 +320,20 @@ LevelTesting* LevelTesting::GetLevelTesting()
 {
     static LevelTesting level;
     return &level;
+}
+Level103::Level103()
+{
+    load();
+}
+Level103::~Level103()
+{
+}
+Level103* Level103::GetLevel103()
+{
+    static Level103 level;
+    return &level;
+}
+void Level103::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }

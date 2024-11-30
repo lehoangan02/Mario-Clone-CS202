@@ -120,3 +120,16 @@ class LevelTesting : public Level
     public:
         static LevelTesting* GetLevelTesting();
 };
+class Level103 : public Level
+{
+    friend class LevelFactory;
+    private:
+        Level103();
+        ~Level103();
+        // void load() override;
+        // unsigned int update(float DeltaTime) override;
+        // void render() override;
+        void load() override;
+    public:
+        static Level103* GetLevel103();
+};
