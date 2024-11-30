@@ -86,6 +86,7 @@ You have to input lists in a specified order (shown after this part). Each list 
 4. Animated Evironment Object
 5. Drawable
 6. Hole
+7. Lift
 
 Example:
 
@@ -97,7 +98,7 @@ Explanation:
 - There is 1 drawble (the type is CLOUD)
 - There are 2 holes
 
-*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide)
+*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide). Lifts only need X and Y coordinate.
 
 ## Type of level
 
@@ -106,7 +107,7 @@ After the list of entities, you should input the type of level.
 ```cpp
 class Level
 {
-    enum LevelType
+    enum WorldType
     {
         OVERWORLD,
         UNDERGROUND

@@ -53,6 +53,26 @@ void Level::resolveEnvironmentCollisions()
             m_Environment[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
+    for (int i = 0; i < m_Lifts.size(); i++)
+    {
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        AABBox EnvironmentBox = AABBox(m_Lifts[i]->m_Position, m_Lifts[i]->getSize());
+        EnvironmentBox.setFixed(true);
+        if (isColliding(PlayerBox, EnvironmentBox))
+        {
+            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+            {
+                m_Player->resetVelocity();
+                if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+                {
+                    m_Player->onPlatform();
+                }
+            }
+            resolveCollisions(PlayerBox, EnvironmentBox);
+            m_Player->setPosition(PlayerBox.getPosition());
+            m_Lifts[i]->m_Position = EnvironmentBox.getPosition();
+        }
+    }
     
 }
 void Level::resolveInteractiveEnvironmentCollisions()
@@ -99,15 +119,15 @@ void Level::applyBoundaries()
 void Level::render()
 {
     // printf("Rendering Level\n");
-    switch (m_LevelType)
+    switch (m_WorldType)
     {
-        case Level::LevelType::OVERWORLD:
+        case Level::WorldType::OVERWORLD:
         {
             // printf("Overworld\n");
             ClearBackground(Color{105, 147, 245, 255});
             break;
         }
-        case Level::UNDERGROUND:
+        case Level::WorldType::UNDERGROUND:
         {
             ClearBackground(BLACK);
             break;
@@ -143,6 +163,10 @@ void Level::render()
         object->render();
     }
     Ground::GetGround()->render();
+    for (auto& object : m_Lifts)
+    {
+        object->render();
+    }
     m_Player->Draw();
     float HidePositionX = m_ScreenSize.x;
     DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth / Zoom - HidePositionX, m_ScreenSize.y, BLACK);
@@ -180,6 +204,10 @@ unsigned int Level::update(float DeltaTime)
     for (auto& object : m_EnvironmentInteractive)
     {
         object->update();
+    }
+    for (auto& object : m_Lifts)
+    {
+        object->update(DeltaTime);
     }
     applyBoundaries();
     resolveEnvironmentCollisions();

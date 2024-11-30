@@ -1,4 +1,5 @@
 #include "Environment.hpp"
+#include "Level.hpp"
 EnvironmentObjectFactory& EnvironmentObjectFactory::GetEnvironmentFactory()
 {
     static EnvironmentObjectFactory Factory;
@@ -66,6 +67,24 @@ void EnvironmentObjectInteractive::move(Vector2 Position)
     m_Position = {m_Position.x + Position.x, m_Position.y + Position.y};
     // std::cout << "New Position x: " << m_Position.x << ", y: " << m_Position.y << std::endl;
 }
+Lift::Lift(Vector2 Position) : MapObject(Position, Vector2{150, 26})
+{
+}
+Lift::~Lift()
+{
+}
+void Lift::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::LIFT)->render(m_Position);
+}
+void Lift::update(float DeltaTime)
+{
+    m_Position.y -= m_Speed * DeltaTime;
+    if (m_Position.y < -100)
+    {
+        m_Position.y = 900;
+    }
+}
 Ground::Ground() : MapObject((Vector2{0, 750}), (Vector2{100, 100}))
 {
     // m_Texture = LoadTexture("assets/textures/ground1x1.png");
@@ -83,15 +102,15 @@ void Ground::render()
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
     for (int i = 0; i < 20; ++i)
     {
-        DrawTexture(m_Texture[m_LevelType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
-        DrawTexture(m_Texture[m_LevelType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
     }
 
     for (auto& hole : m_Holes)
     {
         int Width = hole.second * 100;
-
-        DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
+        if (m_WorldType == Level::WorldType::OVERWORLD) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
+        else if (m_WorldType == Level::WorldType::UNDERGROUND) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{0, 0, 0, 255});
     }
 }
 void Ground::update(Vector2 CameraPosition)
@@ -247,6 +266,11 @@ DrawableObject* DrawableObjectFactory::CreateDrawableObject(int Type, Vector2 Po
             DrawableObject* cloud = new Cloud(Position);
             return cloud;
         }
+        case DrawableObjectFactory::DrawableObjectType::CASTLE:
+        {
+            DrawableObject* castle = new Castle(Position);
+            return castle;
+        }
         break;
     }
 }
@@ -261,6 +285,17 @@ void Cloud::render()
 {
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::CLOUD)->render(m_Position);
 }
+Castle::Castle(Vector2 Position) : DrawableObject(Position)
+{
+}
+Castle::~Castle()
+{
+}
+void Castle::render()
+{
+    DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
+}
+
 
 
 

@@ -26,6 +26,10 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return BlueBrickTextureFlyWeight::GetBlueBrickTextureFlyWeight();
         }
+        case TextureType::LIFT:
+        {
+            return LiftTextureFlyWeight::GetLiftTextureFlyWeight();
+        }
         break;
     }
     return nullptr;
@@ -116,6 +120,23 @@ void BlueBrickTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
+LiftTextureFlyWeight::LiftTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/lift.png");
+}
+LiftTextureFlyWeight::~LiftTextureFlyWeight()
+{
+}
+LiftTextureFlyWeight* LiftTextureFlyWeight::GetLiftTextureFlyWeight()
+{
+    static LiftTextureFlyWeight texture;
+    return &texture;
+}
+void LiftTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+
 QuestionBlockTextureFlyWeight::QuestionBlockTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/question_block.png");

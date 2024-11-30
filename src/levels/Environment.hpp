@@ -13,6 +13,7 @@ class MapObject
         Vector2 m_Size;
     public:
         virtual void render() = 0;
+        Vector2 getSize() { return m_Size; };
     protected:
         MapObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
         
@@ -32,7 +33,6 @@ class EnvironmentObject : public MapObject
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         // virtual void render() = 0;
-        Vector2 getSize() { return m_Size; };
 };
 class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
 {
@@ -49,7 +49,8 @@ class DrawableObjectFactory
     {
         GRASS,
         CLOUD,
-        MOUNTAIN
+        MOUNTAIN,
+        CASTLE
     };
     private:
         DrawableObjectFactory() = default;
@@ -91,6 +92,16 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
         static EnvironmentInteractiveObjectFactory& GetEnvironmentInteractiveFactory();
         EnvironmentObjectInteractive* CreateEnvironmentInteractiveObject(int Type, Vector2 Position);
 };
+class Lift : public MapObject
+{
+    public:
+    Lift(Vector2 Position);
+    ~Lift();
+    void render() override;
+    void update(float DeltaTime);
+    private:
+    float m_Speed = 100;
+};
 class Ground : public MapObject // Singleton
 {
     friend class Level;
@@ -98,7 +109,7 @@ class Ground : public MapObject // Singleton
         Texture2D m_Texture[2] = {LoadTexture("assets/textures/ground1x1.png"), LoadTexture("assets/textures/ground_blue1x1.png")};
         std::vector<std::pair<float, int>> m_Holes;
         Vector2 m_CameraPosition;
-        int m_LevelType = 0;
+        int m_WorldType = 0;
     private:
         Ground();
         ~Ground();
@@ -110,7 +121,7 @@ class Ground : public MapObject // Singleton
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
         int getHoleCount() { return m_Holes.size(); };
-        void setLevelType(int Type) { m_LevelType = Type; };
+        void setWorldType(int Type) { m_WorldType = Type; };
 };
 class WarpPipe : public EnvironmentObject
 {
@@ -181,5 +192,14 @@ class Cloud : public DrawableObject
     public:
     Cloud(Vector2 Position);
     ~Cloud();
+    void render() override;
+};
+class Castle : public DrawableObject
+{
+    private:
+    Texture2D m_Texture = LoadTexture("assets/textures/castle.png");
+    public:
+    Castle(Vector2 Position);
+    ~Castle();
     void render() override;
 };

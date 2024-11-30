@@ -19,11 +19,12 @@ enum LEVEL_RETURN_MESSAGE
 
 class Level
 {
-    enum LevelType
-    {
-        OVERWORLD,
-        UNDERGROUND
-    };
+    public:
+        enum WorldType
+        {
+            OVERWORLD,
+            UNDERGROUND
+        };
     friend class MapLoader;
     protected:
     int m_LevelID;
@@ -32,11 +33,12 @@ class Level
     std::vector<EnvironmentObject*> m_Environment;
     std::vector<EnvironmentObjectInteractive*> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
+    std::vector<Lift*> m_Lifts;
     Character* m_Player;
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
-    int m_LevelType;
+    int m_WorldType;
     const float m_PlayerOffset = 500;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};

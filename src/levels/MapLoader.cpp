@@ -72,9 +72,17 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         Level -> m_Ground -> addHole(X, Y);
     }
-    int LevelType;
-    fin >> LevelType;
-    Level -> m_LevelType = LevelType;
-    Level -> m_Ground -> setLevelType(LevelType);
+    int NumberOfLifts;
+    fin >> NumberOfLifts;
+    for (int i = 0; i < NumberOfLifts; i++)
+    {
+        float X, Y;
+        fin >> X >> Y;
+        Level -> m_Lifts.push_back(new Lift(Vector2{X, Y}));
+    }
+    int WorldType;
+    fin >> WorldType;
+    Level -> m_WorldType = WorldType;
+    Level -> m_Ground -> setWorldType(WorldType);
     fin.close();
 }
