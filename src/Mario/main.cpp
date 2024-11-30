@@ -17,10 +17,10 @@ int main(void)
   
     Coin* coin = new Coin(
         Vector2{ 100, 500 },   //Start position
-        Vector2{ 100, 300 },    //End position
-        Vector2{ 40, 40},      // size of coin
-        coinTexture,       
-        Vector2{ 0, 50 }     //velocity
+        Vector2{ 100, 250 },    //End position
+        Vector2{ 40,100},      // size of coin
+        coinTexture,     
+        Vector2{ 0, 100 }     //velocity
     );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -44,7 +44,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
 
-        coin->Draw1(deltatime);
+        coin->Draw1();
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);

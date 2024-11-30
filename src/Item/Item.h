@@ -1,8 +1,8 @@
 #pragma 
 constexpr float epsilon = 1.0f;
 
-constexpr int COIN_FRAME_COUNT = 4;
-constexpr float COIN_FRAME_TIME = 0.1f;
+constexpr int COIN_FRAME_COUNT = 6;
+constexpr float COIN_FRAME_TIME = 0.05f;
 
 constexpr int MUSHROOM_FRAME_COUNT = 6;
 constexpr float MUSHROOM_FRAME_TIME = 0.08f;
@@ -12,7 +12,6 @@ constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
 
 #include "../animation/Animation.h"
 #include "../characters/Character.h"
-
 
 
 class Item {
@@ -26,10 +25,7 @@ protected:
 	int currentFrame;
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
-	float rotation;
-	float rotationSpeed;
-	int framesPerRotation;
-	float rotationPerFrame;
+	
 
 	
 
@@ -47,7 +43,7 @@ public:
 	virtual void Update1(float deltaTime); //acceleration
 	virtual void Update(float deltaTime); // not acceleration
 	virtual void Draw(); // not animation
-	virtual void Draw1(float deltaTime); // animation
+	virtual void Draw1(); // animation
 	float norm(Vector2 vector1, Vector2 vector2);
 	Vector2 GetPosition() const {
 		return position;
