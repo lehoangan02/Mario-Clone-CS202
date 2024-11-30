@@ -5,16 +5,16 @@ constexpr int COIN_FRAME_COUNT = 6;
 constexpr float COIN_FRAME_TIME = 0.05f;
 
 constexpr int MUSHROOM_FRAME_COUNT = 6;
-constexpr float MUSHROOM_FRAME_TIME = 0.08f;
+constexpr float MUSHROOM_FRAME_TIME = 0.5f;
 
 constexpr int FIREFLOWER_FRAME_COUNT = 5;
 constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
 
 #include "../animation/Animation.h"
 #include "../characters/Character.h"
+#include "../Oberver/Observer.hpp"
 
-
-class Item {
+class Item : public Observer {
 protected:
 	Vector2 position;
 	Vector2 size;
@@ -25,9 +25,7 @@ protected:
 	int currentFrame;
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
-	
-
-	
+	bool Notify;
 
 	Vector2 velocity;
 	Vector2	startPosition;
@@ -37,6 +35,7 @@ protected:
 	int moves;
 
 public:
+	virtual void onNotify() override;
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;

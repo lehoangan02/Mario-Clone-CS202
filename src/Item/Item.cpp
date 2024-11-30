@@ -5,7 +5,8 @@
 Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
-     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false)
+     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false),
+    Notify(false)
     
 {
   
@@ -43,7 +44,11 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
         pow(vector1.y - vector2.y, 2));
     return result;
 }
+void Item::onNotify() {
+    Notify = true;
+}
 void Item::Update(float deltaTime) { // not accerleration
+
     if (!APPEARED) {
         return;
     }
@@ -68,35 +73,38 @@ void Item::Update(float deltaTime) { // not accerleration
 
 }
 void Item::Update1(float deltaTime) { //acceleration
-    if (!APPEARED) {
-        return;
-    }
-    elapsedTime += deltaTime;
-    if (elapsedTime >= switchTime) {
-        currentFrame = (currentFrame + 1) % totalFrames;
-        elapsedTime = 0;
-    }
-    if (velocity.y > 0) velocity.y += 5.0f ;
-    else velocity.y -= 5.0f ;
-    position.x += velocity.x * deltaTime;
-    position.y += velocity.y * deltaTime;
-    
-    if (!isReturning) {
-        if (fabs(position.x - endPosition.x) <= fabs(velocity.x * deltaTime) &&
-            fabs(position.y - endPosition.y) <= fabs(velocity.y * deltaTime)) {
-            position = endPosition;
-            isReturning = true;
-            
-            velocity.x *= -1;
-            velocity.y *= -1;
-
-       
+    if (Notify == true)
+    {
+        if (!APPEARED) {
+            return;
         }
-    }
-    else {
-        float distToEnd = norm(position, endPosition);
-        if (distToEnd > 50.0f) {
-            APPEARED = false;
+        elapsedTime += deltaTime;
+        if (elapsedTime >= switchTime) {
+            currentFrame = (currentFrame + 1) % totalFrames;
+            elapsedTime = 0;
+        }
+        if (velocity.y > 0) velocity.y += 2.0f;
+        else velocity.y -= 2.0f;
+        position.x += velocity.x * deltaTime;
+        position.y += velocity.y * deltaTime;
+
+        if (!isReturning) {
+            if (fabs(position.x - endPosition.x) <= fabs(velocity.x * deltaTime) &&
+                fabs(position.y - endPosition.y) <= fabs(velocity.y * deltaTime)) {
+                position = endPosition;
+                isReturning = true;
+
+                velocity.x *= -1;
+                velocity.y *= -1;
+
+
+            }
+        }
+        else {
+            float distToEnd = norm(position, endPosition);
+            if (distToEnd > 50.0f) {
+                APPEARED = false;
+            }
         }
     }
 }
@@ -113,16 +121,19 @@ void Item::Draw() { // Not animation
     }
 }
 void Item::Draw1() { //animation
-    if (APPEARED) {
-        Rectangle sourceRect = {
-            frameSize.x * currentFrame, 
-            0.0f,                   
-            frameSize.x,           
-            frameSize.y           
-        };
-        Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f }; 
-        Vector2 origin = { 0, 0 };
-        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    if (Notify == true)
+    {
+        if (APPEARED) {
+            Rectangle sourceRect = {
+                frameSize.x * currentFrame,
+                0.0f,
+                frameSize.x,
+                frameSize.y
+            };
+            Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f };
+            Vector2 origin = { 0, 0 };
+            DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+        }
     }
 }
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)

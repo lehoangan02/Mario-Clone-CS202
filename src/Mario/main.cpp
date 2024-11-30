@@ -17,11 +17,19 @@ int main(void)
   
     Coin* coin = new Coin(
         Vector2{ 100, 500 },   //Start position
-        Vector2{ 100, 250 },    //End position
+        Vector2{ 100, 300 },    //End position
         Vector2{ 40,100},      // size of coin
         coinTexture,     
-        Vector2{ 0, 100 }     //velocity
+        Vector2{ 0, 400 }     //velocity
     );
+    /*Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
+    Mushroom* mushroom = new Mushroom(
+        Vector2{ 100, 200 },
+        Vector2{ 100, 200 },
+        Vector2{ 100, 100},
+        mushroomTexture,
+        Vector2{ 0, 0}
+    );*/
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
@@ -34,16 +42,19 @@ int main(void)
     {
         deltatime = GetFrameTime();
 
+        if (IsKeyPressed(KEY_A))
+        {
+            coin->onNotify();
+        }
         coin->Update1(deltatime);
         
 
         level->update(deltatime);
 
-
+        
 
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
-
         coin->Draw1();
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
