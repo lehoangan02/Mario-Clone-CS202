@@ -231,8 +231,9 @@ QuestionBlock::~QuestionBlock()
 void QuestionBlock::render()
 {
     // std::cout << "Rendering Question Block at " << m_Position.x << ", " << m_Position.y << std::endl;
-    if (!m_IsHit) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
-    else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
+    if (!m_HitAnimation.isFinished()) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
+    // else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
+    else EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight()->render(m_Position);
 }
 void QuestionBlock::update()
 {

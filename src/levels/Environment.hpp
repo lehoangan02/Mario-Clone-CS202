@@ -173,6 +173,7 @@ class QuestionBlock : public EnvironmentObjectInteractive
         HitAnimationCommander(float MoveUpDistance, float BottomPosition);
         ~HitAnimationCommander();
         Vector2 giveMovementCommand(Vector2 CurrentPosition);
+        bool isFinished() { return m_Finished; };
     };
     public:
     QuestionBlock(Vector2 Position);
