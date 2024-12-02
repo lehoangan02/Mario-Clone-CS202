@@ -14,7 +14,7 @@ ResourceManager* ResourceManager::GetInstance() {
 }
 
 void ResourceManager::LoadResources() {
-    commonFont = LoadFont("./assets/Font/InterBold.ttf");
+    commonFont = LoadFontEx("./assets/Font/InterBold.ttf", 50, NULL, 255);
     textures["pageTexture"] = LoadTexture("./assets/textures/GUI.png");
     textures["playTexture"] = LoadTexture("./assets/textures/play.png");
     textures["settingTexture"] = LoadTexture("./assets/textures/setting.png");
