@@ -11,7 +11,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     LevelFactory& factory = LevelFactory::GetLevelFactory();
-    Level* level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
+    Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
 	Character* player = CharacterFactory::createCharacter(MARIO);
     level->attachPlayer(player);
     float deltatime;
