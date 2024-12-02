@@ -47,32 +47,15 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
 void Item::onNotify() {
     Notify = true;
 }
-void Item::Update(float deltaTime) { // not accerleration
 
-    if (!APPEARED) {
-        return;
-    }
-    
-    position.x += velocity.x * deltaTime;
-    position.y += velocity.y * deltaTime;
-
-    if (fabs(position.x - endPosition.x) <= fabs(velocity.x * deltaTime) &&
-        fabs(position.y - endPosition.y) <= fabs(velocity.y * deltaTime)) {
-        velocity.x = -velocity.x;
-        velocity.y = -velocity.y;
-        moves++;
-    }
-
-    if (fabs(position.x - startPosition.x) <= fabs(velocity.x * deltaTime) &&
-        fabs(position.y - startPosition.y) <= fabs(velocity.y * deltaTime)) {
-        if (moves >= 1) {
-            APPEARED = false;
-        }
-    }
-
-
+void Item::Draw() {};
+void Item::Update(float deltaTime) {};
+Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity) {}
+void Coin::applyEffect(Character* character) {
+    return;
 }
-void Item::Update1(float deltaTime) { //acceleration
+void Coin::Update(float deltaTime) { //acceleration
     if (Notify == true)
     {
         if (!APPEARED) {
@@ -109,18 +92,7 @@ void Item::Update1(float deltaTime) { //acceleration
     }
 }
 
-    
-    
-
-void Item::Draw() { // Not animation
-    if (APPEARED) {
-        Rectangle destRect = { position.x, position.y, size.x, size.y }; 
-        Rectangle sourceRect = { 0.0f, 0.0f, (float)texture.width, (float)texture.height }; 
-        Vector2 origin = { 0, 0 };
-        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE); 
-    }
-}
-void Item::Draw1() { //animation
+void Coin::Draw() { //animation
     if (Notify == true)
     {
         if (APPEARED) {
@@ -136,19 +108,73 @@ void Item::Draw1() { //animation
         }
     }
 }
-Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity) {}
-void Coin::applyEffect(Character* character) {
-    return;
-}
-Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
+Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
 }
+void Mushroom::Update(float deltaTime) {}
+void Mushroom::Draw() {
+    if (APPEARED) {
+        Rectangle destRect = { position.x, position.y, size.x, size.y };
+        Rectangle sourceRect = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+        Vector2 origin = { 0, 0 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
+}
+
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity) {}
 void FireFlower::applyEffect(Character* character) {
     return;
+}
+void FireFlower::Update(float deltaTime) {
+    if (!APPEARED) {
+        return;
+    }
+    elapsedTime += deltaTime;
+    if (elapsedTime >= switchTime) {
+        currentFrame = (currentFrame + 1) % totalFrames;
+        elapsedTime = 0;
+    }
+}
+void FireFlower::Draw() {
+    if (APPEARED) {
+        Rectangle sourceRect = {
+            frameSize.x * currentFrame,
+            0.0f,
+            frameSize.x,
+            frameSize.y
+        };
+        Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f };
+        Vector2 origin = { 0, 0 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
+}
+StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
+    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel) {}
+void StarMan::applyEffect(Character* character) {}
+void StarMan::Update(float deltaTime) {
+    if (!APPEARED) {
+        return;
+    }
+    elapsedTime += deltaTime;
+    if (elapsedTime >= switchTime) {
+        currentFrame = (currentFrame + 1) % totalFrames;
+        elapsedTime = 0;
+    }
+}
+void StarMan::Draw() {
+    if (APPEARED) {
+        Rectangle sourceRect = {
+            frameSize.x * currentFrame,
+            0.0f,
+            frameSize.x,
+            frameSize.y
+        };
+        Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f };
+        Vector2 origin = { 0, 0 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
 }

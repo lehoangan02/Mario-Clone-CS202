@@ -22,14 +22,27 @@ int main(void)
         coinTexture,     
         Vector2{ 0, 400 }     //velocity
     );
-    /*Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
+    Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
     Mushroom* mushroom = new Mushroom(
-        Vector2{ 100, 200 },
-        Vector2{ 100, 200 },
-        Vector2{ 100, 100},
-        mushroomTexture,
-        Vector2{ 0, 0}
-    );*/
+        Vector2{ 100, 200 }, //Startpos
+        Vector2{ 0 , 0},     //EndPos (= {0,0} neu khong di chuyen)
+        Vector2{ 50, 50 },   //size
+        mushroomTexture
+    );
+    Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+    FireFlower* fireflower = new FireFlower(
+        Vector2{ 100, 300 },
+        Vector2{ 0, 0 },
+        Vector2{ 50, 50 },
+        fireflowerTexture
+    );
+    Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
+    StarMan* starman = new StarMan(
+        Vector2{ 100, 500},
+        Vector2{ 0, 0},
+        Vector2{ 50, 50},
+        starmanTexture
+    );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
@@ -46,8 +59,13 @@ int main(void)
         {
             coin->onNotify();
         }
-        coin->Update1(deltatime);
-        
+        if (IsKeyPressed(KEY_B)) {
+            mushroom->onNotify();
+        }
+        coin->Update(deltatime);
+        mushroom->Update(deltatime);
+        fireflower->Update(deltatime);
+        starman->Update(deltatime);
 
         level->update(deltatime);
 
@@ -55,7 +73,11 @@ int main(void)
 
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
-        coin->Draw1();
+        coin->Draw();
+        mushroom->Draw();
+        fireflower->Draw();
+        starman->Draw();
+
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);

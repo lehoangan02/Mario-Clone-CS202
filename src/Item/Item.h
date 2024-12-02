@@ -7,8 +7,11 @@ constexpr float COIN_FRAME_TIME = 0.05f;
 constexpr int MUSHROOM_FRAME_COUNT = 6;
 constexpr float MUSHROOM_FRAME_TIME = 0.5f;
 
-constexpr int FIREFLOWER_FRAME_COUNT = 5;
-constexpr float FIREFLOWER_FRAME_TIME = 0.12f;
+constexpr int FIREFLOWER_FRAME_COUNT = 4;
+constexpr float FIREFLOWER_FRAME_TIME = 0.05f;
+
+constexpr int STARMAN_FRAME_COUNT = 4;
+constexpr float STARMAN_FRAME_TIME = 0.05f;
 
 #include "../animation/Animation.h"
 #include "../characters/Character.h"
@@ -39,10 +42,8 @@ public:
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;
-	virtual void Update1(float deltaTime); //acceleration
-	virtual void Update(float deltaTime); // not acceleration
+	virtual void Update(float deltaTime); 
 	virtual void Draw(); // not animation
-	virtual void Draw1(); // animation
 	float norm(Vector2 vector1, Vector2 vector2);
 	Vector2 GetPosition() const {
 		return position;
@@ -56,17 +57,32 @@ class Coin : public Item {
 public:
 	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* Character) override;
+	void Update(float deltaTime) override;
+	void Draw() override;
 
 };
 class Mushroom : public Item {
 public:
-	Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
+	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
 	void applyEffect(Character* character);
+	void Update(float deltaTime) override;
+	void Draw() override;
 
 };
 class FireFlower : public Item {
 public:
-	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
+	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
 	void applyEffect(Character* character);
+	void Update(float deltaTime) override;
+	void Draw() override;
+};
+class StarMan : public Item {
+public:
+	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	void applyEffect(Character* character);
+	void Update(float deltaTime) override;
+	void Draw() override;
+
+
 };
 
