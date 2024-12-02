@@ -5,13 +5,13 @@ constexpr int COIN_FRAME_COUNT = 6;
 constexpr float COIN_FRAME_TIME = 0.05f;
 
 constexpr int MUSHROOM_FRAME_COUNT = 6;
-constexpr float MUSHROOM_FRAME_TIME = 0.5f;
+constexpr float MUSHROOM_FRAME_TIME = 0.2f;
 
-constexpr int FIREFLOWER_FRAME_COUNT = 4;
-constexpr float FIREFLOWER_FRAME_TIME = 0.05f;
+constexpr int FIREFLOWER_FRAME_COUNT = 5;
+constexpr float FIREFLOWER_FRAME_TIME = 0.5f;
 
-constexpr int STARMAN_FRAME_COUNT = 4;
-constexpr float STARMAN_FRAME_TIME = 0.05f;
+constexpr int STARMAN_FRAME_COUNT = 5;
+constexpr float STARMAN_FRAME_TIME = 0.5f;
 
 #include "../animation/Animation.h"
 #include "../characters/Character.h"

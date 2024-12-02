@@ -6,8 +6,7 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
      elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false),
-    Notify(false)
-    
+    Notify(false)    
 {
   
     position = startPosition;
@@ -136,7 +135,10 @@ void FireFlower::Update(float deltaTime) {
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
-        elapsedTime = 0;
+        if (currentFrame == 4) {
+            currentFrame++;
+        }
+        elapsedTime = 0.0f;
     }
 }
 void FireFlower::Draw() {
@@ -147,8 +149,8 @@ void FireFlower::Draw() {
             frameSize.x,
             frameSize.y
         };
-        Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f };
-        Vector2 origin = { 0, 0 };
+        Rectangle destRect = { position.x , position.y , size.x, size.y };
+        Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
@@ -162,6 +164,7 @@ void StarMan::Update(float deltaTime) {
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
+        if (currentFrame == 4) currentFrame++;
         elapsedTime = 0;
     }
 }
