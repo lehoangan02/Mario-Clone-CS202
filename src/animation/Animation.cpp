@@ -18,11 +18,22 @@ Animation::Animation(Texture2D* texture, Vector2 imageCount, float switchTime)
 Animation::~Animation()
 {
 }
-void Animation::Update(int state, float deltaTime, bool faceRight) {
+void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire) {
 	currentImage.y = 0; // modify this if texture having states
-	totalTime += deltaTime;
 	if (state == 0) currentImage.x = 0;
-	else {
+	else if (state == 2) currentImage.x = 5;
+	else if (state == 3)
+	{
+		totalTime += 0.01f;
+		currentImage.x = 6;
+		std::cout << totalTime << std::endl;
+		if (totalTime >= switchTime) {
+			totalTime = 0;
+			fire = false;
+		}
+	}
+	else if (state == 1) {
+		totalTime += deltaTime;
 		if (totalTime >= switchTime) {
 			totalTime = 0;
 			currentImage.x++;
@@ -37,7 +48,7 @@ void Animation::Update(int state, float deltaTime, bool faceRight) {
 	{
 		uvRect.x = (currentImage.x) * fabs(uvRect.width);
 		uvRect.width = -fabs(uvRect.width);
-	} 
+	};
 }
 void Animation::Update(float deltaTime) {
 	currentImage.y = 0; // modify this if texture having states

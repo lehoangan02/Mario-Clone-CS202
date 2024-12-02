@@ -4,9 +4,10 @@
 class Animation
 {
 public:
+	Animation() = default;
 	Animation(Texture2D* texture, Vector2 imageCount, float switchTime);
 	~Animation();
-	void Update(int state, float deltaTime, bool faceRight);
+	void Update(int state, float deltaTime, bool faceRight, bool& fire);
 	void Update(float deltaTime);
 public:
 	Rectangle uvRect;

@@ -1,18 +1,18 @@
 #include "Character.h"
 #include <iostream>
-#define scale 3 //scale of character
 using namespace std;
-Character::Character(Texture2D* texture, Vector2 imageCount, float switchTime, float speed, float jumpHeight) : animation(texture, imageCount, switchTime)
+Character::Character(float speed, float jumpHeight) 
 {
-	this->texture = *texture;
+	this->form = 0;
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
 	this->faceRight = true;
 	this->state = 0;
 	this->velocity = { 0.0f, 0.0f };
 	this->canJump = false;
-	position = { 350.0f, 280.0f };
-	size = { (float) (*texture).width/10 * scale, (float) texture->height *scale };
+	this->scale = 3.5f;
+	this->fire = false;
+	position = Vector2{ 20 , 0 };
 }
 
 Character::~Character()
@@ -21,6 +21,7 @@ Character::~Character()
 Vector2 Character::GetCenter() {
 	return Vector2{ position.x + size.x / 2, position.y + size.y / 2 };
 }
+
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
 	if (velocity.x > 10.0f)
@@ -47,14 +48,44 @@ void Character::control(float& accX, bool enabled) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
 	}
+	if (IsKeyPressed(KEY_K)) {
+		form = 2;
+		size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
+		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
+	}
+	if (IsKeyPressed(KEY_J)) {
+		form = 1;
+		size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
+		animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
+	}
+	if (form==2 && IsKeyPressed(KEY_M)) {
+		//autoMove(0.05f);
+		fire = true;
+	}
 }
-void Character::Update(float deltaTime)
+
+void Character::Draw()
 {
-	 //change for slowing down
-	/*float accX = 0;
-	control(accX);
-	accelerate({ accX, 9.81f }, deltaTime);*/
-	if (velocity.y > 0.02f) canJump = false; //handle double jump 
+	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
+	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
+	float rotation = 0.0f;
+	Vector2 origin = { 0.0f, 0.0f };
+	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
+};
+
+Mario::Mario() : Character(500.0f, 5.0f) {
+	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
+	textures.push_back(LoadTexture("assets/textures/marioFire.png"));
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
+	float switchTime = 0.1f;
+	animation = Animation(&textures[form], imageCounts[form], switchTime);
+	size = { (float) textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale};
+}
+void Mario::Update(float deltaTime) {
+	if (velocity.y > 0.2f) canJump = false; //handle double jump 
 	if (velocity.x == 0.0f) {
 		state = 0;
 	}
@@ -67,37 +98,46 @@ void Character::Update(float deltaTime)
 			faceRight = false;
 		}
 	}
-	animation.Update(state, deltaTime, faceRight);
+	if (!canJump) {
+		state = 2;
+	}
+	if (fire) {
+		state = 3;
+	}
+	animation.Update(state, deltaTime, faceRight, fire);
 	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
 }
 
-void Character::Draw()
-{
-	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
-	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
-	float rotation = 0.0f;
-	Vector2 origin = { 0.0f, 0.0f };
-	DrawTexturePro(texture, sourceRec, destRec, origin, rotation, WHITE);
-};
+void Character::autoMove(float deltaTime) {
+	accelerate(Vector2{ 1.0f, 0.0f }, deltaTime);
+
+}
+Luigi::Luigi() : Character(500.0f, 3.0f) {
+	
+}
+void Luigi::Update(float deltaTime) {
+
+}
 
 
-//Character* CharacterFactory::currentCharacter = nullptr;
-//void CharacterFactory::deleteCharacter() {
-//	delete currentCharacter;
-//	currentCharacter = nullptr;
-//}
-//Character* CharacterFactory::createCharacter(CharacterType type) {
-//	deleteCharacter();
-//	switch (type) {
-//	case MARIO:
-//		currentCharacter = new Mario();
-//		break;
-//	case LUIGI:
-//		currentCharacter = new Luigi();
-//		break;
-//	default:
-//		currentCharacter = nullptr;
-//	}
-//	return currentCharacter;
-//
-//}
+
+Character* CharacterFactory::currentCharacter = nullptr;
+void CharacterFactory::deleteCharacter() {
+	delete currentCharacter;
+	currentCharacter = nullptr;
+}
+Character* CharacterFactory::createCharacter(CharacterType type) {
+	deleteCharacter();
+	switch (type) {
+	case MARIO:
+		currentCharacter = new Mario();
+		break;
+	case LUIGI:
+		currentCharacter = new Luigi();
+		break;
+	default:
+		currentCharacter = nullptr;
+	}
+	return currentCharacter;
+
+}
