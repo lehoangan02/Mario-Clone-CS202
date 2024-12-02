@@ -122,6 +122,7 @@ void Level::resolveEnvironmentCollisions()
             m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
+    
 }
 void Level::resolveInteractiveEnvironmentCollisions()
 {

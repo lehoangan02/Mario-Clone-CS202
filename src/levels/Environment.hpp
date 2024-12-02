@@ -222,13 +222,35 @@ class Mountain : public DrawableObject
 enum EndPipeType
 {
     TOP,
-    SIDE
+    SIDE,
 };
-class EndPipeTop : public EnvironmentObject
+enum BeginPipe
+{
+
+};
+class EndPipe : public EnvironmentObject
+{
+    public:
+    EndPipe(Vector2 Position, Vector2 Size, int Type);
+    ~EndPipe();
+    int getType() { return (m_Type); };
+    private:
+    int m_Type;
+
+};
+class EndPipeTop : public EndPipe
 {
     public:
     EndPipeTop(Vector2 Position);
     ~EndPipeTop();
+    void render() override;
+    void update() override;
+};
+class EndPipeSide : public EndPipe
+{
+    public:
+    EndPipeSide(Vector2 Position);
+    ~EndPipeSide();
     void render() override;
     void update() override;
 };

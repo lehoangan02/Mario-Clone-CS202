@@ -333,7 +333,13 @@ void Castle::render()
     DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
 }
 
-EndPipeTop::EndPipeTop(Vector2 Position) : EnvironmentObject(Position, Vector2{200, 100})
+EndPipe::EndPipe(Vector2 Position, Vector2 Size, int Type) : EnvironmentObject(Position, Size), m_Type(Type)
+{
+}
+EndPipe::~EndPipe()
+{
+}
+EndPipeTop::EndPipeTop(Vector2 Position) : EndPipe(Position, Vector2{200, 100}, EndPipeType::TOP)
 {
 }
 EndPipeTop::~EndPipeTop()
@@ -344,6 +350,19 @@ void EndPipeTop::render()
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
 }
 void EndPipeTop::update()
+{
+}
+EndPipeSide::EndPipeSide(Vector2 Position) : EndPipe(Position, Vector2{100, 100}, EndPipeType::SIDE)
+{
+}
+EndPipeSide::~EndPipeSide()
+{
+}
+void EndPipeSide::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+}
+void EndPipeSide::update()
 {
 }
 
