@@ -1,13 +1,20 @@
 #include "Application.hpp"
 
 void Application::run() {
-    while(!WindowShouldClose()) {
+    while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
-        
-        menu.draw();
-        menu.handle();
+
+        int currentState = menu.handle(); 
+
+        if (currentState == 10) {
+            game.start();  
+        }
+
+        menu.draw();  
+
         EndDrawing();
     }
+
     CloseWindow();
 }

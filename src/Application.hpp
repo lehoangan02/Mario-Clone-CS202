@@ -10,17 +10,20 @@
 
 #include "GUI.hpp"
 
+
 class Application {
     private:
         int tab;
         Menu menu;
+        Game game;
     public:
         Application() {
             tab = 0;
             menu = Menu();
+            game = Game();
         }
         void run();
-        int handle();
+        //int handle();
 };
 
 
