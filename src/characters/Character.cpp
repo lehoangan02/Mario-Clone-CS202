@@ -1,19 +1,23 @@
 #include "Character.h"
 #include <iostream>
-using namespace std;
-Character::Character(float speed, float jumpHeight) 
+
+//#define accX = 
+
+Character::Character(float jumpHeight) 
 {
 	this->form = 0;
-	this->speed = speed;
+	this->accX = 0.0f;
 	this->jumpHeight = jumpHeight;
 	this->faceRight = true;
 	this->state = 0;
 	this->velocity = { 0.0f, 0.0f };
+	this->accX = 0.0f;
 	this->canJump = false;
 	this->scale = 3.5f;
 	this->fire = false;
 	this->teleport = true;
 	this->sliding = false;
+	this->brake = false;
 	this->slideDirection = slidingDirection::right;
 	position = Vector2{ 20 , 0 };
 }
@@ -28,23 +32,32 @@ void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
 	if (velocity.x > 10.0f)
 			velocity.x = 10.0f;
-	else if (velocity.x < -10.0f)
+	else if (velocity.x < -10.0f) 
 		velocity.x = -10.0f;
 	velocity.y += acceleration.y * deltaTime;
 }
-void Character::control(float& accX, bool enabled) {
+void Character::control(bool enabled) {
 	if (!enabled) {
 		velocity.x = 0;
 		return;
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		accX = fabs(8.0f);
+		if (velocity.x < -5.0f) brake = true;
+		if (brake) accX = fabs(50.0f);
+		else accX = fabs(10.0f);
 	}
 	else if (IsKeyDown(KEY_LEFT)) {
-		accX = -fabs(8.0f);
+		if (velocity.x > 5.0f) brake = true;
+		if (brake) accX = -fabs(50.0f);
+		else accX = -fabs(10.0f);
 	}
 	else {
-		velocity.x = 0.0f;
+		if (faceRight) accX = -fabs(10.0f);
+		else accX = fabs(10.0f);
+		if (fabs(velocity.x) < 1.0f) {
+			velocity.x = 0.0f;
+			accX = 0;
+		}
 	}
 	if (teleport) {
 		if (IsKeyPressed(KEY_D)) {
@@ -78,6 +91,7 @@ void Character::changeForm(int form) {
 }
 void Character::Draw()
 {
+	std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;
@@ -85,10 +99,10 @@ void Character::Draw()
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
-Mario::Mario() : Character(500.0f, 5.0f) {
-	textures.push_back(LoadTexture("assets/textures/marioSmall.png"));
-	textures.push_back(LoadTexture("assets/textures/marioBig.png"));
-	textures.push_back(LoadTexture("assets/textures/marioFire.png"));
+Mario::Mario() : Character(5.0f) {
+	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
+	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
 	imageCounts.push_back({ 6,1 });
 	imageCounts.push_back({ 6,1 });
 	imageCounts.push_back({ 7,1 });
@@ -103,6 +117,7 @@ void Mario::Update(float deltaTime) {
 		state = 0;
 	}
 	else if (!canJump) state = 2;
+	else if (brake) state = 4;
 	else {
 		state = 1;
 	}
@@ -115,11 +130,11 @@ void Mario::Update(float deltaTime) {
 	else {
 		faceRight = false;
 	}
-	animation.Update(state, deltaTime, faceRight, fire);
+	animation.Update(state, deltaTime, faceRight, fire, brake);
 	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
 }
 
-void Character::SlidePipe(slidingDirection direction, float& dist) {
+void Character::SlidePipe(slidingDirection direction) {
 	this->velocity.x = 0;
 	this->velocity.y = 0;
 	float offset = 0;
@@ -146,7 +161,7 @@ void Character::SlidePipe(slidingDirection direction, float& dist) {
 	}
 };
 
-Luigi::Luigi() : Character(500.0f, 3.0f) {
+Luigi::Luigi() : Character(3.0f) {
 	
 }
 void Luigi::Update(float deltaTime) {
@@ -177,52 +192,16 @@ Character* CharacterFactory::createCharacter(CharacterType type) {
 
 void FullControl::execute(float deltaTime) {
 	if (character->sliding) {
-		float dist = 10.0f;
-		character->SlidePipe(character->slideDirection, dist);
-		character->Update(deltaTime);
+		character->SlidePipe(character->slideDirection);
 	}
 	else {
-		float accX = 0;
-		character->control(accX, true);
-		character->accelerate(Vector2{ accX, 9.81f }, deltaTime);
-
-		character->Update(deltaTime);
+		character->control(true);
+		character->accelerate(Vector2{ character->accX, 9.81f }, deltaTime);
 	}
+	character->Update(deltaTime);
 }
 void InHole::execute(float deltaTime) {
-	float accX = 0;
-	character->control(accX, false);
-	character->accelerate(Vector2{ accX, 9.81f }, deltaTime);
+	character->control(false);
+	character->accelerate(Vector2{ character->accX, 9.81f }, deltaTime);
 	character->Update(deltaTime);
 }
-void SlidePipeRight::execute(float deltaTime) {
-	/*float accX = 0;
-	character->control(accX, false);
-	slideTime -= deltaTime;
-	if (slideTime > 0) {
-		character->setPosition(Vector2{ character->GetPosition().x + 5, character->GetPosition().y });
-	}
-	else character->sliding = false;
-	character->Update(deltaTime);*/
-}
-void SlidePipeUp::execute(float deltaTime) {
-	float accX = 0;
-	character->control(accX, false);
-	slideTime -= deltaTime;
-	if (slideTime < 0) {
-		character->executeCommand(new FullControl(character), deltaTime);
-	}
-	character->setPosition(Vector2{ character->GetPosition().x, character->GetPosition().y - 5 });
-	character->Update(deltaTime);
-}
-void SlidePipeDown::execute(float deltaTime) {
-	float accX = 0;
-	character->control(accX, false);
-	slideTime -= deltaTime;
-	if (slideTime < 0) {
-		character->executeCommand(new FullControl(character), deltaTime);
-	}
-	character->setPosition(Vector2{ character->GetPosition().x, character->GetPosition().y + 5 });
-	character->Update(deltaTime);
-}
-
