@@ -26,11 +26,20 @@ void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire) {
 	{
 		totalTime += 0.01f;
 		currentImage.x = 6;
-		std::cout << totalTime << std::endl;
+		//std::cout << totalTime << std::endl;
 		if (totalTime >= switchTime) {
 			totalTime = 0;
 			fire = false;
 		}
+	}
+	else if (state == 4) {
+		/*totalTime += 0.001f;
+		currentImage.x = 0;
+		std::cout << totalTime << std::endl;
+		if (totalTime >= switchTime) {
+			totalTime = 0;
+			sliding = false;
+		}*/
 	}
 	else if (state == 1) {
 		totalTime += deltaTime;

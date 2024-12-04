@@ -12,9 +12,10 @@ public:
 public:
 	Rectangle uvRect;
 
+	Vector2 currentImage;
+
 private:
 	Vector2 imageCount;
-	Vector2 currentImage;
 
 	float totalTime;
 	float switchTime;
