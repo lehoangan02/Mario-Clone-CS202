@@ -72,7 +72,6 @@ private:
     Texture2D settingTexture;
     Button characterButton[2];
     CircleButton levelButton[3];
-    Button saveButton;
     Button quit2Button;
 
     Texture2D highScoreTexture;
