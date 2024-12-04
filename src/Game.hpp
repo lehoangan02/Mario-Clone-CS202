@@ -18,36 +18,9 @@ public:
 
     Game(int characterMenu, int levelMenu);
 
-    Game& Game::operator=(const Game& other) {
-    if (this == &other) {
-        return *this; 
-    }
-
-    if (level) {
-        level = nullptr;
-    }
-
-    factory = other.factory; 
-    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
-
-    player = other.player;
-
-    return *this; 
-}
+    Game& operator=(const Game& other);
    
-    Game::Game(const Game& other) 
-    : factory(other.factory),  
-      level(nullptr),          
-      player(other.player)     
-{
-    if (other.level) {
-        level = factory.CreateLevel(other.level->GetLevelType());
-        if (level) {
-            level->attachPlayer(&player); 
-        }
-    }
-}
-
+    Game(const Game& other);
     void start();  
     void update(float deltaTime);  
     void draw();  
