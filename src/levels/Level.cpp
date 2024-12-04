@@ -133,13 +133,11 @@ void Level::render()
 void Level::update(float DeltaTime)
 {
     isPlayerFinished = isInHole();
-    float accX = 0;
     if (!isPlayerFinished) {
-		m_Player->control(accX,true);
+        this->setCommand(new FullControl(m_Player));
     }
-	else m_Player->control(accX, false);
-    m_Player->accelerate(Vector2{ accX, 9.81f }, DeltaTime);
-    m_Player->Update(DeltaTime);
+	else this->setCommand(new InHole(m_Player));
+	m_Command->execute(DeltaTime);
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
         m_CameraPosition.x = m_Player->GetPosition().x - m_PlayerOffset;

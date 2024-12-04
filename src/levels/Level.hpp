@@ -9,6 +9,7 @@ class Level
 {
     protected:
     int m_LevelID;
+	Command* m_Command;
     std::vector<Enemy*> m_Enemies;
     std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
@@ -37,6 +38,7 @@ class Level
         void applyBoundaries();
         bool isInHole();
         void resolveHoleCollisions();
+        void setCommand(Command* command) { m_Command = command; };
 };
 class LevelFactory
 {
