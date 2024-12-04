@@ -9,6 +9,7 @@
 #define Application_hpp
 
 #include "GUI.hpp"
+#include "Game.hpp"
 
 
 class Application {
