@@ -15,23 +15,26 @@ private:
 
 public:
     Game();
-//     Game& Game::operator=(const Game& other) {
-//     if (this == &other) {
-//         return *this; 
-//     }
 
-//     if (level) {
-//         level = nullptr;
-//     }
+    Game(int characterMenu, int levelMenu);
 
-//     factory = other.factory; 
-//     level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
+    Game& Game::operator=(const Game& other) {
+    if (this == &other) {
+        return *this; 
+    }
 
-//     player = other.player;
+    if (level) {
+        level = nullptr;
+    }
 
-//     return *this; 
-// }
-  
+    factory = other.factory; 
+    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
+
+    player = other.player;
+
+    return *this; 
+}
+   
     Game::Game(const Game& other) 
     : factory(other.factory),  
       level(nullptr),          
