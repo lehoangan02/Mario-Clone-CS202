@@ -83,6 +83,8 @@ private:
 public:
     Menu();
     void draw();
+    int characterMenu();
+    int levelMenu();
 
     int handle();
 };

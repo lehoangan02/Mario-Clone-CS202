@@ -151,3 +151,14 @@ int Menu::handle() {
     }
     return type;
 }
+
+int Menu::characterMenu() {
+    if (characterButton[0].getChoose()) return 0;
+    else return 1;
+}
+
+int Menu::levelMenu() {
+    if (levelButton[0].getChoose()) return 0;
+    else if (levelButton[0].getChoose()) return 1;
+    else return 2;
+}
