@@ -167,6 +167,7 @@ void Level::applyBoundaries()
 }
 void Level::render()
 {
+    float Offset = 900;
     // printf("Rendering Level\n");
     switch (m_WorldType)
     {
@@ -204,7 +205,7 @@ void Level::render()
     }
     // std::cout << "Zoom: " << Zoom << std::endl;
     Zoom /= 2;
-    camera.offset = {0, 900 * (Zoom)};
+    camera.offset = {0, Offset * (Zoom)};
     camera.zoom = Zoom;
     BeginMode2D(camera);
     for (auto& object : m_Environment)
@@ -230,7 +231,7 @@ void Level::render()
         object->render();
     }
     float HidePositionX = m_ScreenSize.x * 2;
-    DrawRectangle((HidePositionX) + m_CameraPosition.x, - 900 * 2, INT_MAX, INT_MAX, RED);
+    DrawRectangle((HidePositionX) + m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
     // DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth - HidePositionX / Zoom, CurrentHeight, BLACK);
     // std::cout << m_CameraPosition.x << std::endl;

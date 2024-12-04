@@ -52,6 +52,7 @@ class Level : public Subject
         virtual void render();
         void pauseLevel();
         void continueLevel();
+        LevelFactory::LevelType GetLevelType() { return (LevelFactory::LevelType)m_LevelID; };
     protected:
         void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         virtual void load() = 0;
