@@ -12,36 +12,25 @@ int main(void)
     const int screenHeight = 768;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-    
     Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+    Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
+    Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+    Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
+
   
     Coin* coin = new Coin(
         Vector2{ 100, 500 },   //Start position
         Vector2{ 100, 300 },    //End position
         Vector2{ 40,100},      // size of coin
-        coinTexture,     
+        coinTexture,
         Vector2{ 0, 400 }     //velocity
     );
-    Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
-    Mushroom* mushroom = new Mushroom(
-        Vector2{ 100, 200 }, //Startpos
-        Vector2{ 0 , 0},     //EndPos (= {0,0} neu khong di chuyen)
-        Vector2{ 50, 50 },   //size
-        mushroomTexture
-    );
-    Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
-    FireFlower* fireflower = new FireFlower(
-        Vector2{ 100, 300 },
-        Vector2{ 0, 0 },
-        Vector2{ 50, 50 },
-        fireflowerTexture
-    );
-    Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
-    StarMan* starman = new StarMan(
-        Vector2{ 100, 500},
-        Vector2{ 0, 0},
-        Vector2{ 50, 50},
-        starmanTexture
+    Item* mushroom = new Mushroom(
+        Vector2{ 100, 500 },   // Start position
+        Vector2{ 100, 300 },   // End position
+        Vector2{ 50, 50 },    // Size
+        mushroomTexture,     // Texture
+        Vector2{ 0, 400 }      // Velocity
     );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -60,12 +49,12 @@ int main(void)
             coin->onNotify();
         }
         if (IsKeyPressed(KEY_B)) {
-            mushroom->onNotify();
+            if (dynamic_cast<FireFlower*>(mushroom) == nullptr) {
+                mushroom = Item::Transform(mushroom, "FireFlower", fireflowerTexture, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME);
+            }
         }
         coin->Update(deltatime);
         mushroom->Update(deltatime);
-        fireflower->Update(deltatime);
-        starman->Update(deltatime);
 
         level->update(deltatime);
 
@@ -75,8 +64,6 @@ int main(void)
         ClearBackground(Color{105, 147, 245, 255});
         coin->Draw();
         mushroom->Draw();
-        fireflower->Draw();
-        starman->Draw();
 
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
@@ -86,6 +73,6 @@ int main(void)
     }
 
     CloseWindow();
-
+    
     return 0;
 }

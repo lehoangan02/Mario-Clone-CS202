@@ -2,13 +2,15 @@
 #include "Item.h"
 #include <iostream>
 #include <math.h>
+
+
 Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
      elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false),
     Notify(false)    
 {
-  
+    
     position = startPosition;
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
@@ -47,10 +49,27 @@ void Item::onNotify() {
     Notify = true;
 }
 
+
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity) {}
+Item* Item::Transform(Item* currentItem, const std::string& newItemType, Texture2D newTexture, int newTotalFrames, float newSwitchTime) {
+    Vector2 position = currentItem->GetPosition();
+    Vector2 size = currentItem->GetSize();
+    Vector2 velocity = currentItem->velocity;
+    Vector2 startPosition = currentItem->startPosition;
+    Vector2 endPosition = currentItem->endPosition;
+
+    delete currentItem;
+
+    if (newItemType == "FireFlower") {
+        return new FireFlower(startPosition, endPosition, size, newTexture, velocity);
+    }
+    
+
+    return nullptr;
+}
 void Coin::applyEffect(Character* character) {
     return;
 }

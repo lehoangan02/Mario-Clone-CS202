@@ -1,4 +1,5 @@
-#pragma 
+#pragma once
+
 constexpr float epsilon = 1.0f;
 
 constexpr int COIN_FRAME_COUNT = 6;
@@ -13,9 +14,11 @@ constexpr float FIREFLOWER_FRAME_TIME = 0.5f;
 constexpr int STARMAN_FRAME_COUNT = 5;
 constexpr float STARMAN_FRAME_TIME = 0.5f;
 
-#include "../animation/Animation.h"
+#include <string>
+#include "raylib.h"
 #include "../characters/Character.h"
 #include "../Oberver/Observer.hpp"
+
 
 class Item : public Observer {
 protected:
@@ -38,7 +41,7 @@ protected:
 	int moves;
 
 public:
-	virtual void onNotify() override;
+	void onNotify() override;
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;
@@ -51,7 +54,8 @@ public:
 	Vector2 GetSize() const {
 		return size;
 	}
-
+	static Item* Transform(Item* currentItem, const std::string& newItemType,
+		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
 class Coin : public Item {
 public:
