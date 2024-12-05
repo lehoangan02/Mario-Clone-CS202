@@ -4,6 +4,7 @@
 
 class Character {
 public:
+    Character() = default;
 	Character(Texture2D* texture,Vector2 imageCount, float switchTime, float speed, float jumpHeight);
 	~Character();
 	void Update(float deltaTime);

@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "../Application.hpp"
 
 int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
