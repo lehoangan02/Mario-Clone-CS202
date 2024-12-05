@@ -65,6 +65,11 @@
       "cwd": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin",
       "binaryPath": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin/main",
       "binaryArgs": []
+    },
+    {
+      "cwd": "/Users/holamngocbao/Desktop/CS202-Mario/bin",
+      "binaryPath": "/Users/holamngocbao/Desktop/CS202-Mario/bin/main",
+      "binaryArgs": []
     }
   ],
   "C_Cpp_Runner.msvcBatchPath": "",
