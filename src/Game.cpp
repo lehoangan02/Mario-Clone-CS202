@@ -2,10 +2,10 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101)),
-      player(nullptr, Vector2{10, 1}, 0.1f, 500.0f, 3.0f)  
+      level(factory.CreateLevel(LevelFactory::LEVEL_101))
 {
-    Texture t = LoadTexture("assets/textures/mario.png");  
+    Texture t = LoadTexture("assets/textures/mario.png");
+    player = Character(&t, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player.setPosition(Vector2{20, 0});  
     level->attachPlayer(&player);  
 }
@@ -24,7 +24,7 @@ Game::Game(int characterMenu, int levelMenu)
     else {
         level = factory.CreateLevel(LevelFactory::LEVEL_103);
     }
-
+    
     Texture t;
     if (characterMenu == 0) {
         t = LoadTexture("assets/textures/mario.png");
@@ -33,6 +33,7 @@ Game::Game(int characterMenu, int levelMenu)
         t = LoadTexture("assets/textures/luigi.png");
     }
 
+    player = Character(&t, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player = Character(&t, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player.setPosition(Vector2{20, 0});
     level->attachPlayer(&player);
