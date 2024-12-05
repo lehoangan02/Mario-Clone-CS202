@@ -7,7 +7,9 @@ Animation::Animation(Texture2D* texture, Vector2 imageCount, float switchTime)
 	this->switchTime = switchTime;
 	totalTime = 0.0;
 	currentImage.x = 0;
-
+	if (texture == nullptr) {
+		std::cerr << "Texture is null" << std::endl;
+	}
 	uvRect.width = texture->width / imageCount.x;
 	// std::cout << "Width: " << uvRect.width << std::endl;
 	uvRect.height = texture->height;
