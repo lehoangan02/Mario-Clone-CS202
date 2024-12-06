@@ -86,7 +86,7 @@ class LevelFactory
         ~LevelFactory() = default;
     public:
         static LevelFactory& GetLevelFactory();
-        Level* CreateLevel(LevelType Type);
+        Level* CreateLevel(int Type);
 };
 class Level101 : public Level
 {

@@ -4,7 +4,7 @@ LevelFactory& LevelFactory::GetLevelFactory()
     static LevelFactory Factory;
     return Factory;
 }
-Level* LevelFactory::CreateLevel(LevelType Type)
+Level* LevelFactory::CreateLevel(int Type)
 {
     switch (Type)
     {
@@ -266,12 +266,9 @@ unsigned int Level::update(float DeltaTime)
         return ReturnResult;
     }
     isPlayerFinished = isInHole();
-    // float accX = 0;
-    if (!isPlayerFinished) {
-		m_Player->control(true);
-    }
-    else m_Player->control(false);
-    m_Player->accelerate(Vector2{9.81f }, DeltaTime);
+    FullControl control(m_Player);
+    control.execute(DeltaTime);
+    m_Player->accelerate(Vector2{0, 9.81f }, DeltaTime);
     m_Player->Update(DeltaTime);
 
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)

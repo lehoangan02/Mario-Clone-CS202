@@ -3,7 +3,7 @@
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
       level(factory.CreateLevel(LevelFactory::LEVEL_101)),
-      character(ResourceManager::GetInstance()->GetTexture("mario")),
+      character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
     // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
@@ -14,7 +14,7 @@ Game::Game()
 
 Game::Game(int characterMenu, int levelMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
-      level(nullptr),  
+      level(nullptr)  
 {
     if (levelMenu == 0) {
         level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -47,7 +47,7 @@ Game::Game(const Game& other)
     if (other.level) {
         level = factory.CreateLevel(other.level->GetLevelType());
         if (level) {
-            level->attachPlayer(&player); 
+            level->attachPlayer(player); 
         }
     }
 }
