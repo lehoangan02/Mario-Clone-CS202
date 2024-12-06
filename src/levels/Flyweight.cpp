@@ -42,6 +42,10 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return EndPipeTopTextureFlyWeight::GetEndPipeTextureFlyWeight();
         }
+        case TextureType::EMPTY_QUESTION_BLOCK:
+        {
+            return EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight();
+        }
         break;
     }
     return nullptr;
@@ -166,6 +170,23 @@ void QuestionBlockTextureFlyWeight::render(Vector2 Position, Rectangle TextureRe
     // std::cout << "Rendering Question Block at " << Position.x << ", " << Position.y << std::endl;
     DrawTexturePro(m_Texture, TextureRect, Rectangle{Position.x, Position.y, 100, 100}, Vector2{0, 0}, 0.0f, WHITE);
 }
+EmptyQuestionBlockTextureFlyweight::EmptyQuestionBlockTextureFlyweight()
+{
+    m_Texture = LoadTexture("assets/textures/empty_question_block.png");
+}
+EmptyQuestionBlockTextureFlyweight::~EmptyQuestionBlockTextureFlyweight()
+{
+}
+EmptyQuestionBlockTextureFlyweight* EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight()
+{
+    static EmptyQuestionBlockTextureFlyweight texture;
+    return &texture;
+}
+void EmptyQuestionBlockTextureFlyweight::render(Vector2 Position)
+{
+    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+}
+
 CloudTextureFlyWeight::CloudTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/cloud.png");

@@ -5,20 +5,27 @@
 #include <iostream>
 #include "../animation/Animation.h"
 #include "../Oberver/Observer.hpp"
+#include "Flyweight.hpp"
 class MapObject
 {
     public:
         Vector2 m_Position;
         Vector2 m_Size;
     public:
+        virtual void render() = 0;
+        Vector2 getSize() { return m_Size; };
+    protected:
         MapObject(Vector2 Position, Vector2 Size) : m_Position(Position), m_Size(Size) {};
+        
 };
 class DrawableObject : public MapObject
 {
-    public:
+    protected:
         DrawableObject(Vector2 Position) : MapObject(Position, Vector2{0, 0}) {};
+        
+    public:
+        // virtual void render() = 0;
         virtual ~DrawableObject() = default;
-        virtual void render() = 0;
 };
 class EnvironmentObject : public MapObject
 {
@@ -26,8 +33,7 @@ class EnvironmentObject : public MapObject
         EnvironmentObject(Vector2 Position, Vector2 Size) : MapObject(Position, Size) {};
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
-        virtual void render() = 0;
-        Vector2 getSize() { return m_Size; };
+        // virtual void render() = 0;
 };
 class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
 {
@@ -44,7 +50,8 @@ class DrawableObjectFactory
     {
         GRASS,
         CLOUD,
-        MOUNTAIN
+        MOUNTAIN,
+        CASTLE
     };
     private:
         DrawableObjectFactory() = default;
@@ -58,11 +65,12 @@ class EnvironmentObjectFactory // Singleton Factory
     public:
     enum EnvironmentObjectType
     {
-        WARP_PIPE,
-        WARP_PIPE_SHORT,
-        WARP_PIPE_TINY,
-        BRICK,
-        HARD_BLOCK
+        WARP_PIPE, // 0
+        WARP_PIPE_SHORT, // 1
+        WARP_PIPE_TINY, // 2
+        BRICK, // so on & so on
+        HARD_BLOCK,
+        BLUE_BRICK,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -85,22 +93,36 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
         static EnvironmentInteractiveObjectFactory& GetEnvironmentInteractiveFactory();
         EnvironmentObjectInteractive* CreateEnvironmentInteractiveObject(int Type, Vector2 Position);
 };
+class Lift : public MapObject
+{
+    public:
+    Lift(Vector2 Position);
+    ~Lift();
+    void render() override;
+    void update(float DeltaTime);
+    private:
+    float m_Speed = 100;
+};
 class Ground : public MapObject // Singleton
 {
     friend class Level;
     private:
-        Texture2D m_Texture;
+        Texture2D m_Texture[2] = {LoadTexture("assets/textures/ground1x1.png"), LoadTexture("assets/textures/ground_blue1x1.png")};
         std::vector<std::pair<float, int>> m_Holes;
+        Vector2 m_CameraPosition;
+        int m_WorldType = 0;
     private:
         Ground();
         ~Ground();
-        void update();
+        void update(Vector2 CameraPosition);
     public:
-        void render(Vector2 CameraPosition);
+        void clearHoles() { m_Holes.clear(); };
+        void render();
         static Ground* GetGround();
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
         int getHoleCount() { return m_Holes.size(); };
+        void setWorldType(int Type) { m_WorldType = Type; };
 };
 class WarpPipe : public EnvironmentObject
 {
@@ -110,17 +132,7 @@ class WarpPipe : public EnvironmentObject
     void render() override;
     void update() override;
 };
-class WarpPipeTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        WarpPipeTextureFlyWeight();
-        ~WarpPipeTextureFlyWeight();
-    public:
-        static WarpPipeTextureFlyWeight* GetWarpPipeTextureFlyweight();
-        void render(Vector2 Position);
-};
+
 class Brick : public EnvironmentObject
 {
     public:
@@ -128,17 +140,6 @@ class Brick : public EnvironmentObject
     ~Brick();
     void render() override;
     void update() override;
-};
-class BrickTextureFlyWeight // Singleton Flyweight
-{
-    private:
-        Texture2D m_Texture;
-    private:
-        BrickTextureFlyWeight();
-        ~BrickTextureFlyWeight();
-    public:
-        static BrickTextureFlyWeight* GetBrickTextureFlyWeight();
-        void render(Vector2 Position);
 };
 class HardBlock : public EnvironmentObject
 {
@@ -148,16 +149,13 @@ class HardBlock : public EnvironmentObject
     void render() override;
     void update() override;
 };
-class HardBlockTextureFlyWeight // Singleton Flyweight
+class BlueBrick : public EnvironmentObject
 {
-    private:
-        Texture2D m_Texture;
-    private:
-        HardBlockTextureFlyWeight();
-        ~HardBlockTextureFlyWeight();
     public:
-        static HardBlockTextureFlyWeight* GetHardBlockTextureFlyWeight();
-        void render(Vector2 Position);
+    BlueBrick(Vector2 Position);
+    ~BlueBrick();
+    void render() override;
+    void update() override;
 };
 class QuestionBlock : public EnvironmentObjectInteractive
 {
@@ -175,6 +173,7 @@ class QuestionBlock : public EnvironmentObjectInteractive
         HitAnimationCommander(float MoveUpDistance, float BottomPosition);
         ~HitAnimationCommander();
         Vector2 giveMovementCommand(Vector2 CurrentPosition);
+        bool isFinished() { return m_Finished; };
     };
     public:
     QuestionBlock(Vector2 Position);
@@ -190,18 +189,6 @@ class QuestionBlock : public EnvironmentObjectInteractive
     private:
     Rectangle getCurrentTextureRect();
 };
-class QuestionBlockTextureFlyWeight // Singleton Flyweight
-{
-    friend class QuestionBlock;
-    private:
-        Texture2D m_Texture;
-    private:
-        QuestionBlockTextureFlyWeight();
-        ~QuestionBlockTextureFlyWeight();
-    public:
-        static QuestionBlockTextureFlyWeight* GetQuestionBlockTextureFlyWeight();
-        void render(Vector2 Position, Rectangle TextureRect);
-};
 class Cloud : public DrawableObject
 {
     public:
@@ -209,14 +196,61 @@ class Cloud : public DrawableObject
     ~Cloud();
     void render() override;
 };
-class CloudTextureFlyWeight // Singleton Flyweight
+class Castle : public DrawableObject
 {
     private:
-        Texture2D m_Texture;
-    private:
-        CloudTextureFlyWeight();
-        ~CloudTextureFlyWeight();
+    Texture2D m_Texture = LoadTexture("assets/textures/castle.png");
     public:
-        static CloudTextureFlyWeight* GetCloudTextureFlyWeight();
-        void render(Vector2 Position);
+    Castle(Vector2 Position);
+    ~Castle();
+    void render() override;
+};
+class Grass : public DrawableObject
+{
+    public:
+    Grass(Vector2 Position);
+    ~Grass();
+    void render() override;
+};
+class Mountain : public DrawableObject
+{
+    public:
+    Mountain(Vector2 Position);
+    ~Mountain();
+    void render() override;
+};
+enum EndPipeType
+{
+    TOP,
+    SIDE,
+};
+enum BeginPipe
+{
+
+};
+class EndPipe : public EnvironmentObject
+{
+    public:
+    EndPipe(Vector2 Position, Vector2 Size, int Type);
+    ~EndPipe();
+    int getType() { return (m_Type); };
+    private:
+    int m_Type;
+
+};
+class EndPipeTop : public EndPipe
+{
+    public:
+    EndPipeTop(Vector2 Position);
+    ~EndPipeTop();
+    void render() override;
+    void update() override;
+};
+class EndPipeSide : public EndPipe
+{
+    public:
+    EndPipeSide(Vector2 Position);
+    ~EndPipeSide();
+    void render() override;
+    void update() override;
 };
