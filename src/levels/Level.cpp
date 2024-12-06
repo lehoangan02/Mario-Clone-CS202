@@ -280,7 +280,8 @@ unsigned int Level::update(float DeltaTime)
 
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
-        m_CameraPosition.x = m_Player->GetPosition().x - m_PlayerOffset;
+        float Delta = m_Player->GetPosition().x - m_CameraPosition.x - m_PlayerOffset;
+        m_CameraPosition.x += Delta * 0.05;
     }
     if (m_Player->GetPosition().x < m_CameraPosition.x)
     {
