@@ -4,6 +4,7 @@
 #include "../characters/Character.h"
 #include "AABBox.hpp"
 #include "MapLoader.hpp"
+#include "../Item/Item.h"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -44,6 +45,14 @@ class Level : public Subject
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
+    Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+    Coin* coin = new Coin(
+        Vector2{ 500, 500 },   //Start position
+        Vector2{ 500, 300 },    //End position
+        Vector2{ 40,100},      // size of coin
+        coinTexture,
+        Vector2{ 0, 400 }     //velocity
+    );
     private:
         bool m_Paused = false;
     public:

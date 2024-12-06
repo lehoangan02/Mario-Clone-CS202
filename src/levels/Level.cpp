@@ -27,6 +27,8 @@ Level::Level()
 }
 Level::~Level()
 {
+    delete m_Player;
+    delete coin;
     for (auto& object : m_Environment)
     {
         delete object;
@@ -163,6 +165,9 @@ void Level::resolveInteractiveEnvironmentCollisions()
                     if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                     {
                         m_EnvironmentInteractive[i]->onNotify();
+                        Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+                        
+                        coin->onNotify();
                     }
                 }
                 resolveCollisions(PlayerBox, EnvironmentBox);
@@ -189,6 +194,7 @@ void Level::render()
 {
     float Offset = 900;
     // printf("Rendering Level\n");
+    coin -> Draw();
     switch (m_WorldType)
     {
         case Level::WorldType::OVERWORLD:
@@ -259,6 +265,7 @@ void Level::render()
 }
 unsigned int Level::update(float DeltaTime)
 {
+    coin -> Update(DeltaTime);
     m_Ground->update(m_CameraPosition);
     unsigned int ReturnResult = doPauseLogic();
     if (ReturnResult != LEVEL_RETURN_MESSAGE::RUNNING)
