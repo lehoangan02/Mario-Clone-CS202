@@ -12,7 +12,7 @@ private:
     LevelFactory& factory;
     Level* level;
     Texture2D character;
-    Character player;  
+    Character* player;  
 
 public:
     Game();

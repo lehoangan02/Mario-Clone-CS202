@@ -4,18 +4,17 @@ Game::Game()
     : factory(LevelFactory::GetLevelFactory()), 
       level(factory.CreateLevel(LevelFactory::LEVEL_101)),
       character(ResourceManager::GetInstance()->GetTexture("mario")),
-      player(Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
     // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
-    player.setPosition(Vector2{20, 0});  
-    level->attachPlayer(&player);  
+    player = new Mario;
+    player->setPosition(Vector2{20, 0});  
+    level->attachPlayer(player);  
 }
 
 Game::Game(int characterMenu, int levelMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
       level(nullptr),  
-      player(nullptr, Vector2{10, 1}, 0.1f, 500.0f, 3.0f)  
 {
     if (levelMenu == 0) {
         level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -35,10 +34,9 @@ Game::Game(int characterMenu, int levelMenu)
         character = ResourceManager::GetInstance()->GetTexture("mario");
     }
 
-    player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
-    player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
-    player.setPosition(Vector2{20, 0});
-    level->attachPlayer(&player);
+    player = new Mario;
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
 }
 
 Game::Game(const Game& other) 
