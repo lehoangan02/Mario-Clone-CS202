@@ -68,43 +68,40 @@ Menu::Menu() {
     levelButton[2] = CircleButton({669, 383, 50, 50}, Color{3, 121, 255, 255},"3", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
     
     quit2Button = Button({560, 502, 141, 42}, Color{3, 121, 255, 255},"Quit", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
-    saveButton = Button({326, 502, 141, 42}, Color{3, 121, 255, 255},"Save", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
     
     quitButton = Button({247, 253, 141, 42}, Color{3, 121, 255, 255}, "Quit", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
     type = 0;
 }
 
 void Menu::draw(){
-    DrawTexture(pageTexture, 0, 0, WHITE);
-    
+    DrawTextureEx(pageTexture, {0, 0}, 0, 0.125, WHITE);
     playButton.draw();
     settingButton.draw();
     highScoreButton.draw();
     inforButton.draw();
     
     if (type == 1) {
-        DrawTexture(playTexture, 236, 235, WHITE);
+        DrawTextureEx(playTexture, {236, 235}, 0, 0.125, WHITE);
         continueButton.draw();
         newGameButton.draw();
         quit1Button.draw();
     }
     else if (type == 2 || type == 5 || type == 6 || type == 7 || type == 8 || type == 9) {
-        DrawTexture(settingTexture, 236, 235, WHITE);
+        DrawTextureEx(settingTexture, {236, 235}, 0, 0.125, WHITE);
         levelButton[0].draw();
         levelButton[1].draw();
         levelButton[2].draw();
         
         characterButton[0].draw();
         characterButton[1].draw();
-        saveButton.draw();
         quit2Button.draw();
     }
     else if (type == 3) {
-        DrawTexture(highScoreTexture, 236, 235, WHITE);
+        DrawTextureEx(highScoreTexture, {236, 235}, 0, 0.125, WHITE);
         quitButton.draw();
     }
     else if (type == 4) {
-        DrawTexture(inforTexture, 236, 235, WHITE);
+        DrawTextureEx(inforTexture, {236, 235}, 0, 0.125, WHITE);
         quitButton.draw();
     }
 }
@@ -119,10 +116,10 @@ int Menu::handle() {
         type = 0;
     }
     else if (newGameButton.isClicked()) {
-        //
+        type = 10;
     }
     else if (continueButton.isClicked()) {
-        //
+        type = 11;
     }
     else if (characterButton[0].isClicked() && !characterButton[0].getChoose()) {
         characterButton[0].setChoose(true);
@@ -152,9 +149,16 @@ int Menu::handle() {
         levelButton[2].setChoose(true);
         type = 9;
     }
-    else if (saveButton.isClicked()) {
-        //
-        type = 0;
-    }
     return type;
+}
+
+int Menu::characterMenu() {
+    if (characterButton[0].getChoose()) return 0;
+    else return 1;
+}
+
+int Menu::levelMenu() {
+    if (levelButton[0].getChoose()) return 0;
+    else if (levelButton[0].getChoose()) return 1;
+    else return 2;
 }

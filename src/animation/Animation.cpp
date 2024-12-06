@@ -18,18 +18,26 @@ Animation::Animation(Texture2D* texture, Vector2 imageCount, float switchTime)
 Animation::~Animation()
 {
 }
-void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire) {
+void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire, bool& brake) {
 	currentImage.y = 0; // modify this if texture having states
 	if (state == 0) currentImage.x = 0;
 	else if (state == 2) currentImage.x = 5;
 	else if (state == 3)
 	{
-		totalTime += 0.01f;
+		totalTime += 0.02f;
 		currentImage.x = 6;
-		std::cout << totalTime << std::endl;
+		//std::cout << totalTime << std::endl;
 		if (totalTime >= switchTime) {
 			totalTime = 0;
 			fire = false;
+		}
+	}
+	else if (state == 4) {
+		totalTime += 0.015f;
+		currentImage.x = 4;
+		if (totalTime >= switchTime) {
+			totalTime = 0;
+			brake= false;
 		}
 	}
 	else if (state == 1) {

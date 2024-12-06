@@ -1,32 +1,11 @@
-#include "raylib.h"
-#include <iostream>
-#include "../characters/Character.h"
-#include "../levels/Level.hpp"
-#include "../animation/Animation.h"
-int main(void)
-{
-    const int screenWidth = 1200;
-    const int screenHeight = 900;
+#include "../Application.hpp"
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+int main() {
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    LevelFactory& factory = LevelFactory::GetLevelFactory();
-    Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
-	Character* player = CharacterFactory::createCharacter(MARIO);
-    level->attachPlayer(player);
-    float deltatime;
-	SetTargetFPS(60); 
-    while (!WindowShouldClose())
-    {
-        deltatime = GetFrameTime();
-        level->update(deltatime);
-        BeginDrawing();
-        level->render();
-        EndDrawing();
+    ResourceManager::GetInstance()->LoadResources();
 
-    }
-
-    CloseWindow();
-
-    return 0;
+    Application app;
+    app.run();
 }
