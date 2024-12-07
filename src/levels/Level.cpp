@@ -275,8 +275,11 @@ unsigned int Level::update(float DeltaTime)
     isPlayerFinished = isInHole();
     FullControl control(m_Player);
     control.execute(DeltaTime);
-    m_Player->accelerate(Vector2{0, 9.81f }, DeltaTime);
-    m_Player->Update(DeltaTime);
+	if (isPlayerFinished)
+	{
+		InHole control(m_Player);
+		control.execute(DeltaTime);
+	}
 
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {

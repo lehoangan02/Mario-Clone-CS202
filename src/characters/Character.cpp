@@ -1,7 +1,11 @@
 #include "Character.h"
 #include <iostream>
 
-//#define accX = 
+#define MAX_SPEED 700.0f
+#define FAST_BRAKE 1400.0f
+#define ACC_X 600.0f
+#define SLOW_BRAKE 800.0f
+#define GRAVITY 3500.0f
 
 Character::Character(float jumpHeight) 
 {
@@ -13,7 +17,7 @@ Character::Character(float jumpHeight)
 	this->velocity = { 0.0f, 0.0f };
 	this->accX = 0.0f;
 	this->canJump = false;
-	this->scale = 3.5f;
+	this->scale = 5.0f;
 	this->fire = false;
 	this->teleport = true;
 	this->sliding = false;
@@ -30,11 +34,12 @@ Vector2 Character::GetCenter() {
 }
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
-	if (velocity.x > 10.0f)
-			velocity.x = 10.0f;
-	else if (velocity.x < -10.0f) 
-		velocity.x = -10.0f;
+	if (velocity.x > MAX_SPEED)
+			velocity.x = MAX_SPEED;
+	else if (velocity.x < -MAX_SPEED) 
+		velocity.x = -MAX_SPEED;
 	velocity.y += acceleration.y * deltaTime;
+	/*std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;*/
 }
 void Character::control(bool enabled) {
 	if (!enabled) {
@@ -42,19 +47,19 @@ void Character::control(bool enabled) {
 		return;
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		if (velocity.x < -5.0f) brake = true;
-		if (brake) accX = fabs(50.0f);
-		else accX = fabs(10.0f);
+		if (velocity.x < - MAX_SPEED * 3 / 5) brake = true;
+		if (brake) accX = fabs(FAST_BRAKE);
+		else accX = fabs(ACC_X);
 	}
 	else if (IsKeyDown(KEY_LEFT)) {
-		if (velocity.x > 5.0f) brake = true;
-		if (brake) accX = -fabs(50.0f);
-		else accX = -fabs(10.0f);
+		if (velocity.x > MAX_SPEED * 3 / 5) brake = true;
+		if (brake) accX = -fabs(FAST_BRAKE);
+		else accX = -fabs(ACC_X);
 	}
 	else {
-		if (faceRight) accX = -fabs(10.0f);
-		else accX = fabs(10.0f);
-		if (fabs(velocity.x) < 1.0f) {
+		if (faceRight) accX = -fabs(SLOW_BRAKE);
+		else accX = fabs(SLOW_BRAKE);
+		if (fabs(velocity.x) < MAX_SPEED*1/10) {
 			velocity.x = 0.0f;
 			accX = 0;
 		}
@@ -78,7 +83,7 @@ void Character::control(bool enabled) {
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
-		velocity.y = -sqrtf(2.0f * 9.81f * jumpHeight);
+		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
@@ -99,7 +104,7 @@ void Character::Draw()
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
-Mario::Mario() : Character(5.0f) {
+Mario::Mario() : Character(300.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
@@ -112,7 +117,7 @@ Mario::Mario() : Character(5.0f) {
 	this->SlideDist = { size.x,size.y };
 }
 void Mario::Update(float deltaTime) {
-	if (velocity.y > 0.2f) canJump = false; //handle double jump 
+	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
 	if (velocity.x == 0.0f || sliding) {
 		state = 0;
 	}
@@ -131,7 +136,7 @@ void Mario::Update(float deltaTime) {
 		faceRight = false;
 	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
-	setPosition(Vector2{ position.x + velocity.x, position.y + velocity.y });
+	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 }
 
 void Character::SlidePipe(slidingDirection direction) {
@@ -196,12 +201,12 @@ void FullControl::execute(float deltaTime) {
 	}
 	else {
 		character->control(true);
-		character->accelerate(Vector2{ character->accX, 9.81f }, deltaTime);
+		character->accelerate(Vector2{ character->accX, GRAVITY }, deltaTime);
 	}
 	character->Update(deltaTime);
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->accelerate(Vector2{ character->accX, 9.81f }, deltaTime);
+	character->accelerate(Vector2{ character->accX, GRAVITY }, deltaTime);
 	character->Update(deltaTime);
-}
+};
