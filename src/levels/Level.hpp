@@ -32,7 +32,7 @@ class Level : public Subject
     std::vector<Enemy*> m_Enemies;
     std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
-    std::vector<EnvironmentObjectInteractive*> m_EnvironmentInteractive;
+    std::vector<std::pair<EnvironmentObjectInteractive*, Item*>> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
     std::vector<Lift*> m_Lifts;
     std::vector<EndPipeTop*> m_EndPipes;
@@ -45,14 +45,6 @@ class Level : public Subject
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
-    Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
-    Coin* coin = new Coin(
-        Vector2{ 500, 500 },   //Start position
-        Vector2{ 500, 300 },    //End position
-        Vector2{ 40,100},      // size of coin
-        coinTexture,
-        Vector2{ 0, 400 }     //velocity
-    );
     private:
         bool m_Paused = false;
     public:

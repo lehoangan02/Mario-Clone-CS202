@@ -28,14 +28,17 @@ Level::Level()
 Level::~Level()
 {
     delete m_Player;
-    delete coin;
     for (auto& object : m_Environment)
     {
         delete object;
     }
     for (auto& object : m_EnvironmentInteractive)
     {
-        delete object;
+        delete object.first;
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        delete object.second;
     }
     for (auto& object : m_Drawables)
     {
@@ -151,7 +154,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
             AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
-            AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i]->m_Position, m_EnvironmentInteractive[i]->getSize());
+            AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i].first->m_Position, m_EnvironmentInteractive[i].first->getSize());
             EnvironmentBox.setFixed(true);
             if (isColliding(PlayerBox, EnvironmentBox))
             {
@@ -164,15 +167,13 @@ void Level::resolveInteractiveEnvironmentCollisions()
                     }
                     if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                     {
-                        m_EnvironmentInteractive[i]->onNotify();
-                        Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
-                        
-                        coin->onNotify();
+                        m_EnvironmentInteractive[i].first->onNotify();                        
+                        m_EnvironmentInteractive[i].second->onNotify();
                     }
                 }
                 resolveCollisions(PlayerBox, EnvironmentBox);
                 m_Player->setPosition(PlayerBox.getPosition());
-                m_EnvironmentInteractive[i]->m_Position = EnvironmentBox.getPosition();
+                m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
                 
             }
     }
@@ -194,7 +195,6 @@ void Level::render()
 {
     float Offset = 900;
     // printf("Rendering Level\n");
-    coin -> Draw();
     switch (m_WorldType)
     {
         case Level::WorldType::OVERWORLD:
@@ -240,7 +240,11 @@ void Level::render()
     }
     for (auto& object : m_EnvironmentInteractive)
     {
-        object->render();
+        object.first->render();
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        object.second->Draw();
     }
     for (auto& object : m_Drawables)
     {
@@ -265,7 +269,6 @@ void Level::render()
 }
 unsigned int Level::update(float DeltaTime)
 {
-    coin -> Update(DeltaTime);
     m_Ground->update(m_CameraPosition);
     unsigned int ReturnResult = doPauseLogic();
     if (ReturnResult != LEVEL_RETURN_MESSAGE::RUNNING)
@@ -294,7 +297,10 @@ unsigned int Level::update(float DeltaTime)
     }
     for (auto& object : m_EnvironmentInteractive)
     {
-        object->update();
+        object.first ->update();
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {        object.second ->Update(DeltaTime);
     }
     for (auto& object : m_Lifts)
     {
