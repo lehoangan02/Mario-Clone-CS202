@@ -27,7 +27,6 @@ Level::Level()
 }
 Level::~Level()
 {
-    delete m_Player;
     for (auto& object : m_Environment)
     {
         delete object;
@@ -70,29 +69,16 @@ void Level::resolveEnvironmentCollisions()
         EnvironmentBox.setFixed(true);
         if (isColliding(PlayerBox, EnvironmentBox))
         {
-            if (!isCollidingHorizontallyRaw(PlayerBox, EnvironmentBox) && isCollidingOnVertically(PlayerBox, EnvironmentBox, 0.0f))
+            if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
             {
-                m_Player->resetVelocity();
-                // std::cout << "Resetting Velocity" << std::endl;
-                
-            }
-            if (isCollidingOnTop(PlayerBox, EnvironmentBox))
-            {
-                // std::cout << "On Top" << std::endl;
-                m_Player->onPlatform();
-                m_Player->resetVelocity();
-            }
-            else if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
-            {
-                if (isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 10.0f))
-                {
-                    // std::cout << "Less" << std::endl;
-                }
-                // std::cout << "On Bottom" << std::endl;
                 if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
-                    // std::cout << "On Bottom" << std::endl;
                     m_Player->resetVelocity();
+                }
+                else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+                {
+                    m_Player->resetVelocity();
+                    m_Player->onPlatform();
                 }
                 
             }
@@ -102,7 +88,6 @@ void Level::resolveEnvironmentCollisions()
             m_Environment[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
-    // std::cout << m_Player -> canJump << std::endl;
     for (int i = 0; i < m_Lifts.size(); i++)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -158,14 +143,14 @@ void Level::resolveInteractiveEnvironmentCollisions()
             EnvironmentBox.setFixed(true);
             if (isColliding(PlayerBox, EnvironmentBox))
             {
-                if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+                if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
                 {
                     m_Player->resetVelocity();
                     if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                     {
                         m_Player->onPlatform();
                     }
-                    if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
+                    else if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                     {
                         m_EnvironmentInteractive[i].first->onNotify();                        
                         m_EnvironmentInteractive[i].second->onNotify();
@@ -283,7 +268,6 @@ unsigned int Level::update(float DeltaTime)
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
-
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
         float Delta = m_Player->GetPosition().x - m_CameraPosition.x - m_PlayerOffset;
