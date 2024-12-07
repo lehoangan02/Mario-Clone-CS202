@@ -50,7 +50,20 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
-        Level -> m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y}));
+        int ItemType;
+        fin >> ItemType;
+        std::pair<EnvironmentObjectInteractive*, Item*> Pair;
+        Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
+        std::cout << "asdlfkjasldfkj" << Pair.first << std::endl;
+        Coin* coin = new Coin(
+            Vector2{ X + 40, Y },   //Start position
+            Vector2{ X + 40, Y - 300 },    //End position
+            Vector2{ 40,100},      // size of coin
+            LoadTexture("assets/textures/Coin.png"),
+            Vector2{ 0, 400 }     //velocity
+        );
+        Pair.second = coin;
+        Level -> m_EnvironmentInteractive.push_back(Pair);
     }
     int NumberOfDrawables;
     fin >> NumberOfDrawables;
