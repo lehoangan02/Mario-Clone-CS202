@@ -27,30 +27,7 @@ Level::Level()
 }
 Level::~Level()
 {
-    for (auto& object : m_Environment)
-    {
-        delete object;
-    }
-    for (auto& object : m_EnvironmentInteractive)
-    {
-        delete object.first;
-    }
-    for (auto& object : m_EnvironmentInteractive)
-    {
-        delete object.second;
-    }
-    for (auto& object : m_Drawables)
-    {
-        delete object;
-    }
-    for (auto& object : m_Lifts)
-    {
-        delete object;
-    }
-    for (auto& object : m_EndPipes)
-    {
-        delete object;
-    }
+    
 
 }
 void Level::attachPlayer(Character* Player)
@@ -125,7 +102,6 @@ void Level::resolveEnvironmentCollisions()
             }
             else if (isCollidingLeft(PlayerBox, EnvironmentBox))
             {
-                // std::cout << "End Pipe Working!" << std::endl;
             }
             resolveCollisions(PlayerBox, EnvironmentBox);
             m_Player->setPosition(PlayerBox.getPosition());
@@ -143,7 +119,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
             EnvironmentBox.setFixed(true);
             if (isColliding(PlayerBox, EnvironmentBox))
             {
-                if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
+                if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
                 {
                     m_Player->resetVelocity();
                     if (isCollidingOnTop(PlayerBox, EnvironmentBox))
@@ -179,8 +155,7 @@ void Level::applyBoundaries()
 void Level::render()
 {
     float Offset = 900;
-    // printf("Rendering Level\n");
-    switch (m_WorldType)
+    switch (m_Ground -> m_WorldType)
     {
         case Level::WorldType::OVERWORLD:
         {
@@ -190,6 +165,7 @@ void Level::render()
         }
         case Level::WorldType::UNDERGROUND:
         {
+            // printf("Underground\n");
             ClearBackground(BLACK);
             break;
         }

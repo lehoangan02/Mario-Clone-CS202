@@ -23,9 +23,8 @@ Game::Game(int characterMenu, int levelMenu)
         level = factory.CreateLevel(LevelFactory::LEVEL_102);
     }
     else {
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
     }
-    
     
     if (characterMenu == 0) {
         character = ResourceManager::GetInstance()->GetTexture("mario");

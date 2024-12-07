@@ -40,7 +40,6 @@ class Level : public Subject
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
-    int m_WorldType;
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
@@ -60,7 +59,7 @@ class Level : public Subject
         void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         virtual void load() = 0;
         Level();
-        ~Level();
+        virtual ~Level();
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
         void resolveInteractiveEnvironmentCollisions();

@@ -105,7 +105,6 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     }
     int WorldType;
     fin >> WorldType;
-    Level -> m_WorldType = WorldType;
     Level -> m_Ground -> setWorldType(WorldType);
     fin.close();
 }

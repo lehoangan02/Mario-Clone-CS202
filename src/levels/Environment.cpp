@@ -11,7 +11,7 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
     {
         case EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE:
         {
-            std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
+            // std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
             WarpPipe* pipe = new WarpPipe(Position);
             // std::cout << "Current Position: " << pipe->m_Position.x << ", " << pipe->m_Position.y << std::endl;
             return pipe;
