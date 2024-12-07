@@ -48,6 +48,8 @@ class Level : public Subject
     private:
         bool m_Paused = false;
     public:
+        Level operator=(const Level& other) = delete;
+        Level(const Level& other) = delete;
         void attachPlayer(Character* Player);
         virtual unsigned int update(float DeltaTime);
         virtual void render();
