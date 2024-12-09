@@ -20,6 +20,19 @@ enum LEVEL_RETURN_MESSAGE
 
 class Level : public Subject
 {
+    class EndPipeHandler
+    {
+        private:
+        std::vector<EndPipe*> m_EndPipes;
+        Character* m_Player;
+        bool inPipe = false;
+        public:
+        EndPipeHandler() = default;
+        ~EndPipeHandler() = default;
+        void addEndPipe(EndPipe* Pipe);
+        void attachPlayer(Character* Player);
+        bool update();
+    };
     public:
         enum WorldType
         {
@@ -46,11 +59,12 @@ class Level : public Subject
     MapLoader* m_MapLoader;
     private:
         bool m_Paused = false;
+        EndPipeHandler m_EndPipeHandler;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
         void attachPlayer(Character* Player);
-        virtual unsigned int update(float DeltaTime);
+        virtual void update(float DeltaTime);
         virtual void render();
         void pauseLevel();
         void continueLevel();
@@ -67,6 +81,7 @@ class Level : public Subject
         bool isInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
+    
 };
 class LevelFactory
 {
@@ -97,7 +112,7 @@ class Level101 : public Level
         Level101();
         ~Level101();
         void load() override;
-        unsigned int update(float DeltaTime) override;
+        void update(float DeltaTime) override;
         void render() override;
         static Level101* GetLevel101();
 };
@@ -107,7 +122,7 @@ class HiddenLevel101 : public Level
         HiddenLevel101();
         ~HiddenLevel101();
         void load() override;
-        unsigned int update(float DeltaTime) override;
+        void update(float DeltaTime) override;
         void render() override;
     public:
         static HiddenLevel101* GetHiddenLevel101();
@@ -119,7 +134,7 @@ class LevelTesting : public Level
         LevelTesting();
         ~LevelTesting();
         void load() override;
-        unsigned int update(float DeltaTime) override;
+        void update(float DeltaTime) override;
         void render() override;
     public:
         static LevelTesting* GetLevelTesting();

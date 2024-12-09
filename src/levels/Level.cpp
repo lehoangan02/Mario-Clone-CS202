@@ -33,6 +33,7 @@ Level::~Level()
 void Level::attachPlayer(Character* Player)
 {
     m_Player = Player;
+    m_EndPipeHandler.attachPlayer(Player);
 }
 void Level::checkEnvironmentCollisions()
 {
@@ -85,30 +86,6 @@ void Level::resolveEnvironmentCollisions()
             m_Lifts[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
-    for (int i = 0; i < m_EndPipes.size(); ++i)
-    {
-        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
-        AABBox EnvironmentBox = AABBox(m_EndPipes[i]->m_Position, m_EndPipes[i]->getSize());
-        EnvironmentBox.setFixed(true);
-        if (isColliding(PlayerBox, EnvironmentBox))
-        {
-            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
-            {
-                m_Player->resetVelocity();
-                if (isCollidingOnTop(PlayerBox, EnvironmentBox))
-                {
-                    m_Player->onPlatform();
-                }
-            }
-            else if (isCollidingLeft(PlayerBox, EnvironmentBox))
-            {
-            }
-            resolveCollisions(PlayerBox, EnvironmentBox);
-            m_Player->setPosition(PlayerBox.getPosition());
-            m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
-        }
-    }
-    
 }
 void Level::resolveInteractiveEnvironmentCollisions()
 {
@@ -224,17 +201,15 @@ void Level::render()
     float HidePositionX = m_ScreenSize.x * 2;
     DrawRectangle((HidePositionX) + m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
-    // DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth - HidePositionX / Zoom, CurrentHeight, BLACK);
-    // std::cout << m_CameraPosition.x << std::endl;
     
 }
-unsigned int Level::update(float DeltaTime)
+void Level::update(float DeltaTime)
 {
     m_Ground->update(m_CameraPosition);
-    unsigned int ReturnResult = doPauseLogic();
-    if (ReturnResult != LEVEL_RETURN_MESSAGE::RUNNING)
+    doPauseLogic();
+    if (m_Paused)
     {
-        return ReturnResult;
+        return;
     }
     isPlayerFinished = isInHole();
     FullControl control(m_Player);
@@ -269,15 +244,13 @@ unsigned int Level::update(float DeltaTime)
     {
         object->update(DeltaTime);
     }
+    if (m_EndPipeHandler.update())
+    {
+        return;
+    }
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
-
-
-    
-    
-    
-    return LEVEL_RETURN_MESSAGE::RUNNING;
 }
 bool Level::isInHole()
 {
@@ -286,14 +259,10 @@ bool Level::isInHole()
         auto hole = m_Ground -> getHole(i);
         if (m_Player->GetPosition().x > hole.first)
         {
-            // std::cout << "BIGGER THAN HOLE" << std::endl;
-            // std::cout << "Hole: " << hole.first << ", " << hole.second << std::endl;
             if (m_Player->GetPosition().x + m_Player -> GetSize().x < hole.first + hole.second * 100)
             {
-                // std::cout << "SMALLER THAN HOLE" << std::endl;
                 if (m_Player->GetPosition().y + m_Player -> GetSize().y > m_Ground->m_Position.y)
                 {
-                    // std::cout << "LOWER THAN HOLE" << std::endl;
                     return true;
                 }
             }
@@ -333,9 +302,55 @@ unsigned int Level::doPauseLogic()
     }
     return LEVEL_RETURN_MESSAGE::RUNNING;
 }
+void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
+{
+    m_EndPipes.push_back(Pipe);
+}
+void Level::EndPipeHandler::attachPlayer(Character* Player)
+{
+    m_Player = Player;
+}
+bool Level::EndPipeHandler::update()
+{
+    if (inPipe)
+    {
+        // if (slidePipeComplete)
+        // return true;
+    }
+    for (int i = 0; i < m_EndPipes.size(); ++i)
+    {
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        AABBox EnvironmentBox = AABBox(m_EndPipes[i]->m_Position, m_EndPipes[i]->getSize());
+        EnvironmentBox.setFixed(true);
+        if (isColliding(PlayerBox, EnvironmentBox))
+        {
+            if (isCollidingLeft(PlayerBox, EnvironmentBox))
+            {
+                m_Player ->SlidePipe(slidingDirection::right);
+                inPipe = true;
+            }
+            else
+            {
+                if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+                {
+                    m_Player->resetVelocity();
+                    if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+                    {
+                        m_Player->onPlatform();
+                    }
+                }
+                resolveCollisions(PlayerBox, EnvironmentBox);
+                m_Player->setPosition(PlayerBox.getPosition());
+                m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+            }
+        }
+    }
+    return false;
+}
 
 Level101::Level101()
 {
+    m_LevelID = LevelFactory::LEVEL_101;
     load();
 }
 Level101::~Level101()
@@ -345,7 +360,7 @@ void Level101::load()
 {
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
-unsigned int Level101::update(float DeltaTime)
+void Level101::update(float DeltaTime)
 {
     return Level::update(DeltaTime);
 }
@@ -360,6 +375,7 @@ Level101* Level101::GetLevel101()
 }
 LevelTesting::LevelTesting()
 {
+    m_LevelID = LevelFactory::LEVEL_TESTING;
     load();
 }
 LevelTesting::~LevelTesting()
@@ -369,7 +385,7 @@ void LevelTesting::load()
 {
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
 }
-unsigned int LevelTesting::update(float DeltaTime)
+void LevelTesting::update(float DeltaTime)
 {
     return Level::update(DeltaTime);
 }

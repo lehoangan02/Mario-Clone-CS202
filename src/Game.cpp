@@ -2,7 +2,7 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101)),
+      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING)),
       character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");

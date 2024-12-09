@@ -226,10 +226,10 @@ bool isCollidingHorizontallyRawLess(const AABBox &AABBox1, const AABBox &AABBox2
 
         if (fabs(Intersect.x) < Threshold && fabs(Intersect.x) != 0)
         {
-            std::cout << "interesectX: " << Intersect.x << std::endl;
+            // std::cout << "interesectX: " << Intersect.x << std::endl;
             return true;
         }
-        std::cout << "interesectX: " << Intersect.x << std::endl;
+        // std::cout << "interesectX: " << Intersect.x << std::endl;
     }
     return false;
 }

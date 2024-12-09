@@ -13,5 +13,5 @@ class Mediator
 {
     friend class Component;
     private:
-        virtual void notify(Component* sender, std::string Event) = 0;
+        virtual void notify(Component* sender, int EventCode) = 0;
 }; 
