@@ -212,13 +212,16 @@ void Level::update(float DeltaTime)
         return;
     }
     isPlayerFinished = isInHole();
-    FullControl control(m_Player);
-    control.execute(DeltaTime);
 	if (isPlayerFinished)
 	{
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
+    else
+    {
+        FullControl control(m_Player);
+        control.execute(DeltaTime);
+    }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
         float Delta = m_Player->GetPosition().x - m_CameraPosition.x - m_PlayerOffset;
