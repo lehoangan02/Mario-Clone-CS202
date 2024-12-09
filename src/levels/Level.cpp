@@ -320,6 +320,11 @@ bool Level::EndPipeHandler::update()
         // if (slidePipeComplete)
         // return true;
     }
+    if (m_Player->isSliding())
+    {
+        std::cout << "Sliding" << std::endl;
+        DrawText("Sliding", 100, 100, 20, RED);
+    }
     for (int i = 0; i < m_EndPipes.size(); ++i)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
