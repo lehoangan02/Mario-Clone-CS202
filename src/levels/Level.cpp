@@ -4,7 +4,7 @@ LevelFactory& LevelFactory::GetLevelFactory()
     static LevelFactory Factory;
     return Factory;
 }
-Level* LevelFactory::CreateLevel(LevelType Type)
+Level* LevelFactory::CreateLevel(int Type)
 {
     switch (Type)
     {
@@ -65,19 +65,39 @@ void Level::resolveEnvironmentCollisions()
         EnvironmentBox.setFixed(true);
         if (isColliding(PlayerBox, EnvironmentBox))
         {
-            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
+            if (!isCollidingHorizontallyRaw(PlayerBox, EnvironmentBox) && isCollidingOnVertically(PlayerBox, EnvironmentBox, 0.0f))
             {
                 m_Player->resetVelocity();
-                if (isCollidingOnTop(PlayerBox, EnvironmentBox))
-                {
-                    m_Player->onPlatform();
-                }
+                // std::cout << "Resetting Velocity" << std::endl;
+                
             }
+            if (isCollidingOnTop(PlayerBox, EnvironmentBox))
+            {
+                // std::cout << "On Top" << std::endl;
+                m_Player->onPlatform();
+                m_Player->resetVelocity();
+            }
+            else if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
+            {
+                if (isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 10.0f))
+                {
+                    // std::cout << "Less" << std::endl;
+                }
+                // std::cout << "On Bottom" << std::endl;
+                if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
+                {
+                    // std::cout << "On Bottom" << std::endl;
+                    m_Player->resetVelocity();
+                }
+                
+            }
+            
             resolveCollisions(PlayerBox, EnvironmentBox);
             m_Player->setPosition(PlayerBox.getPosition());
             m_Environment[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
+    // std::cout << m_Player -> canJump << std::endl;
     for (int i = 0; i < m_Lifts.size(); i++)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -122,6 +142,7 @@ void Level::resolveEnvironmentCollisions()
             m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
         }
     }
+    
 }
 void Level::resolveInteractiveEnvironmentCollisions()
 {
@@ -166,6 +187,7 @@ void Level::applyBoundaries()
 }
 void Level::render()
 {
+    float Offset = 900;
     // printf("Rendering Level\n");
     switch (m_WorldType)
     {
@@ -184,18 +206,26 @@ void Level::render()
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
     camera.target = target;
-    camera.offset = {0, 0};
-    int CurrentHeight = GetScreenHeight();
-    int CurrentWidth = GetScreenWidth();
+    
+    float CurrentHeight = GetScreenHeight();
+    float CurrentWidth = GetScreenWidth();
     float Zoom;
-    if (CurrentHeight / CurrentWidth < (m_ScreenSize.x / m_ScreenSize.y))
+    // std::cout << "Current Height: " << CurrentHeight << std::endl;
+    // std::cout << "Current Width: " << CurrentWidth << std::endl;
+    // std::cout << m_ScreenSize.x << ", " << m_ScreenSize.y << std::endl;
+    if (CurrentWidth / CurrentHeight < (m_ScreenSize.x / m_ScreenSize.y))
     {
-        Zoom = CurrentHeight / m_ScreenSize.y;
+        // std::cout << "Width based" << std::endl;
+        Zoom = CurrentWidth / m_ScreenSize.x;
     }
     else
     {
-        Zoom = CurrentWidth / m_ScreenSize.x;
+        // std::cout << "Height based" << std::endl;
+        Zoom = CurrentHeight / m_ScreenSize.y;
     }
+    // std::cout << "Zoom: " << Zoom << std::endl;
+    Zoom /= 2;
+    camera.offset = {0, Offset * (Zoom)};
     camera.zoom = Zoom;
     BeginMode2D(camera);
     for (auto& object : m_Environment)
@@ -220,9 +250,12 @@ void Level::render()
     {
         object->render();
     }
-    float HidePositionX = m_ScreenSize.x;
-    DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth / Zoom - HidePositionX, m_ScreenSize.y, BLACK);
+    float HidePositionX = m_ScreenSize.x * 2;
+    DrawRectangle((HidePositionX) + m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
+    // DrawRectangle(HidePositionX + m_CameraPosition.x, 0, CurrentWidth - HidePositionX / Zoom, CurrentHeight, BLACK);
+    // std::cout << m_CameraPosition.x << std::endl;
+    
 }
 unsigned int Level::update(float DeltaTime)
 {
@@ -233,13 +266,11 @@ unsigned int Level::update(float DeltaTime)
         return ReturnResult;
     }
     isPlayerFinished = isInHole();
-    float accX = 0;
-    if (!isPlayerFinished) {
-		m_Player->control(accX,true);
-    }
-	else m_Player->control(accX, false);
-    m_Player->accelerate(Vector2{ accX, 9.81f }, DeltaTime);
+    FullControl control(m_Player);
+    control.execute(DeltaTime);
+    m_Player->accelerate(Vector2{0, 9.81f }, DeltaTime);
     m_Player->Update(DeltaTime);
+
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
         m_CameraPosition.x = m_Player->GetPosition().x - m_PlayerOffset;
@@ -264,6 +295,11 @@ unsigned int Level::update(float DeltaTime)
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
+
+
+    
+    
+    
     return LEVEL_RETURN_MESSAGE::RUNNING;
 }
 bool Level::isInHole()

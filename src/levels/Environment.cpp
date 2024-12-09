@@ -100,7 +100,7 @@ Ground* Ground::GetGround()
 void Ground::render()
 {
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < 40; ++i)
     {
         DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
         DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
@@ -231,8 +231,9 @@ QuestionBlock::~QuestionBlock()
 void QuestionBlock::render()
 {
     // std::cout << "Rendering Question Block at " << m_Position.x << ", " << m_Position.y << std::endl;
-    if (!m_IsHit) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
-    else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
+    if (!m_HitAnimation.isFinished()) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
+    // else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
+    else EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight()->render(m_Position);
 }
 void QuestionBlock::update()
 {
@@ -332,7 +333,13 @@ void Castle::render()
     DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
 }
 
-EndPipeTop::EndPipeTop(Vector2 Position) : EnvironmentObject(Position, Vector2{200, 100})
+EndPipe::EndPipe(Vector2 Position, Vector2 Size, int Type) : EnvironmentObject(Position, Size), m_Type(Type)
+{
+}
+EndPipe::~EndPipe()
+{
+}
+EndPipeTop::EndPipeTop(Vector2 Position) : EndPipe(Position, Vector2{200, 100}, EndPipeType::TOP)
 {
 }
 EndPipeTop::~EndPipeTop()
@@ -343,6 +350,19 @@ void EndPipeTop::render()
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
 }
 void EndPipeTop::update()
+{
+}
+EndPipeSide::EndPipeSide(Vector2 Position) : EndPipe(Position, Vector2{100, 100}, EndPipeType::SIDE)
+{
+}
+EndPipeSide::~EndPipeSide()
+{
+}
+void EndPipeSide::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+}
+void EndPipeSide::update()
 {
 }
 

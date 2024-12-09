@@ -13,7 +13,8 @@ enum TextureType
     LIFT,
     GRASS,
     MOUNTAIN,
-    END_PIPE
+    END_PIPE,
+    EMPTY_QUESTION_BLOCK
 };
 class Flyweight
 {
@@ -103,6 +104,15 @@ class QuestionBlockTextureFlyWeight : public AniamtedFlyweight // Singleton Flyw
     public:
         static QuestionBlockTextureFlyWeight* GetQuestionBlockTextureFlyWeight();
         void render(Vector2 Position, Rectangle TextureRect);
+};
+class EmptyQuestionBlockTextureFlyweight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        EmptyQuestionBlockTextureFlyweight();
+        ~EmptyQuestionBlockTextureFlyweight();
+    public:
+        static EmptyQuestionBlockTextureFlyweight* GetEmptyQuestionBlockTextureFlyweight();
+        void render(Vector2 Position);
 };
 class CloudTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
 {

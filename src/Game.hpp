@@ -11,7 +11,8 @@ class Game {
 private:
     LevelFactory& factory;
     Level* level;
-    Character player;  
+    Texture2D character;
+    Character* player;  
 
 public:
     Game();

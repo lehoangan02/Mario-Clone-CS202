@@ -20,6 +20,8 @@ void ResourceManager::LoadResources() {
     textures["settingTexture"] = LoadTexture("./assets/textures/setting.png");
     textures["highScoreTexture"] = LoadTexture("./assets/textures/highScore.png");
     textures["inforTexture"] = LoadTexture("./assets/textures/infor.png");
+
+    textures["mario"] = LoadTexture("./assets/textures/mario.png");
 }
 
 void ResourceManager::UnloadResources() {

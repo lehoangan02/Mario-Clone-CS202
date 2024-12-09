@@ -17,29 +17,6 @@ enum LEVEL_RETURN_MESSAGE
     QUIT
 };
 
-class LevelFactory
-{
-    public:
-        enum LevelType
-        {
-            LEVEL_101 = 0,
-            HIDDEN_LEVEL_101,
-            LEVEL_102,
-            HIDDEN_LEVEL_102,
-            HIDDEN_LEVEL_112,
-            LEVEL_103,
-            HIDDEN_LEVEL_103,
-            LEVEL_TESTING,
-            
-        };
-    private:
-        LevelFactory() = default;
-        ~LevelFactory() = default;
-    public:
-        static LevelFactory& GetLevelFactory();
-        Level* CreateLevel(LevelType Type);
-};
-
 class Level : public Subject
 {
     public:
@@ -63,7 +40,7 @@ class Level : public Subject
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
     int m_WorldType;
-    const float m_PlayerOffset = 500;
+    const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
@@ -75,7 +52,7 @@ class Level : public Subject
         virtual void render();
         void pauseLevel();
         void continueLevel();
-        LevelFactory::LevelType GetLevelType() { return (LevelFactory::LevelType)m_LevelID; };
+        int GetLevelType() { return m_LevelID; };
     protected:
         void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         virtual void load() = 0;
@@ -89,7 +66,28 @@ class Level : public Subject
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
 };
-
+class LevelFactory
+{
+    public:
+        enum LevelType
+        {
+            LEVEL_101 = 0,
+            HIDDEN_LEVEL_101,
+            LEVEL_102,
+            HIDDEN_LEVEL_102,
+            HIDDEN_LEVEL_112,
+            LEVEL_103,
+            HIDDEN_LEVEL_103,
+            LEVEL_TESTING,
+            
+        };
+    private:
+        LevelFactory() = default;
+        ~LevelFactory() = default;
+    public:
+        static LevelFactory& GetLevelFactory();
+        Level* CreateLevel(int Type);
+};
 class Level101 : public Level
 {
     friend class LevelFactory;
