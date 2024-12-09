@@ -19,6 +19,7 @@ enum slidingDirection {
 
 class Character {
 private:
+	float glitch;
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
@@ -37,7 +38,7 @@ public:
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
 	void changeForm(int form);
-	void updateFormChangeAnimation(float deltaTime);
+	void updateFormChangeAnimation();
 	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
 
 	void setTeleport() { this->teleport = true; };

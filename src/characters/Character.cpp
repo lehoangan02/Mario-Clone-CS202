@@ -23,7 +23,10 @@ Character::Character(float jumpHeight)
 	this->sliding = false;
 	this->brake = false;
 	this->slideDirection = slidingDirection::right;
+	this->isChangingForm = false;
+	this->glitch = 0.0f;
 	position = Vector2{ 20 , 0 };
+
 }
 
 Character::~Character()
@@ -73,7 +76,7 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_J)) {
 		changeForm(2);
 	}
-	if (IsKeyDown(KEY_K)) {
+	if (IsKeyPressed(KEY_K)) {
 		changeForm(1);
 	}
 	if (IsKeyPressed(KEY_L)) {
@@ -93,15 +96,25 @@ void Character::changeForm(int form) {
 	animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
 	isChangingForm = true;
 	formChangeTime = 0.0f;
-	formChangeDuration = 0.5f; // Duration of the form change animation in seconds
+	glitch = -1.0f; // minus 1 for odd number of form changes and 1 for even number of form changes
+	formChangeDuration = 24.0f; // Duration of the form change animation in seconds
 }
-void Character::updateFormChangeAnimation(float deltaTime) {
+void Character::updateFormChangeAnimation() {
 	if (isChangingForm) {
-		formChangeTime += deltaTime;
-		if (formChangeTime >= formChangeDuration) {
+		glitch = -glitch;
+		velocity.y = 0;
+		velocity.x = 0;
+		if ((int) formChangeTime % 8 == 0) {
+			scale = 2.0f + formChangeTime * 0.125f;
+		}
+		else if ((int) formChangeTime % 4 ==0)  scale = scale - 0.2f;
+		formChangeTime += 1.0f;
+		if (formChangeTime > formChangeDuration) {
 			isChangingForm = false;
 		}
 	}
+	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
+	std::cout << "scale: " << scale << std::endl;*/
 }
 void Character::Draw()
 {
@@ -109,12 +122,7 @@ void Character::Draw()
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;
-	Vector2 origin = { 0.0f, 0.0f };
-	if (isChangingForm ) {
-		float scaleFactor = 0.8f + 0.5f * (formChangeTime / formChangeDuration); // Example scaling effect
-		destRec.width *= scaleFactor;
-		destRec.height *= scaleFactor;
-	}
+	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
@@ -150,10 +158,12 @@ void Mario::Update(float deltaTime) {
 		faceRight = false;
 	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
+	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 }
 
 void Character::SlidePipe(slidingDirection direction) {
+	this->sliding = true;
 	this->velocity.x = 0;
 	this->velocity.y = 0;
 	float offset = 0;
@@ -221,6 +231,6 @@ void FullControl::execute(float deltaTime) {
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->accelerate(Vector2{ character->accX, GRAVITY }, deltaTime);
+	character->accelerate(Vector2{ 0.0f, GRAVITY }, deltaTime);
 	character->Update(deltaTime);
 };
