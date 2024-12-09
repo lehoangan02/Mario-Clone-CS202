@@ -65,15 +65,7 @@ void Character::control(bool enabled) {
 		}
 	}
 	if (teleport) {
-		if (IsKeyPressed(KEY_D)) {
-			sliding = true;
-			slideDirection = slidingDirection::right;
-		}
-		else if (IsKeyPressed(KEY_W)) {
-			sliding = true;
-			slideDirection = slidingDirection::up;
-		}
-		else if (IsKeyPressed(KEY_S)) {
+		if (IsKeyPressed(KEY_S)) {
 			sliding = true;
 			slideDirection = slidingDirection::down;
 		}

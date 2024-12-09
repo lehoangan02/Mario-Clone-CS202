@@ -34,7 +34,10 @@ public:
 	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
 	void changeForm(int form);
 	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
+
+	void setTeleport() { this->teleport = true; };
 	void SlidePipe(slidingDirection direction);
+	bool isSliding() { return sliding; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
