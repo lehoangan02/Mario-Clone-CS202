@@ -65,21 +65,19 @@ void Character::control(bool enabled) {
 		}
 	}
 	if (teleport) {
-		if (IsKeyPressed(KEY_D)) {
-			sliding = true;
-			slideDirection = slidingDirection::right;
-		}
-		else if (IsKeyPressed(KEY_W)) {
-			sliding = true;
-			slideDirection = slidingDirection::up;
-		}
-		else if (IsKeyPressed(KEY_S)) {
+		if (IsKeyPressed(KEY_S)) {
 			sliding = true;
 			slideDirection = slidingDirection::down;
 		}
 	}
 	if (IsKeyPressed(KEY_J)) {
 		changeForm(2);
+	}
+	if (IsKeyDown(KEY_K)) {
+		changeForm(1);
+	}
+	if (IsKeyPressed(KEY_L)) {
+		changeForm(0);
 	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
@@ -93,6 +91,17 @@ void Character::changeForm(int form) {
 	this->form = form;
 	size = { (float)textures[form].width / imageCounts[form].x * scale, (float)textures[form].height * scale };
 	animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
+	isChangingForm = true;
+	formChangeTime = 0.0f;
+	formChangeDuration = 0.5f; // Duration of the form change animation in seconds
+}
+void Character::updateFormChangeAnimation(float deltaTime) {
+	if (isChangingForm) {
+		formChangeTime += deltaTime;
+		if (formChangeTime >= formChangeDuration) {
+			isChangingForm = false;
+		}
+	}
 }
 void Character::Draw()
 {
@@ -101,6 +110,11 @@ void Character::Draw()
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f, 0.0f };
+	if (isChangingForm ) {
+		float scaleFactor = 0.8f + 0.5f * (formChangeTime / formChangeDuration); // Example scaling effect
+		destRec.width *= scaleFactor;
+		destRec.height *= scaleFactor;
+	}
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
 };
 
