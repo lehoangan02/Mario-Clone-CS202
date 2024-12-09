@@ -18,6 +18,10 @@ enum slidingDirection {
 };
 
 class Character {
+private:
+	bool isChangingForm;
+	float formChangeTime;
+	float formChangeDuration;
 public:
 	Character(float jumpHeight);
 	~Character();
@@ -33,6 +37,7 @@ public:
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
 	void changeForm(int form);
+	void updateFormChangeAnimation(float deltaTime);
 	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
 
 	void setTeleport() { this->teleport = true; };
