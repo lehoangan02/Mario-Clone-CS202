@@ -132,7 +132,19 @@ Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex
 void Mushroom::applyEffect(Character* character) {
     return;
 }
-void Mushroom::Update(float deltaTime) {}
+void Mushroom::Update(float deltaTime) {
+    position.x += velocity.x * deltaTime;
+    position.y += velocity.y * deltaTime;
+}
+void Mushroom::Accelerate(float deltaTime) {
+    velocity.y += gravity * deltaTime;
+}
+void Mushroom::FlipDirection() {
+    velocity.x *= -1;
+}
+void Mushroom::ResetYVelocity() {
+    velocity.y = 0.0f;
+}
 void Mushroom::Draw() {
     if (APPEARED) {
         Rectangle destRect = { position.x, position.y, size.x, size.y };
@@ -141,6 +153,7 @@ void Mushroom::Draw() {
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
+
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity) {}

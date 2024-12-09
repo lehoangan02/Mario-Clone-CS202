@@ -66,9 +66,15 @@ public:
 
 };
 class Mushroom : public Item {
+private:
+	bool isFalling;
+	float gravity;
 public:
-	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* character);
+	void Accelerate(float deltatime);
+	void FlipDirection();
+	void ResetYVelocity();
 	void Update(float deltaTime) override;
 	void Draw() override;
 

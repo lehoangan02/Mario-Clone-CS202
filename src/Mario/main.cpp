@@ -25,12 +25,12 @@ int main(void)
         coinTexture,
         Vector2{ 0, 400 }     //velocity
     );
-    Item* mushroom = new Mushroom(
-        Vector2{ 100, 500 },   // Start position
-        Vector2{ 100, 300 },   // End position
+    Mushroom* mushroom = new Mushroom(
+        Vector2{ 200, 100 },   // Start position
+        Vector2{ 0, 0 },   // End position
         Vector2{ 50, 50 },    // Size
         mushroomTexture,     // Texture
-        Vector2{ 0, 400 }      // Velocity
+        Vector2{ 100, 0 }      // Velocity
     );
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
@@ -48,11 +48,8 @@ int main(void)
         {
             coin->onNotify();
         }
-        if (IsKeyPressed(KEY_B)) {
-            if (dynamic_cast<FireFlower*>(mushroom) == nullptr) {
-                mushroom = Item::Transform(mushroom, "FireFlower", fireflowerTexture, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME);
-            }
-        }
+        
+        
         coin->Update(deltatime);
         mushroom->Update(deltatime);
 
