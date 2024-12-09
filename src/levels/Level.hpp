@@ -38,7 +38,7 @@ class Level
         void applyBoundaries();
         bool isInHole();
         void resolveHoleCollisions();
-        void setCommand(Command* command) { m_Command = command; };
+        void setCommand(Command* command);
 };
 class LevelFactory
 {

@@ -181,7 +181,11 @@ bool Level::isInHole()
     }
     return false;
 }
-
+void Level::setCommand(Command* command)
+{
+	delete m_Command;
+	m_Command = command;
+}
 Level101::Level101()
 {
     load();
