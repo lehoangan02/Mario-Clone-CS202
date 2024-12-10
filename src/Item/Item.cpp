@@ -4,13 +4,12 @@
 #include <math.h>
 
 
-Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity)
+Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity, bool appeared)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
-     elapsedTime(0), currentFrame(0), APPEARED(true), isReturning(false),
+     elapsedTime(0), currentFrame(0), isReturning(false), APPEARED(appeared),
     Notify(false)    
 {
-    
     position = startPosition;
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
@@ -53,7 +52,7 @@ void Item::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity) {}
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true) {}
 Item* Item::Transform(Item* currentItem, const std::string& newItemType, Texture2D newTexture, int newTotalFrames, float newSwitchTime) {
     Vector2 position = currentItem->GetPosition();
     Vector2 size = currentItem->GetSize();
@@ -109,7 +108,9 @@ void Coin::Update(float deltaTime) { //acceleration
         }
     }
 }
-
+Itemtype Coin::getItemID() const {
+    return Itemtype::COIN;
+}
 void Coin::Draw() { //animation
     if (Notify == true)
     {
@@ -127,25 +128,61 @@ void Coin::Draw() { //animation
     }
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
-    : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity) {}
+    : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
 }
-void Mushroom::Update(float deltaTime) {}
+Itemtype Mushroom::getItemID() const {
+    return Itemtype::MUSHROOM;
+}
+void Mushroom::Update(float deltaTime) {
+    if (isRising) {
+        riseProgress += riseSpeed * deltaTime;
+        if(riseProgress >= 1.0f) {
+            riseProgress = 1.0f;
+            isRising = false;
+            APPEARED = true;
+        }
+    }
+    //position.x += velocity.x * deltaTime;
+    //position.y += velocity.y * deltaTime;
+}
+void Mushroom::Accelerate(float deltaTime) {
+    velocity.y += gravity * deltaTime;
+}
+void Mushroom::FlipDirection() {
+    velocity.x *= -1;
+}
+void Mushroom::ResetYVelocity() {
+    velocity.y = 0.0f;
+}
+void Mushroom::startRising() {
+    isRising = true;
+    riseProgress = 0.0f;
+    APPEARED = false;
+}
+
 void Mushroom::Draw() {
-    if (APPEARED) {
-        Rectangle destRect = { position.x, position.y, size.x, size.y };
-        Rectangle sourceRect = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
+    if (APPEARED || isRising) {
+        Rectangle sourceRect = { 0.0f, 0.0f,
+            (float)texture.width, texture.height * riseProgress };
+        Rectangle destRect = { position.x, position.y - size.y * riseProgress,
+            size.x, size.y * riseProgress };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
 
+
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity) {}
+    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, true) {}
 void FireFlower::applyEffect(Character* character) {
     return;
+}
+Itemtype FireFlower::getItemID() const {
+    return Itemtype::FIREFLOWER;
 }
 void FireFlower::Update(float deltaTime) {
     if (!APPEARED) {
@@ -174,8 +211,11 @@ void FireFlower::Draw() {
     }
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
-    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel) {}
+    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true) {}
 void StarMan::applyEffect(Character* character) {}
+Itemtype StarMan::getItemID() const {
+    return Itemtype::STARMAN;
+}
 void StarMan::Update(float deltaTime) {
     if (!APPEARED) {
         return;
@@ -195,7 +235,7 @@ void StarMan::Draw() {
             frameSize.x,
             frameSize.y
         };
-        Rectangle destRect = { position.x , position.y , size.x * 0.5f, size.y * 0.5f };
+        Rectangle destRect = { position.x , position.y , size.x, size.y };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }

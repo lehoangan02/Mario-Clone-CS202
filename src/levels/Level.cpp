@@ -136,17 +136,16 @@ void Level::render()
     {
         case Level::WorldType::OVERWORLD:
         {
-            // printf("Overworld\n");
             ClearBackground(Color{105, 147, 245, 255});
             break;
         }
         case Level::WorldType::UNDERGROUND:
         {
-            // printf("Underground\n");
             ClearBackground(BLACK);
             break;
         }
     }
+    
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
     camera.target = target;
@@ -172,6 +171,8 @@ void Level::render()
     camera.offset = {0, Offset * (Zoom)};
     camera.zoom = Zoom;
     BeginMode2D(camera);
+    m_Background.render();
+    m_FlagPole.render();
     for (auto& object : m_Environment)
     {
         object->render();
@@ -212,14 +213,15 @@ void Level::update(float DeltaTime)
         return;
     }
     isPlayerFinished = isInHole();
-	if (!isPlayerFinished)
+	if (isPlayerFinished)
 	{
-        FullControl control(m_Player);
-        control.execute(DeltaTime);
-	}
-    else {
 		InHole control(m_Player);
 		control.execute(DeltaTime);
+	}
+    else if (!isPlayerFinished && m_InControl)
+    {
+        FullControl control(m_Player);
+        control.execute(DeltaTime);
     }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
@@ -230,6 +232,14 @@ void Level::update(float DeltaTime)
     {
         Vector2 NewPosition = {m_CameraPosition.x, m_Player->GetPosition().y};
         m_Player->setPosition(NewPosition);
+    }
+    if (m_Ground->m_WorldType == Level::WorldType::OVERWORLD)
+    {
+        m_Background.update(m_CameraPosition, true);
+    }
+    else
+    {
+        m_Background.update(m_CameraPosition, false);
     }
     for (auto& object : m_Environment)
     {
@@ -250,9 +260,11 @@ void Level::update(float DeltaTime)
     {
         return;
     }
+    m_FlagPole.update();
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
+    // resolveFlagPoleCollisions();
 }
 bool Level::isInHole()
 {
@@ -319,6 +331,10 @@ bool Level::EndPipeHandler::update()
         // if (slidePipeComplete)
         // return true;
     }
+    if (m_Player->isSliding())
+    {
+
+    }
     for (int i = 0; i < m_EndPipes.size(); ++i)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -348,6 +364,88 @@ bool Level::EndPipeHandler::update()
         }
     }
     return false;
+}
+Level::Background::Background()
+{
+    m_TextureLayer1 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/cloud_lonely.png");
+    m_TextureLayer2 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/clouds_mg_1_lightened.png");
+    m_TextureLayer3 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/glacial_mountains_lightened.png");
+    m_TextureLayer4 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/clouds_bg.png");
+    // m_TextureLayer5 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/Background5.png");
+    // m_TextureLayer6 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/Background6.png");
+    // m_TextureLayer7 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/Background7.png");
+
+    m_TextureLayer8 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0000_9.png");
+    m_TextureLayer9 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0001_8.png");
+    m_TextureLayer10 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0003_6.png");
+    m_TextureLayer11 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0005_5.png");
+    m_TextureLayer12 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0006_4.png");
+    m_TextureLayer13 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0009_2.png");
+
+}
+void Level::Background::update(Vector2 CameraPosition, bool Overworld)
+{
+    m_Overworld = Overworld;
+    Vector2 Move = Vector2Subtract(CameraPosition, m_PreviousCameraPosition);
+    m_PreviousCameraPosition = CameraPosition;
+    m_Layer1Position = Vector2Add(m_Layer1Position, Vector2Scale(Move, 0.95));
+    m_Layer2Position = Vector2Add(m_Layer2Position, Vector2Scale(Move, 0.96));
+    m_Layer3Position = Vector2Add(m_Layer3Position, Vector2Scale(Move, 0.98));
+    m_Layer4Position = Vector2Add(m_Layer4Position, Vector2Scale(Move, 0.97));
+
+    m_Layer8Position = Vector2Add(m_Layer8Position, Vector2Scale(Move, 0.95));
+    m_Layer9Position = Vector2Add(m_Layer9Position, Vector2Scale(Move, 0.96));
+    m_Layer10Position = Vector2Add(m_Layer10Position, Vector2Scale(Move, 0.98));
+    m_Layer11Position = Vector2Add(m_Layer11Position, Vector2Scale(Move, 0.97));
+    m_Layer12Position = Vector2Add(m_Layer12Position, Vector2Scale(Move, 0.95));
+    m_Layer13Position = Vector2Add(m_Layer13Position, Vector2Scale(Move, 0.96));
+
+
+}
+void Level::Background::render()
+{
+    // std::cout << "Layer2 Pos: " << m_Layer2Position.x << " " << m_Layer2Position.y << std::endl;
+    if (m_Overworld)
+    {
+        DrawTextureEx(m_TextureLayer4, m_Layer4Position, 0, 9, WHITE);
+        DrawTextureEx(m_TextureLayer3, m_Layer1Position, 0, 9, WHITE);
+        DrawTextureEx(m_TextureLayer2, m_Layer2Position, 0, 9, WHITE);
+        DrawTextureEx(m_TextureLayer1, m_Layer3Position, 0, 9, WHITE);
+    }
+    else
+    {
+        DrawTextureEx(m_TextureLayer13, m_Layer13Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer12, m_Layer12Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer8, m_Layer8Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer9, m_Layer9Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer10, m_Layer10Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer11, m_Layer11Position, 0, 7, WHITE);
+        
+        
+    }
+    
+}
+void Level::resolveFlagPoleCollisions()
+{
+    static bool PullDone = false;
+    AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+    AABBox EnvironmentBox = AABBox(m_FlagPole.m_Position, m_FlagPole.getSize());
+    // std::cout << "Flag Pole Position: " << m_FlagPole.m_Position.x << " " << m_FlagPole.m_Position.y << std::endl;
+    // std::cout << "Flag Pole Size: " << m_FlagPole.getSize().x << " " << m_FlagPole.getSize().y << std::endl;
+    EnvironmentBox.setFixed(true);
+    if (isColliding(PlayerBox, EnvironmentBox))
+    {
+        std::cout << "Colliding with flag pole" << std::endl;
+        resolveCollisions(PlayerBox, EnvironmentBox);
+        m_Player->setPosition(PlayerBox.getPosition());
+        m_FlagPole.m_Position = EnvironmentBox.getPosition();
+        m_FlagPole.notifyPull();
+    }
+    PullDone = m_FlagPole.isDone();
+    if (PullDone)
+    {
+        DrawText("Level Complete", 100, 100, 20, RED);
+    }
 }
 
 Level101::Level101()
@@ -394,6 +492,7 @@ void LevelTesting::update(float DeltaTime)
 void LevelTesting::render()
 {
     Level::render();
+    
 }
 LevelTesting* LevelTesting::GetLevelTesting()
 {
@@ -415,4 +514,84 @@ Level103* Level103::GetLevel103()
 void Level103::load()
 {
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
+}
+void Level103::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void Level103::render()
+{
+    Level::render();
+}
+HiddenLevel101::HiddenLevel101()
+{
+    load();
+}
+HiddenLevel101::~HiddenLevel101()
+{
+}
+HiddenLevel101* HiddenLevel101::GetHiddenLevel101()
+{
+    static HiddenLevel101 level;
+    return &level;
+}
+void HiddenLevel101::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+}
+void HiddenLevel101::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void HiddenLevel101::render()
+{
+    Level::render();
+}
+Level102::Level102()
+{
+    load();
+}
+Level102::~Level102()
+{
+}
+Level102* Level102::GetLevel102()
+{
+    static Level102 level;
+    return &level;
+}
+void Level102::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+}
+void Level102::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void Level102::render()
+{
+    Level::render();
+}
+HiddenLevel103::HiddenLevel103()
+{
+    load();
+}
+HiddenLevel103::~HiddenLevel103()
+{
+}
+HiddenLevel103* HiddenLevel103::GetHiddenLevel103()
+{
+    static HiddenLevel103 level;
+    return &level;
+}
+void HiddenLevel103::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+}
+void HiddenLevel103::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void HiddenLevel103::render()
+{
+    Level::render();
 }

@@ -33,6 +33,51 @@ class Level : public Subject
         void attachPlayer(Character* Player);
         bool update();
     };
+    class Background
+    {
+        private:
+
+        bool m_Overworld = true;
+
+        Texture2D m_TextureLayer1;
+        Texture2D m_TextureLayer2;
+        Texture2D m_TextureLayer3;
+        Texture2D m_TextureLayer4;
+        Texture2D m_TextureLayer5;
+        Texture2D m_TextureLayer6;
+        Texture2D m_TextureLayer7;
+
+        Texture2D m_TextureLayer8;
+        Texture2D m_TextureLayer9;
+        Texture2D m_TextureLayer10;
+        Texture2D m_TextureLayer11;
+        Texture2D m_TextureLayer12;
+        Texture2D m_TextureLayer13;
+        Texture2D m_TextureLayer14;
+
+        Vector2 m_PreviousCameraPosition = {0, 0};
+
+
+        Vector2 m_Layer1Position = {-00, -900};
+        Vector2 m_Layer2Position = {-00, -1050};
+        Vector2 m_Layer3Position = {-00, -900};
+        Vector2 m_Layer4Position = {-00, -900};
+        Vector2 m_Layer5Position = {-00, 0};
+        Vector2 m_Layer6Position = {-00, 0};
+        Vector2 m_Layer7Position = {-00, 0};
+
+        Vector2 m_Layer8Position = {-00, -4110};
+        Vector2 m_Layer9Position = {-00, -4110};
+        Vector2 m_Layer10Position = {-00, -4110};
+        Vector2 m_Layer11Position = {-00, -4110};
+        Vector2 m_Layer12Position = {-00, -4110};
+        Vector2 m_Layer13Position = {-00, -4110};
+        Vector2 m_Layer14Position = {-00, -4110};
+        public:
+        Background();
+        void update(Vector2 CameraPosition, bool Overworld);
+        void render();
+    };
     public:
         enum WorldType
         {
@@ -40,6 +85,8 @@ class Level : public Subject
             UNDERGROUND
         };
     friend class MapLoader;
+    // private:
+        FlagPole m_FlagPole = FlagPole(1000);
     protected:
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
@@ -53,6 +100,7 @@ class Level : public Subject
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
+    Background m_Background;
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
@@ -60,6 +108,7 @@ class Level : public Subject
     private:
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
+        bool m_InControl = true;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
@@ -81,7 +130,7 @@ class Level : public Subject
         bool isInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
-    
+        void resolveFlagPoleCollisions();
 };
 class LevelFactory
 {
@@ -130,6 +179,7 @@ class HiddenLevel101 : public Level
 class LevelTesting : public Level
 {
     friend class LevelFactory;
+    
     private:
         LevelTesting();
         ~LevelTesting();
@@ -145,10 +195,32 @@ class Level103 : public Level
     private:
         Level103();
         ~Level103();
-        // void load() override;
-        // unsigned int update(float DeltaTime) override;
-        // void render() override;
         void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
     public:
         static Level103* GetLevel103();
+};
+class Level102 : public Level
+{
+    friend class LevelFactory;
+    private:
+        Level102();
+        ~Level102();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
+    public:
+        static Level102* GetLevel102();
+};
+class HiddenLevel103 : public Level
+{
+    private:
+        HiddenLevel103();
+        ~HiddenLevel103();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
+    public:
+        static HiddenLevel103* GetHiddenLevel103();
 };

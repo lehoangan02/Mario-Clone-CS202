@@ -75,7 +75,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         Level -> m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(Type, Vector2{X, Y}));
     }
-    Level -> m_Ground -> clearHoles();
+    Level -> m_Ground -> reset();
     int NumberOfHoles;
     fin >> NumberOfHoles;
     for (int i = 0; i < NumberOfHoles; i++)

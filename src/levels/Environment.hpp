@@ -6,6 +6,7 @@
 #include "../animation/Animation.h"
 #include "../Oberver/Observer.hpp"
 #include "Flyweight.hpp"
+#include <unordered_set>
 class MapObject
 {
     public:
@@ -111,12 +112,13 @@ class Ground : public MapObject // Singleton
         std::vector<std::pair<float, int>> m_Holes;
         Vector2 m_CameraPosition;
         int m_WorldType = 0;
+        std::unordered_set<int> m_HoleSet;
     private:
         Ground();
         ~Ground();
         void update(Vector2 CameraPosition);
     public:
-        void clearHoles() { m_Holes.clear(); };
+        void reset();
         void render();
         static Ground* GetGround();
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
@@ -253,4 +255,25 @@ class EndPipeSide : public EndPipe
     ~EndPipeSide();
     void render() override;
     void update() override;
+};
+class FlagPole : public MapObject
+{
+    public:
+    FlagPole(float Position);
+    ~FlagPole();
+    void render() override;
+    void update();
+    void notifyPull();
+    bool isDone() { return m_Done; };
+    private:
+    Texture2D m_Pole = LoadTexture("assets/textures/FlagPole.png");
+    Texture2D m_Flag = LoadTexture("assets/textures/Flag.png");
+    Texture2D m_Brick = LoadTexture("assets/textures/hard_block.png");
+    Vector2 m_FlagPosition;
+    bool m_Pull = false;
+    bool m_Done = false;
+    private:
+    void pullFlag();
+    
+    
 };
