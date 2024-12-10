@@ -94,6 +94,10 @@ public:
 
 };
 class FireFlower : public Item {
+private:
+	bool isRising;
+	float riseProgress;
+	float riseSpeed;
 public:
 	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
 	void applyEffect(Character* character);

@@ -14,25 +14,7 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
 
-    if (startPosition.x < endPosition.x) {
-        this->velocity.x = fabs(this->velocity.x);
-    }
-    else if (startPosition.x > endPosition.x) {
-        this->velocity.x = -fabs(this->velocity.x);
-    }
-    else {
-        this->velocity.x = 0;
-    }
-    if (startPosition.y < endPosition.y) {
-        this->velocity.y = fabs(this->velocity.y);
-        
-    }
-    else if (startPosition.y > endPosition.y) {
-        this->velocity.y = -fabs(this->velocity.y);
-    }
-    else {
-        this->velocity.y = 0;
-    }
+    
 
     
 }
@@ -52,7 +34,28 @@ void Item::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true) {}
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true)
+{
+    if (startPosition.x < endPosition.x) {
+        this->velocity.x = fabs(this->velocity.x);
+    }
+    else if (startPosition.x > endPosition.x) {
+        this->velocity.x = -fabs(this->velocity.x);
+    }
+    else {
+        this->velocity.x = 0;
+    }
+    if (startPosition.y < endPosition.y) {
+        this->velocity.y = fabs(this->velocity.y);
+
+    }
+    else if (startPosition.y > endPosition.y) {
+        this->velocity.y = -fabs(this->velocity.y);
+    }
+    else {
+        this->velocity.y = 0;
+    }
+}
 Item* Item::Transform(Item* currentItem, const std::string& newItemType, Texture2D newTexture, int newTotalFrames, float newSwitchTime) {
     Vector2 position = currentItem->GetPosition();
     Vector2 size = currentItem->GetSize();
@@ -146,8 +149,11 @@ void Mushroom::Update(float deltaTime) {
             APPEARED = true;
         }
     }
-    //position.x += velocity.x * deltaTime;
-    //position.y += velocity.y * deltaTime;
+    if (APPEARED == true)
+    {
+        position.x += velocity.x * deltaTime;
+        position.y += velocity.y * deltaTime;
+    }
 }
 void Mushroom::Accelerate(float deltaTime) {
     velocity.y += gravity * deltaTime;
