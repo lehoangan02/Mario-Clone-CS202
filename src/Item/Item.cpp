@@ -26,7 +26,7 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
         pow(vector1.y - vector2.y, 2));
     return result;
 }
-void Item::onNotify() {
+void Coin::onNotify() {
     Notify = true;
 }
 
@@ -132,7 +132,7 @@ void Coin::Draw() { //animation
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
-    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
@@ -140,13 +140,19 @@ void Mushroom::applyEffect(Character* character) {
 Itemtype Mushroom::getItemID() const {
     return Itemtype::MUSHROOM;
 }
+void Mushroom::onNotify() {
+    isRising = true;
+    riseProgress = 0.0f;
+    APPEARED = false;
+}
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
         riseProgress += riseSpeed * deltaTime;
-        if(riseProgress >= 1.0f) {
+        if (riseProgress >= 1.0f) {
             riseProgress = 1.0f;
             isRising = false;
             APPEARED = true;
+            FinishedSpawning = true;
         }
     }
     if (APPEARED == true)
@@ -164,11 +170,7 @@ void Mushroom::FlipDirection() {
 void Mushroom::ResetYVelocity() {
     velocity.y = 0.0f;
 }
-void Mushroom::startRising() {
-    isRising = true;
-    riseProgress = 0.0f;
-    APPEARED = false;
-}
+
 
 void Mushroom::Draw() {
     if (APPEARED || isRising) {
@@ -183,7 +185,7 @@ void Mushroom::Draw() {
 
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, true) {}
+    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false) {}
 void FireFlower::applyEffect(Character* character) {
     return;
 }

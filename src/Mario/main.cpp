@@ -56,7 +56,7 @@ int main(void)
         }
         if (IsKeyPressed(KEY_B))
         {
-            mushroom->startRising();
+            mushroom->onNotify();
 
         }
         
