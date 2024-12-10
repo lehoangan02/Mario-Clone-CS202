@@ -19,12 +19,8 @@ enum slidingDirection {
 
 class Character {
 public:
-<<<<<<< HEAD
-    Character() = default;
-	Character(Texture2D* texture,Vector2 imageCount, float switchTime, float speed, float jumpHeight);
-=======
+
 	Character(float jumpHeight);
->>>>>>> test
 	~Character();
 	virtual void Update(float deltaTime)=0;
 	void Draw();

@@ -3,33 +3,53 @@
 
 #include "Character.h"
 
+
+
 class Enemy : public Character {
 public:
-    Enemy();
+    Enemy(float speed, float jumpHeight);
     virtual ~Enemy();
+
+    virtual void Update(float deltaTime) override = 0;
+    virtual void Attack() = 0;
+
+protected:
+    float speed;       
+    bool isAttacking;  
 };
+
 
 class Goomba : public Enemy {
 public:
-    Goomba();
+    Goomba(Vector2 position, float speed);
     ~Goomba();
+
+    void Update(float deltaTime) override;
+    void Attack() override;
 };
 
-class KoopaParatroopa : public Enemy {
+
+class KoopaTroopa : public Enemy {
 public:
-    KoopaParatroopa();
-    ~KoopaParatroopa();
+    KoopaTroopa(Vector2 position, float speed);
+    ~KoopaTroopa();
+
+    void Update(float deltaTime) override;
+    void Attack() override;
+
+    void EnterShellMode(); 
+
+private:
+    bool isInShellMode;
 };
 
-class Lakitu : public Enemy {
-public:
-    Lakitu();
-    ~Lakitu();
-};
 
 class PiranhaPlant : public Enemy {
 public:
-    PiranhaPlant();
+    PiranhaPlant(Vector2 position);
     ~PiranhaPlant();
-}
+
+    void Update(float deltaTime) override;
+    void Attack() override;
+};
 #endif
