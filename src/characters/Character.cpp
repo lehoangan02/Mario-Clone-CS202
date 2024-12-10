@@ -46,7 +46,7 @@ void Character::accelerate(Vector2 acceleration, float deltaTime) {
 }
 void Character::control(bool enabled) {
 	if (!enabled) {
-		velocity.x = 0;
+		/*velocity.x = 0;*/
 		return;
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
@@ -231,6 +231,12 @@ void FullControl::execute(float deltaTime) {
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->accelerate(Vector2{ 0.0f, GRAVITY }, deltaTime);
+	character->setVelocity( Vector2{0.0f, 700.0f} );
 	character->Update(deltaTime);
 };
+
+void AutoMove::execute(float deltaTime) {
+	character->control(false);
+	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
+	character->Update(deltaTime);
+}

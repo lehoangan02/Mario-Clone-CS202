@@ -385,7 +385,7 @@ LevelTesting::~LevelTesting()
 }
 void LevelTesting::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
 }
 void LevelTesting::update(float DeltaTime)
 {

@@ -44,6 +44,8 @@ public:
 	void setTeleport() { this->teleport = true; };
 	void SlidePipe(slidingDirection direction);
 	bool isSliding() { return sliding; };
+
+	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -116,3 +118,10 @@ public:
 	void execute(float deltaTime) override;
 };
 
+class AutoMove : public Command {
+private:
+	Character* character;
+public:
+	AutoMove(Character* Player) { this->character = Player; };
+	void execute(float deltaTime) override;
+};
