@@ -519,3 +519,51 @@ void HiddenLevel101::render()
 {
     Level::render();
 }
+Level102::Level102()
+{
+    load();
+}
+Level102::~Level102()
+{
+}
+Level102* Level102::GetLevel102()
+{
+    static Level102 level;
+    return &level;
+}
+void Level102::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+}
+void Level102::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void Level102::render()
+{
+    Level::render();
+}
+HiddenLevel103::HiddenLevel103()
+{
+    load();
+}
+HiddenLevel103::~HiddenLevel103()
+{
+}
+HiddenLevel103* HiddenLevel103::GetHiddenLevel103()
+{
+    static HiddenLevel103 level;
+    return &level;
+}
+void HiddenLevel103::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+}
+void HiddenLevel103::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void HiddenLevel103::render()
+{
+    Level::render();
+}
