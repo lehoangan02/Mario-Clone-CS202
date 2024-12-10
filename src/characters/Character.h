@@ -64,6 +64,8 @@ public:
 	float accX;
 	bool sliding;
 	slidingDirection slideDirection;
+
+	int points;
 };
 
 //CharacterFactory
