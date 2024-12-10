@@ -100,19 +100,32 @@ Ground* Ground::GetGround()
 }
 void Ground::render()
 {
+    // std::cout << "Number of Holes: " << m_Holes.size() << std::endl;
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
     for (int i = 0; i < 40; ++i)
     {
-        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
-        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        if (m_HoleSet.find(i + PositionX) != m_HoleSet.end())
+        {
+
+        }
+        else
+        {
+            DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+            DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        }
     }
 
-    for (auto& hole : m_Holes)
-    {
-        int Width = hole.second * 100;
-        if (m_WorldType == Level::WorldType::OVERWORLD) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
-        else if (m_WorldType == Level::WorldType::UNDERGROUND) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{0, 0, 0, 255});
-    }
+    // for (auto& hole : m_Holes)
+    // {
+    //     int Width = hole.second * 100;
+    //     if (m_WorldType == Level::WorldType::OVERWORLD) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
+    //     else if (m_WorldType == Level::WorldType::UNDERGROUND) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{0, 0, 0, 255});
+    // }
+}
+void Ground::reset()
+{
+    m_Holes.clear();
+    m_HoleSet.clear();
 }
 void Ground::update(Vector2 CameraPosition)
 {
@@ -120,6 +133,11 @@ void Ground::update(Vector2 CameraPosition)
 }
 void Ground::addHole(float x, unsigned int y)
 {
+    int HolePosition = static_cast<int>(x / m_Size.x);
+    for (int i = 0; i < y; ++i)
+    {
+        m_HoleSet.insert(HolePosition + i);
+    }
     m_Holes.push_back(std::make_pair(x, y));
 }
 

@@ -6,6 +6,7 @@
 #include "../animation/Animation.h"
 #include "../Oberver/Observer.hpp"
 #include "Flyweight.hpp"
+#include <unordered_set>
 class MapObject
 {
     public:
@@ -111,12 +112,13 @@ class Ground : public MapObject // Singleton
         std::vector<std::pair<float, int>> m_Holes;
         Vector2 m_CameraPosition;
         int m_WorldType = 0;
+        std::unordered_set<int> m_HoleSet;
     private:
         Ground();
         ~Ground();
         void update(Vector2 CameraPosition);
     public:
-        void clearHoles() { m_Holes.clear(); };
+        void reset();
         void render();
         static Ground* GetGround();
         void addHole(float x, unsigned int y); // y is how many bricks wide the hole is
