@@ -42,12 +42,15 @@ protected:
 
 public:
 	void onNotify() override;
-	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity);
+	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity, bool appeared);
 	virtual ~Item();
 	virtual void applyEffect(Character* character) = 0;
 	virtual void Update(float deltaTime); 
 	virtual void Draw(); // not animation
 	float norm(Vector2 vector1, Vector2 vector2);
+	int GetItemID() const {
+		return texture.id;
+	}
 	Vector2 GetPosition() const {
 		return position;
 	}
@@ -69,6 +72,9 @@ class Mushroom : public Item {
 private:
 	bool isFalling;
 	float gravity;
+	bool isRising;
+	float riseProgress;
+	float riseSpeed;
 public:
 	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
 	void applyEffect(Character* character);
@@ -77,6 +83,8 @@ public:
 	void ResetYVelocity();
 	void Update(float deltaTime) override;
 	void Draw() override;
+	void Rising(float deltaTime);
+	void startRising();
 
 };
 class FireFlower : public Item {

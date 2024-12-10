@@ -17,7 +17,13 @@ int main(void)
     Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
     Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
 
-  
+    StarMan* starman = new StarMan(
+        Vector2{ 200, 200 },
+        Vector2{ 0, 0 },
+        Vector2{ 50, 50 },
+        starmanTexture
+        
+        );
     Coin* coin = new Coin(
         Vector2{ 100, 500 },   //Start position
         Vector2{ 100, 300 },    //End position
@@ -48,11 +54,15 @@ int main(void)
         {
             coin->onNotify();
         }
-        
+        if (IsKeyPressed(KEY_B))
+        {
+            mushroom->startRising();
+
+        }
         
         coin->Update(deltatime);
         mushroom->Update(deltatime);
-
+        starman->Update(deltatime);
         level->update(deltatime);
 
         
@@ -61,7 +71,7 @@ int main(void)
         ClearBackground(Color{105, 147, 245, 255});
         coin->Draw();
         mushroom->Draw();
-
+        starman->Draw();
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
