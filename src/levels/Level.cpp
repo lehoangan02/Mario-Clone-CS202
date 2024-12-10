@@ -264,7 +264,7 @@ void Level::update(float DeltaTime)
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
-    resolveFlagPoleCollisions();
+    // resolveFlagPoleCollisions();
 }
 bool Level::isInHole()
 {
@@ -375,12 +375,12 @@ Level::Background::Background()
     // m_TextureLayer6 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/Background6.png");
     // m_TextureLayer7 = LoadTexture("assets/textures/Glacial-mountains-parallax-background_vnitti/Layers/Background7.png");
 
-    m_TextureLayer8 = LoadTexture("assets/textures/The Dawn/Layers/3.png");
-    m_TextureLayer9 = LoadTexture("assets/textures/The Dawn/Layers/4.png");
-    m_TextureLayer10 = LoadTexture("assets/textures/The Dawn/Layers/5.png");
-    m_TextureLayer11 = LoadTexture("assets/textures/The Dawn/Layers/6.png");
-    m_TextureLayer12 = LoadTexture("assets/textures/The Dawn/Layers/7.png");
-    m_TextureLayer13 = LoadTexture("assets/textures/The Dawn/Layers/8.png");
+    m_TextureLayer8 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0000_9.png");
+    m_TextureLayer9 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0001_8.png");
+    m_TextureLayer10 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0003_6.png");
+    m_TextureLayer11 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0005_5.png");
+    m_TextureLayer12 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0006_4.png");
+    m_TextureLayer13 = LoadTexture("assets/textures/Free Pixel Art Forest/PNG/Background layers/Layer_0009_2.png");
 
 }
 void Level::Background::update(Vector2 CameraPosition, bool Overworld)
@@ -414,12 +414,14 @@ void Level::Background::render()
     }
     else
     {
-        DrawTextureEx(m_TextureLayer8, m_Layer8Position, 0, 2, WHITE);
-        DrawTextureEx(m_TextureLayer9, m_Layer9Position, 0, 2, WHITE);
-        DrawTextureEx(m_TextureLayer10, m_Layer10Position, 0, 2, WHITE);
-        DrawTextureEx(m_TextureLayer11, m_Layer11Position, 0, 2, WHITE);
-        DrawTextureEx(m_TextureLayer12, m_Layer12Position, 0, 2, WHITE);
-        DrawTextureEx(m_TextureLayer13, m_Layer13Position, 0, 2, WHITE);
+        DrawTextureEx(m_TextureLayer13, m_Layer13Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer12, m_Layer12Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer8, m_Layer8Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer9, m_Layer9Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer10, m_Layer10Position, 0, 7, WHITE);
+        DrawTextureEx(m_TextureLayer11, m_Layer11Position, 0, 7, WHITE);
+        
+        
     }
     
 }
@@ -428,8 +430,8 @@ void Level::resolveFlagPoleCollisions()
     static bool PullDone = false;
     AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
     AABBox EnvironmentBox = AABBox(m_FlagPole.m_Position, m_FlagPole.getSize());
-    std::cout << "Flag Pole Position: " << m_FlagPole.m_Position.x << " " << m_FlagPole.m_Position.y << std::endl;
-    std::cout << "Flag Pole Size: " << m_FlagPole.getSize().x << " " << m_FlagPole.getSize().y << std::endl;
+    // std::cout << "Flag Pole Position: " << m_FlagPole.m_Position.x << " " << m_FlagPole.m_Position.y << std::endl;
+    // std::cout << "Flag Pole Size: " << m_FlagPole.getSize().x << " " << m_FlagPole.getSize().y << std::endl;
     EnvironmentBox.setFixed(true);
     if (isColliding(PlayerBox, EnvironmentBox))
     {

@@ -66,13 +66,13 @@ class Level : public Subject
         Vector2 m_Layer6Position = {-00, 0};
         Vector2 m_Layer7Position = {-00, 0};
 
-        Vector2 m_Layer8Position = {-00, -900};
-        Vector2 m_Layer9Position = {-00, -900};
-        Vector2 m_Layer10Position = {-00, -900};
-        Vector2 m_Layer11Position = {-00, -900};
-        Vector2 m_Layer12Position = {-00, -900};
-        Vector2 m_Layer13Position = {-00, -900};
-        Vector2 m_Layer14Position = {-00, -900};
+        Vector2 m_Layer8Position = {-00, -4110};
+        Vector2 m_Layer9Position = {-00, -4110};
+        Vector2 m_Layer10Position = {-00, -4110};
+        Vector2 m_Layer11Position = {-00, -4110};
+        Vector2 m_Layer12Position = {-00, -4110};
+        Vector2 m_Layer13Position = {-00, -4110};
+        Vector2 m_Layer14Position = {-00, -4110};
         public:
         Background();
         void update(Vector2 CameraPosition, bool Overworld);
