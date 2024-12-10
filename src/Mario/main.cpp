@@ -16,7 +16,13 @@ int main(void)
     Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
     Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
     Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
-
+   
+    FireFlower* fireflower = new FireFlower(
+        Vector2{ 200, 300 },
+        Vector2{ 0, 0 },
+        Vector2{ 50, 50},
+        fireflowerTexture
+    );
     StarMan* starman = new StarMan(
         Vector2{ 200, 200 },
         Vector2{ 0, 0 },
@@ -59,18 +65,29 @@ int main(void)
             mushroom->onNotify();
 
         }
-        
+        if (IsKeyPressed(KEY_C))
+        {
+            fireflower->onNotify();
+        }
+        if (IsKeyPressed(KEY_D))
+        {
+            starman->onNotify();
+        }
         coin->Update(deltatime);
         mushroom->Update(deltatime);
         starman->Update(deltatime);
+        fireflower->Update(deltatime);
+        starman->Update(deltatime);
         level->update(deltatime);
-
+        
         
 
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
         coin->Draw();
         mushroom->Draw();
+        starman->Draw();
+        fireflower->Draw();
         starman->Draw();
         level->render();
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);

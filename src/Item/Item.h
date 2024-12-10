@@ -100,23 +100,31 @@ private:
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
+	bool FinishedSpawning;
 	
 public:
 	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
 	void applyEffect(Character* character);
+	void onNotify() override;
 	void Update(float deltaTime) override;
 	void Draw() override;
 	Itemtype getItemID() const override;
-
+	bool isFinishedSpawning() { return FinishedSpawning; }
 };
 class StarMan : public Item {
+private:
+	bool isRising;
+	float riseProgress;
+	float riseSpeed;
+	bool FinishedSpawning;
 public:
 	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	void onNotify() override;
 	void applyEffect(Character* character);
 	void Update(float deltaTime) override;
 	void Draw() override;
 	Itemtype getItemID() const override;
-
+	bool isFinishedSpawning() { return FinishedSpawning; }
 
 };
 

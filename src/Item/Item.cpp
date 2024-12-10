@@ -142,8 +142,7 @@ Itemtype Mushroom::getItemID() const {
 }
 void Mushroom::onNotify() {
     isRising = true;
-    riseProgress = 0.0f;
-    APPEARED = false;
+
 }
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
@@ -185,17 +184,18 @@ void Mushroom::Draw() {
 
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false) {}
+    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false),
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 void FireFlower::applyEffect(Character* character) {
     return;
+}
+void FireFlower::onNotify() {
+    isRising = true;
 }
 Itemtype FireFlower::getItemID() const {
     return Itemtype::FIREFLOWER;
 }
 void FireFlower::Update(float deltaTime) {
-    if (!APPEARED) {
-        return;
-    }
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
@@ -204,46 +204,66 @@ void FireFlower::Update(float deltaTime) {
         }
         elapsedTime = 0.0f;
     }
+    if (isRising) {
+        riseProgress += riseSpeed * deltaTime;
+        if (riseProgress >= 1.0f) {
+            riseProgress = 1.0f;
+            isRising = false;
+            APPEARED = true;
+            FinishedSpawning = true;
+        }
+    }
+    
 }
 void FireFlower::Draw() {
-    if (APPEARED) {
+    if (APPEARED || isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
-            frameSize.y
+            frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y , size.x, size.y };
+        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
         Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
-    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true) {}
+    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true),
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
 }
+void StarMan::onNotify() {
+    isRising = true;
+}
 void StarMan::Update(float deltaTime) {
-    if (!APPEARED) {
-        return;
-    }
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
         if (currentFrame == 4) currentFrame++;
         elapsedTime = 0;
     }
+    if (isRising) {
+        riseProgress += riseSpeed * deltaTime;
+        if (riseProgress >= 1.0f) {
+            riseProgress = 1.0f;
+            isRising = false;
+            APPEARED = true;
+            FinishedSpawning = true;
+        }
+    }
 }
 void StarMan::Draw() {
-    if (APPEARED) {
+    if (APPEARED || isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
-            frameSize.y
+            frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y , size.x, size.y };
+        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
