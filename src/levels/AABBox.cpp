@@ -73,6 +73,10 @@ void resolveCollisions(AABBox &AABBox1, AABBox &AABBox2)
         // std::cout << "Not colliding" << std::endl;
     }
 }
+// void resolveCollisions(AABBox &AABBox1, AABBox& AABBox2, bool Fixed)
+// {
+
+// }
 bool isColliding(const AABBox &AABBox1, const AABBox &AABBox2)
 {
     Vector2 Center1 = {AABBox1.m_Position.x + AABBox1.m_Size.x / 2, AABBox1.m_Position.y + AABBox1.m_Size.y / 2};

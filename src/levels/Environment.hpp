@@ -256,3 +256,24 @@ class EndPipeSide : public EndPipe
     void render() override;
     void update() override;
 };
+class FlagPole : public MapObject
+{
+    public:
+    FlagPole(float Position);
+    ~FlagPole();
+    void render() override;
+    void update();
+    void notifyPull();
+    bool isDone() { return m_Done; };
+    private:
+    Texture2D m_Pole = LoadTexture("assets/textures/FlagPole.png");
+    Texture2D m_Flag = LoadTexture("assets/textures/Flag.png");
+    Texture2D m_Brick = LoadTexture("assets/textures/hard_block.png");
+    Vector2 m_FlagPosition;
+    bool m_Pull = false;
+    bool m_Done = false;
+    private:
+    void pullFlag();
+    
+    
+};

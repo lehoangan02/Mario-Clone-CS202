@@ -382,7 +382,45 @@ void EndPipeSide::render()
 void EndPipeSide::update()
 {
 }
-
+FlagPole::FlagPole(float Position) : MapObject(Vector2{Position, 100}, Vector2{100, 900})
+{
+    m_Position.x = Position;
+    m_Position.y = 750 - 900;
+    m_FlagPosition = {m_Position.x - 50, m_Position.y + 50};
+}
+FlagPole::~FlagPole()
+{
+}
+void FlagPole::render()
+{
+    DrawTextureEx(m_Flag, m_FlagPosition, 0, 5, WHITE);
+    DrawTextureEx(m_Pole, m_Position, 0, 5, WHITE);
+    DrawTextureEx(m_Brick, {m_Position.x, m_Position.y + 800}, 0, 1, WHITE);
+}
+void FlagPole::update()
+{
+    if (IsKeyPressed(KEY_ZERO))
+    {
+        notifyPull();
+    }
+    pullFlag();
+}
+void FlagPole::pullFlag()
+{
+    if (!m_Pull) return;
+    static const float Speed = 100;
+    static const float EndPosition = 750 - 200;
+    m_FlagPosition.y += Speed * GetFrameTime();
+    if (m_FlagPosition.y > EndPosition)
+    {
+        m_FlagPosition.y = EndPosition;
+        m_Done = true;
+    }
+}
+void FlagPole::notifyPull()
+{
+    m_Pull = true;
+}
 
 
 

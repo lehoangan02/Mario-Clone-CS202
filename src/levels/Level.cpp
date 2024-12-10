@@ -172,6 +172,7 @@ void Level::render()
     camera.zoom = Zoom;
     BeginMode2D(camera);
     m_Background.render();
+    m_FlagPole.render();
     for (auto& object : m_Environment)
     {
         object->render();
@@ -217,7 +218,7 @@ void Level::update(float DeltaTime)
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
-    else
+    else if (!isPlayerFinished && m_InControl)
     {
         FullControl control(m_Player);
         control.execute(DeltaTime);
@@ -259,9 +260,11 @@ void Level::update(float DeltaTime)
     {
         return;
     }
+    m_FlagPole.update();
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
+    resolveFlagPoleCollisions();
 }
 bool Level::isInHole()
 {
@@ -420,6 +423,28 @@ void Level::Background::render()
     }
     
 }
+void Level::resolveFlagPoleCollisions()
+{
+    static bool PullDone = false;
+    AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+    AABBox EnvironmentBox = AABBox(m_FlagPole.m_Position, m_FlagPole.getSize());
+    std::cout << "Flag Pole Position: " << m_FlagPole.m_Position.x << " " << m_FlagPole.m_Position.y << std::endl;
+    std::cout << "Flag Pole Size: " << m_FlagPole.getSize().x << " " << m_FlagPole.getSize().y << std::endl;
+    EnvironmentBox.setFixed(true);
+    if (isColliding(PlayerBox, EnvironmentBox))
+    {
+        std::cout << "Colliding with flag pole" << std::endl;
+        resolveCollisions(PlayerBox, EnvironmentBox);
+        m_Player->setPosition(PlayerBox.getPosition());
+        m_FlagPole.m_Position = EnvironmentBox.getPosition();
+        m_FlagPole.notifyPull();
+    }
+    PullDone = m_FlagPole.isDone();
+    if (PullDone)
+    {
+        DrawText("Level Complete", 100, 100, 20, RED);
+    }
+}
 
 Level101::Level101()
 {
@@ -465,6 +490,7 @@ void LevelTesting::update(float DeltaTime)
 void LevelTesting::render()
 {
     Level::render();
+    
 }
 LevelTesting* LevelTesting::GetLevelTesting()
 {

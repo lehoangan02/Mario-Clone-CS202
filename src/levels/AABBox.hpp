@@ -23,9 +23,11 @@ class AABBox
     friend bool isCollidingHorizontallyRaw(const AABBox &AABBox1, const AABBox &AABBox2);
     friend bool isCollidingVerticallyRaw(const AABBox &AABBox1, const AABBox &AABBox2, const float &Threshold);
     friend bool isCollidingHorizontallyRawLess(const AABBox &AABBox1, const AABBox &AABBox2, const float &Threshold);
+    // friend void resolveCollision(AABBox &AABBox1, AABBox &AABBox2, bool Fixed);
 
 };
 void resolveCollisions(AABBox &AABBox1, AABBox &AABBox2);
+// void resolveCollision(AABBox &AABBox1, AABBox &AABBox2, bool Fixed);
 bool isColliding(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingOnVertically(const AABBox &AABBox1, const AABBox &AABBox2);
 bool isCollidingVerticallyRaw(const AABBox &AABBox1, const AABBox &AABBox2, const float &Threshold);

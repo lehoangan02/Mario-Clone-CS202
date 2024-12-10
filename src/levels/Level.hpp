@@ -85,6 +85,8 @@ class Level : public Subject
             UNDERGROUND
         };
     friend class MapLoader;
+    // private:
+        FlagPole m_FlagPole = FlagPole(1000);
     protected:
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
@@ -106,6 +108,7 @@ class Level : public Subject
     private:
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
+        bool m_InControl = true;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
@@ -127,7 +130,7 @@ class Level : public Subject
         bool isInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
-    
+        void resolveFlagPoleCollisions();
 };
 class LevelFactory
 {
@@ -176,6 +179,7 @@ class HiddenLevel101 : public Level
 class LevelTesting : public Level
 {
     friend class LevelFactory;
+    
     private:
         LevelTesting();
         ~LevelTesting();
@@ -194,7 +198,6 @@ class Level103 : public Level
         void load() override;
         void update(float DeltaTime) override;
         void render() override;
-        void load() override;
     public:
         static Level103* GetLevel103();
 };
