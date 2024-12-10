@@ -19,7 +19,12 @@ constexpr float STARMAN_FRAME_TIME = 0.5f;
 #include "../characters/Character.h"
 #include "../Oberver/Observer.hpp"
 
-
+enum class Itemtype {
+	COIN,
+	MUSHROOM,
+	FIREFLOWER,
+	STARMAN
+};
 class Item : public Observer {
 protected:
 	Vector2 position;
@@ -32,7 +37,7 @@ protected:
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
 	bool Notify;
-
+	
 	Vector2 velocity;
 	Vector2	startPosition;
 	Vector2 endPosition;
@@ -48,9 +53,7 @@ public:
 	virtual void Update(float deltaTime); 
 	virtual void Draw(); // not animation
 	float norm(Vector2 vector1, Vector2 vector2);
-	int GetItemID() const {
-		return texture.id;
-	}
+	virtual Itemtype getItemID() const = 0;
 	Vector2 GetPosition() const {
 		return position;
 	}
@@ -66,6 +69,7 @@ public:
 	void applyEffect(Character* Character) override;
 	void Update(float deltaTime) override;
 	void Draw() override;
+	Itemtype getItemID() const override;
 
 };
 class Mushroom : public Item {
@@ -85,6 +89,8 @@ public:
 	void Draw() override;
 	void Rising(float deltaTime);
 	void startRising();
+	Itemtype getItemID() const override;
+
 
 };
 class FireFlower : public Item {
@@ -93,6 +99,8 @@ public:
 	void applyEffect(Character* character);
 	void Update(float deltaTime) override;
 	void Draw() override;
+	Itemtype getItemID() const override;
+
 };
 class StarMan : public Item {
 public:
@@ -100,6 +108,7 @@ public:
 	void applyEffect(Character* character);
 	void Update(float deltaTime) override;
 	void Draw() override;
+	Itemtype getItemID() const override;
 
 
 };

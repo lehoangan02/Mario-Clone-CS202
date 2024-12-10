@@ -108,7 +108,9 @@ void Coin::Update(float deltaTime) { //acceleration
         }
     }
 }
-
+Itemtype Coin::getItemID() const {
+    return Itemtype::COIN;
+}
 void Coin::Draw() { //animation
     if (Notify == true)
     {
@@ -131,6 +133,9 @@ Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex
 
 void Mushroom::applyEffect(Character* character) {
     return;
+}
+Itemtype Mushroom::getItemID() const {
+    return Itemtype::MUSHROOM;
 }
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
@@ -176,6 +181,9 @@ FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D
 void FireFlower::applyEffect(Character* character) {
     return;
 }
+Itemtype FireFlower::getItemID() const {
+    return Itemtype::FIREFLOWER;
+}
 void FireFlower::Update(float deltaTime) {
     if (!APPEARED) {
         return;
@@ -205,6 +213,9 @@ void FireFlower::Draw() {
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
     Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true) {}
 void StarMan::applyEffect(Character* character) {}
+Itemtype StarMan::getItemID() const {
+    return Itemtype::STARMAN;
+}
 void StarMan::Update(float deltaTime) {
     if (!APPEARED) {
         return;
