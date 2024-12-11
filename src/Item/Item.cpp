@@ -14,25 +14,7 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
     moves = 0;
 
-    if (startPosition.x < endPosition.x) {
-        this->velocity.x = fabs(this->velocity.x);
-    }
-    else if (startPosition.x > endPosition.x) {
-        this->velocity.x = -fabs(this->velocity.x);
-    }
-    else {
-        this->velocity.x = 0;
-    }
-    if (startPosition.y < endPosition.y) {
-        this->velocity.y = fabs(this->velocity.y);
-        
-    }
-    else if (startPosition.y > endPosition.y) {
-        this->velocity.y = -fabs(this->velocity.y);
-    }
-    else {
-        this->velocity.y = 0;
-    }
+    
 
     
 }
@@ -44,7 +26,7 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
         pow(vector1.y - vector2.y, 2));
     return result;
 }
-void Item::onNotify() {
+void Coin::onNotify() {
     Notify = true;
 }
 
@@ -52,7 +34,28 @@ void Item::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true) {}
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true)
+{
+    if (startPosition.x < endPosition.x) {
+        this->velocity.x = fabs(this->velocity.x);
+    }
+    else if (startPosition.x > endPosition.x) {
+        this->velocity.x = -fabs(this->velocity.x);
+    }
+    else {
+        this->velocity.x = 0;
+    }
+    if (startPosition.y < endPosition.y) {
+        this->velocity.y = fabs(this->velocity.y);
+
+    }
+    else if (startPosition.y > endPosition.y) {
+        this->velocity.y = -fabs(this->velocity.y);
+    }
+    else {
+        this->velocity.y = 0;
+    }
+}
 Item* Item::Transform(Item* currentItem, const std::string& newItemType, Texture2D newTexture, int newTotalFrames, float newSwitchTime) {
     Vector2 position = currentItem->GetPosition();
     Vector2 size = currentItem->GetSize();
@@ -129,7 +132,7 @@ void Coin::Draw() { //animation
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
-    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
@@ -137,17 +140,25 @@ void Mushroom::applyEffect(Character* character) {
 Itemtype Mushroom::getItemID() const {
     return Itemtype::MUSHROOM;
 }
+void Mushroom::onNotify() {
+    isRising = true;
+
+}
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
         riseProgress += riseSpeed * deltaTime;
-        if(riseProgress >= 1.0f) {
+        if (riseProgress >= 1.0f) {
             riseProgress = 1.0f;
             isRising = false;
             APPEARED = true;
+            FinishedSpawning = true;
         }
     }
-    //position.x += velocity.x * deltaTime;
-    //position.y += velocity.y * deltaTime;
+    if (APPEARED == true)
+    {
+        position.x += velocity.x * deltaTime;
+        position.y += velocity.y * deltaTime;
+    }
 }
 void Mushroom::Accelerate(float deltaTime) {
     velocity.y += gravity * deltaTime;
@@ -158,11 +169,7 @@ void Mushroom::FlipDirection() {
 void Mushroom::ResetYVelocity() {
     velocity.y = 0.0f;
 }
-void Mushroom::startRising() {
-    isRising = true;
-    riseProgress = 0.0f;
-    APPEARED = false;
-}
+
 
 void Mushroom::Draw() {
     if (APPEARED || isRising) {
@@ -177,17 +184,18 @@ void Mushroom::Draw() {
 
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, true) {}
+    : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false),
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 void FireFlower::applyEffect(Character* character) {
     return;
+}
+void FireFlower::onNotify() {
+    isRising = true;
 }
 Itemtype FireFlower::getItemID() const {
     return Itemtype::FIREFLOWER;
 }
 void FireFlower::Update(float deltaTime) {
-    if (!APPEARED) {
-        return;
-    }
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
@@ -196,46 +204,66 @@ void FireFlower::Update(float deltaTime) {
         }
         elapsedTime = 0.0f;
     }
+    if (isRising) {
+        riseProgress += riseSpeed * deltaTime;
+        if (riseProgress >= 1.0f) {
+            riseProgress = 1.0f;
+            isRising = false;
+            APPEARED = true;
+            FinishedSpawning = true;
+        }
+    }
+    
 }
 void FireFlower::Draw() {
-    if (APPEARED) {
+    if (APPEARED || isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
-            frameSize.y
+            frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y , size.x, size.y };
+        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
         Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
-    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true) {}
+    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true),
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
 }
+void StarMan::onNotify() {
+    isRising = true;
+}
 void StarMan::Update(float deltaTime) {
-    if (!APPEARED) {
-        return;
-    }
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
         if (currentFrame == 4) currentFrame++;
         elapsedTime = 0;
     }
+    if (isRising) {
+        riseProgress += riseSpeed * deltaTime;
+        if (riseProgress >= 1.0f) {
+            riseProgress = 1.0f;
+            isRising = false;
+            APPEARED = true;
+            FinishedSpawning = true;
+        }
+    }
 }
 void StarMan::Draw() {
-    if (APPEARED) {
+    if (APPEARED || isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
-            frameSize.y
+            frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y , size.x, size.y };
+        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
