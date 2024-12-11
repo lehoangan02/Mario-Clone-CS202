@@ -128,22 +128,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\animation\Animation.cpp" />
+    <ClCompile Include="..\Application.cpp" />
     <ClCompile Include="..\characters\Character.cpp" />
+    <ClCompile Include="..\Game.cpp" />
+    <ClCompile Include="..\GUI.cpp" />
+    <ClCompile Include="..\Item\Item.cpp" />
     <ClCompile Include="..\levels\AABBox.cpp" />
     <ClCompile Include="..\levels\Environment.cpp" />
+    <ClCompile Include="..\levels\Flyweight.cpp" />
     <ClCompile Include="..\levels\Level.cpp" />
+    <ClCompile Include="..\levels\MapLoader.cpp" />
+    <ClCompile Include="..\ResourceManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\animation\Animation.h" />
+    <ClInclude Include="..\Application.hpp" />
     <ClInclude Include="..\characters\Character.h" />
     <ClInclude Include="..\characters\Enemy.h" />
     <ClInclude Include="..\characters\Luigi.h" />
     <ClInclude Include="..\characters\Mario.h" />
+    <ClInclude Include="..\Game.hpp" />
+    <ClInclude Include="..\GUI.hpp" />
+    <ClInclude Include="..\Item\Item.h" />
     <ClInclude Include="..\levels\AABBox.hpp" />
     <ClInclude Include="..\levels\Environment.hpp" />
+    <ClInclude Include="..\levels\Flyweight.hpp" />
     <ClInclude Include="..\levels\Level.hpp" />
+    <ClInclude Include="..\levels\MapLoader.hpp" />
     <ClInclude Include="..\levels\Serialization.hpp" />
+    <ClInclude Include="..\ResourceManager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

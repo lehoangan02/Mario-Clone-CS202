@@ -33,6 +33,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
+        std::cout << "Creating Static Environment Object at " << X << ", " << Y << std::endl;
         if (Type == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
         {
             Level->m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{X, 750 - Y}));
@@ -50,7 +51,41 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
-        Level -> m_EnvironmentInteractive.push_back(EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y}));
+        int ItemType;
+        fin >> ItemType;
+        Itemtype MyItemType = static_cast<Itemtype>(ItemType);
+        std::pair<EnvironmentObjectInteractive*, Item*> Pair;
+        Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
+        Item* NewItem;
+        switch (MyItemType)
+        {
+        case Itemtype::COIN:
+            {
+                NewItem = new Coin(
+                Vector2{ X + 40, Y },   //Start position
+                Vector2{ X + 40, Y - 300 },    //End position
+                Vector2{ 40,100},      // size of coin
+                LoadTexture("assets/textures/Coin.png"),
+                Vector2{ 0, 400 }     //velocity
+                );
+            }
+            break;
+        case Itemtype::MUSHROOM:
+            {
+                NewItem = new Mushroom(
+                Vector2{ X + 20, Y},   //Start position
+                Vector2{ 0, 0 },    //End position
+                Vector2{ 50, 50},      // size of coin
+                LoadTexture("assets/textures/MagicMushroom.png"),
+                Vector2{ 100, 0 }     //velocity
+                );
+            }
+            break;
+        default:
+            break;
+        }
+        Pair.second = NewItem;
+        Level -> m_EnvironmentInteractive.push_back(Pair);
     }
     int NumberOfDrawables;
     fin >> NumberOfDrawables;
@@ -62,7 +97,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         Level -> m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(Type, Vector2{X, Y}));
     }
-    Level -> m_Ground -> clearHoles();
+    Level -> m_Ground -> reset();
     int NumberOfHoles;
     fin >> NumberOfHoles;
     for (int i = 0; i < NumberOfHoles; i++)
@@ -88,11 +123,13 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
-        Level -> m_EndPipes.push_back(new EndPipeTop(Vector2{X, 750 - Y}));
+        EndPipeTop* Pipe = new EndPipeTop(Vector2{X, 750 - Y});
+        Level -> m_EndPipeHandler.addEndPipe(Pipe);
+        Level -> m_EndPipes.push_back(Pipe);
+        
     }
     int WorldType;
     fin >> WorldType;
-    Level -> m_WorldType = WorldType;
     Level -> m_Ground -> setWorldType(WorldType);
     fin.close();
 }

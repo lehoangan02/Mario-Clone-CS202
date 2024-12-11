@@ -90,7 +90,7 @@ void WarpPipeTextureFlyWeight::render(Vector2 Position)
 }
 BrickTextureFlyWeight::BrickTextureFlyWeight()
 {
-    m_Texture = LoadTexture("assets/textures/brick.png");
+    m_Texture = LoadTexture("assets/textures/brick_2.png");
 }
 BrickTextureFlyWeight::~BrickTextureFlyWeight()
 {
@@ -102,7 +102,7 @@ BrickTextureFlyWeight* BrickTextureFlyWeight::GetBrickTextureFlyWeight()
 }
 void BrickTextureFlyWeight::render(Vector2 Position)
 {
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
 }
 HardBlockTextureFlyWeight::HardBlockTextureFlyWeight()
 {
@@ -172,7 +172,7 @@ void QuestionBlockTextureFlyWeight::render(Vector2 Position, Rectangle TextureRe
 }
 EmptyQuestionBlockTextureFlyweight::EmptyQuestionBlockTextureFlyweight()
 {
-    m_Texture = LoadTexture("assets/textures/empty_question_block.png");
+    m_Texture = LoadTexture("assets/textures/empty_question_block_2.png");
 }
 EmptyQuestionBlockTextureFlyweight::~EmptyQuestionBlockTextureFlyweight()
 {
@@ -184,7 +184,7 @@ EmptyQuestionBlockTextureFlyweight* EmptyQuestionBlockTextureFlyweight::GetEmpty
 }
 void EmptyQuestionBlockTextureFlyweight::render(Vector2 Position)
 {
-    DrawTexture(m_Texture, Position.x, Position.y, WHITE);
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
 }
 
 CloudTextureFlyWeight::CloudTextureFlyWeight()
@@ -252,4 +252,5 @@ void EndPipeTopTextureFlyWeight::render(Vector2 Position)
 {
     DrawTextureEx(m_Texture, Position, 0.0f, 3.125, WHITE);
 }
+
 

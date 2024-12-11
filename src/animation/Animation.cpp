@@ -35,7 +35,7 @@ void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire, b
 		}
 	}
 	else if (state == 4) {
-		totalTime += 0.015f;
+		totalTime += 0.01f;
 		currentImage.x = 4;
 		if (totalTime >= switchTime) {
 			totalTime = 0;

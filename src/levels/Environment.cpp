@@ -11,7 +11,7 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
     {
         case EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE:
         {
-            std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
+            // std::cout << "Creating Warp Pipe at " << Position.x << ", " << Position.y << std::endl;
             WarpPipe* pipe = new WarpPipe(Position);
             // std::cout << "Current Position: " << pipe->m_Position.x << ", " << pipe->m_Position.y << std::endl;
             return pipe;
@@ -60,6 +60,7 @@ EnvironmentObjectInteractive* EnvironmentInteractiveObjectFactory::CreateEnviron
             return nullptr;
         }
     }
+    return nullptr;
 }
 void EnvironmentObjectInteractive::move(Vector2 Position)
 {
@@ -99,19 +100,32 @@ Ground* Ground::GetGround()
 }
 void Ground::render()
 {
+    // std::cout << "Number of Holes: " << m_Holes.size() << std::endl;
     int PositionX = static_cast<int>(m_CameraPosition.x / m_Size.x);
     for (int i = 0; i < 40; ++i)
     {
-        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
-        DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        if (m_HoleSet.find(i + PositionX) != m_HoleSet.end())
+        {
+
+        }
+        else
+        {
+            DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y, WHITE);
+            DrawTexture(m_Texture[m_WorldType], i * m_Size.x + m_Size.x * PositionX , m_Position.y + m_Size.y, WHITE);
+        }
     }
 
-    for (auto& hole : m_Holes)
-    {
-        int Width = hole.second * 100;
-        if (m_WorldType == Level::WorldType::OVERWORLD) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
-        else if (m_WorldType == Level::WorldType::UNDERGROUND) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{0, 0, 0, 255});
-    }
+    // for (auto& hole : m_Holes)
+    // {
+    //     int Width = hole.second * 100;
+    //     if (m_WorldType == Level::WorldType::OVERWORLD) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{105, 147, 245, 255});
+    //     else if (m_WorldType == Level::WorldType::UNDERGROUND) DrawRectangle(hole.first, m_Position.y, Width, 200, Color{0, 0, 0, 255});
+    // }
+}
+void Ground::reset()
+{
+    m_Holes.clear();
+    m_HoleSet.clear();
 }
 void Ground::update(Vector2 CameraPosition)
 {
@@ -119,18 +133,23 @@ void Ground::update(Vector2 CameraPosition)
 }
 void Ground::addHole(float x, unsigned int y)
 {
+    int HolePosition = static_cast<int>(x / m_Size.x);
+    for (int i = 0; i < y; ++i)
+    {
+        m_HoleSet.insert(HolePosition + i);
+    }
     m_Holes.push_back(std::make_pair(x, y));
 }
 
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE;
 }
 WarpPipe::~WarpPipe()
 {
 }
 void WarpPipe::render()
 {
-    // std::cout << "Rendering Warp Pipe at " << m_Position.x << ", " << m_Position.y << std::endl;
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::WARP_PIPE)->render(m_Position);
 }
 void WarpPipe::update()
@@ -138,6 +157,7 @@ void WarpPipe::update()
 }
 Brick::Brick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BRICK;
 }
 Brick::~Brick()
 {
@@ -152,6 +172,7 @@ void Brick::update()
 
 HardBlock::HardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK;
 }
 HardBlock::~HardBlock()
 {
@@ -165,6 +186,7 @@ void HardBlock::update()
 }
 BlueBrick::BlueBrick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BLUE_BRICK;
 }
 BlueBrick::~BlueBrick()
 {
@@ -231,8 +253,7 @@ QuestionBlock::~QuestionBlock()
 void QuestionBlock::render()
 {
     // std::cout << "Rendering Question Block at " << m_Position.x << ", " << m_Position.y << std::endl;
-    if (!m_HitAnimation.isFinished()) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
-    // else QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, HittedTextureRect);
+    if (!m_IsHit) QuestionBlockTextureFlyWeight::GetQuestionBlockTextureFlyWeight()->render(m_Position, getCurrentTextureRect());
     else EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight()->render(m_Position);
 }
 void QuestionBlock::update()
@@ -365,7 +386,45 @@ void EndPipeSide::render()
 void EndPipeSide::update()
 {
 }
-
+FlagPole::FlagPole(float Position) : MapObject(Vector2{Position, 100}, Vector2{100, 900})
+{
+    m_Position.x = Position;
+    m_Position.y = 750 - 900;
+    m_FlagPosition = {m_Position.x - 50, m_Position.y + 50};
+}
+FlagPole::~FlagPole()
+{
+}
+void FlagPole::render()
+{
+    DrawTextureEx(m_Flag, m_FlagPosition, 0, 5, WHITE);
+    DrawTextureEx(m_Pole, m_Position, 0, 5, WHITE);
+    DrawTextureEx(m_Brick, {m_Position.x, m_Position.y + 800}, 0, 1, WHITE);
+}
+void FlagPole::update()
+{
+    if (IsKeyPressed(KEY_ZERO))
+    {
+        notifyPull();
+    }
+    pullFlag();
+}
+void FlagPole::pullFlag()
+{
+    if (!m_Pull) return;
+    static const float Speed = 100;
+    static const float EndPosition = 750 - 200;
+    m_FlagPosition.y += Speed * GetFrameTime();
+    if (m_FlagPosition.y > EndPosition)
+    {
+        m_FlagPosition.y = EndPosition;
+        m_Done = true;
+    }
+}
+void FlagPole::notifyPull()
+{
+    m_Pull = true;
+}
 
 
 

@@ -22,7 +22,7 @@
 # 	-rm $(BIN)/*
 CXX = g++
 # CXX_FLAGS = -Wall -Wextra -std=c++17 -g
-CXX_FLAGS = -Wall -std=c++17 -g
+CXX_FLAGS = -std=c++17 -g
 
 BIN = bin
 SRC = src
