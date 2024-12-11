@@ -12,11 +12,12 @@ public:
 
     virtual void Update(float deltaTime) override = 0;
     virtual void Attack() = 0;
+    virtual void render() = 0;
 
 protected:
     Vector2 originPosition;
-    float speed;       
-    bool isAttacking;  
+    float speed;
+    bool isAttacking;
 };
 
 
@@ -38,8 +39,8 @@ public:
 
     void Update(float deltaTime) override;
     void Attack() override;
-
-    void EnterShellMode(); 
+    void render() override;
+    void EnterShellMode();
 
 private:
     bool isInShellMode;
