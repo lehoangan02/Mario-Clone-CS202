@@ -44,6 +44,7 @@ int main(void)
         mushroomTexture,     // Texture
         Vector2{ 100, 0 }      // Velocity
     );
+    // AABBox MushroomBox = AABBox(mushroom -> GetPosition(), mushroom -> GetSize());
     LevelFactory& factory = LevelFactory::GetLevelFactory();
     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
     Texture t = LoadTexture("assets/textures/mario.png");
@@ -92,6 +93,7 @@ int main(void)
         fireflower->Draw();
         starman->Draw();
         level->render();
+        DrawBoundingBox(mushroom->GetPosition(), mushroom->GetSize(), RED);
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
         EndDrawing();
