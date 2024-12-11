@@ -9,10 +9,12 @@ Enemy::~Enemy() {}
 
 Goomba::Goomba(Vector2 position, float speed)
     : Enemy(speed, 0.0f) { 
+    this->originPosition = position;
     this->position = position;
     this->size = {16.0f, 16.0f}; 
-    this->textures.push_back(LoadTexture("assets/textures/goomba.png"));
-    this->animation = Animation(&textures[0], {5, 1}, 0.2f); 
+    this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
+    this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
+    this->animation = Animation(&textures[0], {1, 1}, 0.2f); 
 }
 
 Goomba::~Goomba() {
@@ -22,12 +24,30 @@ Goomba::~Goomba() {
 }
 
 void Goomba::Update(float deltaTime) {
-    position.x += speed * deltaTime;
+    
+    if (faceRight) {
+        position.x += 2* sin(deltaTime);
+        this->animation = Animation(&textures[0], {1, 1}, 0.2f); 
+    } else {
+        position.x -= 2* sin(deltaTime);
+        this->animation = Animation(&textures[1], {1, 1}, 0.2f);  
+    }
+    
     animation.Update(state, deltaTime, faceRight, fire, brake);
+    
+    if (position.x >= originPosition.x + 100 || position.x <= originPosition.x - 100) {
+        faceRight = !faceRight; 
+    }
+
+    // if (CheckCollisionRecs) ...
 }
 
+
+void Goomba::render() {
+    DrawTexture(textures[0], position.x, position.y, WHITE);
+}
 void Goomba::Attack() {
-    //std::cout << "Goomba attacks by walking into the player!" << std::endl;
+    
 }
 
 

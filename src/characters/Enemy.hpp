@@ -14,6 +14,7 @@ public:
     virtual void Attack() = 0;
 
 protected:
+    Vector2 originPosition;
     float speed;       
     bool isAttacking;  
 };
@@ -26,6 +27,7 @@ public:
 
     void Update(float deltaTime) override;
     void Attack() override;
+    void render() ;
 };
 
 
