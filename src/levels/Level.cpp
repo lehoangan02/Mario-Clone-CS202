@@ -91,6 +91,10 @@ void Level::resolveInteractiveEnvironmentCollisions()
 {
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
+        if (IsKeyPressed(KEY_E))
+        {
+            m_EnvironmentInteractive[i].second->onNotify();
+        }
             AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
             AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i].first->m_Position, m_EnvironmentInteractive[i].first->getSize());
             EnvironmentBox.setFixed(true);
@@ -107,6 +111,11 @@ void Level::resolveInteractiveEnvironmentCollisions()
                     {
                         m_EnvironmentInteractive[i].first->onNotify();                        
                         m_EnvironmentInteractive[i].second->onNotify();
+                        if (m_EnvironmentInteractive[i].second->getItemID() == Itemtype::MUSHROOM)
+                        {
+                            std::cout << "Mushroom" << std::endl;
+                        }
+                        
                     }
                 }
                 resolveCollisions(PlayerBox, EnvironmentBox);
@@ -127,6 +136,47 @@ void Level::applyBoundaries()
         m_Player->setPosition(Vector2{m_Player->GetPosition().x, m_Ground->m_Position.y - m_Player->GetSize().y});
         m_Player->resetVelocity();
         m_Player->onPlatform();
+    }
+}
+void Level::handleItemLogic()
+{
+    for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
+    {
+        Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
+        {
+            Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
+            if (IsKeyPressed(KEY_F))
+            {
+                std::cout << "Trying to flip" << std::endl;
+                MushroomItem->FlipDirection();
+            }
+            if (MushroomItem->isFinishSpawning())
+            {
+                // MushroomItem->Accelerate(GetFrameTime());
+            }
+            for (int j = 0; j < m_Environment.size(); j++)
+            {
+                AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_Environment[j]->m_Position, m_Environment[j]->getSize());
+                if (isCollidingOnVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 20.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        MushroomItem->ResetYVelocity();
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        MushroomItem->ResetYVelocity();
+                    }
+                    
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    MushroomItem->FlipDirection();
+                }
+            }
+        }
     }
 }
 void Level::render()
@@ -184,6 +234,11 @@ void Level::render()
     for (auto& object : m_EnvironmentInteractive)
     {
         object.second->Draw();
+        if (object.second->getItemID() == Itemtype::MUSHROOM)
+        {
+            Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
+            DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
+        }
     }
     for (auto& object : m_Drawables)
     {
@@ -264,6 +319,7 @@ void Level::update(float DeltaTime)
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
+    handleItemLogic();
     // resolveFlagPoleCollisions();
 }
 bool Level::isInHole()

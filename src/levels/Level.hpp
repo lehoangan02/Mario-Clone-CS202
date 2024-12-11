@@ -126,6 +126,7 @@ class Level : public Subject
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
         void resolveInteractiveEnvironmentCollisions();
+        void handleItemLogic();
         void applyBoundaries();
         bool isInHole();
         void resolveHoleCollisions();

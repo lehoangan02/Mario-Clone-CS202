@@ -76,7 +76,7 @@ public:
 class Mushroom : public Item {
 private:
 	bool isFalling;
-	float gravity;
+	float gravity = 1000;
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
