@@ -27,8 +27,8 @@ int main(void)
         Vector2{ 200, 200 },
         Vector2{ 0, 0 },
         Vector2{ 50, 50 },
-        starmanTexture
-        
+        starmanTexture,
+        Vector2{ 2.0f, 2.0f}
         );
     Coin* coin = new Coin(
         Vector2{ 100, 500 },   //Start position
@@ -73,11 +73,13 @@ int main(void)
         {
             starman->onNotify();
         }
+        
         coin->Update(deltatime);
         mushroom->Update(deltatime);
         starman->Update(deltatime);
         fireflower->Update(deltatime);
         starman->Update(deltatime);
+
         level->update(deltatime);
         
         

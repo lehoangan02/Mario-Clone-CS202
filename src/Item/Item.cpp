@@ -229,7 +229,7 @@ void FireFlower::Draw() {
     }
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
-    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, true),
+    Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, false),
     isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
@@ -254,6 +254,19 @@ void StarMan::Update(float deltaTime) {
             FinishedSpawning = true;
         }
     }
+    if (APPEARED) {
+        onFalling = true;
+        position.x += velocity.x;
+        position.y += velocity.y;
+        if (position.y >= 500.0f) {
+            onFalling = false;
+            velocity.y *= -1;
+        }
+    }
+}
+void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {
+    
+    
 }
 void StarMan::Draw() {
     if (APPEARED || isRising) {

@@ -93,6 +93,10 @@ public:
 	void Rising(float deltaTime);
 	Itemtype getItemID() const override;
 	bool isFinishSpawning() { return FinishedSpawning; }
+	void setPosition(float x, float y) {
+		position.x = x;
+		position.y = y;
+	}
 
 };
 class FireFlower : public Item {
@@ -117,6 +121,8 @@ private:
 	float riseProgress;
 	float riseSpeed;
 	bool FinishedSpawning;
+	bool onFalling;
+	
 public:
 	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
 	void onNotify() override;
@@ -125,6 +131,6 @@ public:
 	void Draw() override;
 	Itemtype getItemID() const override;
 	bool isFinishedSpawning() { return FinishedSpawning; }
-
+	void Move(float upperBoundary, float lowerBoundary, float deltaTime);
 };
 
