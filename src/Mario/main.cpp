@@ -26,7 +26,7 @@ int main(void)
     StarMan* starman = new StarMan(
         Vector2{ 200, 200 },
         Vector2{ 0, 0 },
-        Vector2{ 50, 50 },
+        Vector2{ 60, 60 },
         starmanTexture,
         Vector2{ 2.0f, 2.0f}
         );
@@ -40,7 +40,7 @@ int main(void)
     Mushroom* mushroom = new Mushroom(
         Vector2{ 200, 100 },   // Start position
         Vector2{ 0, 0 },   // End position
-        Vector2{ 50, 50 },    // Size
+        Vector2{ 60, 60 },    // Size
         mushroomTexture,     // Texture
         Vector2{ 100, 0 }      // Velocity
     );

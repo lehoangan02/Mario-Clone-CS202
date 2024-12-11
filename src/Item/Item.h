@@ -60,6 +60,10 @@ public:
 	Vector2 GetSize() const {
 		return size;
 	}
+	void setPosition(float x, float y) {
+		position.x = x;
+		position.y = y;
+	}
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
@@ -93,10 +97,7 @@ public:
 	void Rising(float deltaTime);
 	Itemtype getItemID() const override;
 	bool isFinishSpawning() { return FinishedSpawning; }
-	void setPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
-	}
+	
 
 };
 class FireFlower : public Item {
