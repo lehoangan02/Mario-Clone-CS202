@@ -11,7 +11,7 @@ Goomba::Goomba(Vector2 position, float speed)
     : Enemy(speed, 0.0f) { 
     this->originPosition = position;
     this->position = position;
-    this->size = {16.0f, 16.0f}; 
+    this->size = {20.0f, 20.0f}; 
     this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
     this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
     this->animation = Animation(&textures[0], {1, 1}, 0.2f); 
