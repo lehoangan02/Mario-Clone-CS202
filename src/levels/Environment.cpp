@@ -143,6 +143,7 @@ void Ground::addHole(float x, unsigned int y)
 
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE;
 }
 WarpPipe::~WarpPipe()
 {
@@ -156,6 +157,7 @@ void WarpPipe::update()
 }
 Brick::Brick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BRICK;
 }
 Brick::~Brick()
 {
@@ -170,6 +172,7 @@ void Brick::update()
 
 HardBlock::HardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK;
 }
 HardBlock::~HardBlock()
 {
@@ -183,6 +186,7 @@ void HardBlock::update()
 }
 BlueBrick::BlueBrick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BLUE_BRICK;
 }
 BlueBrick::~BlueBrick()
 {

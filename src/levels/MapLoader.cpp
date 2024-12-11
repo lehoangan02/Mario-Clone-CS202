@@ -33,6 +33,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
+        std::cout << "Creating Static Environment Object at " << X << ", " << Y << std::endl;
         if (Type == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
         {
             Level->m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{X, 750 - Y}));
@@ -72,7 +73,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         case Itemtype::MUSHROOM:
             {
                 NewItem = new Mushroom(
-                Vector2{ X + 20, Y - 50 },   //Start position
+                Vector2{ X + 20, Y},   //Start position
                 Vector2{ 0, 0 },    //End position
                 Vector2{ 50, 50},      // size of coin
                 LoadTexture("assets/textures/MagicMushroom.png"),

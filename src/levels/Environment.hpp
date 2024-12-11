@@ -35,6 +35,9 @@ class EnvironmentObject : public MapObject
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         // virtual void render() = 0;
+        int getType() { return m_Type; };
+    protected:
+        int m_Type;
 };
 class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
 {
@@ -150,6 +153,7 @@ class HardBlock : public EnvironmentObject
     ~HardBlock();
     void render() override;
     void update() override;
+    
 };
 class BlueBrick : public EnvironmentObject
 {
