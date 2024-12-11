@@ -142,6 +142,61 @@ void Level::handleItemLogic()
 {
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
+
+        if (m_EnvironmentInteractive[i].second->getItemID() == Itemtype::MUSHROOM)
+        {
+            Mushroom* MushroomItem = dynamic_cast<Mushroom*>(m_EnvironmentInteractive[i].second);
+            std::cout << "Mushroom position: " << MushroomItem->GetPosition().y << std::endl;
+            if (MushroomItem->GetPosition().y > m_Ground->m_Position.y - MushroomItem->GetSize().y)
+            {
+                std::cout << "Mushroom is on the ground" << std::endl;
+                MushroomItem->setPosition(MushroomItem->GetPosition().x, m_Ground->m_Position.y - MushroomItem->GetSize().y);
+                MushroomItem->ResetYVelocity();
+            }
+        }
+    }
+    for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
+    {
+        if (m_EnvironmentInteractive[i].second->getItemID() == Itemtype::MUSHROOM)
+        {
+            Mushroom* MushroomItem = dynamic_cast<Mushroom*>(m_EnvironmentInteractive[i].second);
+            // if (IsKeyPressed(KEY_F))
+            // {
+            //     std::cout << "Trying to flip" << std::endl;
+            //     MushroomItem->FlipDirection();
+            // }
+            if (MushroomItem->isFinishSpawning())
+            {
+                MushroomItem->Accelerate(GetFrameTime());
+            }
+            for (int j = 0; j < m_EnvironmentInteractive.size(); ++j)
+            {
+                AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[j].first->m_Position, m_EnvironmentInteractive[j].first->getSize());
+                EnvironmentBox.setFixed(true);
+                if (isCollidingOnVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        MushroomItem->ResetYVelocity();
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        MushroomItem->ResetYVelocity();
+                    }
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    MushroomItem->FlipDirection();
+                }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                MushroomItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                // m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+            }
+        }
+    }
+    for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
+    {
         Item* CurrentItem = m_EnvironmentInteractive[i].second;
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
@@ -153,13 +208,14 @@ void Level::handleItemLogic()
             }
             if (MushroomItem->isFinishSpawning())
             {
-                // MushroomItem->Accelerate(GetFrameTime());
+                MushroomItem->Accelerate(GetFrameTime());
             }
             for (int j = 0; j < m_Environment.size(); j++)
             {
                 AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
                 AABBox EnvironmentBox = AABBox(m_Environment[j]->m_Position, m_Environment[j]->getSize());
-                if (isCollidingOnVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 20.0f)))
+                EnvironmentBox.setFixed(true);
+                if (isCollidingOnVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
                 {
                     if (isCollidingOnBottom(ItemBox, EnvironmentBox))
                     {
@@ -169,12 +225,14 @@ void Level::handleItemLogic()
                     {
                         MushroomItem->ResetYVelocity();
                     }
-                    
                 }
                 else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
                 {
                     MushroomItem->FlipDirection();
                 }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                MushroomItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                m_Environment[i]->m_Position = EnvironmentBox.getPosition();
             }
         }
     }

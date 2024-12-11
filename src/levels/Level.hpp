@@ -90,7 +90,6 @@ class Level : public Subject
     protected:
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
-    std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
     std::vector<std::pair<EnvironmentObjectInteractive*, Item*>> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
