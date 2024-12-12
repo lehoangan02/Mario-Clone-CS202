@@ -98,6 +98,7 @@ You have to input lists in a specified order (shown after this part). Each list 
 6. Hole
 7. Lift
 8. End Pipe
+9. Type of Level
 
 Example:
 
@@ -109,7 +110,17 @@ Explanation:
 - There is 1 drawble (the type is CLOUD)
 - There are 2 holes
 
-*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide). Lifts only need X and Y coordinate.
+*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide). Lifts only need X and Y coordinate.*
+
+## Animated Environment Object
+
+This is the question blocks in the map.
+
+Explanation: 0 1200 400 0. This means that the object is type 0 (question block), followed by its coordinate. After that it's the enum of the item type (0 for coin, 1 for magic mushroom).
+
+## Lift
+
+With lifts, you do not need to input the type, just the coordinate
 
 ## Type of level
 
