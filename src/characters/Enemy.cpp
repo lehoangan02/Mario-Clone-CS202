@@ -3,12 +3,12 @@
 #include "raylib.h"
 
 void Enemy::accelerate(float deltaTime) {
-    position.x += velocity.x * deltaTime;
-    position.y += velocity.y * deltaTime;
+    position.x += speed.x * deltaTime;
+    position.y += speed.y * deltaTime;
 }
 
 void Enemy::flipDirection() {
-    velocity.x *= -1;
+    speed.x *= -1;
 }
 
 void Enemy::hit() {
@@ -44,116 +44,64 @@ void Enemy::render() {
     DrawTexture(texture, position.x, position.y, WHITE);
 }
 
-//Goomba::Goomba(Vector2 position, float speed)
-//     : Enemy(speed, 0.0f) {
-//     this->originPosition = position;
-//     this->position = position;
-//     this->size = {16.0f, 16.0f};
-//     this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
-//     this->textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
-//     this->animation = Animation(&textures[0], {1, 1}, 0.2f);
-// }
+Goomba::Goomba(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
+    size = { 32, 32 };
+    speed = { 4, 0 };
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isDying = false;
+}
 
-// Goomba::~Goomba() {
-//     for (auto& texture : textures) {
-//         UnloadTexture(texture);
-//     }
-// }
+void Goomba::hit() {
+    if (isCollisionTrue) {
+        this->texture = textures[2];           
+    }
+    isDying = true;              
+        dyingTime = 0.0f; 
+}
+  
 
-// void Goomba::Update(float deltaTime) {
-    
-//     if (faceRight) {
-//         position.x += 2* sin(deltaTime);
-//         this->animation = Animation(&textures[0], {1, 1}, 0.2f);
-//     } else {
-//         position.x -= 2* sin(deltaTime);
-//         this->animation = Animation(&textures[1], {1, 1}, 0.2f);
-//     }
-    
-//     animation.Update(state, deltaTime, faceRight, fire, brake);
-    
-//     if (position.x >= originPosition.x + 100 || position.x <= originPosition.x - 100) {
-//         faceRight = !faceRight;
-//     }
-
-//     // if (CheckCollisionRecs) ...
-// }
-
-
-// void Goomba::render() {
-//     if (faceRight) DrawTexture(textures[0], position.x, position.y, WHITE);
-//     else DrawTexture(textures[1], position.x, position.y, WHITE);
-// }
-// void Goomba::Attack() {
-    
-// }
+void Goomba::update(float deltaTime) {
+    if (isDying) {
+        dyingTime += deltaTime;
+        if (dyingTime >= 1.0f) {
+            isDead = true;
+            isDying = false;
+        }
+        return;
+    }
+    if (isDead) return;
 
 
-// KoopaTroopa::KoopaTroopa(Vector2 position, float speed)
-//     : Enemy(speed, 0.0f), isInShellMode(false) {
-//     this->originPosition = position;
-//     this->position = position;
-//     this->size = {16.0f, 16.0f};
-//     this->textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
-//     this->textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
-//     this->textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
-//     this->animation = Animation(&textures[0], {1, 1}, 0.2f);
-// }
 
-// KoopaTroopa::~KoopaTroopa() {
-//     for (auto& texture : textures) {
-//         UnloadTexture(texture);
-//     }
-// }
+    if (isRight) {
+        position.x += speed.x *deltaTime; 
+    } else {
+        position.x -= speed.x *deltaTime; 
+    }
 
-// void KoopaTroopa::Update(float deltaTime) {
-//     if (isInShellMode) {
-//         position.x += 2 * speed * deltaTime;
-//         this->animation = Animation(&textures[2], {1, 1}, 0.2f);
-//     } else if (faceRight) {
-//         position.x += 3 * sin(deltaTime);
-//     }
-//     else position.x -= 3 * sin(deltaTime);
-//     animation.Update(state, deltaTime, faceRight, fire, brake);
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime; 
+        currentTextureIndex = (currentTextureIndex + 1) % 2; 
+        texture = textures[currentTextureIndex];
+    }
+    if (position.x > originPosition.x + 100 || position.x < originPosition.x - 100) {
+        isRight = !isRight;
+    }
 
-//     if (position.x >= originPosition.x + 100 || position.x <= originPosition.x - 100) {
-//         faceRight = !faceRight;
-//     }
-// }
+    if (isDown) {
+        position.y += 9.81 * deltaTime;
+    }
+}
 
-// void KoopaTroopa::render() {
-//     if(isInShellMode) DrawTexture(textures[2], position.x, position.y, WHITE);
-//     else if (faceRight) DrawTexture(textures[0], position.x, position.y, WHITE);
-//     else DrawTexture(textures[1], position.x, position.y, WHITE);
-// }
-// void KoopaTroopa::Attack() {
-// }
-
-// void KoopaTroopa::EnterShellMode() {
-//     isInShellMode = true;
-//     speed *= 2.0f;
-// }
-
-
-// // PiranhaPlant::PiranhaPlant(Vector2 position)
-// //     : Enemy(0.0f, 0.0f) {
-// //     this->position = position;
-// //     this->size = {16.0f, 24.0f};
-// //     this->textures.push_back(LoadTexture("resources/piranha.png"));
-// //     this->animation = Animation(&textures[0], {2, 1}, 0.5f);
-// // }
-
-// // PiranhaPlant::~PiranhaPlant() {
-// //     for (auto& texture : textures) {
-// //         UnloadTexture(texture);
-// //     }
-// // }
-
-// // void PiranhaPlant::Update(float deltaTime) {
-// //     animation.Update(state, deltaTime, faceRight, fire, brake);
-// // }
-
-// // void PiranhaPlant::Attack() {
-// //     //std::cout << "Piranha Plant attacks by biting the player!" << std::endl;
-// // }
-
+void Goomba::render() {
+    if (!isDead) DrawTexture(texture, position.x, position.y, WHITE);
+}
