@@ -19,7 +19,6 @@ enum slidingDirection {
 
 class Character {
 private:
-	float glitch;
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
@@ -46,6 +45,11 @@ public:
 	bool isSliding() { return sliding; };
 
 	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
+
+	void hitFlag(Vector2 flagPos);
+
+	void setScore(int newscore) { this->score = newscore; };
+	int getScore() { return score; }
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -70,6 +74,9 @@ protected:
 	Vector2 SlideDist;
 	bool teleport;
 
+	bool pullFlag;
+
+	int score;
 public:
 	float accX;
 	bool sliding;
