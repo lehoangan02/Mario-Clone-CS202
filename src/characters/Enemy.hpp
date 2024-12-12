@@ -2,57 +2,61 @@
 #define ENEMY_HPP
 
 #include "Character.h"
+#include <vector>
 
-
-
-class Enemy : public Character {
-public:
-    Enemy(float speed, float jumpHeight);
-    virtual ~Enemy();
-
-    virtual void Update(float deltaTime) override = 0;
-    virtual void Attack() = 0;
-    virtual void render() = 0;
-
-protected:
-    Vector2 originPosition;
-    float speed;
-    bool isAttacking;
+enum class EnemyType {
+	GOOMBA,
+    KOOPA_TROOPA,
+    PIRANHA_PLANT,
+    LAKITU,
+    SHY_GUY
 };
 
+class Enemy{
+protected:
+    Texture2D texture;
+    vector<Texture2D> textures;
+
+    Vector2 position;
+    Vector2 size;
+    Vector2 velocity;
+
+    bool isDown;
+    bool isRight;
+    bool isDead;
+public:
+    Enemy() = default;
+    void accelerate(float deltaTime);
+    virtual void flipDirection();
+    virtual void hit();
+
+    Vector2 getPosition() const { return position; };
+    void setPosition(Vector2 position) { this->position = position; };
+
+    Vector2 getSize() const { return size; };
+    void setSize(Vector2 size) { this->size = size; };
+    
+    slidingDirection getDirection() const;
+    void setDirection(slidingDirection direction);
+
+    bool getIsDead() const { return isDead; };
+    virtual EnemyType getEnemyType() const = 0;
+
+    virtual void render();
+};
 
 class Goomba : public Enemy {
-public:
-    Goomba(Vector2 position, float speed);
-    ~Goomba();
-
-    void Update(float deltaTime) override;
-    void Attack() override;
-    void render() ;
 };
-
 
 class KoopaTroopa : public Enemy {
-public:
-    KoopaTroopa(Vector2 position, float speed);
-    ~KoopaTroopa();
-
-    void Update(float deltaTime) override;
-    void Attack() override;
-    void render() override;
-    void EnterShellMode();
-
-private:
-    bool isInShellMode;
 };
-
 
 class PiranhaPlant : public Enemy {
-public:
-    PiranhaPlant(Vector2 position);
-    ~PiranhaPlant();
-
-    void Update(float deltaTime) override;
-    void Attack() override;
 };
-#endif
+
+class Lakitu : public Enemy {
+};
+
+class ShyGuy : public Enemy {
+};
+#endif // !ENEMY_HPP

@@ -13,6 +13,7 @@ public:
 
 enum slidingDirection {
 	right,
+	left,
 	up,
 	down
 };
