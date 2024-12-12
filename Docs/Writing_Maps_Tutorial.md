@@ -4,7 +4,7 @@ Many of the data used to classified elements in maps are defined by enums.
 
 Here are the list of enums used:
 ```cpp
-class EnvironmentObjectFactory
+class EnvironmentObjectFactory // Singleton Factory
 {
     public:
     enum EnvironmentObjectType
@@ -15,6 +15,9 @@ class EnvironmentObjectFactory
         BRICK, // so on & so on
         HARD_BLOCK,
         BLUE_BRICK,
+        LEFT_GRASS_PLATFORM,
+        MID_GRASS_PLATFORM,
+        RIGHT_GRASS_PLATFORM,
     };
 ```
 ```cpp
@@ -34,7 +37,9 @@ class DrawableObjectFactory
     {
         GRASS,
         CLOUD,
-        MOUNTAIN
+        MOUNTAIN,
+        CASTLE,
+        DIRT
     };
 ```
 ```cpp

@@ -213,6 +213,17 @@ class Level102 : public Level
     public:
         static Level102* GetLevel102();
 };
+class HiddenLevel102 : public Level
+{
+    private:
+        HiddenLevel102();
+        ~HiddenLevel102();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
+    public:
+        static HiddenLevel102* GetHiddenLevel102();
+};
 class HiddenLevel103 : public Level
 {
     private:

@@ -27,6 +27,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     fin >> NumberOfItems;
     int NumberOfStaticEnvironment;
     fin >> NumberOfStaticEnvironment;
+    std::cout << "Number of Static Environment: " << NumberOfStaticEnvironment << std::endl;
     for (int i = 0; i < NumberOfStaticEnvironment; i++)
     {
         int Type;
@@ -45,6 +46,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     }
     int NumberOfInteractiveEnvironment;
     fin >> NumberOfInteractiveEnvironment;
+    std::cout << "Number of Interactive Environment: " << NumberOfInteractiveEnvironment << std::endl;
     for (int i = 0; i < NumberOfInteractiveEnvironment; i++)
     {
         int Type;
@@ -89,6 +91,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     }
     int NumberOfDrawables;
     fin >> NumberOfDrawables;
+    std::cout << "Number of Drawables: " << NumberOfDrawables << std::endl;
     for (int i = 0; i < NumberOfDrawables; i++)
     {
         int Type;
