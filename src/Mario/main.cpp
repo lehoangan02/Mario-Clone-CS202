@@ -22,10 +22,9 @@ int main() {
     while(!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
+
+        goomba.test();
         goomba.update(0.1f);
-        if (IsKeyDown(KEY_SPACE)) {
-            goomba.hit();
-        }
         goomba.render();
         EndDrawing();
     }

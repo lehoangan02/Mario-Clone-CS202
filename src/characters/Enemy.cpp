@@ -3,9 +3,12 @@
 #include "raylib.h"
 
 void Enemy::accelerate(float deltaTime) {
-    position.x += speed.x * deltaTime;
-    position.y += speed.y * deltaTime;
+    const float gravity = 9.8f; 
+    speed.y += gravity * deltaTime; 
+    position.x += speed.x * deltaTime; 
+    position.y += speed.y * deltaTime; 
 }
+
 
 void Enemy::flipDirection() {
     speed.x *= -1;
@@ -104,4 +107,28 @@ void Goomba::update(float deltaTime) {
 
 void Goomba::render() {
     if (!isDead) DrawTexture(texture, position.x, position.y, WHITE);
+}
+
+void Goomba::test() {
+    if(IsKeyDown(KEY_A)) {
+        accelerate(0.1f);
+    }
+    if (IsKeyDown(KEY_B)) {
+        flipDirection();
+    }
+    if (IsKeyDown(KEY_C)) {
+        hit();
+    }
+    if (IsKeyDown(KEY_D)) {
+        resetSpeedY();
+    }
+    if (IsKeyDown(KEY_E)) {
+        setDirection(slidingDirection::right);
+    }
+    if (IsKeyDown(KEY_F)) {
+        setDirection(slidingDirection::down);
+    }
+    if (IsKeyDown(KEY_G)) {
+        setDirection(slidingDirection::left);
+    }  
 }

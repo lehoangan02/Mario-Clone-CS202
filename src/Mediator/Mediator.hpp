@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../levels/Level.hpp"
 #include <string>
 class Component
 {
