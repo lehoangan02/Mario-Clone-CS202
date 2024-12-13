@@ -28,7 +28,6 @@ Level::Level()
 Level::~Level()
 {
     
-
 }
 void Level::attachPlayer(Character* Player)
 {
@@ -630,6 +629,7 @@ LevelTesting* LevelTesting::GetLevelTesting()
 }
 Level103::Level103()
 {
+    m_LevelID = LevelFactory::LEVEL_103;
     load();
 }
 Level103::~Level103()
@@ -654,6 +654,7 @@ void Level103::render()
 }
 HiddenLevel101::HiddenLevel101()
 {
+    m_LevelID = LevelFactory::HIDDEN_LEVEL_101;
     load();
 }
 HiddenLevel101::~HiddenLevel101()
@@ -678,6 +679,7 @@ void HiddenLevel101::render()
 }
 Level102::Level102()
 {
+    m_LevelID = LevelFactory::LEVEL_102;
     load();
 }
 Level102::~Level102()
@@ -700,8 +702,34 @@ void Level102::render()
 {
     Level::render();
 }
+HiddenLevel102::HiddenLevel102()
+{
+    m_LevelID = LevelFactory::HIDDEN_LEVEL_102;
+    load();
+}
+HiddenLevel102::~HiddenLevel102()
+{
+}
+HiddenLevel102* HiddenLevel102::GetHiddenLevel102()
+{
+    static HiddenLevel102 level;
+    return &level;
+}
+void HiddenLevel102::load()
+{
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+}
+void HiddenLevel102::update(float DeltaTime)
+{
+    return Level::update(DeltaTime);
+}
+void HiddenLevel102::render()
+{
+    Level::render();
+}
 HiddenLevel103::HiddenLevel103()
 {
+    m_LevelID = LevelFactory::HIDDEN_LEVEL_103;
     load();
 }
 HiddenLevel103::~HiddenLevel103()

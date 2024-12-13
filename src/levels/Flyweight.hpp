@@ -14,7 +14,11 @@ enum TextureType
     GRASS,
     MOUNTAIN,
     END_PIPE,
-    EMPTY_QUESTION_BLOCK
+    EMPTY_QUESTION_BLOCK,
+    DIRT,
+    LEFT_GRASS_PLATFORM,
+    MID_GRASS_PLATFORM,
+    RIGHT_GRASS_PLATFORM
 };
 class Flyweight
 {
@@ -86,6 +90,33 @@ class BlueBrickTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
         static BlueBrickTextureFlyWeight* GetBlueBrickTextureFlyWeight();
         void render(Vector2 Position);
 };
+class LeftGrassPlatformTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        LeftGrassPlatformTextureFlyWeight();
+        ~LeftGrassPlatformTextureFlyWeight();
+    public:
+        static LeftGrassPlatformTextureFlyWeight* GetLeftGrassPlatformTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class MiddleGrassPlatformTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        MiddleGrassPlatformTextureFlyWeight();
+        ~MiddleGrassPlatformTextureFlyWeight();
+    public:
+        static MiddleGrassPlatformTextureFlyWeight* GetMiddleGrassPlatformTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class RightGrassPlatformTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        RightGrassPlatformTextureFlyWeight();
+        ~RightGrassPlatformTextureFlyWeight();
+    public:
+        static RightGrassPlatformTextureFlyWeight* GetRightGrassPlatformTextureFlyWeight();
+        void render(Vector2 Position);
+};
 class LiftTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
 {
     private:
@@ -139,6 +170,15 @@ class MountainTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
         ~MountainTextureFlyWeight();
     public:
         static MountainTextureFlyWeight* GetMountainTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class DirtTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        DirtTextureFlyWeight();
+        ~DirtTextureFlyWeight();
+    public:
+        static DirtTextureFlyWeight* GetDirtTextureFlyWeight();
         void render(Vector2 Position);
 };
 class EndPipeTopTextureFlyWeight : public StaticFlyweight // Singleton Flyweight

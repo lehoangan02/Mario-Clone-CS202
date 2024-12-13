@@ -2,12 +2,13 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING)),
+      level(factory.CreateLevel(LevelFactory::LEVEL_103)),
       character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
     // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player = new Mario;
+    std::cout << "Level Type: " << level -> GetLevelType() << std::endl;
     player->setPosition(Vector2{20, 0});  
     level->attachPlayer(player);  
 }
@@ -17,13 +18,13 @@ Game::Game(int characterMenu, int levelMenu)
       level(nullptr)  
 {
     if (levelMenu == 0) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_101);
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
     }
     else if (levelMenu == 1) {
         level = factory.CreateLevel(LevelFactory::LEVEL_102);
     }
     else {
-        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
     }
     
     if (characterMenu == 0) {

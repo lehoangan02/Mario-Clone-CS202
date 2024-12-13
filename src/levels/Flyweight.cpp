@@ -46,6 +46,22 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
         {
             return EmptyQuestionBlockTextureFlyweight::GetEmptyQuestionBlockTextureFlyweight();
         }
+        case TextureType::DIRT:
+        {
+            return DirtTextureFlyWeight::GetDirtTextureFlyWeight();
+        }
+        case TextureType::LEFT_GRASS_PLATFORM:
+        {
+            return LeftGrassPlatformTextureFlyWeight::GetLeftGrassPlatformTextureFlyWeight();
+        }
+        case TextureType::MID_GRASS_PLATFORM:
+        {
+            return MiddleGrassPlatformTextureFlyWeight::GetMiddleGrassPlatformTextureFlyWeight();
+        }
+        case TextureType::RIGHT_GRASS_PLATFORM:
+        {
+            return RightGrassPlatformTextureFlyWeight::GetRightGrassPlatformTextureFlyWeight();
+        }
         break;
     }
     return nullptr;
@@ -136,6 +152,56 @@ void BlueBrickTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
+LeftGrassPlatformTextureFlyWeight::LeftGrassPlatformTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/LeftGrassPlatform.png");
+}
+LeftGrassPlatformTextureFlyWeight::~LeftGrassPlatformTextureFlyWeight()
+{
+}
+LeftGrassPlatformTextureFlyWeight* LeftGrassPlatformTextureFlyWeight::GetLeftGrassPlatformTextureFlyWeight()
+{
+    static LeftGrassPlatformTextureFlyWeight texture;
+    return &texture;
+}
+void LeftGrassPlatformTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
+}
+MiddleGrassPlatformTextureFlyWeight::MiddleGrassPlatformTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/MiddleGrassPlatform.png");
+}
+MiddleGrassPlatformTextureFlyWeight::~MiddleGrassPlatformTextureFlyWeight()
+{
+}
+MiddleGrassPlatformTextureFlyWeight* MiddleGrassPlatformTextureFlyWeight::GetMiddleGrassPlatformTextureFlyWeight()
+{
+    static MiddleGrassPlatformTextureFlyWeight texture;
+    return &texture;
+}
+void MiddleGrassPlatformTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
+}
+RightGrassPlatformTextureFlyWeight::RightGrassPlatformTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/RightGrassPlatform.png");
+}
+
+RightGrassPlatformTextureFlyWeight::~RightGrassPlatformTextureFlyWeight()
+{
+}
+RightGrassPlatformTextureFlyWeight* RightGrassPlatformTextureFlyWeight::GetRightGrassPlatformTextureFlyWeight()
+{
+    static RightGrassPlatformTextureFlyWeight texture;
+    return &texture;
+}
+void RightGrassPlatformTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
+}
+
 LiftTextureFlyWeight::LiftTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/lift.png");
@@ -235,6 +301,23 @@ void MountainTextureFlyWeight::render(Vector2 Position)
 {
     DrawTexture(m_Texture, Position.x, Position.y, WHITE);
 }
+DirtTextureFlyWeight::DirtTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/Dirt.png");
+}
+DirtTextureFlyWeight::~DirtTextureFlyWeight()
+{
+}
+DirtTextureFlyWeight* DirtTextureFlyWeight::GetDirtTextureFlyWeight()
+{
+    static DirtTextureFlyWeight texture;
+    return &texture;
+}
+void DirtTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0, 6.25, WHITE);
+}
+
 EndPipeTopTextureFlyWeight::EndPipeTopTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/end_pipe.png");

@@ -55,7 +55,8 @@ class DrawableObjectFactory
         GRASS,
         CLOUD,
         MOUNTAIN,
-        CASTLE
+        CASTLE,
+        DIRT
     };
     private:
         DrawableObjectFactory() = default;
@@ -75,6 +76,9 @@ class EnvironmentObjectFactory // Singleton Factory
         BRICK, // so on & so on
         HARD_BLOCK,
         BLUE_BRICK,
+        LEFT_GRASS_PLATFORM,
+        MID_GRASS_PLATFORM,
+        RIGHT_GRASS_PLATFORM,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -163,6 +167,30 @@ class BlueBrick : public EnvironmentObject
     void render() override;
     void update() override;
 };
+class LeftGrassPlatform : public EnvironmentObject
+{
+    public:
+    LeftGrassPlatform(Vector2 Position);
+    ~LeftGrassPlatform();
+    void render() override;
+    void update() override;
+};
+class MiddleGrassPlatform : public EnvironmentObject
+{
+    public:
+    MiddleGrassPlatform(Vector2 Position);
+    ~MiddleGrassPlatform();
+    void render() override;
+    void update() override;
+};
+class RightGrassPlatform : public EnvironmentObject
+{
+    public:
+    RightGrassPlatform(Vector2 Position);
+    ~RightGrassPlatform();
+    void render() override;
+    void update() override;
+};
 class QuestionBlock : public EnvironmentObjectInteractive
 {
     class HitAnimationCommander
@@ -223,6 +251,13 @@ class Mountain : public DrawableObject
     public:
     Mountain(Vector2 Position);
     ~Mountain();
+    void render() override;
+};
+class Dirt : public DrawableObject
+{
+    public:
+    Dirt(Vector2 Position);
+    ~Dirt();
     void render() override;
 };
 enum EndPipeType
