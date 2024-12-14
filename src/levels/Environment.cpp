@@ -455,7 +455,7 @@ EndPipeTop::~EndPipeTop()
 }
 void EndPipeTop::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_TOP)->render(m_Position);
 }
 void EndPipeTop::update()
 {
@@ -468,7 +468,7 @@ EndPipeSide::~EndPipeSide()
 }
 void EndPipeSide::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_SIDE)->render(m_Position);
 }
 void EndPipeSide::update()
 {
