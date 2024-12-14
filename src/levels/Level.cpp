@@ -220,8 +220,11 @@ void Level::update(float DeltaTime)
 	}
     else if (!isPlayerFinished && m_InControl)
     {
-        FullControl control(m_Player);
-        control.execute(DeltaTime);
+        AutoMove* control = AutoMove::getInstance(m_Player);
+
+        control->execute(DeltaTime);
+		if (m_Player->haveWon()) std::cout << "Player has won" << std::endl;
+		else std::cout << "Player has not won" << std::endl;
     }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
@@ -483,7 +486,7 @@ LevelTesting::~LevelTesting()
 }
 void LevelTesting::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 void LevelTesting::update(float DeltaTime)
 {

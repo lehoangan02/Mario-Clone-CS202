@@ -25,6 +25,7 @@ Character::Character(float jumpHeight)
 	this->slideDirection = slidingDirection::right;
 	this->isChangingForm = false;
 	this->pullFlag = false;
+	this->isWin = false;
 	position = Vector2{ 20 , 0 };
 
 }
@@ -249,8 +250,19 @@ void InHole::execute(float deltaTime) {
 	character->Update(deltaTime);
 };
 
+AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
+if (totalTime < 5.0f) {
 	character->control(false);
 	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
 	character->Update(deltaTime);
+	totalTime += deltaTime;
+	std::cout << totalTime;
+}
+else {
+	character->setWin();
+	character->control(false);
+	character->setVelocity(Vector2{ 0.0f, 0.0f });
+	character->Update(deltaTime);
+}
 }

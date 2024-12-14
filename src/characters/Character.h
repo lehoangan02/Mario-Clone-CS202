@@ -50,6 +50,9 @@ public:
 
 	void setScore(int newscore) { this->score = newscore; };
 	int getScore() { return score; }
+
+	bool haveWon() { return isWin; };
+	void setWin() { isWin = true; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -77,6 +80,8 @@ protected:
 	bool pullFlag;
 
 	int score;
+
+	bool isWin;
 public:
 	float accX;
 	bool sliding;
@@ -128,7 +133,17 @@ public:
 class AutoMove : public Command {
 private:
 	Character* character;
+	float totalTime; 
+	static AutoMove* instance; 
+	AutoMove(Character* character) : totalTime(0.0f) { this->character = character; }
+
 public:
-	AutoMove(Character* Player) { this->character = Player; };
+	static AutoMove* getInstance(Character* character) {
+		if (instance == nullptr) {
+			instance = new AutoMove(character);
+		}
+		return instance;
+	}
+	void reset() {totalTime = 0.0f;}
 	void execute(float deltaTime) override;
 };
