@@ -75,13 +75,10 @@ void Character::control(bool enabled) {
 		}
 	}
 	if (IsKeyPressed(KEY_J)) {
-		changeForm(2);
+		powerUp();
 	}
 	if (IsKeyPressed(KEY_K)) {
-		changeForm(1);
-	}
-	if (IsKeyPressed(KEY_L)) {
-		changeForm(0);
+		powerDown();
 	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
@@ -128,6 +125,19 @@ void Character::hitFlag(Vector2 flagPos) {
 		position.y = EndPosition;
 		pullFlag = false;
 	}*/
+}
+
+void Character::powerUp() {
+	if (form == 0) {
+		changeForm(1);
+	}
+	else if (form == 1) {
+		changeForm(2);
+	}
+}
+void Character::powerDown() {
+	//add invicible effect for few seconds and maybe there should be some effect when turning small
+	changeForm(0);
 }
 void Character::Draw()
 {

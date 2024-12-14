@@ -36,7 +36,6 @@ public:
 	void accelerate(Vector2 acceleration, float deltaTime);
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
-	void changeForm(int form);
 	void updateFormChangeAnimation();
 	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
 
@@ -53,6 +52,9 @@ public:
 
 	bool haveWon() { return isWin; };
 	void setWin() { isWin = true; };
+
+	void powerUp();
+	void powerDown(); //need invicile effect
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -82,6 +84,8 @@ protected:
 	int score;
 
 	bool isWin;
+	void changeForm(int form);
+
 public:
 	float accX;
 	bool sliding;
