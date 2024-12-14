@@ -18,8 +18,9 @@ int main() {
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     Goomba goomba(Vector2{600, 400});
+    
+    // KoopaTroopa goomba(Vector2{600, 400});
     goomba.setBound(0, 1024, 0, 768);
-    //KoopaTroopa goomba(Vector2{600, 400}, 10.f);
     while(!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
