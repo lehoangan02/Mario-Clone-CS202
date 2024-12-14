@@ -9,14 +9,13 @@ void Application::run() {
 
         if (currentState == 10) {
             game.start();  
+
         }
         else if (currentState == 11) {
             game = Game(menu.characterMenu(), menu.levelMenu());
             game.start();
         }
-
-        menu.draw();  
-
+        menu.draw();
         EndDrawing();
     }
 

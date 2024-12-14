@@ -85,6 +85,6 @@ class PiranhaPlant : public Enemy {
 class Lakitu : public Enemy {
 };
 
-class ShyGuy : public Enemy {
+class ShyGuy : public Goomba {
 };
 #endif // !ENEMY_HPP
