@@ -6,6 +6,7 @@
 #include "./characters/Character.h"
 #include "./levels/Level.hpp"
 #include "./animation/Animation.h"
+#include "./Mediator/Mediator.hpp"
 
 class Game {
 private:

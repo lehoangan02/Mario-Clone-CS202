@@ -13,6 +13,7 @@ public:
 
 enum slidingDirection {
 	right,
+	left,
 	up,
 	down
 };
@@ -24,6 +25,7 @@ private:
 	float formChangeTime;
 	float formChangeDuration;
 public:
+
 	Character(float jumpHeight);
 	~Character();
 	virtual void Update(float deltaTime)=0;
@@ -74,6 +76,8 @@ public:
 	float accX;
 	bool sliding;
 	slidingDirection slideDirection;
+
+	int points;
 };
 
 //CharacterFactory
