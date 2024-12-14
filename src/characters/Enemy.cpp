@@ -57,11 +57,22 @@ void Enemy::render() {
 Goomba::Goomba(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
+    
     texture = LoadTexture("assets/textures/Goomba_Walk1.png");
     textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
     textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
     textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
-    size = { 32, 32 };
+
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    size = { 16, 16 };
     speed = { 40, 0 };
     isRight = false;
     isDown = false;
@@ -69,6 +80,32 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDying = false;
 }
 
+Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
+
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+
+    this->size = size;
+    this->speed = speed;
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isDying = false;
+}
 void Goomba::hit() {
     if (isCollisionTrue) {
         this->texture = textures[2];           
@@ -103,7 +140,7 @@ void Goomba::update(float deltaTime) {
         currentTextureIndex = (currentTextureIndex + 1) % 2; 
         texture = textures[currentTextureIndex];
     }
-    if (position.x < leftBound || position.x + texture.width > rightBound) {
+    if (position.x < leftBound || position.x + texture.width * size.x/16 > rightBound) {
         isRight = !isRight;
     }
     if (position.y > bottomBound) {
@@ -116,7 +153,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::render() {
-    if (!isDead) DrawTexture(texture, position.x, position.y, WHITE);
+    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
 }
 
 void Goomba::test() {

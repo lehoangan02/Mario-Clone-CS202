@@ -70,26 +70,122 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
-    SetTargetFPS(60);  
     while (!WindowShouldClose()) {
-        float deltaTime = GetFrameTime();  
-        
-        update(deltaTime);  
-        draw();  
+        update(GetFrameTime());
+        draw();
+        if (IsKeyPressed(KEY_P)) {
+            nextLevel();
+        }
     }
-
-    CloseWindow();  
+    CloseWindow();
 }
 
 void Game::update(float deltaTime) {
-    level->update(deltaTime);  
+    if (level) {
+        level->update(deltaTime);
+    }
 }
 
 void Game::draw() {
     BeginDrawing();
-    ClearBackground(WHITE);
-
-    level->render();  
-
+    ClearBackground(RAYWHITE);
+    if (level) {
+        level->render();
+    }
     EndDrawing();
+}
+
+
+
+void Game::notify(Component* sender, int eventCode) {
+    switch (eventCode) {
+        case 0:
+            state = LEVEL_RETURN_MESSAGE::PAUSE;
+            break;
+        case 1:
+            state = LEVEL_RETURN_MESSAGE::CONTINUE;
+            break;
+        case 2:
+            state = LEVEL_RETURN_MESSAGE::RUNNING;
+            break;
+        case 3:
+            state = LEVEL_RETURN_MESSAGE::HIDDEN;
+            break;
+        case 4:
+            state = LEVEL_RETURN_MESSAGE::WIN;
+            break;
+        case 5:
+            state = LEVEL_RETURN_MESSAGE::LOSE;
+            break;
+        case 6:
+            state = LEVEL_RETURN_MESSAGE::QUIT;
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::pause() {
+    notify(nullptr, 0); // Pause event
+}
+
+void Game::resume() {
+    notify(nullptr, 1); // Continue event
+}
+
+void Game::win() {
+    notify(nullptr, 4); // Win event
+}
+
+void Game::lose() {
+    notify(nullptr, 5); // Lose event
+}
+
+void Game::quit() {
+    notify(nullptr, 6); // Quit event
+}
+
+void Game::nextLevel() {
+    // Logic to switch to the next level
+    if (level->GetLevelType() == LevelFactory::LEVEL_101) {
+        delete level;
+        level = factory.CreateLevel(LevelFactory::LEVEL_102);
+    } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+        delete level;
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    } else {
+        delete level;
+        level = factory.CreateLevel(LevelFactory::LEVEL_101); // Loop back to the first level or handle as needed
+    }
+    level->attachPlayer(player);
+    state = LEVEL_RETURN_MESSAGE::RUNNING; // Ensure the state is set to running
+}
+
+void Game::handleState() {
+    switch (state) {
+        case LEVEL_RETURN_MESSAGE::PAUSE:
+            //drawPauseMenu();
+            break;
+        case LEVEL_RETURN_MESSAGE::CONTINUE:
+            // Handle continue state
+            break;
+        case LEVEL_RETURN_MESSAGE::RUNNING:
+            // Handle running state
+            break;
+        case LEVEL_RETURN_MESSAGE::HIDDEN:
+            if (level->GetLevelType() == LevelFactory::LEVEL_101) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
+            else if (level->GetLevelType() == LevelFactory::LEVEL_102) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
+            else if (level->GetLevelType() == LevelFactory::LEVEL_103) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103);
+            level->attachPlayer(player);
+            break;
+        case LEVEL_RETURN_MESSAGE::WIN:
+            nextLevel(); // Chuyển sang level tiếp theo khi thắng
+            break;
+        case LEVEL_RETURN_MESSAGE::LOSE:
+            //drawLoseButton();
+            break;
+        case LEVEL_RETURN_MESSAGE::QUIT:
+            //drawQuitButton();
+            break;
+    }
 }

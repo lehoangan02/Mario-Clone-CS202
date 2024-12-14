@@ -66,6 +66,7 @@ private:
     float dyingTime;
 public:
     Goomba(Vector2 position);
+    Goomba(Vector2 position, Vector2 size, Vector2 speed);
     EnemyType getEnemyType() const override { return EnemyType::GOOMBA; };
 
     bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
@@ -84,6 +85,6 @@ class PiranhaPlant : public Enemy {
 class Lakitu : public Enemy {
 };
 
-class ShyGuy : public Enemy {
+class ShyGuy : public Goomba {
 };
 #endif // !ENEMY_HPP

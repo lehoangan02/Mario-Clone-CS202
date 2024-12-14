@@ -17,11 +17,13 @@ class Application {
         int tab;
         Menu menu;
         Game game;
+        bool inGame;
     public:
         Application() {
             tab = 0;
             menu = Menu();
             game = Game();
+            inGame = false;
         }
         void run();
         //int handle();
