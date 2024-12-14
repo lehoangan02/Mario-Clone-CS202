@@ -382,8 +382,11 @@ void Level::update(float DeltaTime)
 	}
     else if (!isPlayerFinished && m_InControl && !m_TouchedFlag)
     {
-        FullControl control(m_Player);
-        control.execute(DeltaTime);
+        AutoMove* control = AutoMove::getInstance(m_Player);
+
+        control->execute(DeltaTime);
+		if (m_Player->haveWon()) std::cout << "Player has won" << std::endl;
+		else std::cout << "Player has not won" << std::endl;
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
@@ -657,7 +660,7 @@ LevelTesting::~LevelTesting()
 }
 void LevelTesting::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 void LevelTesting::update(float DeltaTime)
 {
