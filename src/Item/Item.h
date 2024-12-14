@@ -25,6 +25,29 @@ enum class Itemtype {
 	FIREFLOWER,
 	STARMAN
 };
+class IdleCoin {
+private:
+	Vector2 position;
+	Vector2 size;
+	Texture2D texture;
+	Rectangle uvRect;
+	Vector2 frameSize;
+	int totalFrames;
+	int currentFrame;
+	float switchTime;
+	float elapsedTime;
+	bool APPEARED;
+	static bool anyCoinHit;
+public:
+	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
+	void Update(float deltaTime);
+	void Draw();
+	static bool isHit();
+	void stopDrawing();
+	Vector2 getPosition() const;
+	Vector2 getSize() const;
+	~IdleCoin();
+};
 class Item : public Observer {
 protected:
 	Vector2 position;
@@ -70,7 +93,7 @@ public:
 class Coin : public Item {
 public:
 	void onNotify() override;
-	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
+	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0,0 });
 	void applyEffect(Character* Character) override;
 	void Update(float deltaTime) override;
 	void Draw() override;

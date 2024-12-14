@@ -16,12 +16,16 @@ int main(void)
     Texture2D mushroomTexture = LoadTexture("assets/textures/MagicMushroom.png");
     Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
     Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
-   
     FireFlower* fireflower = new FireFlower(
         Vector2{ 200, 300 },
         Vector2{ 0, 0 },
         Vector2{ 50, 50},
         fireflowerTexture
+    );
+    IdleCoin* coin1 = new IdleCoin(
+        Vector2{ 300, 300 },
+        Vector2{ 20, 50 },
+        coinTexture
     );
     StarMan* starman = new StarMan(
         Vector2{ 200, 200 },
@@ -73,7 +77,7 @@ int main(void)
         {
             starman->onNotify();
         }
-        
+        coin1->Update(deltatime);
         coin->Update(deltatime);
         mushroom->Update(deltatime);
         starman->Update(deltatime);
@@ -87,6 +91,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(Color{105, 147, 245, 255});
         coin->Draw();
+        coin1->Draw();
         mushroom->Draw();
         starman->Draw();
         fireflower->Draw();
