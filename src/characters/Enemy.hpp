@@ -28,7 +28,9 @@ protected:
 
     float animationTime;       
     float timer;               
-    int currentTextureIndex;   
+    int currentTextureIndex;
+
+    float leftBound, rightBound, topBound, bottomBound;   
 public:
     Enemy() = default;
     Enemy(Vector2 position) : position(position), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
@@ -49,6 +51,8 @@ public:
 
     bool getIsDead() const { return isDead; };
     virtual EnemyType getEnemyType() const = 0;
+
+    void setBound(float left, float right, float top, float bottom) ;
 
     virtual void update(float deltaTime) = 0;
 

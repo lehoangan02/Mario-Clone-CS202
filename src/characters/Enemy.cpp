@@ -43,6 +43,13 @@ void Enemy::setDirection(slidingDirection direction) {
     }
 }
 
+void Enemy::setBound(float left, float right, float top, float bottom) {
+        leftBound = left;
+        rightBound = right;
+        topBound = top;
+        bottomBound = bottom;
+    }
+
 void Enemy::render() {
     DrawTexture(texture, position.x, position.y, WHITE);
 }
