@@ -430,13 +430,15 @@ void Dirt::render()
 
 Castle::Castle(Vector2 Position) : DrawableObject(Position)
 {
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 Castle::~Castle()
 {
 }
 void Castle::render()
 {
-    DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
+    DrawTextureEx(m_Texture, m_Position, 0, 2, WHITE);
 }
 
 EndPipe::EndPipe(Vector2 Position, Vector2 Size, int Type) : EnvironmentObject(Position, Size), m_Type(Type)
