@@ -233,7 +233,7 @@ void Mushroom::Draw() {
             0.0f, 
             0.0f,
             (float)texture.width, 
-            texture.height 
+            (float)texture.height 
         };
         Rectangle destRect = { position.x, 
             position.y,
