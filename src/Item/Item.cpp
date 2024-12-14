@@ -192,6 +192,7 @@ void Mushroom::Update(float deltaTime) {
             APPEARED = true;
             FinishedSpawning = true;
         }
+        position.y = startPosition.y - size.y * riseProgress;
     }
     if (APPEARED == true)
     {
@@ -211,11 +212,33 @@ void Mushroom::ResetYVelocity() {
 
 
 void Mushroom::Draw() {
-    if (APPEARED || isRising) {
-        Rectangle sourceRect = { 0.0f, 0.0f,
-            (float)texture.width, texture.height * riseProgress };
-        Rectangle destRect = { position.x, position.y - size.y * riseProgress,
-            size.x, size.y * riseProgress };
+    if (isRising) {
+        Rectangle sourceRect = {
+            0.0f,
+            0.0f,
+            (float)texture.width,
+            texture.height * riseProgress
+        };
+        Rectangle destRect = {
+            startPosition.x,
+            startPosition.y - size.y * riseProgress,
+            size.x,
+            size.y * riseProgress
+        };
+        Vector2 origin = { 0,0 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
+    if (APPEARED) {
+        Rectangle sourceRect = { 
+            0.0f, 
+            0.0f,
+            (float)texture.width, 
+            texture.height 
+        };
+        Rectangle destRect = { position.x, 
+            position.y,
+            size.x, 
+            size.y};
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
