@@ -167,10 +167,14 @@ LeftGrassPlatformTextureFlyWeight* LeftGrassPlatformTextureFlyWeight::GetLeftGra
 void LeftGrassPlatformTextureFlyWeight::render(Vector2 Position)
 {
     DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 MiddleGrassPlatformTextureFlyWeight::MiddleGrassPlatformTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/MiddleGrassPlatform.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 MiddleGrassPlatformTextureFlyWeight::~MiddleGrassPlatformTextureFlyWeight()
 {
@@ -187,6 +191,8 @@ void MiddleGrassPlatformTextureFlyWeight::render(Vector2 Position)
 RightGrassPlatformTextureFlyWeight::RightGrassPlatformTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/RightGrassPlatform.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 
 RightGrassPlatformTextureFlyWeight::~RightGrassPlatformTextureFlyWeight()
@@ -199,6 +205,7 @@ RightGrassPlatformTextureFlyWeight* RightGrassPlatformTextureFlyWeight::GetRight
 }
 void RightGrassPlatformTextureFlyWeight::render(Vector2 Position)
 {
+    Position.x -= 20;
     DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
 }
 

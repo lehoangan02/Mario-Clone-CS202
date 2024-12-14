@@ -127,7 +127,7 @@ class Level : public Subject
         void resolveInteractiveEnvironmentCollisions();
         void handleItemLogic();
         void applyBoundaries();
-        bool isInHole();
+        bool isPlayerInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();

@@ -46,7 +46,7 @@ void Level::resolveEnvironmentCollisions()
         EnvironmentBox.setFixed(true);
         if (isColliding(PlayerBox, EnvironmentBox))
         {
-            if (isCollidingOnVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 20.0f)))
+            if (isCollidingOnVertically(PlayerBox, EnvironmentBox))
             {
                 if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
@@ -128,7 +128,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
 }
 void Level::applyBoundaries()
 {
-    if (isInHole())
+    if (isPlayerInHole())
     {
         // std::cout << "In Hole" << std::endl;
     }
@@ -265,6 +265,8 @@ void Level::render()
     
     Camera2D camera = { 0 };
     Vector2 target = m_CameraPosition;
+    target.x = roundf(target.x);
+    target.y = roundf(target.y);
     camera.target = target;
     
     float CurrentHeight = GetScreenHeight();
@@ -302,6 +304,10 @@ void Level::render()
     {
         object.first->render();
     }
+    for (auto& object : m_Drawables)
+    {
+        object->render();
+    }
     for (auto& object : m_EnvironmentInteractive)
     {
         if (object.second == nullptr) continue;
@@ -312,10 +318,7 @@ void Level::render()
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
         }
     }
-    for (auto& object : m_Drawables)
-    {
-        object->render();
-    }
+    
     Ground::GetGround()->render();
     for (auto& object : m_Lifts)
     {
@@ -339,7 +342,7 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    isPlayerFinished = isInHole();
+    isPlayerFinished = isPlayerInHole();
 	if (isPlayerFinished)
 	{
 		InHole control(m_Player);
@@ -394,7 +397,7 @@ void Level::update(float DeltaTime)
     handleItemLogic();
     // resolveFlagPoleCollisions();
 }
-bool Level::isInHole()
+bool Level::isPlayerInHole()
 {
     for (int i = 0; i < m_Ground -> getHoleCount(); i++)
     {
