@@ -25,6 +25,29 @@ enum class Itemtype {
 	FIREFLOWER,
 	STARMAN
 };
+class IdleCoin {
+private:
+	Vector2 position;
+	Vector2 size;
+	Texture2D texture;
+	Rectangle uvRect;
+	Vector2 frameSize;
+	int totalFrames;
+	int currentFrame;
+	float switchTime;
+	float elapsedTime;
+	bool APPEARED;
+	static bool anyCoinHit;
+public:
+	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
+	void Update(float deltaTime);
+	void Draw();
+	static bool isHit();
+	void stopDrawing();
+	Vector2 getPosition() const;
+	Vector2 getSize() const;
+	~IdleCoin();
+};
 class Item : public Observer {
 protected:
 	Vector2 position;
@@ -60,13 +83,17 @@ public:
 	Vector2 GetSize() const {
 		return size;
 	}
+	void setPosition(float x, float y) {
+		position.x = x;
+		position.y = y;
+	}
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
 class Coin : public Item {
 public:
 	void onNotify() override;
-	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
+	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0,0 });
 	void applyEffect(Character* Character) override;
 	void Update(float deltaTime) override;
 	void Draw() override;
@@ -93,10 +120,7 @@ public:
 	void Rising(float deltaTime);
 	Itemtype getItemID() const override;
 	bool isFinishSpawning() { return FinishedSpawning; }
-	void setPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
-	}
+	
 
 };
 class FireFlower : public Item {
