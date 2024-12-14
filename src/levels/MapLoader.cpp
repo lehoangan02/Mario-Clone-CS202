@@ -21,6 +21,9 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         std::cerr << "Error opening file" << std::endl;
         return;
     }
+    Vector2 PlayerSpawn;
+    fin >> PlayerSpawn.x >> PlayerSpawn.y;
+    Level -> m_StartPosition = PlayerSpawn;
     int NumberOfEnemies;
     fin >> NumberOfEnemies;
     int NumberOfItems;

@@ -53,6 +53,7 @@ Level::~Level()
 void Level::attachPlayer(Character* Player)
 {
     m_Player = Player;
+    m_Player->setPosition(m_StartPosition);
     m_EndPipeHandler.attachPlayer(Player);
 }
 void Level::checkEnvironmentCollisions()

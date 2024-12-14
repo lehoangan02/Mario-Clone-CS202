@@ -2,7 +2,7 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_103)),
+      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING)),
       character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
@@ -21,7 +21,7 @@ Game::Game(int characterMenu, int levelMenu)
         level = factory.CreateLevel(LevelFactory::LEVEL_101);
     }
     else if (levelMenu == 1) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
     }
     else {
         level = factory.CreateLevel(LevelFactory::LEVEL_103);

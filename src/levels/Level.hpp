@@ -113,6 +113,7 @@ class Level : public Subject
         EndPipeHandler m_EndPipeHandler;
         bool m_InControl = true;
         bool m_TouchedFlag = false;
+        Vector2 m_StartPosition = {0, 0};
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;

@@ -95,6 +95,7 @@ Explanation:
 You have to input lists in a specified order (shown after this part). Each list contain similar-type entites.
 
 **Order of types:**
+0. Start Position
 1. Enemy
 2. Item
 3. Static Environment Object
@@ -105,6 +106,10 @@ You have to input lists in a specified order (shown after this part). Each list 
 8. End Pipe
 9. Type of Level
 10. End Flag
+
+## Start Position
+
+Simply input the XY cordinate where you want Mario to spawn at.
 
 Example:
 
