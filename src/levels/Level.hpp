@@ -16,7 +16,8 @@ enum LEVEL_RETURN_MESSAGE
     HIDDEN,
     WIN,
     LOSE,
-    QUIT
+    QUIT,
+    RESTART
 };
 
 class Level : public Subject
@@ -87,11 +88,7 @@ class Level : public Subject
         };
     friend class MapLoader;
     // private:
-<<<<<<< Updated upstream
-        FlagPole m_FlagPole = FlagPole(9800);
-=======
     
->>>>>>> Stashed changes
     protected:
     FlagPole *m_FlagPole = nullptr;
     int m_LevelID;

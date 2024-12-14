@@ -312,7 +312,10 @@ void Level::render()
     camera.zoom = Zoom;
     BeginMode2D(camera);
     m_Background.render();
-    m_FlagPole.render();
+    if (m_FlagPole != nullptr)
+    {
+        m_FlagPole -> render();
+    }
     for (auto& object : m_Environment)
     {
         if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
@@ -422,12 +425,15 @@ void Level::update(float DeltaTime)
         return;
     }
     goomba->update(DeltaTime);
-    m_FlagPole.update();
+    if (m_FlagPole != nullptr)
+    {
+        m_FlagPole -> update();
+    }
     applyBoundaries();
     resolveEnvironmentCollisions();
     resolveInteractiveEnvironmentCollisions();
     handleItemLogic();
-    // resolveFlagPoleCollisions();
+    resolveFlagPoleCollisions();
 }
 bool Level::isPlayerInHole()
 {
@@ -593,19 +599,20 @@ void Level::resolveFlagPoleCollisions()
     if (m_FlagPole == nullptr) return;
     static bool PullDone = false;
     AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
-    AABBox EnvironmentBox = AABBox(m_FlagPole.m_Position, m_FlagPole.getSize());
+    AABBox EnvironmentBox = AABBox(m_FlagPole -> m_Position, m_FlagPole -> getSize());
     // std::cout << "Flag Pole Position: " << m_FlagPole.m_Position.x << " " << m_FlagPole.m_Position.y << std::endl;
     // std::cout << "Flag Pole Size: " << m_FlagPole.getSize().x << " " << m_FlagPole.getSize().y << std::endl;
     EnvironmentBox.setFixed(true);
-    if (isColliding(PlayerBox, EnvironmentBox))
+    if (!m_TouchedFlag && isColliding(PlayerBox, EnvironmentBox))
     {
         std::cout << "Colliding with flag pole" << std::endl;
         resolveCollisions(PlayerBox, EnvironmentBox);
+        m_TouchedFlag = true;
         m_Player->setPosition(PlayerBox.getPosition());
-        m_FlagPole.m_Position = EnvironmentBox.getPosition();
-        m_FlagPole.notifyPull();
+        m_FlagPole -> m_Position = EnvironmentBox.getPosition();
+        m_FlagPole -> notifyPull();
     }
-    PullDone = m_FlagPole.isDone();
+    PullDone = m_FlagPole -> isDone();
     if (PullDone)
     {
         DrawText("Level Complete", 100, 100, 20, RED);

@@ -104,6 +104,7 @@ You have to input lists in a specified order (shown after this part). Each list 
 7. Lift
 8. End Pipe
 9. Type of Level
+10. End Flag
 
 Example:
 
@@ -140,3 +141,19 @@ class Level
         UNDERGROUND
     };
 ```
+
+## End Flag
+
+If there is a flag, input 1, followed by the X cordinate. Else, input 0. You can only have maximum end flag per level. The flag is always set to be on ground level.
+
+Example:
+```
+1 10000
+```
+Explanation: The flag is at X coordinate 10000.
+
+Example:
+```
+0
+```
+Explanation: There is no end flag.
