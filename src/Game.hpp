@@ -32,6 +32,7 @@ public:
     void lose();
     void quit();
     void nextLevel();
+    void hiddenLevel();
 
     // Implement notify method
     void notify(Component* sender, int eventCode) override;
@@ -43,29 +44,6 @@ public:
     void drawWinButton();
     void drawLoseButton();
     void drawQuitButton();
-    void test() {
-        if(IsKeyDown(KEY_A)) {
-            notify(nullptr, 0);
-        }
-        else if(IsKeyDown(KEY_B)) {
-            notify(nullptr, 1);
-        }
-        else if(IsKeyDown(KEY_C)) {
-            notify(nullptr, 2);
-        }
-        else if(IsKeyDown(KEY_D)) {
-            notify(nullptr, 3);
-        }
-        else if(IsKeyDown(KEY_E)) {
-            notify(nullptr, 4);
-        }
-        else if(IsKeyDown(KEY_F)) {
-            notify(nullptr, 5);
-        }
-        else if(IsKeyDown(KEY_G)) {
-            notify(nullptr, 6);
-        }
-    }
 };
 
 #endif /* GAME_hpp */

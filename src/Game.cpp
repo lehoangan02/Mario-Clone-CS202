@@ -2,7 +2,7 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING)),
+      level(factory.CreateLevel(LevelFactory::LEVEL_101)),
       character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
@@ -72,8 +72,11 @@ void Game::start() {
     while (!WindowShouldClose()) {
         update(GetFrameTime());
         draw();
-        if (IsKeyPressed(KEY_P)) {
+        if (IsKeyDown(KEY_N)) {
             nextLevel();
+        }
+        else if (IsKeyDown(KEY_O)) {
+            hiddenLevel();
         }
     }
     CloseWindow();
@@ -146,18 +149,29 @@ void Game::quit() {
 
 void Game::nextLevel() {
     // Logic to switch to the next level
-    if (level->GetLevelType() == LevelFactory::LEVEL_101) {
-        delete level;
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
-    } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-        delete level;
+    if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
         level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    // } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
     } else {
-        delete level;
-        level = factory.CreateLevel(LevelFactory::LEVEL_101); // Loop back to the first level or handle as needed
     }
+    player->setPosition(Vector2{20, 0});
+    level->update(0.0f);
     level->attachPlayer(player);
-    state = LEVEL_RETURN_MESSAGE::RUNNING; // Ensure the state is set to running
+    state = LEVEL_RETURN_MESSAGE::RUNNING; 
+}
+
+void Game::hiddenLevel() {
+    if (level->GetLevelType() == LevelFactory::LEVEL_101) 
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    // else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
+    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    player->setPosition(Vector2{20, 0});
+    level->update(0.0f);
+    level->attachPlayer(player);
+    state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::handleState() {
@@ -172,13 +186,10 @@ void Game::handleState() {
             // Handle running state
             break;
         case LEVEL_RETURN_MESSAGE::HIDDEN:
-            if (level->GetLevelType() == LevelFactory::LEVEL_101) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
-            else if (level->GetLevelType() == LevelFactory::LEVEL_102) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
-            else if (level->GetLevelType() == LevelFactory::LEVEL_103) level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103);
-            level->attachPlayer(player);
+            hiddenLevel();
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
-            nextLevel(); // Chuyển sang level tiếp theo khi thắng
+            nextLevel();
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
             //drawLoseButton();
