@@ -82,6 +82,33 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDying = false;
 }
 
+Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) {
+    this->position = position;
+    this->originPosition = position;
+
+    Image image = LoadImage("assets/textures/Goomba_Walk1.png");
+
+    ImageResize(&image, size.x, size.y);
+
+    texture = LoadTextureFromImage(image);
+    textures.push_back(LoadTextureFromImage(image));
+
+    image = LoadImage("assets/textures/Goomba_Walk2.png");
+    ImageResize(&image, size.x, size.y);
+    textures.push_back(LoadTextureFromImage(image));
+
+    image = LoadImage("assets/textures/Goomba_Flat.png");
+    ImageResize(&image, size.x, size.y);
+    textures.push_back(LoadTextureFromImage(image));
+
+    UnloadImage(image);
+    this->size = size;
+    this->speed = speed;
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isDying = false;
+}
 void Goomba::hit() {
     if (isCollisionTrue) {
         this->texture = textures[2];           
