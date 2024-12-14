@@ -57,10 +57,23 @@ void Enemy::render() {
 Goomba::Goomba(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
-    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
+
+    Image image = LoadImage("assets/textures/Goomba_Walk1.png");
+
+    ImageResize(&image, 60, 60);
+
+    texture = LoadTextureFromImage(image);
+    textures.push_back(LoadTextureFromImage(image));
+
+    image = LoadImage("assets/textures/Goomba_Walk2.png");
+    ImageResize(&image, 60, 60);
+    textures.push_back(LoadTextureFromImage(image));
+
+    image = LoadImage("assets/textures/Goomba_Flat.png");
+    ImageResize(&image, 60, 60);
+    textures.push_back(LoadTextureFromImage(image));
+
+    UnloadImage(image);
     size = { 60, 60 };
     speed = { 40, 0 };
     isRight = false;
@@ -116,7 +129,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::render() {
-    if (!isDead) DrawTexture(texture, position.x, position.y, WHITE);
+    if (!isDead) DrawTextureEx(texture, position, 0.0f, 1.0f, WHITE);
 }
 
 void Goomba::test() {
