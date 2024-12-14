@@ -1,6 +1,7 @@
 #pragma once
 #include "../levels/Level.hpp"
 #include <string>
+class Mediator;
 class Component
 {
     private:
