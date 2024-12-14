@@ -57,24 +57,22 @@ void Enemy::render() {
 Goomba::Goomba(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
 
-    Image image = LoadImage("assets/textures/Goomba_Walk1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
 
-    ImageResize(&image, 60, 60);
-
-    texture = LoadTextureFromImage(image);
-    textures.push_back(LoadTextureFromImage(image));
-
-    image = LoadImage("assets/textures/Goomba_Walk2.png");
-    ImageResize(&image, 60, 60);
-    textures.push_back(LoadTextureFromImage(image));
-
-    image = LoadImage("assets/textures/Goomba_Flat.png");
-    ImageResize(&image, 60, 60);
-    textures.push_back(LoadTextureFromImage(image));
-
-    UnloadImage(image);
-    size = { 60, 60 };
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    size = { 16, 16 };
     speed = { 40, 0 };
     isRight = false;
     isDown = false;
@@ -82,26 +80,25 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDying = false;
 }
 
-Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) {
+Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
 
-    Image image = LoadImage("assets/textures/Goomba_Walk1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
 
-    ImageResize(&image, size.x, size.y);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
 
-    texture = LoadTextureFromImage(image);
-    textures.push_back(LoadTextureFromImage(image));
-
-    image = LoadImage("assets/textures/Goomba_Walk2.png");
-    ImageResize(&image, size.x, size.y);
-    textures.push_back(LoadTextureFromImage(image));
-
-    image = LoadImage("assets/textures/Goomba_Flat.png");
-    ImageResize(&image, size.x, size.y);
-    textures.push_back(LoadTextureFromImage(image));
-
-    UnloadImage(image);
     this->size = size;
     this->speed = speed;
     isRight = false;
@@ -143,7 +140,7 @@ void Goomba::update(float deltaTime) {
         currentTextureIndex = (currentTextureIndex + 1) % 2; 
         texture = textures[currentTextureIndex];
     }
-    if (position.x < leftBound || position.x + texture.width > rightBound) {
+    if (position.x < leftBound || position.x + texture.width * size.x/16 > rightBound) {
         isRight = !isRight;
     }
     if (position.y > bottomBound) {
@@ -156,7 +153,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::render() {
-    if (!isDead) DrawTextureEx(texture, position, 0.0f, 1.0f, WHITE);
+    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
 }
 
 void Goomba::test() {

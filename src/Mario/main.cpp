@@ -17,7 +17,7 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    Goomba goomba(Vector2{600, 400}, {40,40}, {30,0});
+    Goomba goomba(Vector2{600, 400}, {60,60}, {30,0});
     
     // KoopaTroopa goomba(Vector2{600, 400});
     goomba.setBound(0, 1024, 0, 768);
