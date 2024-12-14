@@ -27,7 +27,7 @@ IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
 }
 bool IdleCoin::anyCoinHit = false;
 void IdleCoin::Update(float deltaTime) {
-    
+    if (!APPEARED) return;
     elapsedTime += deltaTime;
     if (elapsedTime >= switchTime) {
         currentFrame = (currentFrame + 1) % totalFrames;
