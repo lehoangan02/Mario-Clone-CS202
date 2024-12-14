@@ -360,6 +360,10 @@ void Level::update(float DeltaTime)
 {
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
+    if (IsKeyPressed(KEY_O))
+    {
+        m_TouchedFlag = true;
+    }
     if (m_Paused)
     {
         return;
@@ -370,9 +374,14 @@ void Level::update(float DeltaTime)
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
-    else if (!isPlayerFinished && m_InControl)
+    else if (!isPlayerFinished && m_InControl && !m_TouchedFlag)
     {
         FullControl control(m_Player);
+        control.execute(DeltaTime);
+    }
+    else if (!isPlayerFinished && m_TouchedFlag)
+    {
+        AutoMove control(m_Player);
         control.execute(DeltaTime);
     }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)

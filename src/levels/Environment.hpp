@@ -111,6 +111,7 @@ class Lift : public MapObject
     private:
     float m_Speed = 100;
 };
+class AABBox;
 class Ground : public MapObject // Singleton
 {
     friend class Level;
@@ -132,6 +133,7 @@ class Ground : public MapObject // Singleton
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
         int getHoleCount() { return m_Holes.size(); };
         void setWorldType(int Type) { m_WorldType = Type; };
+        bool isInHole(AABBox Box);
 };
 class WarpPipe : public EnvironmentObject
 {

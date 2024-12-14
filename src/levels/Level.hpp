@@ -87,7 +87,7 @@ class Level : public Subject
         };
     friend class MapLoader;
     // private:
-        FlagPole m_FlagPole = FlagPole(1000);
+        FlagPole m_FlagPole = FlagPole(9800);
     protected:
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
@@ -110,6 +110,7 @@ class Level : public Subject
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
         bool m_InControl = true;
+        bool m_TouchedFlag = false;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;

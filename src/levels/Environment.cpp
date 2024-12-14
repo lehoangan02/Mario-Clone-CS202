@@ -1,5 +1,6 @@
 #include "Environment.hpp"
 #include "Level.hpp"
+#include "AABBox.hpp"
 EnvironmentObjectFactory& EnvironmentObjectFactory::GetEnvironmentFactory()
 {
     static EnvironmentObjectFactory Factory;
@@ -154,6 +155,17 @@ void Ground::addHole(float x, unsigned int y)
         m_HoleSet.insert(HolePosition + i);
     }
     m_Holes.push_back(std::make_pair(x, y));
+}
+bool Ground::isInHole(AABBox Box)
+{
+    for (auto& hole : m_Holes)
+    {
+        if (Box.getPosition().x + Box.getSize().x < hole.first + hole.second * 100 && Box.getPosition().x > hole.first)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})

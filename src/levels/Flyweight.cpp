@@ -278,7 +278,7 @@ void CloudTextureFlyWeight::render(Vector2 Position)
 }
 GrassTextureFlyWeight::GrassTextureFlyWeight()
 {
-    m_Texture = LoadTexture("assets/textures/grass.png");
+    m_Texture = LoadTexture("assets/textures/grasses.png");
 }
 GrassTextureFlyWeight::~GrassTextureFlyWeight()
 {
