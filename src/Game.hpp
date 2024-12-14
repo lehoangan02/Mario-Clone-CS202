@@ -8,7 +8,7 @@
 #include "./animation/Animation.h"
 #include "./Mediator/Mediator.hpp"
 
-class Game : public Mediator {
+class Game {
 private:
     LevelFactory& factory;
     Level* level;

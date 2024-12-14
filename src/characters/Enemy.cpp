@@ -62,7 +62,7 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
     textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
     size = { 32, 32 };
-    speed = { 4, 0 };
+    speed = { 40, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
