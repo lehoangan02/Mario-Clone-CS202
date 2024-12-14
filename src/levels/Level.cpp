@@ -327,10 +327,6 @@ void Level::render()
         }
         object->render();
     }
-    for (auto& object : m_EnvironmentInteractive)
-    {
-        object.first->render();
-    }
     for (auto& object : m_Drawables)
     {
         object->render();
@@ -344,6 +340,10 @@ void Level::render()
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
         }
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        object.first->render();
     }
     
     Ground::GetGround()->render();
@@ -390,8 +390,8 @@ void Level::update(float DeltaTime)
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
-        AutoMove control(m_Player);
-        control.execute(DeltaTime);
+        Command *control = AutoMove::getInstance(m_Player);
+        control->execute(DeltaTime);
     }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
@@ -611,7 +611,7 @@ void Level::resolveFlagPoleCollisions()
     EnvironmentBox.setFixed(true);
     if (!m_TouchedFlag && isColliding(PlayerBox, EnvironmentBox))
     {
-        std::cout << "Colliding with flag pole" << std::endl;
+        // std::cout << "Colliding with flag pole" << std::endl;
         resolveCollisions(PlayerBox, EnvironmentBox);
         m_TouchedFlag = true;
         m_Player->setPosition(PlayerBox.getPosition());
