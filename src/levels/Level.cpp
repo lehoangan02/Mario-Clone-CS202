@@ -27,6 +27,27 @@ Level::Level()
 }
 Level::~Level()
 {
+    for (auto& object : m_Environment)
+    {
+        delete object;
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        delete object.first;
+        delete object.second;
+    }
+    for (auto& object : m_Drawables)
+    {
+        delete object;
+    }
+    for (auto& object : m_Lifts)
+    {
+        delete object;
+    }
+    for (auto& object : m_EndPipes)
+    {
+        delete object;
+    }
     
 }
 void Level::attachPlayer(Character* Player)
@@ -324,6 +345,7 @@ void Level::render()
     {
         object->render();
     }
+    goomba->render();
     m_Player->Draw();
     for (auto& object : m_EndPipes)
     {
@@ -390,6 +412,7 @@ void Level::update(float DeltaTime)
     {
         return;
     }
+    goomba->update(DeltaTime);
     m_FlagPole.update();
     applyBoundaries();
     resolveEnvironmentCollisions();

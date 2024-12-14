@@ -5,6 +5,7 @@
 #include "AABBox.hpp"
 #include "MapLoader.hpp"
 #include "../Item/Item.h"
+#include "../characters/Enemy.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -105,6 +106,7 @@ class Level : public Subject
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
     private:
+    Enemy* goomba = new Goomba(Vector2{200, 200});
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
         bool m_InControl = true;
