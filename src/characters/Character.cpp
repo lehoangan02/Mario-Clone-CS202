@@ -24,7 +24,8 @@ Character::Character(float jumpHeight)
 	this->brake = false;
 	this->slideDirection = slidingDirection::right;
 	this->isChangingForm = false;
-	this->glitch = 0.0f;
+	this->pullFlag = false;
+	this->isWin = false;
 	position = Vector2{ 20 , 0 };
 
 }
@@ -82,6 +83,9 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_L)) {
 		changeForm(0);
 	}
+	if (IsKeyPressed(KEY_Q)) {
+		pullFlag = true;
+	}
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
@@ -96,12 +100,10 @@ void Character::changeForm(int form) {
 	animation.uvRect = { 0.0f, 0.0f, (float)textures[form].width / imageCounts[form].x, (float)textures[form].height };
 	isChangingForm = true;
 	formChangeTime = 0.0f;
-	glitch = -1.0f; // minus 1 for odd number of form changes and 1 for even number of form changes
 	formChangeDuration = 24.0f; // Duration of the form change animation in seconds
 }
 void Character::updateFormChangeAnimation() {
 	if (isChangingForm) {
-		glitch = -glitch;
 		velocity.y = 0;
 		velocity.x = 0;
 		if ((int) formChangeTime % 8 == 0) {
@@ -115,6 +117,17 @@ void Character::updateFormChangeAnimation() {
 	}
 	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
 	std::cout << "scale: " << scale << std::endl;*/
+}
+void Character::hitFlag(Vector2 flagPos) {
+	/*if (!pullFlag) return;
+	static const float Speed = 100;
+	static const float EndPosition = 750 - 200;
+	this->setPosition({flagPos.x , Speed*GetFrameTime()});
+	if (position.y > EndPosition)
+	{
+		position.y = EndPosition;
+		pullFlag = false;
+	}*/
 }
 void Character::Draw()
 {
@@ -159,6 +172,7 @@ void Mario::Update(float deltaTime) {
 	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
+	hitFlag({ 1000, 1000 });
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 }
 
@@ -236,8 +250,19 @@ void InHole::execute(float deltaTime) {
 	character->Update(deltaTime);
 };
 
+AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
+if (totalTime < 5.0f) {
 	character->control(false);
 	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
 	character->Update(deltaTime);
+	totalTime += deltaTime;
+	std::cout << totalTime;
+}
+else {
+	character->setWin();
+	character->control(false);
+	character->setVelocity(Vector2{ 0.0f, 0.0f });
+	character->Update(deltaTime);
+}
 }
