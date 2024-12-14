@@ -168,6 +168,8 @@ void Level::handleItemLogic()
         if (!CurrentItem) continue;
         if (CurrentItem -> getItemID() == Itemtype::MUSHROOM)
         {
+            AABBox ItemBox = AABBox(CurrentItem->GetPosition(), CurrentItem->GetSize());
+            if (m_Ground->isInHole(ItemBox)) continue;
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
             // std::cout << "Mushroom position: " << MushroomItem->GetPosition().y << std::endl;
             if (MushroomItem->GetPosition().y > m_Ground->m_Position.y - MushroomItem->GetSize().y)
