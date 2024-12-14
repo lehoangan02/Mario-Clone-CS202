@@ -134,5 +134,14 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     int WorldType;
     fin >> WorldType;
     Level -> m_Ground -> setWorldType(WorldType);
+    bool HaveFlagPole;
+    fin >> HaveFlagPole;
+    if (HaveFlagPole)
+    {
+        float X;
+        fin >> X;
+        FlagPole* Pole = new FlagPole(X);
+        Level -> m_FlagPole = Pole;
+    }
     fin.close();
 }

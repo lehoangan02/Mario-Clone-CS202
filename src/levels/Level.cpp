@@ -590,6 +590,7 @@ void Level::Background::render()
 }
 void Level::resolveFlagPoleCollisions()
 {
+    if (m_FlagPole == nullptr) return;
     static bool PullDone = false;
     AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
     AABBox EnvironmentBox = AABBox(m_FlagPole.m_Position, m_FlagPole.getSize());

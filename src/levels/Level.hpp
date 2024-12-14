@@ -87,8 +87,13 @@ class Level : public Subject
         };
     friend class MapLoader;
     // private:
+<<<<<<< Updated upstream
         FlagPole m_FlagPole = FlagPole(9800);
+=======
+    
+>>>>>>> Stashed changes
     protected:
+    FlagPole *m_FlagPole = nullptr;
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
     std::vector<EnvironmentObject*> m_Environment;
