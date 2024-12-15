@@ -26,6 +26,10 @@ private:
 	int flickSwitch;
 	float flickDuration;
 	bool isVisible;
+	int invincibleSwitch;
+	float invincibleDuration;
+	bool isInvincible;
+	Color InvincibleColor;
 public:
 	Character(float jumpHeight);
 	~Character();
@@ -63,6 +67,9 @@ public:
 	void touchEnemy();
 	bool isDead() { return isDie; };
 	bool isflick() { return isflicking; };
+
+	void invincile() { this->isInvincible = true; };
+	bool isSuper() { return isInvincible; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
