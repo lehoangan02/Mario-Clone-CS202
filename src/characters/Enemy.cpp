@@ -201,6 +201,10 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     isDown = false;
     isDead = false;
     isPauseCollision = false;
+
+    heightInGround = 0;
+    topBound = size.y + position.y;
+    bottomBound = position.y;
 }
 
 PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
@@ -224,8 +228,11 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isDown = false;
     isDead = false;
     isPauseCollision = false;
-}
 
+    heightInGround = 0;
+    topBound = size.y + position.y;
+    bottomBound = position.y;
+}
 void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
 
@@ -248,6 +255,8 @@ void PiranhaPlant::update(float deltaTime) {
         if(position.y > topBound|| position.y < bottomBound ) {
             isDown = !isDown;
         }
+
+        heightInGround = Clamp(heightInGround, 0.0f, size.y);
     }
     else {
         timer += deltaTime;
@@ -260,8 +269,8 @@ void PiranhaPlant::update(float deltaTime) {
 
 void PiranhaPlant::render() {
     if (!isDead) {
-        Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height - heightInGround};
-        Rectangle destRec = { position.x, position.y, size.x, size.x/texture.width * (texture.height - heightInGround)};
+        Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height - heightInGround/size.y * 66};
+        Rectangle destRec = { position.x, position.y, size.x, size.y - heightInGround};
         Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
     }
@@ -276,6 +285,77 @@ void PiranhaPlant::test() {
         hit();
     }
     if (IsKeyDown(KEY_B)) {
+        setIsPauseCollision(true);
+    }
+}
+
+InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
+    heightInGround = 66;
+    topBound = position.y + 66;
+    bottomBound = position.y;
+}
+
+InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : PiranhaPlant(position, size, speed) {
+    heightInGround = size.y;
+    topBound = position.y + size.y;
+    bottomBound = position.y;
+    isDown = true;
+}
+void InversePiranhaPlant::update(float deltaTime) {
+    if (isDead) return;
+
+    if (!isPauseCollision) {
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 2;
+            texture = textures[currentTextureIndex];
+        }
+
+        if (isDown) {
+            position.y += speed.y * deltaTime; 
+            heightInGround -= speed.y * deltaTime; 
+        } else {
+            position.y -= speed.y * deltaTime; 
+            heightInGround += speed.y * deltaTime; 
+        }
+        if (position.y <= bottomBound || position.y >= topBound) {
+            isDown = !isDown;
+        }
+    } else {
+        timer += deltaTime;
+        if (timer >= 6 * animationTime) {
+            timer -= 6 * animationTime;
+            isPauseCollision = false;
+        }
+    }
+}
+
+
+void InversePiranhaPlant::render() {
+    if (!isDead) {
+        Rectangle sourceRec = { 
+            0.0f, 
+            0.0f, 
+            (float)texture.width, 
+            -((float)texture.height - heightInGround/size.y * 66)
+        };
+
+        Rectangle destRec = { 
+            originPosition.x, 
+            originPosition.y, 
+            size.x, 
+            size.y - heightInGround
+        };
+
+        Vector2 origin = {0.0f, 0.0f };
+
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+    }
+}
+
+void InversePiranhaPlant::test() {
+    if (IsKeyDown(KEY_A)) {
         setIsPauseCollision(true);
     }
 }

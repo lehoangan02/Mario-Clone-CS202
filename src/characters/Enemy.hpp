@@ -8,6 +8,7 @@ enum class EnemyType {
 	GOOMBA,
     KOOPA_TROOPA,
     PIRANHA_PLANT,
+    INVERSE_PIRANHA_PLANT,
     LAKITU,
     SHY_GUY
 };
@@ -81,7 +82,7 @@ class KoopaTroopa : public Enemy {
 };
 
 class PiranhaPlant : public Enemy {
-    private:
+    protected:
         float heightInGround;
         bool isPauseCollision;
     public:
@@ -90,14 +91,27 @@ class PiranhaPlant : public Enemy {
         EnemyType getEnemyType() const override { return EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
+        float getHeightInGround() const { return heightInGround; };
         void setIsPauseCollision(bool isPauseCollision) { this->isPauseCollision = isPauseCollision; };
         void hit() override;
+        virtual void update(float deltaTime) override;
+        virtual void render() override;
+        void test();
+};
+//size of piranha plant should be scale of 32x66
+//position is the top left of piranha full out of ground.
+
+// chieu cao noi tren ong = size.y - heightInGround
+
+//position of inverse piranha plant is the left of ground
+class InversePiranhaPlant : public PiranhaPlant {
+    public:
+        InversePiranhaPlant(Vector2 position);
+        InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
         void update(float deltaTime) override;
         void render() override;
         void test();
 };
-//size of piranha plant should be scale of 32x66
-
 class Lakitu : public Enemy {
 };
 
