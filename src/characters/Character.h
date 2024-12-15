@@ -55,6 +55,9 @@ public:
 
 	void powerUp();
 	void powerDown(); //need invicile effect
+
+	void touchEnemy();
+	bool isDead() { return isDie; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -73,6 +76,7 @@ protected:
 	bool canJump;
 	bool fire;
 	bool brake;
+	bool isDie;
 
 	float scale ;
 

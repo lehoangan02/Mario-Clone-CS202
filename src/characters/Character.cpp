@@ -26,6 +26,7 @@ Character::Character(float jumpHeight)
 	this->isChangingForm = false;
 	this->pullFlag = false;
 	this->isWin = false;
+	this->isDie = false;
 	position = Vector2{ 20 , 0 };
 
 }
@@ -80,6 +81,9 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_K)) {
 		powerDown();
 	}
+	if (IsKeyPressed(KEY_H)) {
+		touchEnemy();
+	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
@@ -116,13 +120,18 @@ void Character::updateFormChangeAnimation() {
 	std::cout << "scale: " << scale << std::endl;*/
 }
 void Character::hitFlag(Vector2 flagPos) {
-	/*if (!pullFlag) return;
-	static const float Speed = 100;
-	static const float EndPosition = 750 - 200;
-	this->setPosition({flagPos.x , Speed*GetFrameTime()});
+	/*if (!pullFlag) {
+		std::cout << "not pull flag" << std::endl;
+		return;
+	};
+	static const float Speed =100;
+	static const float EndPosition = 600;
+	position.x = 20;
+	std::cout << "position: " << position.y << std::endl;
 	if (position.y > EndPosition)
 	{
-		position.y = EndPosition;
+		std::cout << "Cc";
+		position.y = 1;
 		pullFlag = false;
 	}*/
 }
@@ -139,6 +148,17 @@ void Character::powerDown() {
 	//add invicible effect for few seconds and maybe there should be some effect when turning small
 	changeForm(0);
 }
+
+void Character::touchEnemy() {
+    if (form != 0) {
+		powerDown();
+		return;
+	}
+	else {
+		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+		isDie = true;
+	}
+}
 void Character::Draw()
 {
 	//std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
@@ -153,7 +173,7 @@ Mario::Mario() : Character(300.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
-	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
 	imageCounts.push_back({ 6,1 });
 	imageCounts.push_back({ 7,1 });
 	float switchTime = 0.1f;
@@ -180,9 +200,13 @@ void Mario::Update(float deltaTime) {
 	else if (velocity.x < 0.0f) {
 		faceRight = false;
 	}
+
+	if (isDie) {
+		velocity.x = 0;
+		state = 5;
+	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
-	hitFlag({ 1000, 1000 });
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 }
 
