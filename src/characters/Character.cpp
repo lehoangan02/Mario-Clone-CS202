@@ -27,9 +27,9 @@ Character::Character(float jumpHeight)
 	this->pullFlag = false;
 	this->isWin = false;
 	this->isDie = false;
-	this->isGlitching = false;
-	this->glitchSwitch = 0;
-	this->glitchDuration = 3.0f;
+	this->isflicking = false;
+	this->flickSwitch = 0;
+	this->flickDuration = 3.0f;
 	this->isVisible = true;
 	position = Vector2{ 20 , 0 };
 
@@ -120,13 +120,13 @@ void Character::updateFormChangeAnimation() {
 			isChangingForm = false;
 		}
 	}
-	if (isGlitching) {
-		glitchSwitch += 1;
-		if (glitchSwitch % 3 ==0) isVisible = !isVisible;
+	if (isflicking) {
+		flickSwitch += 1;
+		if (flickSwitch % 3 ==0) isVisible = !isVisible;
 
-		glitchDuration -= GetFrameTime();
-		if (glitchDuration <0.0f) {
-			isGlitching = false;
+		flickDuration -= GetFrameTime();
+		if (flickDuration <0.0f) {
+			isflicking = false;
 			isVisible = true;
 		}
 	}
@@ -159,8 +159,8 @@ void Character::powerUp() {
 	}
 }
 void Character::powerDown() {
-	isGlitching = true;
-	glitchSwitch = 0;
+	isflicking = true;
+	flickSwitch = 0;
 	changeForm(0);
 }
 

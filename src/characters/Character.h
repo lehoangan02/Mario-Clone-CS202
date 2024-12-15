@@ -22,9 +22,9 @@ private:
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
-	bool isGlitching;
-	int glitchSwitch;
-	float glitchDuration;
+	bool isflicking;
+	int flickSwitch;
+	float flickDuration;
 	bool isVisible;
 public:
 	Character(float jumpHeight);
@@ -62,7 +62,7 @@ public:
 
 	void touchEnemy();
 	bool isDead() { return isDie; };
-	bool isGlitch() { return isGlitching; };
+	bool isflick() { return isflicking; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
