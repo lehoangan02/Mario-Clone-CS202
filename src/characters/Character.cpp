@@ -27,6 +27,10 @@ Character::Character(float jumpHeight)
 	this->pullFlag = false;
 	this->isWin = false;
 	this->isDie = false;
+	this->isGlitching = false;
+	this->glitchSwitch = 0;
+	this->glitchDuration = 3.0f;
+	this->isVisible = true;
 	position = Vector2{ 20 , 0 };
 
 }
@@ -116,6 +120,16 @@ void Character::updateFormChangeAnimation() {
 			isChangingForm = false;
 		}
 	}
+	if (isGlitching) {
+		glitchSwitch += 1;
+		if (glitchSwitch % 3 ==0) isVisible = !isVisible;
+
+		glitchDuration -= GetFrameTime();
+		if (glitchDuration <0.0f) {
+			isGlitching = false;
+			isVisible = true;
+		}
+	}
 	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
 	std::cout << "scale: " << scale << std::endl;*/
 }
@@ -145,7 +159,8 @@ void Character::powerUp() {
 	}
 }
 void Character::powerDown() {
-	//add invicible effect for few seconds and maybe there should be some effect when turning small
+	isGlitching = true;
+	glitchSwitch = 0;
 	changeForm(0);
 }
 
@@ -161,6 +176,7 @@ void Character::touchEnemy() {
 }
 void Character::Draw()
 {
+	if (!isVisible) return;
 	//std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
