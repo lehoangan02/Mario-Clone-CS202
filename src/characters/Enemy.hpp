@@ -83,18 +83,20 @@ class KoopaTroopa : public Enemy {
 class PiranhaPlant : public Enemy {
     private:
         float heightInGround;
+        bool isPauseCollision;
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
         EnemyType getEnemyType() const override { return EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
+        void setIsPauseCollision(bool isPauseCollision) { this->isPauseCollision = isPauseCollision; };
         void hit() override;
         void update(float deltaTime) override;
         void render() override;
         void test();
 };
-
+//size of piranha plant should be scale of 32x66
 
 class Lakitu : public Enemy {
 };
