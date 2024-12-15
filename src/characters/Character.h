@@ -22,6 +22,10 @@ private:
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
+	bool isGlitching;
+	int glitchSwitch;
+	float glitchDuration;
+	bool isVisible;
 public:
 	Character(float jumpHeight);
 	~Character();
