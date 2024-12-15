@@ -55,12 +55,13 @@ public:
     virtual EnemyType getEnemyType() const = 0;
 
     void setBound(float left, float right, float top, float bottom) ;
+    virtual Rectangle getBoundingBox() const = 0;
 
     virtual void update(float deltaTime) = 0;
 
     virtual void render();
 };
-
+//isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
 class Goomba : public Enemy {
 private:
     bool isCollisionTrue;
@@ -71,6 +72,7 @@ public:
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
     EnemyType getEnemyType() const override { return EnemyType::GOOMBA; };
 
+    Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
     bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
     void hit() override;
     void update(float deltaTime) override;
@@ -93,6 +95,8 @@ class PiranhaPlant : public Enemy {
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
         void setIsPauseCollision(bool isPauseCollision) { this->isPauseCollision = isPauseCollision; };
+        virtual Rectangle getBoundingBox () const { return {position.x, position.y, size.x, size.y - heightInGround}; };
+
         void hit() override;
         virtual void update(float deltaTime) override;
         virtual void render() override;
@@ -102,12 +106,15 @@ class PiranhaPlant : public Enemy {
 //position is the top left of piranha full out of ground.
 
 // chieu cao noi tren ong = size.y - heightInGround
+//dung isPauseCollision thi no se cho pause vai khung hinh cua piranha sau va cham
 
 //position of inverse piranha plant is the left of ground
 class InversePiranhaPlant : public PiranhaPlant {
     public:
         InversePiranhaPlant(Vector2 position);
         InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
+
+        Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
         void update(float deltaTime) override;
         void render() override;
         void test();
@@ -115,6 +122,7 @@ class InversePiranhaPlant : public PiranhaPlant {
 class Lakitu : public Enemy {
 };
 
-class ShyGuy : public Goomba {
+class ShyGuy : public Enemy {
+
 };
 #endif // !ENEMY_HPP

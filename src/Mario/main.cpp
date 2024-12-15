@@ -25,11 +25,12 @@ int main() {
         ClearBackground(RAYWHITE);
         DrawRectangleLines(300, 300, 48, 99, RED);
         DrawRectangleLines(400, 300, 48, 99, RED);
-        
+
+        DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
         goomba.test();
         goomba.update(0.01f);
         goomba.render();
-
+        DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
 
         goomba2.test();
         goomba2.update(0.01f);
