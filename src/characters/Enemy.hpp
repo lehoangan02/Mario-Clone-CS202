@@ -49,6 +49,7 @@ public:
     slidingDirection getDirection() const;
     void setDirection(slidingDirection direction);
 
+    void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
     virtual EnemyType getEnemyType() const = 0;
 
@@ -80,7 +81,20 @@ class KoopaTroopa : public Enemy {
 };
 
 class PiranhaPlant : public Enemy {
+    private:
+        float heightInGround;
+    public:
+        PiranhaPlant(Vector2 position);
+        PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
+        EnemyType getEnemyType() const override { return EnemyType::PIRANHA_PLANT; };
+
+        void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
+        void hit() override;
+        void update(float deltaTime) override;
+        void render() override;
+        void test();
 };
+
 
 class Lakitu : public Enemy {
 };

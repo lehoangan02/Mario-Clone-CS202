@@ -179,3 +179,89 @@ void Goomba::test() {
         setDirection(slidingDirection::left);
     }  
 }
+
+PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/PiranhaPlant_0.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_0.png"));
+    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_1.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    size = { 32, 66 };
+    speed = { 0, 10};
+    isRight = false;
+    isDown = false;
+    isDead = false;
+}
+
+PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/PiranhaPlant_0.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_0.png"));
+    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_1.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    this->size = size;
+    this->speed = speed;
+    isRight = false;
+    isDown = false;
+    isDead = false;
+}
+
+void PiranhaPlant::update(float deltaTime) {
+    if (isDead) return;
+
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime; 
+        currentTextureIndex = (currentTextureIndex + 1) % 2; 
+        texture = textures[currentTextureIndex];
+    }
+
+    if(isDown) {
+        position.y += speed.y * deltaTime;
+        heightInGround += speed.y * deltaTime;
+    }
+    else {
+        position.y -= speed.y * deltaTime;
+        heightInGround -= speed.y * deltaTime;
+    }
+    if(position.y > topBound|| position.y < bottomBound ) {
+        isDown = !isDown;
+    }
+}
+
+void PiranhaPlant::render() {
+    if (!isDead) {
+        Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height - heightInGround};
+        Rectangle destRec = { position.x, position.y, size.x, size.y-heightInGround };
+        Vector2 origin = { 0.0f, 0.0f };
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+    }
+}
+
+void PiranhaPlant::hit() {
+    isDead = true;
+}
+
+void PiranhaPlant::test() {
+    if (IsKeyDown(KEY_A)) {
+        hit();
+    }
+}
