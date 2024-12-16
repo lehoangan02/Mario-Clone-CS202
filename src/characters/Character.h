@@ -57,7 +57,8 @@ public:
 
 	void hitFlag(Vector2 flagPos);
 
-	void setScore(int newscore) { this->score = newscore; };
+	void increaseScore(int Incre) { this->score += Incre; };
+	void increaseScore() { this->score += 1; };
 	int getScore() { return score; }
 
 	bool haveWon() { return isWin; };
