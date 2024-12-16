@@ -310,6 +310,7 @@ void Level::handleItemLogic()
             {
                 m_Player -> powerUp();
                 MushroomItem->setHit();
+                m_Player->increaseScore();
             }
         }
     }
@@ -322,6 +323,7 @@ void Level::handleItemLogic()
         if (isColliding(ItemBox, PlayerBox) && !object->isHit())
         {
             object->setHit();
+            m_Player->increaseScore();
         }
     }
 }
