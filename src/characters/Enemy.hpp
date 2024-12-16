@@ -48,9 +48,9 @@ public:
 
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
-    bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
-    //virtual EnemyFactory::EnemyType getEnemyType() const = 0;
-
+    void setHit(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
+    bool isHit() const { return isCollisionTrue; };
+    
     void setBound(float left, float right, float top, float bottom) ;
     virtual Rectangle getBoundingBox() const = 0;
 
