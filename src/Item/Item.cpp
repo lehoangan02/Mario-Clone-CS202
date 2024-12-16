@@ -51,6 +51,9 @@ void IdleCoin::setHit() {
     hit = true;
     APPEARED = false;
 }
+Itemtype IdleCoin::getItemID() const {
+    return Itemtype::IDLECOIN;
+}
 Vector2 IdleCoin::getPosition() const { return position; }
 Vector2 IdleCoin::getSize() const { return size; }
 void IdleCoin::stopDrawing() {

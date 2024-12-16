@@ -23,32 +23,10 @@ enum class Itemtype {
 	COIN,
 	MUSHROOM,
 	FIREFLOWER,
-	STARMAN
+	STARMAN,
+	IDLECOIN
 };
-class IdleCoin {
-private:
-	Vector2 position;
-	Vector2 size;
-	Texture2D texture;
-	Rectangle uvRect;
-	Vector2 frameSize;
-	int totalFrames;
-	int currentFrame;
-	float switchTime;
-	float elapsedTime;
-	bool APPEARED;
-	bool hit;
-public:
-	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
-	void Update(float deltaTime);
-	void Draw();
-	bool isHit();
-	void stopDrawing();
-	Vector2 getPosition() const;
-	Vector2 getSize() const;
-	void setHit();
-	~IdleCoin();
-};
+
 class Item : public Observer {
 protected:
 	Vector2 position;
@@ -90,6 +68,31 @@ public:
 	}
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
+};
+class IdleCoin {
+private:
+	Vector2 position;
+	Vector2 size;
+	Texture2D texture;
+	Rectangle uvRect;
+	Vector2 frameSize;
+	int totalFrames;
+	int currentFrame;
+	float switchTime;
+	float elapsedTime;
+	bool APPEARED;
+	bool hit;
+public:
+	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
+	Itemtype getItemID() const;
+	void Update(float deltaTime);
+	void Draw();
+	bool isHit();
+	void stopDrawing();
+	Vector2 getPosition() const;
+	Vector2 getSize() const;
+	void setHit();
+	~IdleCoin();
 };
 class Coin : public Item {
 private:
