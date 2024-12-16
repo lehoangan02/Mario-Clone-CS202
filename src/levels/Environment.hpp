@@ -35,6 +35,9 @@ class EnvironmentObject : public MapObject
         virtual ~EnvironmentObject() = default;
         virtual void update() = 0;
         // virtual void render() = 0;
+        int getType() { return m_Type; };
+    protected:
+        int m_Type;
 };
 class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
 {
@@ -52,7 +55,8 @@ class DrawableObjectFactory
         GRASS,
         CLOUD,
         MOUNTAIN,
-        CASTLE
+        CASTLE,
+        DIRT
     };
     private:
         DrawableObjectFactory() = default;
@@ -72,6 +76,9 @@ class EnvironmentObjectFactory // Singleton Factory
         BRICK, // so on & so on
         HARD_BLOCK,
         BLUE_BRICK,
+        LEFT_GRASS_PLATFORM,
+        MID_GRASS_PLATFORM,
+        RIGHT_GRASS_PLATFORM,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -104,6 +111,7 @@ class Lift : public MapObject
     private:
     float m_Speed = 100;
 };
+class AABBox;
 class Ground : public MapObject // Singleton
 {
     friend class Level;
@@ -125,6 +133,7 @@ class Ground : public MapObject // Singleton
         std::pair<float, unsigned int> getHole(unsigned int index) { return m_Holes[index]; };
         int getHoleCount() { return m_Holes.size(); };
         void setWorldType(int Type) { m_WorldType = Type; };
+        bool isInHole(AABBox Box);
 };
 class WarpPipe : public EnvironmentObject
 {
@@ -150,12 +159,37 @@ class HardBlock : public EnvironmentObject
     ~HardBlock();
     void render() override;
     void update() override;
+    
 };
 class BlueBrick : public EnvironmentObject
 {
     public:
     BlueBrick(Vector2 Position);
     ~BlueBrick();
+    void render() override;
+    void update() override;
+};
+class LeftGrassPlatform : public EnvironmentObject
+{
+    public:
+    LeftGrassPlatform(Vector2 Position);
+    ~LeftGrassPlatform();
+    void render() override;
+    void update() override;
+};
+class MiddleGrassPlatform : public EnvironmentObject
+{
+    public:
+    MiddleGrassPlatform(Vector2 Position);
+    ~MiddleGrassPlatform();
+    void render() override;
+    void update() override;
+};
+class RightGrassPlatform : public EnvironmentObject
+{
+    public:
+    RightGrassPlatform(Vector2 Position);
+    ~RightGrassPlatform();
     void render() override;
     void update() override;
 };
@@ -219,6 +253,13 @@ class Mountain : public DrawableObject
     public:
     Mountain(Vector2 Position);
     ~Mountain();
+    void render() override;
+};
+class Dirt : public DrawableObject
+{
+    public:
+    Dirt(Vector2 Position);
+    ~Dirt();
     void render() override;
 };
 enum EndPipeType

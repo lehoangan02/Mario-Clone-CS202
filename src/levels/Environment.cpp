@@ -1,5 +1,6 @@
 #include "Environment.hpp"
 #include "Level.hpp"
+#include "AABBox.hpp"
 EnvironmentObjectFactory& EnvironmentObjectFactory::GetEnvironmentFactory()
 {
     static EnvironmentObjectFactory Factory;
@@ -31,6 +32,21 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
         {
             BlueBrick* blueBrick = new BlueBrick(Position);
             return blueBrick;
+        }
+        case EnvironmentObjectFactory::EnvironmentObjectType::LEFT_GRASS_PLATFORM:
+        {
+            LeftGrassPlatform* leftGrassPlatform = new LeftGrassPlatform(Position);
+            return leftGrassPlatform;
+        }
+        case EnvironmentObjectFactory::EnvironmentObjectType::MID_GRASS_PLATFORM:
+        {
+            MiddleGrassPlatform* midGrassPlatform = new MiddleGrassPlatform(Position);
+            return midGrassPlatform;
+        }
+        case EnvironmentObjectFactory::EnvironmentObjectType::RIGHT_GRASS_PLATFORM:
+        {
+            RightGrassPlatform* rightGrassPlatform = new RightGrassPlatform(Position);
+            return rightGrassPlatform;
         }
         default:
         {
@@ -140,9 +156,21 @@ void Ground::addHole(float x, unsigned int y)
     }
     m_Holes.push_back(std::make_pair(x, y));
 }
+bool Ground::isInHole(AABBox Box)
+{
+    for (auto& hole : m_Holes)
+    {
+        if (Box.getPosition().x + Box.getSize().x < hole.first + hole.second * 100 && Box.getPosition().x > hole.first)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE;
 }
 WarpPipe::~WarpPipe()
 {
@@ -156,6 +184,7 @@ void WarpPipe::update()
 }
 Brick::Brick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BRICK;
 }
 Brick::~Brick()
 {
@@ -170,6 +199,7 @@ void Brick::update()
 
 HardBlock::HardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK;
 }
 HardBlock::~HardBlock()
 {
@@ -183,6 +213,7 @@ void HardBlock::update()
 }
 BlueBrick::BlueBrick(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
 {
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BLUE_BRICK;
 }
 BlueBrick::~BlueBrick()
 {
@@ -192,6 +223,48 @@ void BlueBrick::render()
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::BLUE_BRICK)->render(m_Position);
 }
 void BlueBrick::update()
+{
+}
+LeftGrassPlatform::LeftGrassPlatform(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::LEFT_GRASS_PLATFORM;
+}
+LeftGrassPlatform::~LeftGrassPlatform()
+{
+}
+void LeftGrassPlatform::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::LEFT_GRASS_PLATFORM)->render(m_Position);
+}
+void LeftGrassPlatform::update()
+{
+}
+MiddleGrassPlatform::MiddleGrassPlatform(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::MID_GRASS_PLATFORM;
+}
+MiddleGrassPlatform::~MiddleGrassPlatform()
+{
+}
+void MiddleGrassPlatform::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::MID_GRASS_PLATFORM)->render(m_Position);
+}
+void MiddleGrassPlatform::update()
+{
+}
+RightGrassPlatform::RightGrassPlatform(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::RIGHT_GRASS_PLATFORM;
+}
+RightGrassPlatform::~RightGrassPlatform()
+{
+}
+void RightGrassPlatform::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::RIGHT_GRASS_PLATFORM)->render(m_Position);
+}
+void RightGrassPlatform::update()
 {
 }
 
@@ -299,6 +372,11 @@ DrawableObject* DrawableObjectFactory::CreateDrawableObject(int Type, Vector2 Po
             DrawableObject* mountain = new Mountain(Position);
             return mountain;
         }
+        case DrawableObjectFactory::DrawableObjectType::DIRT:
+        {
+            DrawableObject* dirt = new Dirt(Position);
+            return dirt;
+        }
         default:
         {
             std::cerr << "Invalid Drawable Object Type\n";
@@ -338,16 +416,29 @@ void Mountain::render()
 {
     StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::MOUNTAIN)->render(m_Position);
 }
+Dirt::Dirt(Vector2 Position) : DrawableObject(Position)
+{
+}
+Dirt::~Dirt()
+{
+}
+void Dirt::render()
+{ 
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::DIRT)->render(m_Position);
+}
+
 
 Castle::Castle(Vector2 Position) : DrawableObject(Position)
 {
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 Castle::~Castle()
 {
 }
 void Castle::render()
 {
-    DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
+    DrawTextureEx(m_Texture, m_Position, 0, 2, WHITE);
 }
 
 EndPipe::EndPipe(Vector2 Position, Vector2 Size, int Type) : EnvironmentObject(Position, Size), m_Type(Type)
@@ -364,7 +455,7 @@ EndPipeTop::~EndPipeTop()
 }
 void EndPipeTop::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_TOP)->render(m_Position);
 }
 void EndPipeTop::update()
 {
@@ -377,7 +468,7 @@ EndPipeSide::~EndPipeSide()
 }
 void EndPipeSide::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_SIDE)->render(m_Position);
 }
 void EndPipeSide::update()
 {

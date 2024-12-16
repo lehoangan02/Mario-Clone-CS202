@@ -4,7 +4,7 @@ Many of the data used to classified elements in maps are defined by enums.
 
 Here are the list of enums used:
 ```cpp
-class EnvironmentObjectFactory
+class EnvironmentObjectFactory // Singleton Factory
 {
     public:
     enum EnvironmentObjectType
@@ -15,6 +15,9 @@ class EnvironmentObjectFactory
         BRICK, // so on & so on
         HARD_BLOCK,
         BLUE_BRICK,
+        LEFT_GRASS_PLATFORM,
+        MID_GRASS_PLATFORM,
+        RIGHT_GRASS_PLATFORM,
     };
 ```
 ```cpp
@@ -34,7 +37,9 @@ class DrawableObjectFactory
     {
         GRASS,
         CLOUD,
-        MOUNTAIN
+        MOUNTAIN,
+        CASTLE,
+        DIRT
     };
 ```
 ```cpp
@@ -90,6 +95,7 @@ Explanation:
 You have to input lists in a specified order (shown after this part). Each list contain similar-type entites.
 
 **Order of types:**
+0. Start Position
 1. Enemy
 2. Item
 3. Static Environment Object
@@ -98,6 +104,12 @@ You have to input lists in a specified order (shown after this part). Each list 
 6. Hole
 7. Lift
 8. End Pipe
+9. Type of Level
+10. End Flag
+
+## Start Position
+
+Simply input the XY cordinate where you want Mario to spawn at.
 
 Example:
 
@@ -109,7 +121,17 @@ Explanation:
 - There is 1 drawble (the type is CLOUD)
 - There are 2 holes
 
-*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide). Lifts only need X and Y coordinate.
+*Note: Holes don't need any type; you just need to specify the X position and the width (e.g., 2 is 2 blocks, which is 2 * 100 pixels wide). Lifts only need X and Y coordinate.*
+
+## Animated Environment Object
+
+This is the question blocks in the map.
+
+Explanation: 0 1200 400 0. This means that the object is type 0 (question block), followed by its coordinate. After that it's the enum of the item type (0 for coin, 1 for magic mushroom).
+
+## Lift
+
+With lifts, you do not need to input the type, just the coordinate
 
 ## Type of level
 
@@ -124,3 +146,19 @@ class Level
         UNDERGROUND
     };
 ```
+
+## End Flag
+
+If there is a flag, input 1, followed by the X cordinate. Else, input 0. You can only have maximum end flag per level. The flag is always set to be on ground level.
+
+Example:
+```
+1 10000
+```
+Explanation: The flag is at X coordinate 10000.
+
+Example:
+```
+0
+```
+Explanation: There is no end flag.

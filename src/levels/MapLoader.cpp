@@ -21,18 +21,23 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         std::cerr << "Error opening file" << std::endl;
         return;
     }
+    Vector2 PlayerSpawn;
+    fin >> PlayerSpawn.x >> PlayerSpawn.y;
+    Level -> m_StartPosition = PlayerSpawn;
     int NumberOfEnemies;
     fin >> NumberOfEnemies;
     int NumberOfItems;
     fin >> NumberOfItems;
     int NumberOfStaticEnvironment;
     fin >> NumberOfStaticEnvironment;
+    std::cout << "Number of Static Environment: " << NumberOfStaticEnvironment << std::endl;
     for (int i = 0; i < NumberOfStaticEnvironment; i++)
     {
         int Type;
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
+        std::cout << "Creating Static Environment Object at " << X << ", " << Y << std::endl;
         if (Type == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
         {
             Level->m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{X, 750 - Y}));
@@ -44,6 +49,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     }
     int NumberOfInteractiveEnvironment;
     fin >> NumberOfInteractiveEnvironment;
+    std::cout << "Number of Interactive Environment: " << NumberOfInteractiveEnvironment << std::endl;
     for (int i = 0; i < NumberOfInteractiveEnvironment; i++)
     {
         int Type;
@@ -52,21 +58,43 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> X >> Y;
         int ItemType;
         fin >> ItemType;
+        Itemtype MyItemType = static_cast<Itemtype>(ItemType);
         std::pair<EnvironmentObjectInteractive*, Item*> Pair;
         Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
-        std::cout << "asdlfkjasldfkj" << Pair.first << std::endl;
-        Coin* coin = new Coin(
-            Vector2{ X + 40, Y },   //Start position
-            Vector2{ X + 40, Y - 300 },    //End position
-            Vector2{ 40,100},      // size of coin
-            LoadTexture("assets/textures/Coin.png"),
-            Vector2{ 0, 400 }     //velocity
-        );
-        Pair.second = coin;
+        Item* NewItem;
+        switch (MyItemType)
+        {
+        case Itemtype::COIN:
+            {
+                NewItem = new Coin(
+                Vector2{ X + 40, Y },   //Start position
+                Vector2{ X + 40, Y - 300 },    //End position
+                Vector2{ 40,100},      // size of coin
+                LoadTexture("assets/textures/Coin.png"),
+                Vector2{ 0, 400 }     //velocity
+                );
+            }
+            break;
+        case Itemtype::MUSHROOM:
+            {
+                NewItem = new Mushroom(
+                Vector2{ X + 20, Y},   //Start position
+                Vector2{ 0, 0 },    //End position
+                Vector2{ 50, 50},      // size of coin
+                LoadTexture("assets/textures/MagicMushroom.png"),
+                Vector2{ 100, 0 }     //velocity
+                );
+            }
+            break;
+        default:
+            break;
+        }
+        Pair.second = NewItem;
         Level -> m_EnvironmentInteractive.push_back(Pair);
     }
     int NumberOfDrawables;
     fin >> NumberOfDrawables;
+    std::cout << "Number of Drawables: " << NumberOfDrawables << std::endl;
     for (int i = 0; i < NumberOfDrawables; i++)
     {
         int Type;
@@ -109,5 +137,14 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     int WorldType;
     fin >> WorldType;
     Level -> m_Ground -> setWorldType(WorldType);
+    bool HaveFlagPole;
+    fin >> HaveFlagPole;
+    if (HaveFlagPole)
+    {
+        float X;
+        fin >> X;
+        FlagPole* Pole = new FlagPole(X);
+        Level -> m_FlagPole = Pole;
+    }
     fin.close();
 }

@@ -5,6 +5,7 @@
 #include "AABBox.hpp"
 #include "MapLoader.hpp"
 #include "../Item/Item.h"
+#include "../characters/Enemy.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -15,7 +16,8 @@ enum LEVEL_RETURN_MESSAGE
     HIDDEN,
     WIN,
     LOSE,
-    QUIT
+    QUIT,
+    RESTART
 };
 
 class Level : public Subject
@@ -86,11 +88,11 @@ class Level : public Subject
         };
     friend class MapLoader;
     // private:
-        FlagPole m_FlagPole = FlagPole(1000);
+    
     protected:
+    FlagPole *m_FlagPole = nullptr;
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
-    std::vector<Item*> m_Items;
     std::vector<EnvironmentObject*> m_Environment;
     std::vector<std::pair<EnvironmentObjectInteractive*, Item*>> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
@@ -106,9 +108,12 @@ class Level : public Subject
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
     private:
+    Enemy* goomba = new Goomba(Vector2{200, 200});
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
         bool m_InControl = true;
+        bool m_TouchedFlag = false;
+        Vector2 m_StartPosition = {0, 0};
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
@@ -126,8 +131,9 @@ class Level : public Subject
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
         void resolveInteractiveEnvironmentCollisions();
+        void handleItemLogic();
         void applyBoundaries();
-        bool isInHole();
+        bool isPlayerInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();
@@ -212,6 +218,17 @@ class Level102 : public Level
         void render() override;
     public:
         static Level102* GetLevel102();
+};
+class HiddenLevel102 : public Level
+{
+    private:
+        HiddenLevel102();
+        ~HiddenLevel102();
+        void load() override;
+        void update(float DeltaTime) override;
+        void render() override;
+    public:
+        static HiddenLevel102* GetHiddenLevel102();
 };
 class HiddenLevel103 : public Level
 {
