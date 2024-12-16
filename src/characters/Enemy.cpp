@@ -27,9 +27,9 @@ Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position)
         case EnemyType::SHY_GUY:
             return ShyGuy::getShyGuy(position);
             break;
-        case EnemyType::LAKITU:
-            return Lakitu::getLakitu(position);
-            break;
+        // case EnemyType::LAKITU:
+        //     return Lakitu::getLakitu(position);
+        //     break;
     }
 }
 
@@ -383,8 +383,8 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    size = { 21, 29 };
-    speed = { 10, 0 };
+    size = { 42, 58 };
+    speed = { 25, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
@@ -638,8 +638,11 @@ KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position) {
     return &koopaTroopa;
 }
 
-Lakitu* Lakitu::getLakitu(Vector2 position) {
-    static Lakitu lakitu(position);
-    return &lakitu;
-}
+
+
+
+// Lakitu* Lakitu::getLakitu(Vector2 position) {
+//     static Lakitu lakitu(position);
+//     return &lakitu;
+// }
 

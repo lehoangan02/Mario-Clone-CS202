@@ -5,24 +5,6 @@
 #include <vector>
 
 
-class EnemyFactory
-{
-    public:
-        enum class EnemyType {
-            GOOMBA,
-            KOOPA_TROOPA,
-            PIRANHA_PLANT,
-            INVERSE_PIRANHA_PLANT,
-            LAKITU,
-            SHY_GUY
-        };
-    private:
-        EnemyFactory() = default;
-        EnemyFactory() = default;
-    public:
-        static EnemyFactory& GetEnemyFactory();
-        Enemy* CreateEnemy(EnemyType type, Vector2 position);
-};
 
 class Enemy{
 protected:
@@ -67,7 +49,7 @@ public:
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
     bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
-    virtual EnemyFactory::EnemyType getEnemyType() const = 0;
+    //virtual EnemyFactory::EnemyType getEnemyType() const = 0;
 
     void setBound(float left, float right, float top, float bottom) ;
     virtual Rectangle getBoundingBox() const = 0;
@@ -76,6 +58,26 @@ public:
 
     virtual void render();
 };
+
+class EnemyFactory
+{
+    public:
+        enum class EnemyType {
+            GOOMBA,
+            KOOPA_TROOPA,
+            PIRANHA_PLANT,
+            INVERSE_PIRANHA_PLANT,
+            LAKITU,
+            SHY_GUY
+        };
+    private:
+        EnemyFactory() = default;
+        ~EnemyFactory() = default;
+    public:
+        static EnemyFactory& GetEnemyFactory();
+        Enemy* CreateEnemy(EnemyType type, Vector2 position);
+};
+
 //isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
 class Goomba : public Enemy {
     friend class EnemyFactory;
@@ -85,7 +87,7 @@ private:
 public:
     Goomba(Vector2 position);
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
-    EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::GOOMBA; };
+    EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::GOOMBA; };
 
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
     void hit() override;
@@ -105,7 +107,7 @@ class KoopaTroopa : public Enemy {
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::KOOPA_TROOPA; };
+        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::KOOPA_TROOPA; };
 
         void setShell(bool isShell) { this->isShell = isShell; };
         bool getIsShell() const { return isShell; };
@@ -130,7 +132,7 @@ class PiranhaPlant : public Enemy {
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::PIRANHA_PLANT; };
+        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
@@ -156,7 +158,7 @@ class InversePiranhaPlant : public PiranhaPlant {
     public:
         InversePiranhaPlant(Vector2 position);
         InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::INVERSE_PIRANHA_PLANT; };
+        EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::INVERSE_PIRANHA_PLANT; };
 
         Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
         void update(float deltaTime) override;
@@ -175,7 +177,7 @@ class ShyGuy : public Enemy {
         ShyGuy(Vector2 position);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::SHY_GUY; };
+        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::SHY_GUY; };
 
         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
         void hit() override;
@@ -187,20 +189,22 @@ class ShyGuy : public Enemy {
 
 };
 
-class Lakitu : public Enemy {
-    friend class EnemyFactory;
-    public:
-        Lakitu(Vector2 position) : Enemy(position) {}
-        Lakitu(Vector2 position, Vector2 size, Vector2 speed);
-        Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::LAKITU; };
+// class Lakitu : public Enemy {
+//     friend class EnemyFactory;
+//     public:
+//         Lakitu(Vector2 position) : Enemy(position) {}
+//         Lakitu(Vector2 position, Vector2 size, Vector2 speed);
+//         Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+//         EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::LAKITU; };
 
-        Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
-        void hit() override;
-        void update(float deltaTime) override;
-        void render() override;
+//         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
+//         void hit() override;
+//         void update(float deltaTime) override;
+//         void render() override;
 
-    public:
-        static Lakitu* getLakitu(Vector2 position);
-};
+//     public:
+//         static Lakitu* getLakitu(Vector2 position);
+// };
+
+
 #endif // !ENEMY_HPP

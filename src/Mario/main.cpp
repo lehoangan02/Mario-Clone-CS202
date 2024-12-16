@@ -50,3 +50,33 @@ int main() {
     }
     CloseWindow();
 }
+
+// #include "../Application.hpp"
+
+// #include "../levels/Level.hpp"
+// int main() {
+//     const int screenWidth = 1024;
+//     const int screenHeight = 896;
+
+//     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+
+//     SetTargetFPS(60);
+//     LevelFactory& factory = LevelFactory::GetLevelFactory();
+//     Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
+
+//     while (!WindowShouldClose()) {
+
+//         BeginDrawing();
+//         ClearBackground(RAYWHITE);
+
+//         if(IsKeyPressed(KEY_P)) {
+//             level = factory.CreateLevel(LevelFactory::LEVEL_103);
+//         }
+//         level->update(GetFrameTime());
+
+//         level->render();
+//         EndDrawing();
+//     }
+
+//     CloseWindow();
+// }
