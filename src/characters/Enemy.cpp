@@ -662,13 +662,19 @@ void Projectile::update(float deltaTime) {
     if (active) {
         
         speed.y += 9.81f * deltaTime;
-
         
         position.x += speed.x * deltaTime;
-
        
         position.y += speed.y * deltaTime;
+
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 2;
+            texture = textures[currentTextureIndex];
+        }
     }
+
 }
 
 
