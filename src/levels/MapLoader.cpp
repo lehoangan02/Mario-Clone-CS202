@@ -61,7 +61,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         Itemtype MyItemType = static_cast<Itemtype>(ItemType);
         std::pair<EnvironmentObjectInteractive*, Item*> Pair;
         Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
-        Item* NewItem;
+        Item* NewItem = nullptr;
         switch (MyItemType)
         {
         case Itemtype::COIN:
