@@ -35,6 +35,7 @@ Character::Character(float jumpHeight)
 	this->invincibleSwitch = 0;
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
+	this->score = 0;
 	position = Vector2{ 20 , 0 };
 
 }
