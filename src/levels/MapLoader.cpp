@@ -28,6 +28,22 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     fin >> NumberOfEnemies;
     int NumberOfItems;
     fin >> NumberOfItems;
+    for (int i = 0; i < NumberOfItems; i++)
+    {
+        int Type;
+        fin >> Type;
+        float X, Y;
+        fin >> X >> Y;
+        switch (Type)
+        {
+        case 1:
+            
+            break;
+        
+        default:
+            break;
+        }
+    }
     int NumberOfStaticEnvironment;
     fin >> NumberOfStaticEnvironment;
     std::cout << "Number of Static Environment: " << NumberOfStaticEnvironment << std::endl;

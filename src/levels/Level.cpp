@@ -356,6 +356,7 @@ void Level::render()
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
         }
+        
     }
     for (auto& object : m_EnvironmentInteractive)
     {
@@ -367,7 +368,6 @@ void Level::render()
     {
         object->render();
     }
-    goomba->render();
     AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
     DrawBoundingBox(PlayerBox.getPosition(), PlayerBox.getSize(), RED, 10);
     m_Player->Draw();
@@ -445,7 +445,6 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    goomba->update(DeltaTime);
     if (m_FlagPole != nullptr)
     {
         m_FlagPole -> update();

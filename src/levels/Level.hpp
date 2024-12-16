@@ -104,12 +104,13 @@ class Level : public Subject
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
     Background m_Background;
+    Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+    IdleCoin* m_IdleCoin = new IdleCoin(Vector2{0, 0}, Vector2{40, 100}, coinTexture);
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
     MapLoader* m_MapLoader;
     private:
-    Enemy* goomba = new Goomba(Vector2{200, 200});
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
         bool m_InControl = true;
