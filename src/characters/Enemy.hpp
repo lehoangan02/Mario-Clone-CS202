@@ -69,7 +69,8 @@ class EnemyFactory
             PIRANHA_PLANT,
             INVERSE_PIRANHA_PLANT,
             LAKITU,
-            SHY_GUY
+            SHY_GUY,
+            PROJECTILE
         };
     private:
         EnemyFactory() = default;
@@ -190,22 +191,21 @@ class ShyGuy : public Enemy {
 
 };
 
-class Projectile {
+class Projectile : public Enemy {
 private:
-    Vector2 position;
-    Vector2 speed;
-    Texture2D texture;
     bool active;
-
 public:
-    Projectile(Vector2 position, Vector2 speed, Texture2D texture)
-        : position(position), speed(speed), texture(texture), active(true) {}
+    Projectile(Vector2 position);
 
+    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PROJECTILE; };
     void update(float deltaTime);
     void render();
+    void hit();
+
+    void setActivate(bool newActive);
     void deactivate();
     bool isActive();
-    Rectangle getBoundingBox();
+    Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 };
 
 class Lakitu : public Enemy {

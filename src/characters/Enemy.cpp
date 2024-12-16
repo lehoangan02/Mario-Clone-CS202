@@ -638,8 +638,57 @@ KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position) {
     return &koopaTroopa;
 }
 
+Projectile::Projectile(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    this->texture = LoadTexture("assets/textures/Projectile1.png");
+    textures.push_back(LoadTexture("assets/textures/Projectile1.png"));
+    textures.push_back(LoadTexture("assets/textures/Projectile2.png"));
+
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    size = { 66, 70 };
+    this->speed = {15, 9.81};
+    active = false;
+}
+
+void Projectile::update(float deltaTime) {
+    if (active) {
+        position.x += speed.x * deltaTime;
+        position.y += speed.y * deltaTime;
+    }
+}
+
+void Projectile::render() {
+    if (active) {
+        DrawTextureEx(texture, position, 0.0f, 1.0f, WHITE);
+    }
+}
 
 
+void Projectile::hit() {
+    if (isCollisionTrue) {
+        active = false;
+    }
+}
+
+void Projectile::setActivate(bool newActive) {
+    active = newActive;
+}
+
+void Projectile::deactivate() {
+    active = false;
+}
+
+bool Projectile::isActive() {
+    return active;
+}
 
 Lakitu* Lakitu::getLakitu(Vector2 position) {
     static Lakitu lakitu(position);
