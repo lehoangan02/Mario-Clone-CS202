@@ -37,15 +37,16 @@ private:
 	float switchTime;
 	float elapsedTime;
 	bool APPEARED;
-	static bool anyCoinHit;
+	bool hit;
 public:
 	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
 	void Update(float deltaTime);
 	void Draw();
-	static bool isHit();
+	bool isHit();
 	void stopDrawing();
 	Vector2 getPosition() const;
 	Vector2 getSize() const;
+	void setHit();
 	~IdleCoin();
 };
 class Item : public Observer {
@@ -108,6 +109,7 @@ private:
 	float riseProgress;
 	float riseSpeed;
 	bool FinishedSpawning;
+	bool hit;
 public:
 	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
 	void onNotify() override;
@@ -120,7 +122,8 @@ public:
 	void Rising(float deltaTime);
 	Itemtype getItemID() const override;
 	bool isFinishSpawning() { return FinishedSpawning; }
-	
+	bool isHit();
+	void setHit();
 
 };
 class FireFlower : public Item {
