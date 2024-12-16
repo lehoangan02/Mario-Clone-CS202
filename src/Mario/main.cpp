@@ -18,8 +18,7 @@ int main() {
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
-    KoopaTroopa koopa({300, 300});
-    koopa.setBound(100, 500 , 0, 768);
+    Projectile koopa({100, 100});
     
     while(!WindowShouldClose()) {
         BeginDrawing();
@@ -40,7 +39,6 @@ int main() {
         koopa.update(0.01f);
         koopa.render();
         if (IsKeyDown(KEY_SPACE)) {
-            koopa.setCollisionTrue(true);
             koopa.hit();
         }
         // shy.update(0.01f);

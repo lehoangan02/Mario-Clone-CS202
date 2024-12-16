@@ -654,20 +654,28 @@ Projectile::Projectile(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
     size = { 66, 70 };
-    this->speed = {15, 9.81};
-    active = false;
+    this->speed = {25, 17};
+    active = true;
 }
 
 void Projectile::update(float deltaTime) {
     if (active) {
+        
+        speed.y += 9.81f * deltaTime;
+
+        
         position.x += speed.x * deltaTime;
+
+       
         position.y += speed.y * deltaTime;
     }
 }
 
+
+
 void Projectile::render() {
     if (active) {
-        DrawTextureEx(texture, position, 0.0f, 1.0f, WHITE);
+        DrawTextureEx(texture, position, 0.0f, 0.5f, WHITE);
     }
 }
 
@@ -690,8 +698,8 @@ bool Projectile::isActive() {
     return active;
 }
 
-Lakitu* Lakitu::getLakitu(Vector2 position) {
-    static Lakitu lakitu(position);
-    return &lakitu;
-}
+// Lakitu* Lakitu::getLakitu(Vector2 position) {
+//     static Lakitu lakitu(position);
+//     return &lakitu;
+// }
 

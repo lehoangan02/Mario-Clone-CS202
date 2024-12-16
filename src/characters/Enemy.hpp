@@ -208,26 +208,26 @@ public:
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 };
 
-class Lakitu : public Enemy {
-private:
-    std::vector<std::shared_ptr<Projectile>> projectiles;
-    Texture2D projectileTexture;
-    float shootTime;
-    float curentTimer;
+// class Lakitu : public Enemy {
+// private:
+//     std::vector<std::shared_ptr<Projectile>> projectiles;
+//     Texture2D projectileTexture;
+//     float shootTime;
+//     float curentTimer;
 
-public:
-    Lakitu(Vector2 position);
-    Lakitu(Vector2 position, Vector2 size, Vector2 speed);
-    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
+// public:
+//     Lakitu(Vector2 position);
+//     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
+//     EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
 
-    void hit() override;
-    void update(float deltaTime) override;
-    void render() override;
-    void shoot();
+//     void hit() override;
+//     void update(float deltaTime) override;
+//     void render() override;
+//     void shoot();
 
-public:
-    static Lakitu* getLakitu(Vector2 position);
-};
+// public:
+//     static Lakitu* getLakitu(Vector2 position);
+// };
 
 
 #endif // !ENEMY_HPP
