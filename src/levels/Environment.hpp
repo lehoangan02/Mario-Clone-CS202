@@ -277,6 +277,8 @@ class EndPipe : public EnvironmentObject
     EndPipe(Vector2 Position, Vector2 Size, int Type);
     ~EndPipe();
     int getType() { return (m_Type); };
+    virtual void render() = 0;
+    virtual void update() = 0;
     private:
     int m_Type;
 

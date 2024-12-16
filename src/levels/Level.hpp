@@ -34,6 +34,7 @@ class Level : public Subject
         void addEndPipe(EndPipe* Pipe);
         void attachPlayer(Character* Player);
         bool update();
+        bool isPlayerInPipe() { return inPipe; };
     };
     class Background
     {
@@ -97,7 +98,7 @@ class Level : public Subject
     std::vector<std::pair<EnvironmentObjectInteractive*, Item*>> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
     std::vector<Lift*> m_Lifts;
-    std::vector<EndPipeTop*> m_EndPipes;
+    std::vector<EndPipe*> m_EndPipes;
     Character* m_Player;
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};

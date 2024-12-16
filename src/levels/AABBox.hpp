@@ -45,3 +45,4 @@ bool isCollidingHorizontallyRawLess(const AABBox &AABBox1, const AABBox &AABBox2
 bool isCollidingHorizontally(const AABBox &AABBox1, const AABBox &AABBox2);
 // Function to draw a bounding box
 void DrawBoundingBox(Vector2 position, Vector2 size, Color color);
+void DrawBoundingBox(Vector2 position, Vector2 size, Color color, float Thickness);

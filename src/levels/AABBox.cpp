@@ -266,3 +266,14 @@ void DrawBoundingBox(Vector2 position, Vector2 size, Color color) {
     DrawLineV(bottomRight, bottomLeft, color); // Bottom edge
     DrawLineV(bottomLeft, topLeft, color);     // Left edge
 }
+void DrawBoundingBox(Vector2 position, Vector2 size, Color color, float Thickness)
+{
+    Vector2 topLeft = position;
+    Vector2 topRight = { position.x + size.x, position.y };
+    Vector2 bottomLeft = { position.x, position.y + size.y };
+    Vector2 bottomRight = { position.x + size.x, position.y + size.y };
+    DrawLineEx(topLeft, topRight, Thickness, RED);
+    DrawLineEx(topRight, bottomRight, Thickness, RED);
+    DrawLineEx(bottomRight, bottomLeft, Thickness, RED);
+    DrawLineEx(bottomLeft, topLeft, Thickness, RED);
+}

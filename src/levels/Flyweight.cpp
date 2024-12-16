@@ -344,8 +344,8 @@ EndPipeTopTextureFlyWeight* EndPipeTopTextureFlyWeight::GetEndPipeTextureFlyWeig
 }
 void EndPipeTopTextureFlyWeight::render(Vector2 Position)
 {
-    Vector2 AdditionalPosition = {Position.x, Position.y - 100};
-    DrawTextureEx(m_AdditionalTexture, Position, 0.0f, 6.25, WHITE);
+    Vector2 AdditionalPosition = {Position.x + 100, Position.y - 50};
+    DrawTextureEx(m_AdditionalTexture, AdditionalPosition, 0.0f, 3.125, WHITE);
     DrawTextureEx(m_Texture, Position, 0.0f, 3.125, WHITE);
 }
 EndPipeSideTextureFlyWeight::EndPipeSideTextureFlyWeight()
@@ -363,7 +363,14 @@ EndPipeSideTextureFlyWeight* EndPipeSideTextureFlyWeight::GetEndPipeSideTextureF
 }
 void EndPipeSideTextureFlyWeight::render(Vector2 Position)
 {
-    DrawTextureEx(m_Texture, Position, 0.0f, 6.25, WHITE);
+    Vector2 AdditionalPosition = {Position.x + 100, Position.y - 50};
+    int Num = 35;
+    for (int i = 0; i < Num; i++)
+    {
+        DrawTextureEx(m_AdditionalTexture, AdditionalPosition, 0.0f, 3.125, WHITE);
+        AdditionalPosition.y -= 50;
+    }
+    DrawTextureEx(m_Texture, Position, 0.0f, 3.125, WHITE);
 }
 
 
