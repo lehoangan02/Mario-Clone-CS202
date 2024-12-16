@@ -190,22 +190,39 @@ class ShyGuy : public Enemy {
 
 };
 
-// class Lakitu : public Enemy {
-//     friend class EnemyFactory;
-//     public:
-//         Lakitu(Vector2 position) : Enemy(position) {}
-//         Lakitu(Vector2 position, Vector2 size, Vector2 speed);
-//         Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-//         EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::LAKITU; };
+class Projectile {
+private:
+    Vector2 position;
+    Vector2 speed;
+    Texture2D texture;
+    bool active;
 
-//         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
-//         void hit() override;
-//         void update(float deltaTime) override;
-//         void render() override;
+public:
+    Projectile(Vector2 position, Vector2 speed, Texture2D texture)
+        : position(position), speed(speed), texture(texture), active(true) {}
 
-//     public:
-//         static Lakitu* getLakitu(Vector2 position);
-// };
+    void update(float deltaTime);
+    void render();
+    void deactivate();
+    bool isActive();
+    Rectangle getBoundingBox();
+};
+
+class Lakitu : public Enemy {
+private:
+    std::vector<std::shared_ptr<Projectile>> projectiles;
+    Texture2D projectileTexture;
+
+public:
+    Lakitu(Vector2 position);
+    Lakitu(Vector2 position, Vector2 size, Vector2 speed);
+    EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::LAKITU; };
+
+    void hit() override;
+    void update(float deltaTime) override;
+    void render() override;
+    void shoot();
+};
 
 
 #endif // !ENEMY_HPP
