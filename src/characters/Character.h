@@ -23,6 +23,14 @@ private:
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
+	bool isflicking;
+	int flickSwitch;
+	float flickDuration;
+	bool isVisible;
+	int invincibleSwitch;
+	float invincibleDuration;
+	bool isInvincible;
+	Color InvincibleColor;
 public:
 
 	Character(float jumpHeight);
@@ -57,6 +65,13 @@ public:
 
 	void powerUp();
 	void powerDown(); //need invicile effect
+
+	void touchEnemy();
+	bool isDead() { return isDie; };
+	bool isflick() { return isflicking; };
+
+	void invincile() { this->isInvincible = true; };
+	bool isSuper() { return isInvincible; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -75,6 +90,7 @@ protected:
 	bool canJump;
 	bool fire;
 	bool brake;
+	bool isDie;
 
 	float scale ;
 

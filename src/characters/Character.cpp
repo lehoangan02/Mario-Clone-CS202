@@ -26,6 +26,15 @@ Character::Character(float jumpHeight)
 	this->isChangingForm = false;
 	this->pullFlag = false;
 	this->isWin = false;
+	this->isDie = false;
+	this->isflicking = false;
+	this->flickSwitch = 0;
+	this->flickDuration = 3.0f;
+	this->isVisible = true;
+	this->invincibleDuration = 6.0f;
+	this->invincibleSwitch = 0;
+	this->isInvincible = false;
+	this->InvincibleColor = WHITE;
 	position = Vector2{ 20 , 0 };
 
 }
@@ -80,6 +89,12 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_K)) {
 		powerDown();
 	}
+	if (IsKeyPressed(KEY_H)) {
+		touchEnemy();
+	}
+	if (IsKeyPressed(KEY_I)) {
+		invincile();
+	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
@@ -112,17 +127,46 @@ void Character::updateFormChangeAnimation() {
 			isChangingForm = false;
 		}
 	}
+	if (isflicking) {
+		flickSwitch += 1;
+		if (flickSwitch % 3 ==0) isVisible = !isVisible;
+
+		flickDuration -= GetFrameTime();
+		if (flickDuration <0.0f) {
+			isflicking = false;
+			isVisible = true;
+			flickDuration = 3.0f;
+		}
+	}
+	if (isInvincible) {
+		invincibleSwitch += 1;
+		if (invincibleSwitch % 21 == 0) InvincibleColor = Color { 0, 228, 48, 200 };
+		else if (invincibleSwitch % 21 == 7) InvincibleColor = Color{ 190, 33, 55, 200 };
+		else if (invincibleSwitch % 21 == 14) InvincibleColor = Color{ 255,255,255,200 };
+
+		invincibleDuration -= GetFrameTime();
+		if (invincibleDuration < 0.0f) {
+			isInvincible = false;
+			InvincibleColor = WHITE;
+			invincibleDuration = 6.0f;
+		}
+	}
 	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
 	std::cout << "scale: " << scale << std::endl;*/
 }
 void Character::hitFlag(Vector2 flagPos) {
-	/*if (!pullFlag) return;
-	static const float Speed = 100;
-	static const float EndPosition = 750 - 200;
-	this->setPosition({flagPos.x , Speed*GetFrameTime()});
+	/*if (!pullFlag) {
+		std::cout << "not pull flag" << std::endl;
+		return;
+	};
+	static const float Speed =100;
+	static const float EndPosition = 600;
+	position.x = flagPos.x;
+	position.y += Speed*
 	if (position.y > EndPosition)
 	{
-		position.y = EndPosition;
+		std::cout << "Cc";
+		position.y = 1;
 		pullFlag = false;
 	}*/
 }
@@ -136,24 +180,37 @@ void Character::powerUp() {
 	}
 }
 void Character::powerDown() {
-	//add invicible effect for few seconds and maybe there should be some effect when turning small
+	isflicking = true;
+	flickSwitch = 0;
 	changeForm(0);
+}
+
+void Character::touchEnemy() {
+    if (form != 0) {
+		powerDown();
+		return;
+	}
+	else {
+		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+		isDie = true;
+	}
 }
 void Character::Draw()
 {
+	if (!isVisible) return;
 	//std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
 	Rectangle destRec = { position.x, position.y, fabs(sourceRec.width) * scale, sourceRec.height * scale }; // Destination rectangle with scaling
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
-	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, WHITE);
+	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
 };
 
 Mario::Mario() : Character(300.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
-	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
 	imageCounts.push_back({ 6,1 });
 	imageCounts.push_back({ 7,1 });
 	float switchTime = 0.1f;
@@ -180,9 +237,13 @@ void Mario::Update(float deltaTime) {
 	else if (velocity.x < 0.0f) {
 		faceRight = false;
 	}
+
+	if (isDie) {
+		velocity.x = 0;
+		state = 5;
+	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
-	hitFlag({ 1000, 1000 });
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 }
 
