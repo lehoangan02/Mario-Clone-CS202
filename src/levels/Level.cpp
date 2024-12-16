@@ -150,12 +150,14 @@ void Level::resolveInteractiveEnvironmentCollisions()
 }
 void Level::applyBoundaries()
 {
+    // std::cout << "Applying Boundaries" << std::endl;
     if (isPlayerInHole())
     {
         // std::cout << "In Hole" << std::endl;
     }
     else if (m_Player->GetPosition().y > m_Ground->m_Position.y - m_Player->GetSize().y)
     {
+        // std::cout << "On Ground" << std::endl;
         m_Player->setPosition(Vector2{m_Player->GetPosition().x, m_Ground->m_Position.y - m_Player->GetSize().y});
         m_Player->resetVelocity();
         m_Player->onPlatform();
@@ -269,18 +271,20 @@ void Level::handleItemLogic()
             }
         }
     }
-    // for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
-    // {
-    //     Item* CurrentItem = m_EnvironmentInteractive[i].second;
-    //     if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
-    //     {
-    //         Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
-    //         if (MushroomItem->GetPosition().x < m_CameraPosition.x - 100)
-    //         {
-    //             Mushroom -> 
-    //         }
-    //     }
-    // }
+    for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
+    {
+        Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
+        {
+            Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
+            AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> powerUp();
+            }
+        }
+    }
 }
 void Level::render()
 {
@@ -364,6 +368,8 @@ void Level::render()
         object->render();
     }
     goomba->render();
+    AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+    DrawBoundingBox(PlayerBox.getPosition(), PlayerBox.getSize(), RED, 10);
     m_Player->Draw();
     for (auto& object : m_EndPipes)
     {
