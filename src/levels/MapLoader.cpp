@@ -129,10 +129,18 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
-        EndPipeTop* Pipe = new EndPipeTop(Vector2{X, 750 - Y});
-        Level -> m_EndPipeHandler.addEndPipe(Pipe);
-        Level -> m_EndPipes.push_back(Pipe);
-        
+        if (Type == EndPipeType::TOP)
+        {
+            EndPipeTop* Pipe = new EndPipeTop(Vector2{X, 750 - Y});
+            Level -> m_EndPipeHandler.addEndPipe(Pipe);
+            Level -> m_EndPipes.push_back(Pipe);
+        }
+        else
+        {
+            EndPipeSide* Pipe = new EndPipeSide(Vector2{X, 750 - Y});
+            Level -> m_EndPipeHandler.addEndPipe(Pipe);
+            Level -> m_EndPipes.push_back(Pipe);
+        }
     }
     int WorldType;
     fin >> WorldType;

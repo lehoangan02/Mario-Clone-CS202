@@ -198,6 +198,8 @@ class EndPipeSideTextureFlyWeight : public StaticFlyweight // Singleton Flyweigh
     private:
         EndPipeSideTextureFlyWeight();
         ~EndPipeSideTextureFlyWeight();
+    private:
+        Texture2D m_AdditionalTexture = LoadTexture("assets/textures/PipeBottom.png");
     public:
         static EndPipeSideTextureFlyWeight* GetEndPipeSideTextureFlyWeight();
         void render(Vector2 Position);

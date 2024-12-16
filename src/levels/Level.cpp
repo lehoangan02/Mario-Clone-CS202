@@ -269,6 +269,18 @@ void Level::handleItemLogic()
             }
         }
     }
+    // for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
+    // {
+    //     Item* CurrentItem = m_EnvironmentInteractive[i].second;
+    //     if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
+    //     {
+    //         Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
+    //         if (MushroomItem->GetPosition().x < m_CameraPosition.x - 100)
+    //         {
+    //             Mushroom -> 
+    //         }
+    //     }
+    // }
 }
 void Level::render()
 {
@@ -380,7 +392,7 @@ void Level::update(float DeltaTime)
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
-    else if (!isPlayerFinished && m_InControl && !m_TouchedFlag)
+    else if (!isPlayerFinished && m_InControl && !m_TouchedFlag && !m_EndPipeHandler.isPlayerInPipe())
     {
 		FullControl control(m_Player);
         control.execute(DeltaTime);
