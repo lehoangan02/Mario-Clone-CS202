@@ -48,7 +48,8 @@ public:
 
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
-    void setHit(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
+
+    virtual void setHit(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
     bool isHit() const { return isCollisionTrue; };
     
     void setBound(float left, float right, float top, float bottom) ;
@@ -136,7 +137,8 @@ class PiranhaPlant : public Enemy {
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
-        void setIsPauseCollision(bool isPauseCollision) { this->isPauseCollision = isPauseCollision; };
+
+        void setHit(bool isPauseCollision) override { this->isPauseCollision = isPauseCollision; };
         virtual Rectangle getBoundingBox () const { return {position.x, position.y, size.x, size.y - heightInGround}; };
 
         void hit() override;
@@ -163,7 +165,6 @@ class InversePiranhaPlant : public PiranhaPlant {
         Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
         void update(float deltaTime) override;
         void render() override;
-        void test();
 
     public:
         static InversePiranhaPlant* getInversePiranhaPlant(Vector2 position);
