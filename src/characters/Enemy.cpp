@@ -2,6 +2,38 @@
 
 #include "raylib.h"
 
+
+EnemyFactory& EnemyFactory::GetEnemyFactory()
+{
+    static EnemyFactory Factory;
+    return Factory;
+}
+Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position)
+{
+    switch (type)
+    {
+        case EnemyType::GOOMBA:
+            return Goomba::getGoomba(position);
+            break;
+        case EnemyType::KOOPA_TROOPA:
+            return KoopaTroopa::getKoopaTroopa(position);
+            break;
+        case EnemyType::PIRANHA_PLANT:
+            return PiranhaPlant::getPiranhaPlant(position);
+            break;
+        case EnemyType::INVERSE_PIRANHA_PLANT:
+            return InversePiranhaPlant::getInversePiranhaPlant(position);
+            break;
+        case EnemyType::SHY_GUY:
+            return ShyGuy::getShyGuy(position);
+            break;
+        case EnemyType::LAKITU:
+            return Lakitu::getLakitu(position);
+            break;
+    }
+}
+
+
 void Enemy::accelerate(float deltaTime) {
     const float gravity = 9.8f; 
     speed.y += gravity * deltaTime; 
@@ -158,6 +190,10 @@ void Goomba::render() {
     if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
 }
 
+Goomba* Goomba::getGoomba(Vector2 position) {
+    static Goomba goomba(position);
+    return &goomba;
+}
 
 PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -257,6 +293,10 @@ void PiranhaPlant::hit() {
     isDead = true;
 }
 
+PiranhaPlant* PiranhaPlant::getPiranhaPlant(Vector2 position) {
+    static PiranhaPlant piranhaPlant(position);
+    return &piranhaPlant;
+}
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
     heightInGround = 66;
@@ -323,10 +363,9 @@ void InversePiranhaPlant::render() {
     }
 }
 
-void InversePiranhaPlant::test() {
-    if (IsKeyDown(KEY_A)) {
-        setIsPauseCollision(true);
-    }
+InversePiranhaPlant* InversePiranhaPlant::getInversePiranhaPlant(Vector2 position) {
+    static InversePiranhaPlant inversePiranhaPlant(position);
+    return &inversePiranhaPlant;
 }
 
 ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
@@ -443,6 +482,11 @@ void ShyGuy::render() {
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
         }
     }
+}
+
+ShyGuy* ShyGuy::getShyGuy(Vector2 position) {
+    static ShyGuy shyGuy(position);
+    return &shyGuy;
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
@@ -589,4 +633,13 @@ void KoopaTroopa::render() {
     }
 }
 
+KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position) {
+    static KoopaTroopa koopaTroopa(position);
+    return &koopaTroopa;
+}
+
+Lakitu* Lakitu::getLakitu(Vector2 position) {
+    static Lakitu lakitu(position);
+    return &lakitu;
+}
 
