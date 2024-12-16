@@ -72,13 +72,14 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
-    size = { 16, 16 };
+    size = { 60, 60 };
     speed = { 40, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
     isDying = false;
     isCollisionTrue = false;
+
 }
 
 Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
