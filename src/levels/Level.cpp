@@ -48,6 +48,14 @@ Level::~Level()
     {
         delete object;
     }
+    for (auto& object : m_Enemies)
+    {
+        delete object;
+    }
+    for (auto& object : m_IdleCoin)
+    {
+        delete object;
+    }
     
 }
 void Level::attachPlayer(Character* Player)
@@ -72,12 +80,30 @@ void Level::resolveEnvironmentCollisions()
             {
                 if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
-                    m_Player->resetVelocity();
+                    if (m_LevelID == LevelFactory::LEVEL_103)
+                    {
+                        m_Player->resetVelocity();
+                    }
+                    else if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f))
+                    {
+                        m_Player->resetVelocity();
+                    }
                 }
                 else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
-                    m_Player->resetVelocity();
-                    m_Player->onPlatform();
+                    
+                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103)
+                    {
+                        
+                        m_Player->resetVelocity();
+                        m_Player->onPlatform();
+                    }
+                    else if (m_LevelID == LevelFactory::LEVEL_103)
+                    {
+                        std::cout << "Resetting Velocity 103" << std::endl;
+                        m_Player->resetVelocity();
+                        m_Player->onPlatform();
+                    }
                 }
                 
             }
@@ -277,12 +303,25 @@ void Level::handleItemLogic()
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
+            if (MushroomItem->isHit()) continue;
             AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
             AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player -> powerUp();
+                MushroomItem->setHit();
             }
+        }
+    }
+    for (auto& object : m_IdleCoin)
+    {
+        if (object->isHit()) continue;
+        object->Update(GetFrameTime());
+        AABBox ItemBox = AABBox(object->getPosition(), object->getSize());
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        if (isColliding(ItemBox, PlayerBox) && !object->isHit())
+        {
+            object->setHit();
         }
     }
 }
@@ -354,6 +393,7 @@ void Level::render()
         if (object.second->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
+            if (MushroomItem->isHit()) continue;
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
         }
         
@@ -370,6 +410,11 @@ void Level::render()
     }
     AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
     DrawBoundingBox(PlayerBox.getPosition(), PlayerBox.getSize(), RED, 10);
+    for (auto& object : m_IdleCoin)
+    {
+        if (object->isHit()) continue;
+        object->Draw();
+    }
     m_Player->Draw();
     for (auto& object : m_EndPipes)
     {
@@ -392,7 +437,7 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    isPlayerFinished = isPlayerInHole();
+    
 	if (isPlayerFinished)
 	{
 		InHole control(m_Player);
@@ -454,6 +499,7 @@ void Level::update(float DeltaTime)
     resolveInteractiveEnvironmentCollisions();
     handleItemLogic();
     resolveFlagPoleCollisions();
+    isPlayerFinished = isPlayerInHole();
 }
 bool Level::isPlayerInHole()
 {

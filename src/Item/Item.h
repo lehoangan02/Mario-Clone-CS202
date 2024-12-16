@@ -19,7 +19,7 @@ constexpr float STARMAN_FRAME_TIME = 0.5f;
 #include "../characters/Character.h"
 #include "../Oberver/Observer.hpp"
 
-enum class Itemtype {
+enum Itemtype {
 	COIN,
 	MUSHROOM,
 	FIREFLOWER,
