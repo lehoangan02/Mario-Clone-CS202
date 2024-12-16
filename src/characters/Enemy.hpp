@@ -212,11 +212,13 @@ class Lakitu : public Enemy {
 private:
     std::vector<std::shared_ptr<Projectile>> projectiles;
     Texture2D projectileTexture;
+    float shootTime;
+    float curentTimer;
 
 public:
     Lakitu(Vector2 position);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
-    EnemyFactory::EnemyType getEnemyType() const override { return EnemyFactory::EnemyType::LAKITU; };
+    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
 
     void hit() override;
     void update(float deltaTime) override;
