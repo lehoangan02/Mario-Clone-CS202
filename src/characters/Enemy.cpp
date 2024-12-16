@@ -641,8 +641,8 @@ KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position) {
 
 
 
-// Lakitu* Lakitu::getLakitu(Vector2 position) {
-//     static Lakitu lakitu(position);
-//     return &lakitu;
-// }
+Lakitu* Lakitu::getLakitu(Vector2 position) {
+    static Lakitu lakitu(position);
+    return &lakitu;
+}
 

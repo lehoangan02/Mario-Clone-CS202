@@ -224,6 +224,9 @@ public:
     void update(float deltaTime) override;
     void render() override;
     void shoot();
+
+public:
+    static Lakitu* getLakitu(Vector2 position);
 };
 
 
