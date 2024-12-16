@@ -20,12 +20,11 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
 }
 IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
     : position(pos), size(size), texture(tex), switchTime(COIN_FRAME_TIME), totalFrames(COIN_FRAME_COUNT), 
-    APPEARED(true), elapsedTime(0), currentFrame(0) {
+    APPEARED(true), elapsedTime(0), currentFrame(0), hit(false) {
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
-    IdleCoin::anyCoinHit = true;
+    
     
 }
-bool IdleCoin::anyCoinHit = false;
 void IdleCoin::Update(float deltaTime) {
     if (!APPEARED) return;
     elapsedTime += deltaTime;
@@ -46,7 +45,11 @@ void IdleCoin::Draw() {
     DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
 }
 bool IdleCoin::isHit() {
-    return IdleCoin::anyCoinHit;
+    return hit;
+}
+void IdleCoin::setHit() {
+    hit = true;
+    APPEARED = false;
 }
 Vector2 IdleCoin::getPosition() const { return position; }
 Vector2 IdleCoin::getSize() const { return size; }
@@ -171,7 +174,7 @@ void Coin::Draw() { //animation
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
-    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
@@ -182,6 +185,13 @@ Itemtype Mushroom::getItemID() const {
 void Mushroom::onNotify() {
     isRising = true;
 
+}
+void Mushroom::setHit() {
+    hit = true;
+    APPEARED = false;
+}
+bool Mushroom::isHit() {
+    return hit;
 }
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
