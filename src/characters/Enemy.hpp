@@ -26,6 +26,7 @@ protected:
     bool isDown;
     bool isRight;
     bool isDead;
+    bool isCollisionTrue;
 
     float animationTime;       
     float timer;               
@@ -35,6 +36,8 @@ protected:
 public:
     Enemy() = default;
     Enemy(Vector2 position) : position(position), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
 
     void accelerate(float deltaTime);
     virtual void flipDirection();
@@ -52,6 +55,7 @@ public:
 
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
+    bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
     virtual EnemyType getEnemyType() const = 0;
 
     void setBound(float left, float right, float top, float bottom) ;
@@ -64,7 +68,6 @@ public:
 //isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
 class Goomba : public Enemy {
 private:
-    bool isCollisionTrue;
     bool isDying;
     float dyingTime;
 public:
@@ -73,11 +76,9 @@ public:
     EnemyType getEnemyType() const override { return EnemyType::GOOMBA; };
 
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
-    bool setCollisionTrue(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
     void hit() override;
     void update(float deltaTime) override;
     void render() override;
-    void test();
 };
 
 class KoopaTroopa : public Enemy {
@@ -100,7 +101,6 @@ class PiranhaPlant : public Enemy {
         void hit() override;
         virtual void update(float deltaTime) override;
         virtual void render() override;
-        void test();
 };
 //size of piranha plant should be scale of 32x66
 //position is the top left of piranha full out of ground.
@@ -122,7 +122,19 @@ class InversePiranhaPlant : public PiranhaPlant {
 class Lakitu : public Enemy {
 };
 
+//size of shy guy should be scale of 21x29
+//neu va cham dung thi shy guy moi bien mat(tuc ham hit duoc goi se set isDead = true neu isCollisionTrue = true)
 class ShyGuy : public Enemy {
+    public:
+        ShyGuy(Vector2 position);
+        ShyGuy(Vector2 position, Vector2 size, Vector2 speed);
+        ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+        EnemyType getEnemyType() const override { return EnemyType::SHY_GUY; };
+
+        Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
+        void hit() override;
+        void update(float deltaTime) override;
+        void render() override;
 
 };
 #endif // !ENEMY_HPP

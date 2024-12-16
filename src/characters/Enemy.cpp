@@ -78,6 +78,7 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDown = false;
     isDead = false;
     isDying = false;
+    isCollisionTrue = false;
 }
 
 Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
@@ -105,6 +106,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     isDown = false;
     isDead = false;
     isDying = false;
+    isCollisionTrue = false;
 }
 void Goomba::hit() {
     if (isCollisionTrue) {
@@ -143,7 +145,7 @@ void Goomba::update(float deltaTime) {
     if (position.x < leftBound || position.x + texture.width * size.x/16 > rightBound) {
         isRight = !isRight;
     }
-    if (position.y > bottomBound) {
+    if (position.y + size.y> bottomBound) {
         isDown = false;
     }
 
@@ -156,29 +158,6 @@ void Goomba::render() {
     if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
 }
 
-void Goomba::test() {
-    if(IsKeyDown(KEY_A)) {
-        accelerate(0.1f);
-    }
-    if (IsKeyDown(KEY_B)) {
-        flipDirection();
-    }
-    if (IsKeyDown(KEY_C)) {
-        hit();
-    }
-    if (IsKeyDown(KEY_D)) {
-        resetSpeedY();
-    }
-    if (IsKeyDown(KEY_E)) {
-        setDirection(slidingDirection::right);
-    }
-    if (IsKeyDown(KEY_F)) {
-        setDirection(slidingDirection::down);
-    }
-    if (IsKeyDown(KEY_G)) {
-        setDirection(slidingDirection::left);
-    }  
-}
 
 PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -207,7 +186,7 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     bottomBound = position.y;
 }
 
-PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
+PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position, size, speed) {
     this->position = position;
     this->originPosition = position;
     
@@ -222,8 +201,6 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    this->size = size;
-    this->speed = speed;
     isRight = false;
     isDown = false;
     isDead = false;
@@ -280,14 +257,6 @@ void PiranhaPlant::hit() {
     isDead = true;
 }
 
-void PiranhaPlant::test() {
-    if (IsKeyDown(KEY_A)) {
-        hit();
-    }
-    if (IsKeyDown(KEY_B)) {
-        setIsPauseCollision(true);
-    }
-}
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
     heightInGround = 66;
@@ -359,3 +328,120 @@ void InversePiranhaPlant::test() {
         setIsPauseCollision(true);
     }
 }
+
+ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    size = { 21, 29 };
+    speed = { 10, 0 };
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isCollisionTrue = false;
+}
+
+ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isCollisionTrue = false;
+}
+
+ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isCollisionTrue = false;
+}
+
+void ShyGuy::hit() {
+    if (isCollisionTrue) {
+        isDead = true;
+    }
+}
+
+void ShyGuy::update(float deltaTime) {
+    if (isDead) return;
+
+    if (isRight) {
+        position.x += speed.x * deltaTime;
+    } else {
+        position.x -= speed.x * deltaTime;
+    }
+
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        texture = textures[currentTextureIndex];
+    }
+
+    if (position.x < leftBound) {
+        isRight = true;
+    }
+    if (position.x + size.x > rightBound) {
+        isRight = false;
+    }
+
+    if (position.y <= topBound) {
+        isDown = true;
+    }
+
+    if (position.y + size.y >= bottomBound) {
+        isDown = false;
+    }
+}
+
+void ShyGuy::render() {
+    if (!isDead) {
+        if (isRight == false) {
+            DrawTextureEx(texture, position, 0.0f, size.x/21, WHITE);
+        } else {
+            Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
+            Rectangle destRec = { position.x, position.y, size.x, size.y };
+            Vector2 origin = { 0.0f, 0.0f };
+            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+        }
+    }
+}
+

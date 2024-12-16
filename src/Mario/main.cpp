@@ -17,27 +17,28 @@ int main() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
-    InversePiranhaPlant goomba({300, 300}, {48, 99} , {0, 10}); //size should be scale of 32x66
-    PiranhaPlant goomba2({400, 300}, {48, 99} , {0, 10}); //size should be scale of 32x66
-    //Texture2D texture = LoadTexture("./assets/textures/PiranhaPlant_1.png");
+    
+    ShyGuy shy({300, 300}, {42, 58}, {10,0}, 100, 700, 600, 900);
     while(!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawRectangleLines(300, 300, 48, 99, RED);
-        DrawRectangleLines(400, 300, 48, 99, RED);
+        DrawRectangleLines(300, 300, 42, 58, RED);
+        // DrawRectangleLines(400, 300, 48, 99, RED);
 
-        DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
-        goomba.test();
-        goomba.update(0.01f);
-        goomba.render();
-        DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
+        // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
+        // goomba.test();
+        // goomba.update(0.01f);
+        // goomba.render();
+        // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
 
-        goomba2.test();
-        goomba2.update(0.01f);
-        goomba2.render();
-        //DrawTexture(LoadTexture("./assets/textures/PiranhaPlant_0.png"), 300, 300, WHITE);
-        //DrawTexturePro(texture, {0,0,32,66}, {300, 300, 32, 66}, {32, 66}, 180.0f, WHITE);
+        // goomba2.test();
+        // goomba2.update(0.01f);
+        // goomba2.render();
+        DrawLineEx({700,100}, {700,400}, 2.0f, RED);
+        shy.update(0.01f);
+        shy.render();
         EndDrawing();
+        
     }
     CloseWindow();
 }
