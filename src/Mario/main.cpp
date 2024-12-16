@@ -99,6 +99,8 @@ int main(void)
         starman->Draw();
         level->render();
         DrawBoundingBox(mushroom->GetPosition(), mushroom->GetSize(), RED);
+        DrawBoundingBox(fireflower->GetPosition(), fireflower->GetSize(), RED);
+        DrawBoundingBox(starman->GetPosition(), starman->GetSize(), RED);
         // DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, GRAY);
         // DrawText("Congrats! You created your first window!", 190, 200, 20, BLACK);
         EndDrawing();
