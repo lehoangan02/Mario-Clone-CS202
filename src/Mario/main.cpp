@@ -18,7 +18,9 @@ int main() {
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
-    ShyGuy shy({300, 300}, {42, 58}, {10,0}, 100, 700, 600, 900);
+    KoopaTroopa koopa({300, 300});
+    koopa.setBound(100, 500 , 0, 768);
+    
     while(!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -35,8 +37,14 @@ int main() {
         // goomba2.update(0.01f);
         // goomba2.render();
         DrawLineEx({700,100}, {700,400}, 2.0f, RED);
-        shy.update(0.01f);
-        shy.render();
+        koopa.update(0.01f);
+        koopa.render();
+        if (IsKeyDown(KEY_SPACE)) {
+            koopa.setCollisionTrue(true);
+            koopa.hit();
+        }
+        // shy.update(0.01f);
+        // shy.render();
         EndDrawing();
         
     }

@@ -82,6 +82,25 @@ public:
 };
 
 class KoopaTroopa : public Enemy {
+    private:
+        bool isShell;
+        Vector2 shellSpeed;
+    public:
+        KoopaTroopa(Vector2 position);
+        KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
+        KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+        EnemyType getEnemyType() const override { return EnemyType::KOOPA_TROOPA; };
+
+        void setShell(bool isShell) { this->isShell = isShell; };
+        bool getIsShell() const { return isShell; };
+        
+        void setShellSpeed( Vector2 shellSpeed) { this->shellSpeed = shellSpeed; };
+        Vector2 getShellSpeed() const { return shellSpeed; };
+
+        Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
+        void hit() override;
+        void update(float deltaTime) override;
+        void render() override;
 };
 
 class PiranhaPlant : public Enemy {
