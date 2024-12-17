@@ -142,6 +142,7 @@
     <ClCompile Include="..\levels\MapLoader.cpp" />
     <ClCompile Include="..\Obstacle\Obstacle.cpp" />
     <ClCompile Include="..\ResourceManager.cpp" />
+    <ClCompile Include="..\Sound\Audio.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +165,7 @@
     <ClInclude Include="..\levels\Serialization.hpp" />
     <ClInclude Include="..\Obstacle\Obstacle.h" />
     <ClInclude Include="..\ResourceManager.hpp" />
+    <ClInclude Include="..\Sound\Audio.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\Maps\0.txt" />

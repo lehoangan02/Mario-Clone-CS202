@@ -63,6 +63,9 @@
     <ClCompile Include="..\Obstacle\Obstacle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sound\Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\levels\Environment.hpp">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Obstacle\Obstacle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sound\Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
