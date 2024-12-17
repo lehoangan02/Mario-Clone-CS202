@@ -388,10 +388,22 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
     size = { 63, 87 };
     speed = { 130, 0 };
@@ -411,10 +423,22 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
     isRight = false;
     isDown = false;
@@ -432,10 +456,22 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
     isRight = false;
     isDown = false;
@@ -459,14 +495,16 @@ void ShyGuy::update(float deltaTime) {
     timer += deltaTime;
     if (timer >= animationTime) {
         timer -= animationTime;
-        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        currentTextureIndex = (currentTextureIndex + 1) % 6;
         texture = textures[currentTextureIndex];
+        size.x = texture.width;
+        size.y = texture.height;
     }
 
     if (position.x < leftBound) {
         isRight = true;
     }
-    if (position.x + size.x > rightBound) {
+    if (position.x + size.x * 1.5f > rightBound) {
         isRight = false;
     }
 
@@ -474,7 +512,7 @@ void ShyGuy::update(float deltaTime) {
         isDown = true;
     }
 
-    if (position.y + size.y >= bottomBound) {
+    if (position.y + size.y * 1.5f >= bottomBound) {
         isDown = false;
     }
 }
@@ -482,10 +520,10 @@ void ShyGuy::update(float deltaTime) {
 void ShyGuy::render() {
     if (!isDead) {
         if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, size.x/21, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 1.5f, RAYWHITE);
         } else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, size.x, size.y };
+            Rectangle destRec = { position.x, position.y, size.x * 1.5f, size.y * 1.5f };
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }

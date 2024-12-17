@@ -19,7 +19,7 @@ int main() {
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
     
-    KoopaTroopa goomba({300, 300});
+    ShyGuy goomba({300, 300});
     // PiranhaPlant piranha({200, 200});
     // KoopaTroopa koopa({400, 400});
     // ShyGuy shy({500, 500});
