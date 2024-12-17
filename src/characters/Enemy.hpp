@@ -167,6 +167,10 @@ class InversePiranhaPlant : public PiranhaPlant {
 //neu va cham dung thi shy guy moi bien mat(tuc ham hit duoc goi se set isDead = true neu isCollisionTrue = true)
 class ShyGuy : public Enemy {
     friend class EnemyFactory;
+    private:
+        float fallSpeed;
+        bool isBouncing;
+        float bounceTime;
     public:
         ShyGuy(Vector2 position);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed);

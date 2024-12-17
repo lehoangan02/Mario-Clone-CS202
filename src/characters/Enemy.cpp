@@ -480,40 +480,63 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
 }
 
 void ShyGuy::hit() {
-    isDead = true;
+    isDying = true;
+    isBouncing = true;
+    bounceTime = 0.15f; 
+    fallSpeed = -200.0f;
 }
 
 void ShyGuy::update(float deltaTime) {
     if (isDead) return;
 
-    if (isRight) {
-        position.x += speed.x * deltaTime;
-    } else {
-        position.x -= speed.x * deltaTime;
-    }
+    if (isDying) {
+        if (isBouncing) {
+            bounceTime -= deltaTime;
+            position.y += fallSpeed * deltaTime;
+            if (bounceTime <= 0.0f) {
+                isBouncing = false;
+                fallSpeed = 0.0f;
+            }
+        } 
+        else {
+            fallSpeed += 981.0f*3 * deltaTime; 
+            position.y += fallSpeed * deltaTime;
+            if (position.y > bottomBound) {
+                isDead = true;
+                isDying = false;
+            }
+        }
+    } 
+    else {
+        if (isRight) {
+            position.x += speed.x * deltaTime;
+        } else {
+            position.x -= speed.x * deltaTime;
+        }
 
-    timer += deltaTime;
-    if (timer >= animationTime) {
-        timer -= animationTime;
-        currentTextureIndex = (currentTextureIndex + 1) % 6;
-        texture = textures[currentTextureIndex];
-        size.x = texture.width;
-        size.y = texture.height;
-    }
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 6;
+            texture = textures[currentTextureIndex];
+            size.x = texture.width;
+            size.y = texture.height;
+        }
 
-    if (position.x < leftBound) {
-        isRight = true;
-    }
-    if (position.x + size.x * 1.5f > rightBound) {
-        isRight = false;
-    }
+        if (position.x < leftBound) {
+            isRight = true;
+        }
+        if (position.x + size.x * 1.5f > rightBound) {
+            isRight = false;
+        }
 
-    if (position.y <= topBound) {
-        isDown = true;
-    }
+        if (position.y <= topBound) {
+            isDown = true;
+        }
 
-    if (position.y + size.y * 1.5f >= bottomBound) {
-        isDown = false;
+        if (position.y + size.y * 1.5f >= bottomBound) {
+            isDown = false;
+        }
     }
 }
 
