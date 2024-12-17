@@ -129,7 +129,6 @@ class Level : public Subject
         void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         virtual void load() = 0;
         Level();
-        virtual ~Level();
         void checkEnvironmentCollisions();
         void resolveEnvironmentCollisions();
         void resolveInteractiveEnvironmentCollisions();
@@ -139,6 +138,8 @@ class Level : public Subject
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();
+    public:
+        virtual ~Level();
 };
 class LevelFactory
 {
