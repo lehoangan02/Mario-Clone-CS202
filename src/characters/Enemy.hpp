@@ -65,7 +65,7 @@ public:
 class EnemyFactory
 {
     public:
-        enum class EnemyType {
+        enum EnemyType {
             GOOMBA,
             KOOPA_TROOPA,
             PIRANHA_PLANT,

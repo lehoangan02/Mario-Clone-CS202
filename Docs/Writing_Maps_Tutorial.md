@@ -67,6 +67,21 @@ enum EndPipeType
 };
 ```
 
+``` cpp
+class EnemyFactory
+{
+    public:
+        enum EnemyType {
+            GOOMBA,
+            KOOPA_TROOPA,
+            PIRANHA_PLANT,
+            INVERSE_PIRANHA_PLANT,
+            LAKITU,
+            SHY_GUY,
+            PROJECTILE
+        };
+```
+
 ## Format of the map file
 All map files should be .txt files, with their name corresponding with the enum specified.
 

@@ -32,8 +32,34 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         fin >> Type;
         float X, Y;
         fin >> X >> Y;
+        float LeftBound, RightBound;
+        fin >> LeftBound >> RightBound;
         EnemyFactory& Factory = EnemyFactory::GetEnemyFactory();
-        // Factory.CreateEnemy()
+        switch (Type)
+        {
+        case EnemyFactory::EnemyType::GOOMBA:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyFactory::EnemyType::GOOMBA, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyFactory::EnemyType::KOOPA_TROOPA:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyFactory::EnemyType::KOOPA_TROOPA, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyFactory::EnemyType::PIRANHA_PLANT:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyFactory::EnemyType::PIRANHA_PLANT, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyFactory::EnemyType::SHY_GUY:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyFactory::EnemyType::SHY_GUY, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        default:
+            break;
+        }
     }
     int NumberOfItems;
     fin >> NumberOfItems;

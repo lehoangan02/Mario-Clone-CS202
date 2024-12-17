@@ -173,7 +173,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
                 }
                 else if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
-                    m_EnvironmentInteractive[i].first->onNotify();                        
+                    m_EnvironmentInteractive[i].first->onNotify();                   
                     CurrentItem->onNotify();
                     if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
                     {
@@ -403,6 +403,10 @@ void Level::render()
     {
         object->render();
     }
+    for (auto& object : m_Enemies)
+    {
+        object->render();
+    }
     for (auto& object : m_EnvironmentInteractive)
     {
         if (object.second == nullptr) continue;
@@ -500,6 +504,10 @@ void Level::update(float DeltaTime)
     {        object.second ->Update(DeltaTime);
     }
     for (auto& object : m_Lifts)
+    {
+        object->update(DeltaTime);
+    }
+    for (auto& object : m_Enemies)
     {
         object->update(DeltaTime);
     }
