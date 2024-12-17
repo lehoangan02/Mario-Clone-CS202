@@ -36,6 +36,15 @@ class Level : public Subject
         bool update();
         bool isPlayerInPipe() { return inPipe; };
     };
+    class EnemyHandler
+    {
+        Level* m_Level;
+        public:
+        EnemyHandler() = default;
+        void setLevel(Level* Level) { m_Level = Level; };
+        void update();
+
+    };
     class Background
     {
         private:
@@ -113,6 +122,7 @@ class Level : public Subject
     private:
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
+        EnemyHandler m_EnemyHandler;
         bool m_InControl = true;
         bool m_TouchedFlag = false;
         Vector2 m_StartPosition = {0, 0};

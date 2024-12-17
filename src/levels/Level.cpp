@@ -39,6 +39,8 @@ Level::Level()
 {
     m_CameraPosition = {0, 0};
     m_Ground = Ground::GetGround();
+    m_EnemyHandler.setLevel(this);
+
 }
 Level::~Level()
 {
@@ -405,6 +407,7 @@ void Level::render()
     }
     for (auto& object : m_Enemies)
     {
+        if (object->isHit()) continue;
         object->render();
     }
     for (auto& object : m_EnvironmentInteractive)
@@ -507,10 +510,7 @@ void Level::update(float DeltaTime)
     {
         object->update(DeltaTime);
     }
-    for (auto& object : m_Enemies)
-    {
-        object->update(DeltaTime);
-    }
+    m_EnemyHandler.update();
     if (m_EndPipeHandler.update())
     {
         return;
@@ -626,6 +626,33 @@ bool Level::EndPipeHandler::update()
         }
     }
     return false;
+}
+void Level::EnemyHandler::update()
+{
+    for (auto& object : m_Level->m_Enemies)
+    {
+        if (object->isHit()) continue;
+        object->update(GetFrameTime());
+    }
+    for (auto& object : m_Level->m_Enemies)
+    {
+        std::cout << "Is Hit: " << object->isHit() << std::endl;
+        if (object->isHit()) continue;
+        AABBox EnemyBox = AABBox(object->getPosition(), object->getSize());
+        AABBox PlayerBox = AABBox(m_Level->m_Player->GetPosition(), m_Level->m_Player->GetSize());
+        if (isColliding(EnemyBox, PlayerBox))
+        {
+            object->setHit(true);
+            if (isCollidingOnVertically(PlayerBox, EnemyBox))
+            {
+                std::cout << "Colliding Vertically" << std::endl;
+            }
+            else
+            {
+                m_Level->m_Player->touchEnemy();
+            }
+        }
+    }
 }
 Level::Background::Background()
 {
