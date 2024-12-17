@@ -266,12 +266,13 @@ void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
     if (isDying) {
         isDown = true;
+        speed.y *= 1.1f;
     }
     if (isDying && heightInGround >= size.y) {
         isDead = true;
         isDying = false;
     }
-    
+
     timer += deltaTime;
     if (timer >= animationTime) {
         timer -= animationTime; 
