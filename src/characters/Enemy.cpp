@@ -112,6 +112,8 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDead = false;
     isDying = false;
     isCollisionTrue = false;
+
+    setBound(0, 1024, 0, 768);
 }
 
 Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
@@ -140,6 +142,8 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     isDead = false;
     isDying = false;
     isCollisionTrue = false;
+    
+    setBound(0, 1024, 0, 768);
 }
 void Goomba::hit() {
     if (isCollisionTrue) {
@@ -220,6 +224,7 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
@@ -245,6 +250,7 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
@@ -393,6 +399,7 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -414,6 +421,7 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -435,6 +443,7 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void ShyGuy::hit() {
@@ -521,6 +530,7 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(0, 1024, 0, 768);
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -549,6 +559,7 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(0, 1024, 0, 768);
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -574,6 +585,7 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void KoopaTroopa::hit() {
