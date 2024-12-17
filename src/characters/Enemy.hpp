@@ -5,6 +5,15 @@
 #include <vector>
 
 
+enum class EnemyType {
+    GOOMBA,
+    KOOPA_TROOPA,
+    PIRANHA_PLANT,
+    INVERSE_PIRANHA_PLANT,
+    LAKITU,
+    SHY_GUY,
+    PROJECTILE
+ };
 
 class Enemy{
 protected:
@@ -31,6 +40,7 @@ public:
     Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    virtual EnemyType getEnemyType() const = 0;
 
     void accelerate(float deltaTime);
     virtual void flipDirection();
@@ -64,16 +74,6 @@ public:
 
 class EnemyFactory
 {
-    public:
-        enum class EnemyType {
-            GOOMBA,
-            KOOPA_TROOPA,
-            PIRANHA_PLANT,
-            INVERSE_PIRANHA_PLANT,
-            LAKITU,
-            SHY_GUY,
-            PROJECTILE
-        };
     private:
         EnemyFactory() = default;
         ~EnemyFactory() = default;
@@ -91,7 +91,7 @@ private:
 public:
     Goomba(Vector2 position);
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
-    EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::GOOMBA; };
+    EnemyType getEnemyType() const  { return EnemyType::GOOMBA; };
 
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
     void hit() override;
@@ -109,7 +109,7 @@ class KoopaTroopa : public Enemy {
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::KOOPA_TROOPA; };
+        EnemyType getEnemyType() const { return EnemyType::KOOPA_TROOPA; };
 
         void setShell(bool isShell) { this->isShell = isShell; };
         bool getIsShell() const { return isShell; };
@@ -132,7 +132,7 @@ class PiranhaPlant : public Enemy {
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PIRANHA_PLANT; };
+        EnemyType getEnemyType() const { return EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
@@ -155,7 +155,7 @@ class InversePiranhaPlant : public PiranhaPlant {
     public:
         InversePiranhaPlant(Vector2 position);
         InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::INVERSE_PIRANHA_PLANT; };
+        EnemyType getEnemyType() const  { return EnemyType::INVERSE_PIRANHA_PLANT; };
 
         Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
         void update(float deltaTime) override;
@@ -171,7 +171,7 @@ class ShyGuy : public Enemy {
         ShyGuy(Vector2 position);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::SHY_GUY; };
+        EnemyType getEnemyType() const { return EnemyType::SHY_GUY; };
 
         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
         void hit() override;
@@ -187,7 +187,7 @@ public:
     ~Projectile() = default;
     Projectile(Vector2 position);
 
-    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PROJECTILE; };
+    EnemyType getEnemyType() const { return EnemyType::PROJECTILE; };
     void update(float deltaTime);
     void render();
     void hit();
@@ -212,7 +212,7 @@ public:
     Lakitu(Vector2 position);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
+    EnemyType getEnemyType() const { return EnemyType::LAKITU; };
 
     void hit() override;
     void update(float deltaTime) override;
