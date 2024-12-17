@@ -478,6 +478,12 @@ FlagPole::FlagPole(float Position) : MapObject(Vector2{Position, 100}, Vector2{1
     m_Position.x = Position;
     m_Position.y = 750 - 900;
     m_FlagPosition = {m_Position.x - 50, m_Position.y + 50};
+    SetTextureFilter(m_Flag, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Flag, TEXTURE_WRAP_CLAMP);
+    SetTextureFilter(m_Pole, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Pole, TEXTURE_WRAP_CLAMP);
+    SetTextureFilter(m_Brick, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Brick, TEXTURE_WRAP_CLAMP);
 }
 FlagPole::~FlagPole()
 {
@@ -499,7 +505,7 @@ void FlagPole::update()
 void FlagPole::pullFlag()
 {
     if (!m_Pull) return;
-    static const float Speed = 100;
+    static const float Speed = 300;
     static const float EndPosition = 750 - 200;
     m_FlagPosition.y += Speed * GetFrameTime();
     if (m_FlagPosition.y > EndPosition)

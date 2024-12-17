@@ -4,7 +4,7 @@
 #include "Character.h"
 #include <vector>
 
-enum class EnemyType {
+enum EnemyType {
 	GOOMBA,
     KOOPA_TROOPA,
     PIRANHA_PLANT,

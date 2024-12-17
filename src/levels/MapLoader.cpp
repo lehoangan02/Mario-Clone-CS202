@@ -26,8 +26,31 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     Level -> m_StartPosition = PlayerSpawn;
     int NumberOfEnemies;
     fin >> NumberOfEnemies;
+    for (int i = 0; i < NumberOfEnemies; i++)
+    {
+        // int Type;
+        // fin >> Type;
+        // float X, Y;
+        // fin >> X >> Y;
+        // switch (Type)
+        // {
+        // case EnemyType::GOOMBA:
+        //     Level -> m_Enemies.push_back(new Goomba(Vector2{X, Y}));
+        //     break;
+        // default:
+        //     break;
+        // }
+    }
     int NumberOfItems;
     fin >> NumberOfItems;
+    for (int i = 0; i < NumberOfItems; i++)
+    {
+    
+        float X, Y;
+        fin >> X >> Y;
+        IdleCoin* Coin = new IdleCoin(Vector2{X, Y}, Vector2{40, 100}, LoadTexture("assets/textures/Coin.png"));
+        Level -> m_IdleCoin.push_back(Coin);
+    }
     int NumberOfStaticEnvironment;
     fin >> NumberOfStaticEnvironment;
     std::cout << "Number of Static Environment: " << NumberOfStaticEnvironment << std::endl;

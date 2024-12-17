@@ -95,6 +95,8 @@ AniamtedFlyweight* AnimatedFlyweightFactory::getFlyweight(int Type)
 WarpPipeTextureFlyWeight::WarpPipeTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/pipe.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 WarpPipeTextureFlyWeight::~WarpPipeTextureFlyWeight()
 {
@@ -111,6 +113,8 @@ void WarpPipeTextureFlyWeight::render(Vector2 Position)
 BrickTextureFlyWeight::BrickTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/brick_2.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 BrickTextureFlyWeight::~BrickTextureFlyWeight()
 {
@@ -127,6 +131,8 @@ void BrickTextureFlyWeight::render(Vector2 Position)
 HardBlockTextureFlyWeight::HardBlockTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/hard_block.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 HardBlockTextureFlyWeight::~HardBlockTextureFlyWeight()
 {
@@ -143,6 +149,8 @@ void HardBlockTextureFlyWeight::render(Vector2 Position)
 BlueBrickTextureFlyWeight::BlueBrickTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/blue_brick.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 BlueBrickTextureFlyWeight::~BlueBrickTextureFlyWeight()
 {
@@ -159,6 +167,8 @@ void BlueBrickTextureFlyWeight::render(Vector2 Position)
 LeftGrassPlatformTextureFlyWeight::LeftGrassPlatformTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/LeftGrassPlatform.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 LeftGrassPlatformTextureFlyWeight::~LeftGrassPlatformTextureFlyWeight()
 {
@@ -170,9 +180,9 @@ LeftGrassPlatformTextureFlyWeight* LeftGrassPlatformTextureFlyWeight::GetLeftGra
 }
 void LeftGrassPlatformTextureFlyWeight::render(Vector2 Position)
 {
-    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
     SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
 }
 MiddleGrassPlatformTextureFlyWeight::MiddleGrassPlatformTextureFlyWeight()
 {
@@ -216,6 +226,8 @@ void RightGrassPlatformTextureFlyWeight::render(Vector2 Position)
 LiftTextureFlyWeight::LiftTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/lift.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 LiftTextureFlyWeight::~LiftTextureFlyWeight()
 {
@@ -233,6 +245,8 @@ void LiftTextureFlyWeight::render(Vector2 Position)
 QuestionBlockTextureFlyWeight::QuestionBlockTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/question_block.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 QuestionBlockTextureFlyWeight::~QuestionBlockTextureFlyWeight()
 {
@@ -250,6 +264,8 @@ void QuestionBlockTextureFlyWeight::render(Vector2 Position, Rectangle TextureRe
 EmptyQuestionBlockTextureFlyweight::EmptyQuestionBlockTextureFlyweight()
 {
     m_Texture = LoadTexture("assets/textures/empty_question_block_2.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 EmptyQuestionBlockTextureFlyweight::~EmptyQuestionBlockTextureFlyweight()
 {
@@ -267,6 +283,8 @@ void EmptyQuestionBlockTextureFlyweight::render(Vector2 Position)
 CloudTextureFlyWeight::CloudTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/cloud.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 CloudTextureFlyWeight::~CloudTextureFlyWeight()
 {
@@ -283,6 +301,8 @@ void CloudTextureFlyWeight::render(Vector2 Position)
 GrassTextureFlyWeight::GrassTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/grasses.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 GrassTextureFlyWeight::~GrassTextureFlyWeight()
 {
@@ -299,6 +319,8 @@ void GrassTextureFlyWeight::render(Vector2 Position)
 MountainTextureFlyWeight::MountainTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/mountain.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 MountainTextureFlyWeight::~MountainTextureFlyWeight()
 {
@@ -315,6 +337,8 @@ void MountainTextureFlyWeight::render(Vector2 Position)
 DirtTextureFlyWeight::DirtTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/Dirt.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 DirtTextureFlyWeight::~DirtTextureFlyWeight()
 {
@@ -333,6 +357,7 @@ EndPipeTopTextureFlyWeight::EndPipeTopTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/end_pipe.png");
     SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 EndPipeTopTextureFlyWeight::~EndPipeTopTextureFlyWeight()
 {
@@ -352,6 +377,7 @@ EndPipeSideTextureFlyWeight::EndPipeSideTextureFlyWeight()
 {
     m_Texture = LoadTexture("assets/textures/end_pipe.png");
     SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 EndPipeSideTextureFlyWeight::~EndPipeSideTextureFlyWeight()
 {

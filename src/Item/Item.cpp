@@ -20,12 +20,11 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
 }
 IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
     : position(pos), size(size), texture(tex), switchTime(COIN_FRAME_TIME), totalFrames(COIN_FRAME_COUNT), 
-    APPEARED(true), elapsedTime(0), currentFrame(0) {
+    APPEARED(true), elapsedTime(0), currentFrame(0), hit(false) {
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
-    IdleCoin::anyCoinHit = true;
+    
     
 }
-bool IdleCoin::anyCoinHit = false;
 void IdleCoin::Update(float deltaTime) {
     if (!APPEARED) return;
     elapsedTime += deltaTime;
@@ -46,7 +45,14 @@ void IdleCoin::Draw() {
     DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
 }
 bool IdleCoin::isHit() {
-    return IdleCoin::anyCoinHit;
+    return hit;
+}
+void IdleCoin::setHit() {
+    hit = true;
+    APPEARED = false;
+}
+Itemtype IdleCoin::getItemID() const {
+    return Itemtype::IDLECOIN;
 }
 Vector2 IdleCoin::getPosition() const { return position; }
 Vector2 IdleCoin::getSize() const { return size; }
@@ -72,7 +78,7 @@ void Coin::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true)
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true), hit(false)
 {
     if (startPosition.x < endPosition.x) {
         this->velocity.x = fabs(this->velocity.x);
@@ -171,7 +177,7 @@ void Coin::Draw() { //animation
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
-    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
@@ -182,6 +188,13 @@ Itemtype Mushroom::getItemID() const {
 void Mushroom::onNotify() {
     isRising = true;
 
+}
+void Mushroom::setHit() {
+    hit = true;
+    APPEARED = false;
+}
+bool Mushroom::isHit() {
+    return hit;
 }
 void Mushroom::Update(float deltaTime) {
     if (isRising) {
@@ -247,7 +260,7 @@ void Mushroom::Draw() {
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false),
-    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
 void FireFlower::applyEffect(Character* character) {
     return;
 }
@@ -258,14 +271,6 @@ Itemtype FireFlower::getItemID() const {
     return Itemtype::FIREFLOWER;
 }
 void FireFlower::Update(float deltaTime) {
-    elapsedTime += deltaTime;
-    if (elapsedTime >= switchTime) {
-        currentFrame = (currentFrame + 1) % totalFrames;
-        if (currentFrame == 4) {
-            currentFrame++;
-        }
-        elapsedTime = 0.0f;
-    }
     if (isRising) {
         riseProgress += riseSpeed * deltaTime;
         if (riseProgress >= 1.0f) {
@@ -274,25 +279,50 @@ void FireFlower::Update(float deltaTime) {
             APPEARED = true;
             FinishedSpawning = true;
         }
+        position.y = startPosition.y - size.y * riseProgress;
     }
+    elapsedTime += deltaTime;
+    if (elapsedTime >= switchTime) {
+        currentFrame = (currentFrame + 1) % totalFrames;
+        if (currentFrame == 4) {
+            currentFrame++;
+        }
+        elapsedTime = 0.0f;
+    }
+    
     
 }
 void FireFlower::Draw() {
-    if (APPEARED || isRising) {
+    if (isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
             frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
+        Rectangle destRect = { startPosition.x , startPosition.y - size.y * riseProgress , size.x, size.y * riseProgress };
         Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
+    if (APPEARED) {
+        Rectangle sourceRect = {
+            frameSize.x * currentFrame,
+            0.0f,
+            frameSize.x,
+            frameSize.y
+        };
+        Rectangle destRect = { position.x,
+            position.y,
+            size.x,
+            size.y };
+        Vector2 origin = { 0, 0 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
+
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
     Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, false),
-    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false) {}
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
@@ -315,6 +345,8 @@ void StarMan::Update(float deltaTime) {
             APPEARED = true;
             FinishedSpawning = true;
         }
+        position.y = startPosition.y - size.y * riseProgress;
+
     }
     if (APPEARED) {
         onFalling = true;
@@ -331,15 +363,30 @@ void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {
     
 }
 void StarMan::Draw() {
-    if (APPEARED || isRising) {
+    if (isRising) {
         Rectangle sourceRect = {
             frameSize.x * currentFrame,
             0.0f,
             frameSize.x,
             frameSize.y * riseProgress
         };
-        Rectangle destRect = { position.x , position.y - size.y * riseProgress , size.x, size.y * riseProgress };
+        Rectangle destRect = { startPosition.x , startPosition.y - size.y * riseProgress , size.x, size.y * riseProgress };
+        Vector2 origin = { 0.0f, 0.0f };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
+    if (APPEARED) {
+        Rectangle sourceRect = {
+            frameSize.x * currentFrame,
+            0.0f,
+            frameSize.x,
+            frameSize.y
+        };
+        Rectangle destRect = { position.x,
+            position.y,
+            size.x,
+            size.y };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
+
