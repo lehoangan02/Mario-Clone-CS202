@@ -4,6 +4,7 @@
 #include "string"
 #include "../animation/Animation.h"
 #include "Fireball.h"
+#include "../Sound/Audio.h"
 
 #define MAX_VEC_X = 10.0f
 class Command {
@@ -33,6 +34,9 @@ private:
 	bool isInvincible;
 	Color InvincibleColor;
 	std::vector<Fireball> fireballs;
+	const int maxFireballs = 2;
+	float reloadTime = 1.0f; // Time in seconds to reload a fireball
+	float currentReloadTime = 0.0f;
 public:
 
 	Character(float jumpHeight);
@@ -70,6 +74,7 @@ public:
 	void powerDown(); //need invicile effect
 
 	void touchEnemy();
+	void killEnemy();
 	bool isDead() { return isDie; };
 	bool isflick() { return isflicking; };
 
