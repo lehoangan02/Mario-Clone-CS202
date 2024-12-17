@@ -14,6 +14,10 @@ Level* LevelFactory::CreateLevel(int Type)
         case LEVEL_TESTING:
             return LevelTesting::GetLevelTesting();
             break;
+        case LEVEL_102:
+            std::cout << "Creating Level 102" << std::endl;
+            return Level102::GetLevel102();
+            break;
         case LEVEL_103:
             return Level103::GetLevel103();
             break;
