@@ -54,6 +54,15 @@
     <ClCompile Include="..\Item\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\characters\Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\characters\Fireball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Obstacle\Obstacle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\levels\Environment.hpp">
@@ -104,5 +113,20 @@
     <ClInclude Include="..\levels\MapLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\characters\Enemy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\characters\Fireball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Obstacle\Obstacle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Maps\0.txt" />
+    <Text Include="..\..\Maps\1.txt" />
+    <Text Include="..\..\Maps\2.txt" />
+    <Text Include="..\..\Maps\5.txt" />
   </ItemGroup>
 </Project>

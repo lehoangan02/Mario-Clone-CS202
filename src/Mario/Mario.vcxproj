@@ -131,6 +131,7 @@
     <ClCompile Include="..\Application.cpp" />
     <ClCompile Include="..\characters\Character.cpp" />
     <ClCompile Include="..\characters\Enemy.cpp" />
+    <ClCompile Include="..\characters\Fireball.cpp" />
     <ClCompile Include="..\Game.cpp" />
     <ClCompile Include="..\GUI.cpp" />
     <ClCompile Include="..\Item\Item.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="..\characters\Character.h" />
     <ClInclude Include="..\characters\Enemy.h" />
     <ClInclude Include="..\characters\Enemy.hpp" />
+    <ClInclude Include="..\characters\Fireball.h" />
     <ClInclude Include="..\characters\Luigi.h" />
     <ClInclude Include="..\characters\Mario.h" />
     <ClInclude Include="..\Game.hpp" />
@@ -162,6 +164,12 @@
     <ClInclude Include="..\levels\Serialization.hpp" />
     <ClInclude Include="..\Obstacle\Obstacle.h" />
     <ClInclude Include="..\ResourceManager.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Maps\0.txt" />
+    <Text Include="..\..\Maps\1.txt" />
+    <Text Include="..\..\Maps\2.txt" />
+    <Text Include="..\..\Maps\5.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
