@@ -71,6 +71,7 @@ float Item::norm(Vector2 vector1, Vector2 vector2) {
     return result;
 }
 void Coin::onNotify() {
+    if (Notify) return;
     Notify = true;
 }
 
@@ -186,6 +187,8 @@ Itemtype Mushroom::getItemID() const {
     return Itemtype::MUSHROOM;
 }
 void Mushroom::onNotify() {
+    if (Notify) return;
+    Notify = true;
     isRising = true;
 
 }
@@ -265,6 +268,8 @@ void FireFlower::applyEffect(Character* character) {
     return;
 }
 void FireFlower::onNotify() {
+    if (Notify) return;
+    Notify = true;
     isRising = true;
 }
 Itemtype FireFlower::getItemID() const {
@@ -328,6 +333,8 @@ Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
 }
 void StarMan::onNotify() {
+    if (Notify) return;
+    Notify = true;
     isRising = true;
 }
 void StarMan::Update(float deltaTime) {
