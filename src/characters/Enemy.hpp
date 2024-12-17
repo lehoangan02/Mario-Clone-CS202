@@ -28,7 +28,7 @@ protected:
     float leftBound, rightBound, topBound, bottomBound;   
 public:
     Enemy() = default;
-    Enemy(Vector2 position) : position(position), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
 
@@ -98,8 +98,6 @@ public:
     void update(float deltaTime) override;
     void render() override;
 
-public:
-    static Goomba* getGoomba(Vector2 position, float leftBound, float rightBound);
 };
 
 class KoopaTroopa : public Enemy {
@@ -124,8 +122,6 @@ class KoopaTroopa : public Enemy {
         void update(float deltaTime) override;
         void render() override;
 
-    public:
-        static KoopaTroopa* getKoopaTroopa(Vector2 position, float leftBound, float rightBound);
 };
 
 class PiranhaPlant : public Enemy {
@@ -147,9 +143,6 @@ class PiranhaPlant : public Enemy {
         void hit() override;
         virtual void update(float deltaTime) override;
         virtual void render() override;
-
-    public:
-        static PiranhaPlant* getPiranhaPlant(Vector2 position, float leftBound, float rightBound);
 };
 //size of piranha plant should be scale of 32x66
 //position is the top left of piranha full out of ground.
@@ -169,8 +162,6 @@ class InversePiranhaPlant : public PiranhaPlant {
         void update(float deltaTime) override;
         void render() override;
 
-    public:
-        static InversePiranhaPlant* getInversePiranhaPlant(Vector2 position, float leftBound, float rightBound);
 };
 
 //size of shy guy should be scale of 21x29
@@ -187,9 +178,6 @@ class ShyGuy : public Enemy {
         void hit() override;
         void update(float deltaTime) override;
         void render() override;
-
-    public:
-        static ShyGuy* getShyGuy(Vector2 position, float leftBound, float rightBound);
 
 };
 
@@ -233,9 +221,6 @@ public:
     void shoot();
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 
-public:
-    static Lakitu* getLakitu(Vector2 position, float leftBound, float rightBound);
 };
-
 
 #endif // !ENEMY_HPP

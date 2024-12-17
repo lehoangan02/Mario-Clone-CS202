@@ -13,26 +13,45 @@ Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position, float leftBou
     switch (type)
     {
         case EnemyType::GOOMBA:
-            return Goomba::getGoomba(position, leftBound, rightBound);
-            break;
+        {
+            Goomba* goomba = new Goomba(position);
+            goomba->setBoundLR(leftBound, rightBound);
+            return goomba;
+        }
         case EnemyType::KOOPA_TROOPA:
-            return KoopaTroopa::getKoopaTroopa(position, leftBound, rightBound);
-            break;
+        {
+            KoopaTroopa* koopa = new KoopaTroopa(position);
+            koopa->setBoundLR(leftBound, rightBound);
+            return koopa;
+        }
         case EnemyType::PIRANHA_PLANT:
-            return PiranhaPlant::getPiranhaPlant(position, leftBound, rightBound);
-            break;
+        {
+            PiranhaPlant* piranha = new PiranhaPlant(position);
+            piranha->setBoundLR(leftBound, rightBound);
+            return piranha;
+        }
         case EnemyType::INVERSE_PIRANHA_PLANT:
-            return InversePiranhaPlant::getInversePiranhaPlant(position, leftBound, rightBound);
-            break;
+        {
+            InversePiranhaPlant* inversePiranha = new InversePiranhaPlant(position);
+            inversePiranha->setBoundLR(leftBound, rightBound);
+            return inversePiranha;
+        }
         case EnemyType::SHY_GUY:
-            return ShyGuy::getShyGuy(position, leftBound, rightBound);
-            break;
+        {
+            ShyGuy* shyGuy = new ShyGuy(position);
+            shyGuy->setBoundLR(leftBound, rightBound);
+            return shyGuy;
+        }
         case EnemyType::LAKITU:
-            return Lakitu::getLakitu(position, leftBound, rightBound);
-            break;
+        {
+            Lakitu* lakitu = new Lakitu(position);
+            lakitu->setBoundLR(leftBound, rightBound);
+            return lakitu;
+        }
     }
     return nullptr; 
 }
+
 
 
 void Enemy::accelerate(float deltaTime) {
@@ -106,12 +125,14 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     size = { 60, 60 };
-    speed = { 30, 0 };
+    speed = { 140, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
     isDying = false;
     isCollisionTrue = false;
+
+    setBound(0, 1024, 0, 768);
 }
 
 Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
@@ -140,6 +161,8 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     isDead = false;
     isDying = false;
     isCollisionTrue = false;
+    
+    setBound(0, 1024, 0, 768);
 }
 void Goomba::hit() {
     if (isCollisionTrue) {
@@ -191,11 +214,6 @@ void Goomba::render() {
     if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
 }
 
-Goomba* Goomba::getGoomba(Vector2 position, float leftBound, float rightBound) {
-    static Goomba goomba(position);
-    goomba.setBoundLR(leftBound, rightBound);
-    return &goomba;
-}
 
 PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -212,14 +230,15 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    size = { 32, 66 };
-    speed = { 0, 10};
+    size = { 64, 132 };
+    speed = { 0, 60};
     isRight = false;
     isDown = false;
     isDead = false;
     isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
@@ -245,6 +264,7 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
@@ -295,11 +315,6 @@ void PiranhaPlant::hit() {
     isDead = true;
 }
 
-PiranhaPlant* PiranhaPlant::getPiranhaPlant(Vector2 position, float leftBound, float rightBound) {
-    static PiranhaPlant piranhaPlant(position);
-    piranhaPlant.setBoundLR(leftBound, rightBound);
-    return &piranhaPlant;
-}
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
     heightInGround = 66;
@@ -366,11 +381,6 @@ void InversePiranhaPlant::render() {
     }
 }
 
-InversePiranhaPlant* InversePiranhaPlant::getInversePiranhaPlant(Vector2 position, float leftBound, float rightBound) {
-    static InversePiranhaPlant inversePiranhaPlant(position);
-    inversePiranhaPlant.setBoundLR(leftBound, rightBound);
-    return &inversePiranhaPlant;
-}
 
 ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -387,12 +397,13 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    size = { 42, 58 };
+    size = { 63, 87 };
     speed = { 25, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -414,6 +425,7 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -435,6 +447,7 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void ShyGuy::hit() {
@@ -488,11 +501,6 @@ void ShyGuy::render() {
     }
 }
 
-ShyGuy* ShyGuy::getShyGuy(Vector2 position, float leftBound, float rightBound) {
-    static ShyGuy shyGuy(position);
-    shyGuy.setBoundLR(leftBound, rightBound);
-    return &shyGuy;
-}
 
 KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -512,15 +520,16 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
 
-    size = { 48, 72 };
-    speed = { 25, 0 };
-    shellSpeed = { 50, 0 };
+    size = { 72, 108 };
+    speed = { 140, 0 };
+    shellSpeed = { 280, 0 };
 
     isRight = false;
     isDown = false;
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(0, 1024, 0, 768);
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -549,6 +558,7 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(0, 1024, 0, 768);
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -574,6 +584,7 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     isDead = false;
     isCollisionTrue = false;
     isShell = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void KoopaTroopa::hit() {
@@ -638,11 +649,6 @@ void KoopaTroopa::render() {
     }
 }
 
-KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position, float leftBound, float rightBound) {
-    static KoopaTroopa koopaTroopa(position);
-    koopaTroopa.setBoundLR(leftBound, rightBound);
-    return &koopaTroopa;
-}
 
 Projectile::Projectile(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -689,7 +695,7 @@ void Projectile::update(float deltaTime) {
 
 void Projectile::render() {
     if (active) {
-        DrawTextureEx(texture, position, 0.0f, 0.5f, RAYWHITE);
+        DrawTextureEx(texture, position, 0.0f, 1.0f, RAYWHITE);
     }
 }
 
@@ -737,7 +743,7 @@ Lakitu::Lakitu(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
 
-    size = { 48, 72 };
+    size = { 72, 108 };
     speed = { 25, 0 };
     shootTime = 6.0f;
     curentTimer = 0.0f;
@@ -859,11 +865,4 @@ void Lakitu::render() {
     for (auto& projectile : projectiles) {
         projectile->render();
     }
-}
-
-
-Lakitu* Lakitu::getLakitu(Vector2 position, float leftBound, float rightBound) {
-    static Lakitu lakitu(position);
-    lakitu.setBoundLR(leftBound, rightBound);
-    return &lakitu;
 }
