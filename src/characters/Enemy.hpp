@@ -28,7 +28,6 @@ protected:
     bool isDown;
     bool isRight;
     bool isDead;
-    bool isCollisionTrue;
 
     float animationTime;       
     float timer;               
@@ -60,8 +59,7 @@ public:
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
 
-    virtual void setHit(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
-    bool isHit() const { return isCollisionTrue; };
+    bool isHit() const { return isDead; };
     
     void setBound(float left, float right, float top, float bottom) ;
     void setBoundLR(float left, float right) { leftBound = left; rightBound = right; };

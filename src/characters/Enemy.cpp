@@ -130,7 +130,6 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     isDown = false;
     isDead = false;
     isDying = false;
-    isCollisionTrue = false;
 
     setBound(0, 1024, 0, 768);
 }
@@ -160,16 +159,13 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     isDown = false;
     isDead = false;
     isDying = false;
-    isCollisionTrue = false;
     
     setBound(0, 1024, 0, 768);
 }
 void Goomba::hit() {
-    if (isCollisionTrue) {
-        this->texture = textures[2];           
-    }
+    this->texture = textures[2];           
     isDying = true;              
-        dyingTime = 0.0f; 
+    dyingTime = 0.0f; 
 }
   
 
@@ -301,9 +297,7 @@ void PiranhaPlant::render() {
 }
 
 void PiranhaPlant::hit() {
-    if (isCollisionTrue) {
-        isDead = true;
-    }
+    isDead = true;
 }
 
 
@@ -387,7 +381,6 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     setBound(0, 1024, 0, 768);
 }
 
@@ -409,7 +402,6 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     setBound(0, 1024, 0, 768);
 }
 
@@ -431,15 +423,11 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void ShyGuy::hit() {
-    if (isCollisionTrue) {
-        isDead = true;
-    }
-    else isDead = true;
+    isDead = true;
 }
 
 void ShyGuy::update(float deltaTime) {
@@ -513,7 +501,6 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     isShell = false;
     setBound(0, 1024, 0, 768);
 }
@@ -542,7 +529,6 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     isShell = false;
     setBound(0, 1024, 0, 768);
 }
@@ -568,18 +554,12 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
     isShell = false;
     setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void KoopaTroopa::hit() {
-    if (isCollisionTrue) {
-        isShell = true;
-    }
-    else {
-        isDead = true;
-    }
+    isShell = true;
 }
 
 void KoopaTroopa::update(float deltaTime) {
@@ -690,9 +670,7 @@ void Projectile::render() {
 
 
 void Projectile::hit() {
-    if (isCollisionTrue) {
-        active = false;
-    }
+    active = false;
 }
 
 void Projectile::setActivate(bool newActive) {
@@ -795,9 +773,7 @@ Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
 }
 
 void Lakitu::hit() {
-    if (isCollisionTrue) {
-        isDead = true;
-    }
+    isDead = true;
 }
 
 void Lakitu::update(float deltaTime) {
