@@ -106,7 +106,7 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     size = { 60, 60 };
-    speed = { 30, 0 };
+    speed = { 140, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
