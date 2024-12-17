@@ -27,10 +27,11 @@ Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position)
         case EnemyType::SHY_GUY:
             return ShyGuy::getShyGuy(position);
             break;
-        // case EnemyType::LAKITU:
-        //     return Lakitu::getLakitu(position);
-        //     break;
+        case EnemyType::LAKITU:
+            return Lakitu::getLakitu(position);
+            break;
     }
+    return nullptr; 
 }
 
 
@@ -654,13 +655,14 @@ Projectile::Projectile(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
     size = { 66, 70 };
-    this->speed = {25, 17};
+    this->speed = {50, 17};
     active = true;
 }
 
 void Projectile::update(float deltaTime) {
     if (active) {
-        
+        if (!isRight && speed.x > 0) speed.x *= -1;
+
         speed.y += 9.81f * deltaTime;
         
         position.x += speed.x * deltaTime;
@@ -674,6 +676,7 @@ void Projectile::update(float deltaTime) {
             texture = textures[currentTextureIndex];
         }
     }
+
 
 }
 
@@ -704,8 +707,157 @@ bool Projectile::isActive() {
     return active;
 }
 
-// Lakitu* Lakitu::getLakitu(Vector2 position) {
-//     static Lakitu lakitu(position);
-//     return &lakitu;
-// }
+void Projectile::setRight(bool isRight) {
+    this->isRight = isRight;
+}
 
+Lakitu::Lakitu(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    size = { 48, 72 };
+    speed = { 25, 0 };
+    shootTime = 6.0f;
+    curentTimer = 0.0f;
+
+    setBound(0, 1024, 0, 768);
+}
+
+Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    shootTime = 6.0f;
+    curentTimer = 0.0f;
+
+    setBound(0, 1024, 0, 768);
+}
+
+Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    shootTime = 6.0f;
+    curentTimer = 0.0f;
+
+    setBound(leftBound, rightBound, topBound, bottomBound);
+}
+
+void Lakitu::hit() {
+    if (isCollisionTrue) {
+        isDead = true;
+    }
+}
+
+void Lakitu::update(float deltaTime) {
+    if (isDead) return;
+
+    if (isRight) {
+        position.x += speed.x * deltaTime;
+    } else {
+        position.x -= speed.x * deltaTime;
+    }
+
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 3;
+        texture = textures[currentTextureIndex];
+    }
+
+    curentTimer += deltaTime;
+    if (curentTimer >= shootTime) {
+        curentTimer -= shootTime;
+        projectiles.push_back(std::make_shared<Projectile>(Projectile{position}));
+        projectiles.back()->setRight(isRight);
+        isShoot = true;
+    }
+    else {
+        isShoot = false;
+    }
+
+    for (auto& projectile : projectiles) {
+        projectile->update(deltaTime);
+    }
+
+    if (position.x < leftBound || position.x + size.x > rightBound) {
+        isRight = !isRight;
+    }
+}
+
+void Lakitu::render() {
+    if (!isDead) {
+        if (isRight == false) {
+            if (!isShoot) DrawTextureEx(texture, position, 0.0f, size.x/60, WHITE);
+            else DrawTextureEx(textures[3], position, 0.0f, size.x/60, WHITE);
+        }
+        else {
+            Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
+            Rectangle destRec = { position.x, position.y, size.x, size.y };
+            Vector2 origin = { 0.0f, 0.0f };
+            if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+            else DrawTexturePro(textures[3], sourceRec, destRec, origin, 0.0f, WHITE);
+        }
+    }
+
+    for (auto& projectile : projectiles) {
+        projectile->render();
+    }
+}
+
+
+Lakitu* Lakitu::getLakitu(Vector2 position) {
+    static Lakitu lakitu(position);
+    return &lakitu;
+}

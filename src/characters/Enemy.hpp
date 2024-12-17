@@ -203,31 +203,36 @@ public:
     void hit();
 
     void setActivate(bool newActive);
+    void setRight(bool isRight);
     void deactivate();
     bool isActive();
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 };
 
-// class Lakitu : public Enemy {
-// private:
-//     std::vector<std::shared_ptr<Projectile>> projectiles;
-//     Texture2D projectileTexture;
-//     float shootTime;
-//     float curentTimer;
+class Lakitu : public Enemy {
+    friend class EnemyFactory;
+private:
+    std::vector<std::shared_ptr<Projectile>> projectiles;
+    Texture2D projectileTexture;
+    float shootTime;
+    float curentTimer;
+    bool isShoot;
 
-// public:
-//     Lakitu(Vector2 position);
-//     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
-//     EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
+public:
+    Lakitu(Vector2 position);
+    Lakitu(Vector2 position, Vector2 size, Vector2 speed);
+    Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
 
-//     void hit() override;
-//     void update(float deltaTime) override;
-//     void render() override;
-//     void shoot();
+    void hit() override;
+    void update(float deltaTime) override;
+    void render() override;
+    void shoot();
+    Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 
-// public:
-//     static Lakitu* getLakitu(Vector2 position);
-// };
+public:
+    static Lakitu* getLakitu(Vector2 position);
+};
 
 
 #endif // !ENEMY_HPP

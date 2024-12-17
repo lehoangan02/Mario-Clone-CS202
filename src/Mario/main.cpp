@@ -18,7 +18,8 @@ int main() {
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     
-    Projectile koopa({100, 100});
+    Lakitu koopa({700, 100});
+    //koopa.setRight(false);
     
     while(!WindowShouldClose()) {
         BeginDrawing();
