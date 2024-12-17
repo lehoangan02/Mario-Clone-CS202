@@ -439,6 +439,7 @@ void ShyGuy::hit() {
     if (isCollisionTrue) {
         isDead = true;
     }
+    else isDead = true;
 }
 
 void ShyGuy::update(float deltaTime) {
