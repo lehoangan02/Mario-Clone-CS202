@@ -2,7 +2,7 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING)),
+      level(factory.CreateLevel(LevelFactory::LEVEL_102)),
       character(ResourceManager::GetInstance()->GetTexture("mario"))
 {
     SetTargetFPS(60);
