@@ -186,6 +186,8 @@ Itemtype Mushroom::getItemID() const {
     return Itemtype::MUSHROOM;
 }
 void Mushroom::onNotify() {
+    if (Notify) return;
+    Notify = true;
     isRising = true;
 
 }
@@ -211,6 +213,7 @@ void Mushroom::Update(float deltaTime) {
     {
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
+        if (position.x > 300) APPEARED = false;
     }
 }
 void Mushroom::Accelerate(float deltaTime) {
