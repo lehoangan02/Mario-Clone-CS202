@@ -522,8 +522,8 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
 
     size = { 48, 72 };
-    speed = { 25, 0 };
-    shellSpeed = { 50, 0 };
+    speed = { 140, 0 };
+    shellSpeed = { 280, 0 };
 
     isRight = false;
     isDown = false;
