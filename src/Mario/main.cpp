@@ -35,8 +35,8 @@ int main() {
         // goomba.test();
         // goomba.update(0.01f);
         // goomba.render();
-        // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
-
+        DrawRectangleLines(inversePiranha.getBoundingBox().x, inversePiranha.getBoundingBox().y, inversePiranha.getBoundingBox().width,  inversePiranha.getBoundingBox().height,BLUE);
+        DrawRectangleLines(600, 600, 64, 132, RED);
         // goomba2.test();
         // goomba2.update(0.01f);
         // goomba2.render();

@@ -320,6 +320,7 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(positi
     heightInGround = size.y;
     topBound = position.y + size.y;
     bottomBound = position.y;
+    isDown = true;;
 }
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : PiranhaPlant(position, size, speed) {
