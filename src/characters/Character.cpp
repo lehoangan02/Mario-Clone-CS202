@@ -105,6 +105,7 @@ void Character::control(bool enabled) {
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
+		ShootFireball();
 	}
 }
 void Character::changeForm(int form) {
@@ -196,6 +197,29 @@ void Character::touchEnemy() {
 		isDie = true;
 	}
 }
+void Character::ShootFireball() {
+	Vector2 fireballPos = { position.x + size.x / 2, position.y + size.y / 2 };
+	Vector2 fireballVel = { faceRight ? 500.0f : -500.0f, 0.0f };
+	float fireballScale = 10.0f; // Example scaling factor
+	float fireballMaxDistance = 1000.0f; // Example maximum distance
+	fireballs.push_back(Fireball(fireballPos, fireballVel, fireballScale, fireballMaxDistance));
+}
+
+void Character::UpdateFireballs(float deltaTime) {
+	for (auto& fireball : fireballs) {
+		fireball.Update(deltaTime);
+	}
+	// Remove fireballs that are off-screen or have exceeded the maximum distance
+	fireballs.erase(std::remove_if(fireballs.begin(), fireballs.end(), [](Fireball& fireball) {
+		return fireball.position.x < 0 || fireball.position.x > GetScreenWidth() || fireball.HasExceededMaxDistance();
+		}), fireballs.end());
+}
+
+void Character::DrawFireballs() {
+	for (auto& fireball : fireballs) {
+		fireball.Draw();
+	}
+}
 void Character::Draw()
 {
 	if (!isVisible) return;
@@ -205,6 +229,7 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
+	DrawFireballs();
 };
 
 Mario::Mario() : Character(300.0f) {
@@ -246,6 +271,7 @@ void Mario::Update(float deltaTime) {
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
+	UpdateFireballs(deltaTime);
 }
 
 void Character::SlidePipe(slidingDirection direction) {

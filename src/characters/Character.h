@@ -3,6 +3,7 @@
 #include "vector"
 #include "string"
 #include "../animation/Animation.h"
+#include "Fireball.h"
 
 #define MAX_VEC_X = 10.0f
 class Command {
@@ -31,6 +32,7 @@ private:
 	float invincibleDuration;
 	bool isInvincible;
 	Color InvincibleColor;
+	std::vector<Fireball> fireballs;
 public:
 
 	Character(float jumpHeight);
@@ -73,6 +75,10 @@ public:
 
 	void invincile() { this->isInvincible = true; };
 	bool isSuper() { return isInvincible; };
+
+	void ShootFireball();
+	void UpdateFireballs(float deltaTime);
+	void DrawFireballs();
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
