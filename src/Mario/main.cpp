@@ -62,6 +62,13 @@ int main() {
         lakitu.update(0.01f);
         lakitu.render();
         
+
+        if (IsKeyDown(KEY_SPACE)) {
+            koopa.hit();
+        }
+        if (IsKeyDown(KEY_V)) {
+            koopa.setHit(true);
+        }
         EndDrawing();
         
     }

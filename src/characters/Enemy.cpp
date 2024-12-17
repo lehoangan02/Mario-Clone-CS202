@@ -576,6 +576,9 @@ void KoopaTroopa::hit() {
     if (isCollisionTrue) {
         isShell = true;
     }
+    else {
+        isDead = true;
+    }
 }
 
 void KoopaTroopa::update(float deltaTime) {
