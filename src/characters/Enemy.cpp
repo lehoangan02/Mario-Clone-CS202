@@ -172,7 +172,7 @@ void Goomba::hit() {
 void Goomba::update(float deltaTime) {
     if (isDying) {
         dyingTime += deltaTime;
-        if (dyingTime >= 1.0f) {
+        if (dyingTime >= 0.2f) {
             isDead = true;
             isDying = false;
         }
@@ -264,7 +264,14 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
 }
 void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-
+    if (isDying) {
+        isDown = true;
+    }
+    if (isDying && heightInGround >= size.y) {
+        isDead = true;
+        isDying = false;
+    }
+    
     timer += deltaTime;
     if (timer >= animationTime) {
         timer -= animationTime; 
@@ -297,7 +304,8 @@ void PiranhaPlant::render() {
 }
 
 void PiranhaPlant::hit() {
-    isDead = true;
+    isDying = true;
+    dyingTime = 0.0f;
 }
 
 
@@ -316,23 +324,31 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2
 }
 void InversePiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-    
-    timer += deltaTime;
-    if (timer >= animationTime) {
-        timer -= animationTime;
-        currentTextureIndex = (currentTextureIndex + 1) % 2;
-        texture = textures[currentTextureIndex];
-    }
+    if (!isDying) {
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 2;
+            texture = textures[currentTextureIndex];
+        }
 
-    if (isDown) {
-        position.y += speed.y * deltaTime; 
-        heightInGround -= speed.y * deltaTime; 
-    } else {
-        position.y -= speed.y * deltaTime; 
-        heightInGround += speed.y * deltaTime; 
+        if (isDown) {
+            position.y += speed.y * deltaTime; 
+            heightInGround -= speed.y * deltaTime; 
+        } else {
+            position.y -= speed.y * deltaTime; 
+            heightInGround += speed.y * deltaTime; 
+        }
+        if (position.y <= bottomBound || position.y >= topBound) {
+            isDown = !isDown;
+        }
     }
-    if (position.y <= bottomBound || position.y >= topBound) {
-        isDown = !isDown;
+    else {
+        dyingTime += deltaTime;
+        if (dyingTime >= 0.2f) {
+            isDead = true;
+            isDying = false;
+        }
     }
    
 }
@@ -559,7 +575,13 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
 }
 
 void KoopaTroopa::hit() {
-    isShell = true;
+    if (isShell) {
+        isDying = true;
+    } else {
+        isShell = true;
+        shellSpeed.x = 2 * speed.x;
+        shellSpeed.y = 2 * speed.y;
+    }
 }
 
 void KoopaTroopa::update(float deltaTime) {

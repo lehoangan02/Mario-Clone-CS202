@@ -28,6 +28,8 @@ protected:
     bool isDown;
     bool isRight;
     bool isDead;
+    bool isDying;
+    float dyingTime;
 
     float animationTime;       
     float timer;               
@@ -36,9 +38,9 @@ protected:
     float leftBound, rightBound, topBound, bottomBound;   
 public:
     Enemy() = default;
-    Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0) {}
-    Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
-    Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
     virtual EnemyType getEnemyType() const = 0;
 
     void accelerate(float deltaTime);
@@ -83,9 +85,6 @@ class EnemyFactory
 //isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
 class Goomba : public Enemy {
     friend class EnemyFactory;
-private:
-    bool isDying;
-    float dyingTime;
 public:
     Goomba(Vector2 position);
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
