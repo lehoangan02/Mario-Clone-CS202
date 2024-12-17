@@ -13,26 +13,45 @@ Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position, float leftBou
     switch (type)
     {
         case EnemyType::GOOMBA:
-            return Goomba::getGoomba(position, leftBound, rightBound);
-            break;
+        {
+            Goomba* goomba = new Goomba(position);
+            goomba->setBoundLR(leftBound, rightBound);
+            return goomba;
+        }
         case EnemyType::KOOPA_TROOPA:
-            return KoopaTroopa::getKoopaTroopa(position, leftBound, rightBound);
-            break;
+        {
+            KoopaTroopa* koopa = new KoopaTroopa(position);
+            koopa->setBoundLR(leftBound, rightBound);
+            return koopa;
+        }
         case EnemyType::PIRANHA_PLANT:
-            return PiranhaPlant::getPiranhaPlant(position, leftBound, rightBound);
-            break;
+        {
+            PiranhaPlant* piranha = new PiranhaPlant(position);
+            piranha->setBoundLR(leftBound, rightBound);
+            return piranha;
+        }
         case EnemyType::INVERSE_PIRANHA_PLANT:
-            return InversePiranhaPlant::getInversePiranhaPlant(position, leftBound, rightBound);
-            break;
+        {
+            InversePiranhaPlant* inversePiranha = new InversePiranhaPlant(position);
+            inversePiranha->setBoundLR(leftBound, rightBound);
+            return inversePiranha;
+        }
         case EnemyType::SHY_GUY:
-            return ShyGuy::getShyGuy(position, leftBound, rightBound);
-            break;
+        {
+            ShyGuy* shyGuy = new ShyGuy(position);
+            shyGuy->setBoundLR(leftBound, rightBound);
+            return shyGuy;
+        }
         case EnemyType::LAKITU:
-            return Lakitu::getLakitu(position, leftBound, rightBound);
-            break;
+        {
+            Lakitu* lakitu = new Lakitu(position);
+            lakitu->setBoundLR(leftBound, rightBound);
+            return lakitu;
+        }
     }
     return nullptr; 
 }
+
 
 
 void Enemy::accelerate(float deltaTime) {
@@ -195,11 +214,6 @@ void Goomba::render() {
     if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
 }
 
-Goomba* Goomba::getGoomba(Vector2 position, float leftBound, float rightBound) {
-    static Goomba goomba(position);
-    goomba.setBoundLR(leftBound, rightBound);
-    return &goomba;
-}
 
 PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -301,11 +315,6 @@ void PiranhaPlant::hit() {
     isDead = true;
 }
 
-PiranhaPlant* PiranhaPlant::getPiranhaPlant(Vector2 position, float leftBound, float rightBound) {
-    static PiranhaPlant piranhaPlant(position);
-    piranhaPlant.setBoundLR(leftBound, rightBound);
-    return &piranhaPlant;
-}
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
     heightInGround = 66;
@@ -372,11 +381,6 @@ void InversePiranhaPlant::render() {
     }
 }
 
-InversePiranhaPlant* InversePiranhaPlant::getInversePiranhaPlant(Vector2 position, float leftBound, float rightBound) {
-    static InversePiranhaPlant inversePiranhaPlant(position);
-    inversePiranhaPlant.setBoundLR(leftBound, rightBound);
-    return &inversePiranhaPlant;
-}
 
 ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -497,11 +501,6 @@ void ShyGuy::render() {
     }
 }
 
-ShyGuy* ShyGuy::getShyGuy(Vector2 position, float leftBound, float rightBound) {
-    static ShyGuy shyGuy(position);
-    shyGuy.setBoundLR(leftBound, rightBound);
-    return &shyGuy;
-}
 
 KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -650,11 +649,6 @@ void KoopaTroopa::render() {
     }
 }
 
-KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position, float leftBound, float rightBound) {
-    static KoopaTroopa koopaTroopa(position);
-    koopaTroopa.setBoundLR(leftBound, rightBound);
-    return &koopaTroopa;
-}
 
 Projectile::Projectile(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -871,11 +865,4 @@ void Lakitu::render() {
     for (auto& projectile : projectiles) {
         projectile->render();
     }
-}
-
-
-Lakitu* Lakitu::getLakitu(Vector2 position, float leftBound, float rightBound) {
-    static Lakitu lakitu(position);
-    lakitu.setBoundLR(leftBound, rightBound);
-    return &lakitu;
 }
