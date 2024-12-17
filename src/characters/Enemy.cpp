@@ -235,7 +235,6 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
     setBound(0, 1024, 0, 768);
@@ -261,7 +260,6 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
     setBound(0, 1024, 0, 768);
@@ -271,35 +269,26 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
 void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
 
-    if (!isPauseCollision) {
-            timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime; 
-            currentTextureIndex = (currentTextureIndex + 1) % 2; 
-            texture = textures[currentTextureIndex];
-        }
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime; 
+        currentTextureIndex = (currentTextureIndex + 1) % 2; 
+        texture = textures[currentTextureIndex];
+    }
 
-        if(isDown) {
-            position.y += speed.y * deltaTime;
-            heightInGround += speed.y * deltaTime;
-        }
-        else {
-            position.y -= speed.y * deltaTime;
-            heightInGround -= speed.y * deltaTime;
-        }
-        if(position.y > topBound|| position.y < bottomBound ) {
-            isDown = !isDown;
-        }
-
-        heightInGround = Clamp(heightInGround, 0.0f, size.y);
+    if(isDown) {
+        position.y += speed.y * deltaTime;
+        heightInGround += speed.y * deltaTime;
     }
     else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime; 
-            isPauseCollision = false;
-        }
+        position.y -= speed.y * deltaTime;
+        heightInGround -= speed.y * deltaTime;
     }
+    if(position.y > topBound|| position.y < bottomBound ) {
+        isDown = !isDown;
+    }
+
+    heightInGround = Clamp(heightInGround, 0.0f, size.y);
 }
 
 void PiranhaPlant::render() {
@@ -312,14 +301,17 @@ void PiranhaPlant::render() {
 }
 
 void PiranhaPlant::hit() {
-    isDead = true;
+    if (isCollisionTrue) {
+        isDead = true;
+    }
 }
 
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
-    heightInGround = 66;
-    topBound = position.y + 66;
+    heightInGround = size.y;
+    topBound = position.y + size.y;
     bottomBound = position.y;
+    isDown = true;;
 }
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : PiranhaPlant(position, size, speed) {
@@ -330,32 +322,25 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2
 }
 void InversePiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-
-    if (!isPauseCollision) {
-        timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime;
-            currentTextureIndex = (currentTextureIndex + 1) % 2;
-            texture = textures[currentTextureIndex];
-        }
-
-        if (isDown) {
-            position.y += speed.y * deltaTime; 
-            heightInGround -= speed.y * deltaTime; 
-        } else {
-            position.y -= speed.y * deltaTime; 
-            heightInGround += speed.y * deltaTime; 
-        }
-        if (position.y <= bottomBound || position.y >= topBound) {
-            isDown = !isDown;
-        }
-    } else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime;
-            isPauseCollision = false;
-        }
+    
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        texture = textures[currentTextureIndex];
     }
+
+    if (isDown) {
+        position.y += speed.y * deltaTime; 
+        heightInGround -= speed.y * deltaTime; 
+    } else {
+        position.y -= speed.y * deltaTime; 
+        heightInGround += speed.y * deltaTime; 
+    }
+    if (position.y <= bottomBound || position.y >= topBound) {
+        isDown = !isDown;
+    }
+   
 }
 
 
@@ -398,7 +383,7 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
     size = { 63, 87 };
-    speed = { 25, 0 };
+    speed = { 130, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
@@ -491,12 +476,12 @@ void ShyGuy::update(float deltaTime) {
 void ShyGuy::render() {
     if (!isDead) {
         if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, size.x/21, WHITE);
+            DrawTextureEx(texture, position, 0.0f, size.x/21, RAYWHITE);
         } else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
             Rectangle destRec = { position.x, position.y, size.x, size.y };
             Vector2 origin = { 0.0f, 0.0f };
-            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
     }
 }
@@ -666,7 +651,7 @@ Projectile::Projectile(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
     size = { 66, 70 };
-    this->speed = {50, 17};
+    this->speed = {220, 153};
     active = true;
 }
 
@@ -744,8 +729,8 @@ Lakitu::Lakitu(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
 
     size = { 72, 108 };
-    speed = { 25, 0 };
-    shootTime = 6.0f;
+    speed = { 150, 0 };
+    shootTime = 2.0f;
     curentTimer = 0.0f;
 
     setBound(0, 1024, 0, 768);
