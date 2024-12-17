@@ -695,7 +695,7 @@ void Projectile::update(float deltaTime) {
 
 void Projectile::render() {
     if (active) {
-        DrawTextureEx(texture, position, 0.0f, 0.5f, RAYWHITE);
+        DrawTextureEx(texture, position, 0.0f, 1.0f, RAYWHITE);
     }
 }
 
@@ -743,7 +743,7 @@ Lakitu::Lakitu(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
 
-    size = { 48, 72 };
+    size = { 72, 108 };
     speed = { 25, 0 };
     shootTime = 6.0f;
     curentTimer = 0.0f;
