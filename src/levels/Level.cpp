@@ -17,7 +17,18 @@ Level* LevelFactory::CreateLevel(int Type)
         case LEVEL_103:
             return Level103::GetLevel103();
             break;
-        
+        case HIDDEN_LEVEL_101:
+            return HiddenLevel101::GetHiddenLevel101();
+            break;
+        case HIDDEN_LEVEL_103:
+            return HiddenLevel103::GetHiddenLevel103();
+            break;
+        case HIDDEN_LEVEL_102:
+            return HiddenLevel102::GetHiddenLevel102();
+            break;
+        default:
+            return nullptr;
+            break;
     }
 }
 Level::Level()
@@ -582,6 +593,8 @@ bool Level::EndPipeHandler::update()
             if (isCollidingLeft(PlayerBox, EnvironmentBox))
             {
                 m_Player ->SlidePipe(slidingDirection::right);
+                m_Player ->powerDown();
+                m_Player ->powerDown();
                 inPipe = true;
             }
             else

@@ -28,18 +28,12 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     fin >> NumberOfEnemies;
     for (int i = 0; i < NumberOfEnemies; i++)
     {
-        // int Type;
-        // fin >> Type;
-        // float X, Y;
-        // fin >> X >> Y;
-        // switch (Type)
-        // {
-        // case EnemyType::GOOMBA:
-        //     Level -> m_Enemies.push_back(new Goomba(Vector2{X, Y}));
-        //     break;
-        // default:
-        //     break;
-        // }
+        int Type;
+        fin >> Type;
+        float X, Y;
+        fin >> X >> Y;
+        EnemyFactory& Factory = EnemyFactory::GetEnemyFactory();
+        // Factory.CreateEnemy()
     }
     int NumberOfItems;
     fin >> NumberOfItems;
