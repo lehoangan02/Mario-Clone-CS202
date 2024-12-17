@@ -213,7 +213,6 @@ void Mushroom::Update(float deltaTime) {
     {
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
-        if (position.x > 300) APPEARED = false;
     }
 }
 void Mushroom::Accelerate(float deltaTime) {
