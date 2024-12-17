@@ -19,8 +19,12 @@ int main() {
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
     
-    PiranhaPlant koopa({300, 300});
-    
+    Goomba goomba({300, 300});
+    PiranhaPlant piranha({200, 200});
+    KoopaTroopa koopa({400, 400});
+    ShyGuy shy({500, 500});
+    InversePiranhaPlant inversePiranha({600, 600});
+    Lakitu lakitu({100, 100});
     while(!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -36,14 +40,28 @@ int main() {
         // goomba2.test();
         // goomba2.update(0.01f);
         // goomba2.render();
-        DrawLineEx({700,100}, {700,400}, 2.0f, RED);
+        goomba.update(0.01f);
+        goomba.render();
+
         koopa.update(0.01f);
         koopa.render();
         if (IsKeyDown(KEY_SPACE)) {
             koopa.hit();
         }
-        // shy.update(0.01f);
-        // shy.render();
+
+
+        shy.update(0.01f);
+        shy.render();
+
+        piranha.update(0.01f);
+        piranha.render();
+
+        inversePiranha.update(0.01f);
+        inversePiranha.render();
+
+        lakitu.update(0.01f);
+        lakitu.render();
+        
         EndDrawing();
         
     }
