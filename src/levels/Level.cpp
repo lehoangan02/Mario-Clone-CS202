@@ -17,7 +17,9 @@ Level* LevelFactory::CreateLevel(int Type)
         case LEVEL_103:
             return Level103::GetLevel103();
             break;
-        
+        case LEVEL_102:
+            return Level102::GetLevel102();
+
     }
 }
 Level::Level()
