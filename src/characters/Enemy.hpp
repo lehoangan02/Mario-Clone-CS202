@@ -78,7 +78,7 @@ class EnemyFactory
         ~EnemyFactory() = default;
     public:
         static EnemyFactory& GetEnemyFactory();
-        Enemy* CreateEnemy(EnemyType type, Vector2 position);
+        Enemy* CreateEnemy(EnemyType type, Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 
 //isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
@@ -98,7 +98,7 @@ public:
     void render() override;
 
 public:
-    static Goomba* getGoomba(Vector2 position);
+    static Goomba* getGoomba(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 
 class KoopaTroopa : public Enemy {
@@ -124,7 +124,7 @@ class KoopaTroopa : public Enemy {
         void render() override;
 
     public:
-        static KoopaTroopa* getKoopaTroopa(Vector2 position);
+        static KoopaTroopa* getKoopaTroopa(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 
 class PiranhaPlant : public Enemy {
@@ -148,7 +148,7 @@ class PiranhaPlant : public Enemy {
         virtual void render() override;
 
     public:
-        static PiranhaPlant* getPiranhaPlant(Vector2 position);
+        static PiranhaPlant* getPiranhaPlant(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 //size of piranha plant should be scale of 32x66
 //position is the top left of piranha full out of ground.
@@ -169,7 +169,7 @@ class InversePiranhaPlant : public PiranhaPlant {
         void render() override;
 
     public:
-        static InversePiranhaPlant* getInversePiranhaPlant(Vector2 position);
+        static InversePiranhaPlant* getInversePiranhaPlant(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 
 //size of shy guy should be scale of 21x29
@@ -188,7 +188,7 @@ class ShyGuy : public Enemy {
         void render() override;
 
     public:
-        static ShyGuy* getShyGuy(Vector2 position);
+        static ShyGuy* getShyGuy(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 
 };
 
@@ -233,7 +233,7 @@ public:
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
 
 public:
-    static Lakitu* getLakitu(Vector2 position);
+    static Lakitu* getLakitu(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound);
 };
 
 
