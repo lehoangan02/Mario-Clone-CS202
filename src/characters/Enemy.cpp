@@ -325,32 +325,32 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2
 }
 void InversePiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-    if (!isDying) {
-        timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime;
-            currentTextureIndex = (currentTextureIndex + 1) % 2;
-            texture = textures[currentTextureIndex];
-        }
+    if (isDying) {
+        isDown = false;
+        speed.y *= 1.1f;
+    }
+    if (isDying && heightInGround >= size.y) {
+        isDead = true;
+        isDying = false;
+    }
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        texture = textures[currentTextureIndex];
+    }
 
-        if (isDown) {
-            position.y += speed.y * deltaTime; 
-            heightInGround -= speed.y * deltaTime; 
-        } else {
-            position.y -= speed.y * deltaTime; 
-            heightInGround += speed.y * deltaTime; 
-        }
-        if (position.y <= bottomBound || position.y >= topBound) {
-            isDown = !isDown;
-        }
+    if (isDown) {
+        position.y += speed.y * deltaTime; 
+        heightInGround -= speed.y * deltaTime; 
+    } else {
+        position.y -= speed.y * deltaTime; 
+        heightInGround += speed.y * deltaTime; 
     }
-    else {
-        dyingTime += deltaTime;
-        if (dyingTime >= 0.2f) {
-            isDead = true;
-            isDying = false;
-        }
+    if (position.y <= bottomBound || position.y >= topBound) {
+        isDown = !isDown;
     }
+    heightInGround = Clamp(heightInGround, 0.0f, size.y);
    
 }
 
