@@ -36,6 +36,7 @@ public:
     virtual void flipDirection();
     virtual void hit();
     void resetSpeedY() { speed.y = 0; isDown = false; }
+    void resetSpeedX() { speed.x = 0; isRight = false; }
 
     Vector2 getPosition() const { return position; };
     void setPosition(Vector2 position) { this->position = position; };
@@ -195,6 +196,7 @@ class Projectile : public Enemy {
 private:
     bool active;
 public:
+    ~Projectile() = default;
     Projectile(Vector2 position);
 
     EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PROJECTILE; };

@@ -188,7 +188,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::render() {
-    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
+    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
 }
 
 Goomba* Goomba::getGoomba(Vector2 position) {
@@ -286,7 +286,7 @@ void PiranhaPlant::render() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height - heightInGround/size.y * 66};
         Rectangle destRec = { position.x, position.y, size.x, size.y - heightInGround};
         Vector2 origin = { 0.0f, 0.0f };
-        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
     }
 }
 
@@ -360,7 +360,7 @@ void InversePiranhaPlant::render() {
 
         Vector2 origin = {0.0f, 0.0f };
 
-        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
     }
 }
 
@@ -621,15 +621,15 @@ void KoopaTroopa::update(float deltaTime) {
 void KoopaTroopa::render() {
     if (!isDead) {
         if (isShell) {
-            DrawTextureEx(textures[2], position, 0.0f, size.x/16, WHITE);
+            DrawTextureEx(textures[2], position, 0.0f, size.x/16, RAYWHITE);
         } else  if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
+            DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
         }
         else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
             Rectangle destRec = { position.x, position.y, size.x, size.y };
             Vector2 origin = { 0.0f, 0.0f };
-            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
     }
 }
@@ -684,7 +684,7 @@ void Projectile::update(float deltaTime) {
 
 void Projectile::render() {
     if (active) {
-        DrawTextureEx(texture, position, 0.0f, 0.5f, WHITE);
+        DrawTextureEx(texture, position, 0.0f, 0.5f, RAYWHITE);
     }
 }
 
@@ -839,15 +839,15 @@ void Lakitu::update(float deltaTime) {
 void Lakitu::render() {
     if (!isDead) {
         if (isRight == false) {
-            if (!isShoot) DrawTextureEx(texture, position, 0.0f, size.x/60, WHITE);
-            else DrawTextureEx(textures[3], position, 0.0f, size.x/60, WHITE);
+            if (!isShoot) DrawTextureEx(texture, position, 0.0f, size.x/60, RAYWHITE);
+            else DrawTextureEx(textures[3], position, 0.0f, size.x/60, RAYWHITE);
         }
         else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
             Rectangle destRec = { position.x, position.y, size.x, size.y };
             Vector2 origin = { 0.0f, 0.0f };
-            if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
-            else DrawTexturePro(textures[3], sourceRec, destRec, origin, 0.0f, WHITE);
+            if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
+            else DrawTexturePro(textures[3], sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
     }
 
