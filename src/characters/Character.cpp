@@ -96,6 +96,9 @@ void Character::control(bool enabled) {
 		invincile();
 		MusicManager::getInstance().PlayMusic(Invincible);
 	}
+	if (IsKeyPressed(KEY_L)) {
+		killEnemy();
+	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
@@ -228,7 +231,8 @@ void Character::touchEnemy() {
 	}
 }
 void Character::killEnemy() {
-	//velocity,
+	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
+	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
 }
 void Character::ShootFireball() {
 	if (fireballs.size() < maxFireballs && currentReloadTime <= 0.0f) {
