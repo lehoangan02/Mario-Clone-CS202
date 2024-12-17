@@ -102,6 +102,9 @@ class KoopaTroopa : public Enemy {
     private:
         bool isShell;
         Vector2 shellSpeed;
+        float fallSpeed;
+        bool isBouncing;
+        float bounceTime;
     public:
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);

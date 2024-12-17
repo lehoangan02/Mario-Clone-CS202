@@ -520,6 +520,10 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     isDead = false;
     isShell = false;
     setBound(0, 1024, 0, 768);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -548,6 +552,10 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     isDead = false;
     isShell = false;
     setBound(0, 1024, 0, 768);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -573,12 +581,20 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     isDead = false;
     isShell = false;
     setBound(leftBound, rightBound, topBound, bottomBound);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
 }
 
 void KoopaTroopa::hit() {
     if (isShell) {
         isDying = true;
-    } else {
+        isBouncing = true;
+        bounceTime = 0.15f; 
+        fallSpeed = -200.0f; 
+    } 
+    else {
         isShell = true;
         shellSpeed.x = 2 * speed.x;
         shellSpeed.y = 2 * speed.y;
@@ -588,46 +604,56 @@ void KoopaTroopa::hit() {
 void KoopaTroopa::update(float deltaTime) {
     if (isDead) return;
 
-    if (isShell) {
-        if (isRight) {
-            position.x += shellSpeed.x * deltaTime;
-        } else {
-            position.x -= shellSpeed.x * deltaTime;
+    if (isDying) {
+        if (isBouncing) {
+            bounceTime -= deltaTime;
+            position.y += fallSpeed * deltaTime;
+            if (bounceTime <= 0.0f) {
+                isBouncing = false;
+                fallSpeed = 0.0f;
+            }
+        } 
+        else {
+            fallSpeed += 981.0f*3 * deltaTime; 
+            position.y += fallSpeed * deltaTime;
+            if (position.y > bottomBound) {
+                isDead = true;
+                isDying = false;
+            }
         }
-    } else {
-        if (isRight) {
-            position.x += speed.x * deltaTime;
-        } else {
-            position.x -= speed.x * deltaTime;
+    } 
+    else {
+        if (isShell) {
+            if (isRight) {
+                position.x += shellSpeed.x * deltaTime;
+            } else {
+                position.x -= shellSpeed.x * deltaTime;
+            }
+        } 
+        else {
+            if (isRight) {
+                position.x += speed.x * deltaTime;
+            } 
+            else {
+                position.x -= speed.x * deltaTime;
+            }
+
+            timer += deltaTime;
+            if (timer >= animationTime) {
+                timer -= animationTime;
+                currentTextureIndex = (currentTextureIndex + 1) % 2;
+                texture = textures[currentTextureIndex];
+            }
         }
-
-        timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime;
-            currentTextureIndex = (currentTextureIndex + 1) % 2;
-            texture = textures[currentTextureIndex];
-        }
     }
-
-    if (position.x < leftBound) {
-        isRight = true;
-    }
-    if (position.x + size.x > rightBound) {
-        isRight = false;
-    }
-
-    if (position.y <= topBound) {
-        isDown = true;
-    }
-
-    if (position.y + size.y >= bottomBound) {
-        isDown = false;
+    if (position.x < leftBound || position.x + texture.width * size.x / 16 > rightBound) {
+        isRight = !isRight;
     }
 }
 
 void KoopaTroopa::render() {
-    if (!isDead) {
-        if (isShell) {
+    if (!isDead ) {
+        if (isShell || isDying) {
             DrawTextureEx(textures[2], position, 0.0f, size.x/16, RAYWHITE);
         } else  if (isRight == false) {
             DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
