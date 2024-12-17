@@ -8,27 +8,27 @@ EnemyFactory& EnemyFactory::GetEnemyFactory()
     static EnemyFactory Factory;
     return Factory;
 }
-Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position)
+Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound)
 {
     switch (type)
     {
         case EnemyType::GOOMBA:
-            return Goomba::getGoomba(position);
+            return Goomba::getGoomba(position, leftBound, rightBound, topBound, bottomBound);
             break;
         case EnemyType::KOOPA_TROOPA:
-            return KoopaTroopa::getKoopaTroopa(position);
+            return KoopaTroopa::getKoopaTroopa(position, leftBound, rightBound, topBound, bottomBound);
             break;
         case EnemyType::PIRANHA_PLANT:
-            return PiranhaPlant::getPiranhaPlant(position);
+            return PiranhaPlant::getPiranhaPlant(position, leftBound, rightBound, topBound, bottomBound);
             break;
         case EnemyType::INVERSE_PIRANHA_PLANT:
-            return InversePiranhaPlant::getInversePiranhaPlant(position);
+            return InversePiranhaPlant::getInversePiranhaPlant(position, leftBound, rightBound, topBound, bottomBound);
             break;
         case EnemyType::SHY_GUY:
-            return ShyGuy::getShyGuy(position);
+            return ShyGuy::getShyGuy(position, leftBound, rightBound, topBound, bottomBound);
             break;
         case EnemyType::LAKITU:
-            return Lakitu::getLakitu(position);
+            return Lakitu::getLakitu(position, leftBound, rightBound, topBound, bottomBound);
             break;
     }
     return nullptr; 
@@ -191,8 +191,9 @@ void Goomba::render() {
     if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
 }
 
-Goomba* Goomba::getGoomba(Vector2 position) {
+Goomba* Goomba::getGoomba(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static Goomba goomba(position);
+    goomba.setBound(leftBound, rightBound, topBound, bottomBound);
     return &goomba;
 }
 
@@ -294,8 +295,9 @@ void PiranhaPlant::hit() {
     isDead = true;
 }
 
-PiranhaPlant* PiranhaPlant::getPiranhaPlant(Vector2 position) {
+PiranhaPlant* PiranhaPlant::getPiranhaPlant(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static PiranhaPlant piranhaPlant(position);
+    piranhaPlant.setBound(leftBound, rightBound, topBound, bottomBound);
     return &piranhaPlant;
 }
 
@@ -364,8 +366,9 @@ void InversePiranhaPlant::render() {
     }
 }
 
-InversePiranhaPlant* InversePiranhaPlant::getInversePiranhaPlant(Vector2 position) {
+InversePiranhaPlant* InversePiranhaPlant::getInversePiranhaPlant(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static InversePiranhaPlant inversePiranhaPlant(position);
+    inversePiranhaPlant.setBound(leftBound, rightBound, topBound, bottomBound);
     return &inversePiranhaPlant;
 }
 
@@ -485,8 +488,9 @@ void ShyGuy::render() {
     }
 }
 
-ShyGuy* ShyGuy::getShyGuy(Vector2 position) {
+ShyGuy* ShyGuy::getShyGuy(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static ShyGuy shyGuy(position);
+    shyGuy.setBound(leftBound, rightBound, topBound, bottomBound);
     return &shyGuy;
 }
 
@@ -634,8 +638,9 @@ void KoopaTroopa::render() {
     }
 }
 
-KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position) {
+KoopaTroopa* KoopaTroopa::getKoopaTroopa(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static KoopaTroopa koopaTroopa(position);
+    koopaTroopa.setBound(leftBound, rightBound, topBound, bottomBound);
     return &koopaTroopa;
 }
 
@@ -857,7 +862,8 @@ void Lakitu::render() {
 }
 
 
-Lakitu* Lakitu::getLakitu(Vector2 position) {
+Lakitu* Lakitu::getLakitu(Vector2 position, float leftBound, float rightBound, float topBound, float bottomBound) {
     static Lakitu lakitu(position);
+    lakitu.setBound(leftBound, rightBound, topBound, bottomBound);
     return &lakitu;
 }
