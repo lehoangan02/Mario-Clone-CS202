@@ -230,7 +230,7 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    size = { 32, 66 };
+    size = { 64, 132 };
     speed = { 0, 60};
     isRight = false;
     isDown = false;
