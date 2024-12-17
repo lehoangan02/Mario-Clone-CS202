@@ -128,7 +128,7 @@ class PiranhaPlant : public Enemy {
     friend class EnemyFactory;
     protected:
         float heightInGround;
-        bool isPauseCollision;
+        
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
@@ -137,7 +137,6 @@ class PiranhaPlant : public Enemy {
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
 
-        void setHit(bool isPauseCollision) override { this->isPauseCollision = isPauseCollision; };
         virtual Rectangle getBoundingBox () const { return {position.x, position.y, size.x, size.y - heightInGround}; };
 
         void hit() override;

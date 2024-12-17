@@ -235,7 +235,6 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
     setBound(0, 1024, 0, 768);
@@ -261,7 +260,6 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
     setBound(0, 1024, 0, 768);
@@ -271,35 +269,26 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
 void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
 
-    if (!isPauseCollision) {
-            timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime; 
-            currentTextureIndex = (currentTextureIndex + 1) % 2; 
-            texture = textures[currentTextureIndex];
-        }
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime; 
+        currentTextureIndex = (currentTextureIndex + 1) % 2; 
+        texture = textures[currentTextureIndex];
+    }
 
-        if(isDown) {
-            position.y += speed.y * deltaTime;
-            heightInGround += speed.y * deltaTime;
-        }
-        else {
-            position.y -= speed.y * deltaTime;
-            heightInGround -= speed.y * deltaTime;
-        }
-        if(position.y > topBound|| position.y < bottomBound ) {
-            isDown = !isDown;
-        }
-
-        heightInGround = Clamp(heightInGround, 0.0f, size.y);
+    if(isDown) {
+        position.y += speed.y * deltaTime;
+        heightInGround += speed.y * deltaTime;
     }
     else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime; 
-            isPauseCollision = false;
-        }
+        position.y -= speed.y * deltaTime;
+        heightInGround -= speed.y * deltaTime;
     }
+    if(position.y > topBound|| position.y < bottomBound ) {
+        isDown = !isDown;
+    }
+
+    heightInGround = Clamp(heightInGround, 0.0f, size.y);
 }
 
 void PiranhaPlant::render() {
@@ -312,7 +301,9 @@ void PiranhaPlant::render() {
 }
 
 void PiranhaPlant::hit() {
-    isDead = true;
+    if (isCollisionTrue) {
+        isDead = true;
+    }
 }
 
 
@@ -331,32 +322,25 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2
 }
 void InversePiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-
-    if (!isPauseCollision) {
-        timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime;
-            currentTextureIndex = (currentTextureIndex + 1) % 2;
-            texture = textures[currentTextureIndex];
-        }
-
-        if (isDown) {
-            position.y += speed.y * deltaTime; 
-            heightInGround -= speed.y * deltaTime; 
-        } else {
-            position.y -= speed.y * deltaTime; 
-            heightInGround += speed.y * deltaTime; 
-        }
-        if (position.y <= bottomBound || position.y >= topBound) {
-            isDown = !isDown;
-        }
-    } else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime;
-            isPauseCollision = false;
-        }
+    
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        texture = textures[currentTextureIndex];
     }
+
+    if (isDown) {
+        position.y += speed.y * deltaTime; 
+        heightInGround -= speed.y * deltaTime; 
+    } else {
+        position.y -= speed.y * deltaTime; 
+        heightInGround += speed.y * deltaTime; 
+    }
+    if (position.y <= bottomBound || position.y >= topBound) {
+        isDown = !isDown;
+    }
+   
 }
 
 
