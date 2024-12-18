@@ -401,17 +401,23 @@ void InHole::execute(float deltaTime) {
 
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
-if (totalTime < 5.0f) {
-	character->control(false);
-	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
-	character->Update(deltaTime);
-	totalTime += deltaTime;
-	std::cout << totalTime;
-}
-else {
-	character->setWin();
-	character->control(false);
-	character->setVelocity(Vector2{ 0.0f, 0.0f });
-	character->Update(deltaTime);
-}
+	if (totalTime == 0.0f) {
+		MusicManager::getInstance().PlayMusic(LevelFinished);
+	}
+	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+		MusicManager::getInstance().StopMusic();
+	}
+	if (totalTime < 5.0f) {
+		character->control(false);
+		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
+		character->Update(deltaTime);
+		totalTime += deltaTime;
+		//std::cout << totalTime;
+	}
+	else {
+		character->setWin();
+		character->control(false);
+		character->setVelocity(Vector2{ 0.0f, 0.0f });
+		character->Update(deltaTime);
+	}
 }

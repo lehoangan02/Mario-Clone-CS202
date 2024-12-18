@@ -51,6 +51,7 @@ enum MusicTrack {
 	Athletic,
 	UnderGround,
 	SMB,
+	LevelFinished,
 };
 
 class MusicManager {
@@ -63,7 +64,7 @@ public:
     void PlayMusic(MusicTrack music);
     void UpdateMusic();
     void StopMusic();
-
+	bool IsMusicPlaying();
 private:
     int currentTrack;
     MusicManager();

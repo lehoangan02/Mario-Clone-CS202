@@ -50,7 +50,6 @@ void SoundManager::PlaySoundEffect(SoundTrack sound) {
 	case FLAGDOWN_SOUND:
 		PlaySound(soundSet[8]);
 		break;
-
     }
 }
 
@@ -67,6 +66,7 @@ MusicManager::MusicManager() {
 	musicSet.push_back(LoadMusicStream("assets/audio/background_Athletic.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/background_UnderGround.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/background_SMB.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/level_finished.wav"));
 }
 
 MusicManager::~MusicManager() {
@@ -112,6 +112,10 @@ void MusicManager::PlayMusic(MusicTrack music) {
 		PlayMusicStream(musicSet[SMB]);
 		currentTrack = 7;
 		break;
+	case LevelFinished:
+		PlayMusicStream(musicSet[LevelFinished]);
+		currentTrack = 8;
+		break;
 	}
 }
 
@@ -124,6 +128,12 @@ void MusicManager::UpdateMusic() {
 }
 
 void MusicManager::StopMusic() {
+	if (currentTrack == -1) return;
 	StopMusicStream(musicSet[currentTrack]);
     currentTrack = -1;
+}
+
+bool MusicManager::IsMusicPlaying() {
+	if (currentTrack == -1) return false;
+	return IsMusicStreamPlaying(musicSet[currentTrack]);
 }
