@@ -37,7 +37,6 @@ Character::Character(float jumpHeight)
 	this->InvincibleColor = WHITE;
 	this->score = 0;
 	position = Vector2{ 20 , 0 };
-
 }
 
 Character::~Character()
@@ -95,16 +94,47 @@ void Character::control(bool enabled) {
 	}
 	if (IsKeyPressed(KEY_I)) {
 		invincile();
+		MusicManager::getInstance().PlayMusic(Invincible);
+	}
+	if (IsKeyPressed(KEY_L)) {
+		killEnemy();
 	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
+	if (IsKeyPressed(KEY_ONE)) {
+		SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+	}
+	if (IsKeyPressed(KEY_TWO)) {
+		SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
+	}
+	if (IsKeyPressed(KEY_THREE)) {
+		SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+	}
+	if (IsKeyPressed(KEY_FOUR)) {
+		SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+	}
+	if (IsKeyPressed(KEY_FIVE)) {
+		SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+	}
+	if (IsKeyPressed(KEY_SIX)) {
+		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
+	}
+	if (IsKeyPressed(KEY_SEVEN)) {
+		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	}
+	if (IsKeyPressed(KEY_EIGHT)) {
+		SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
+	}
+
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+		SoundManager::getInstance().PlaySoundEffect(JUMP_SOUND);
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
+		ShootFireball();
 	}
 }
 void Character::changeForm(int form) {
@@ -147,6 +177,8 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
+			MusicManager::getInstance().StopMusic();
+			MusicManager::getInstance().PlayMusic(OverWorld);
 			isInvincible = false;
 			InvincibleColor = WHITE;
 			invincibleDuration = 6.0f;
@@ -189,15 +221,50 @@ void Character::powerDown() {
 void Character::touchEnemy() {
     if (form != 0) {
 		powerDown();
+		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
 		return;
 	}
 	else {
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
 		isDie = true;
+		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	}
+}
+void Character::killEnemy() {
+	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
+	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+}
+void Character::ShootFireball() {
+	if (fireballs.size() < maxFireballs && currentReloadTime <= 0.0f) {
+		Vector2 fireballPos = { position.x + size.x / 2, position.y + size.y / 2 };
+		Vector2 fireballVel = { faceRight ? 500.0f : -500.0f, 0.0f };
+		float fireballScale = 3.0f; // Example scaling factor
+		float fireballMaxDistance = 1000.0f; // Example maximum distance
+		fireballs.push_back(Fireball(fireballPos, fireballVel, fireballScale, fireballMaxDistance));
+		currentReloadTime = reloadTime; // Reset the reload timer
+	}
+}
+
+void Character::UpdateFireballs(float deltaTime) {
+	for (auto& fireball : fireballs) {
+		fireball.Update(deltaTime);
+	}
+	// Update the reload timer
+	if (currentReloadTime > 0.0f) {
+		currentReloadTime -= deltaTime;
+	}
+}
+
+void Character::DrawFireballs() {
+	for (auto& fireball : fireballs) {
+		if (!fireball.HasExceededMaxDistance() && fireball.position.x >= 0 && fireball.position.x <= GetScreenWidth()) {
+			fireball.Draw();
+		}
 	}
 }
 void Character::Draw()
 {
+	//std::cout << "Score" << score << std::endl;
 	if (!isVisible) return;
 	//std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
@@ -205,9 +272,10 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
+	DrawFireballs();
 };
 
-Mario::Mario() : Character(300.0f) {
+Mario::Mario() : Character(400.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
@@ -246,6 +314,7 @@ void Mario::Update(float deltaTime) {
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
+	UpdateFireballs(deltaTime);
 }
 
 void Character::SlidePipe(slidingDirection direction) {

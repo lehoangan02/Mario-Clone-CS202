@@ -71,6 +71,7 @@ Game& Game::operator=(const Game& other) {
 void Game::start() {
     while (!WindowShouldClose()) {
         update(GetFrameTime());
+		MusicManager::getInstance().UpdateMusic();
         draw();
         if (IsKeyDown(KEY_N)) {
             nextLevel();
