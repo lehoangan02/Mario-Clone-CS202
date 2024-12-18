@@ -7,7 +7,7 @@
 #define SLOW_BRAKE 800.0f
 #define GRAVITY 3500.0f
 
-Character::Character(float jumpHeight) 
+Character::Character(float jumpHeight) : firePool(nullptr)
 {
 	this->form = 0;
 	this->accX = 0.0f;
@@ -36,6 +36,9 @@ Character::Character(float jumpHeight)
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
 	this->score = 0;
+	if (this->firePool == nullptr) {
+		this->firePool = new FirePool(2);
+	}
 	position = Vector2{ 20 , 0 };
 }
 
@@ -134,8 +137,26 @@ void Character::control(bool enabled) {
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
-		ShootFireball();
+		Vector2 direction = { 0,0 };
+		if (faceRight) direction = { 1,0.3f };
+		else direction = { -1,0.3f };
+		Vector2 firePos = { position.x + size.x, position.y + size.y / 2 };
+		firePool->GetAvailableFireBall(firePos, direction);
 	}
+		/*for (int i = 0; i < this->firePool->fireballs.size(); i++) {
+			if (firePool->fireballs[i].IsActive()) {
+				if (firePool->fireballs[i].getPosition().y > 600.0f) {
+					firePool->fireballs[i].Bounce();
+					std::cout << "bounce" << " ball " << i + 1 << std::endl;
+				}
+				if (firePool->fireballs[i].getPosition().x > 1200.0f) {
+					firePool->fireballs[i].Deactivate();
+					std::cout << "Deact" << std::endl;
+				}
+			}
+		}*/
+	// Deactivate if out of bounds
+
 }
 void Character::changeForm(int form) {
 	this->form = form;
@@ -234,34 +255,7 @@ void Character::killEnemy() {
 	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
 }
-void Character::ShootFireball() {
-	if (fireballs.size() < maxFireballs && currentReloadTime <= 0.0f) {
-		Vector2 fireballPos = { position.x + size.x / 2, position.y + size.y / 2 };
-		Vector2 fireballVel = { faceRight ? 500.0f : -500.0f, 0.0f };
-		float fireballScale = 3.0f; // Example scaling factor
-		float fireballMaxDistance = 1000.0f; // Example maximum distance
-		fireballs.push_back(Fireball(fireballPos, fireballVel, fireballScale, fireballMaxDistance));
-		currentReloadTime = reloadTime; // Reset the reload timer
-	}
-}
 
-void Character::UpdateFireballs(float deltaTime) {
-	for (auto& fireball : fireballs) {
-		fireball.Update(deltaTime);
-	}
-	// Update the reload timer
-	if (currentReloadTime > 0.0f) {
-		currentReloadTime -= deltaTime;
-	}
-}
-
-void Character::DrawFireballs() {
-	for (auto& fireball : fireballs) {
-		if (!fireball.HasExceededMaxDistance() && fireball.position.x >= 0 && fireball.position.x <= GetScreenWidth()) {
-			fireball.Draw();
-		}
-	}
-}
 void Character::Draw()
 {
 	//std::cout << "Score" << score << std::endl;
@@ -272,7 +266,7 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
-	DrawFireballs();
+	firePool->Draw();
 };
 
 Mario::Mario() : Character(400.0f) {
@@ -314,7 +308,7 @@ void Mario::Update(float deltaTime) {
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
-	UpdateFireballs(deltaTime);
+	firePool->Update();	
 }
 
 void Character::SlidePipe(slidingDirection direction) {
