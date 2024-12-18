@@ -105,29 +105,32 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
-	if (IsKeyPressed(KEY_ONE)) {
-		SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+	if (IsKeyPressed(KEY_F1)) {
+		MusicManager::getInstance().PlayMusic(OverWorld);
 	}
-	if (IsKeyPressed(KEY_TWO)) {
-		SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
+	if (IsKeyPressed(KEY_F2)) {
+		MusicManager::getInstance().PlayMusic(Origin_UnderWorld);
 	}
-	if (IsKeyPressed(KEY_THREE)) {
-		SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+	if (IsKeyPressed(KEY_F3)) {
+		MusicManager::getInstance().PlayMusic(Invincible);
 	}
-	if (IsKeyPressed(KEY_FOUR)) {
-		SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+	if (IsKeyPressed(KEY_F4)) {
+		MusicManager::getInstance().PlayMusic(SuperBellHill);
 	}
-	if (IsKeyPressed(KEY_FIVE)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+	if (IsKeyPressed(KEY_F5)) {
+		MusicManager::getInstance().PlayMusic(FlowerGarden);
 	}
-	if (IsKeyPressed(KEY_SIX)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
+	if (IsKeyPressed(KEY_F6)) {
+		MusicManager::getInstance().PlayMusic(Athletic);
 	}
-	if (IsKeyPressed(KEY_SEVEN)) {
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	if (IsKeyPressed(KEY_F7)) {
+		MusicManager::getInstance().PlayMusic(UnderGround);
 	}
-	if (IsKeyPressed(KEY_EIGHT)) {
-		SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
+	if (IsKeyPressed(KEY_F8)) {
+		MusicManager::getInstance().PlayMusic(SMB);
+	}
+	if (IsKeyPressed(KEY_F9)) {
+		MusicManager::getInstance().StopMusic();
 	}
 
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
@@ -198,7 +201,6 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
-			MusicManager::getInstance().StopMusic();
 			MusicManager::getInstance().PlayMusic(OverWorld);
 			isInvincible = false;
 			InvincibleColor = WHITE;

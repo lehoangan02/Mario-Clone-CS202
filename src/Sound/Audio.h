@@ -44,8 +44,13 @@ private:
 
 enum MusicTrack {
     OverWorld,
-	UnderGround,
+	Origin_UnderWorld,
 	Invincible,
+	SuperBellHill,
+	FlowerGarden,
+	Athletic,
+	UnderGround,
+	SMB,
 };
 
 class MusicManager {
