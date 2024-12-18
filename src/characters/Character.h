@@ -111,6 +111,9 @@ protected:
 
 	bool isWin;
 	void changeForm(int form);
+
+	int Chartype;
+
 public:
 	FirePool* firePool;
 	float accX;
@@ -118,6 +121,7 @@ public:
 	slidingDirection slideDirection;
 
 	int points;
+	int getType() { return Chartype; };
 };
 
 //CharacterFactory

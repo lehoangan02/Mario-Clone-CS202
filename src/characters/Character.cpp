@@ -272,6 +272,7 @@ void Character::Draw()
 };
 
 Mario::Mario() : Character(400.0f) {
+	Chartype = MARIO;
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
@@ -343,6 +344,17 @@ void Character::SlidePipe(slidingDirection direction) {
 };
 
 Luigi::Luigi() : Character(3.0f) {
+	Chartype = LUIGI;
+	/*textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiFire.png"));
+	imageCounts.push_back({ 7,1 });
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
+	float switchTime = 0.1f;
+	animation = Animation(&textures[form], imageCounts[form], switchTime);
+	size = { (float)textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale };
+	this->SlideDist = { size.x,size.y };*/
 	
 }
 void Luigi::Update(float deltaTime) {
