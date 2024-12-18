@@ -26,8 +26,7 @@ void Fireball::Draw() {
     Rectangle sourceRect = animation.uvRect;
 
     // Define the destination rectangle (where to draw the texture on the screen)
-    Rectangle destRect = { position.x, position.y, fabs(texture.width / 4) * scale, texture.height * scale };
-
+    Rectangle destRect = { position.x, position.y, static_cast<float>(fabs(texture.width / 4) * scale), texture.height * scale };
     // Define the origin point (center of the texture)
     Vector2 origin = { (texture.width * scale) / 2, (texture.height * scale) / 2 };
 
