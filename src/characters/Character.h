@@ -111,9 +111,8 @@ protected:
 
 	bool isWin;
 	void changeForm(int form);
-
-	FirePool* firePool;
 public:
+	FirePool* firePool;
 	float accX;
 	bool sliding;
 	slidingDirection slideDirection;
