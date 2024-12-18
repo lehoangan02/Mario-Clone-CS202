@@ -27,6 +27,7 @@ public:
 
     void nextLevel();
     void hiddenLevel();
+    void restartLevel();
 
     // Implement notify method
     void notify(Component* sender, LEVEL_RETURN_MESSAGE eventCode) override;

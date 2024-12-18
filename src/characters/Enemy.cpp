@@ -405,7 +405,7 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
-    size = { 63, 87 };
+    size = { 40, 40 };
     speed = { 130, 0 };
     isRight = false;
     isDown = false;
@@ -519,8 +519,6 @@ void ShyGuy::update(float deltaTime) {
             timer -= animationTime;
             currentTextureIndex = (currentTextureIndex + 1) % 6;
             texture = textures[currentTextureIndex];
-            size.x = texture.width;
-            size.y = texture.height;
         }
 
         if (position.x < leftBound) {
@@ -543,10 +541,10 @@ void ShyGuy::update(float deltaTime) {
 void ShyGuy::render() {
     if (!isDead) {
         if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, 1.5f, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
         } else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, size.x * 1.5f, size.y * 1.5f };
+            Rectangle destRec = { position.x, position.y, size.x * 2.0f, size.y * 2.0f };
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }

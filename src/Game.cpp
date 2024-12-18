@@ -53,11 +53,14 @@ Game& Game::operator=(const Game& other) {
 void Game::start() {
     update(GetFrameTime());
     draw();
-    if (IsKeyDown(KEY_N)) {
+    if (IsKeyDown(KEY_A)) {
         nextLevel();
     }
-    else if (IsKeyDown(KEY_O)) {
+    else if (IsKeyDown(KEY_B)) {
         hiddenLevel();
+    }
+    else if (IsKeyDown(KEY_C)) {
+        restartLevel();
     }
 }
 
@@ -65,6 +68,12 @@ void Game::update(float deltaTime) {
     if (level) {
         level->update(deltaTime);
     }
+    // if (player.GetType() == Character::MARIO) {
+    //     player->update(deltaTime);
+    // }
+    // else if (player.GetType() == Character::LUIGI) {
+    //     player->update(deltaTime);
+    
 }
 
 void Game::draw() {
@@ -95,6 +104,9 @@ void Game::notify(Component* sender, LEVEL_RETURN_MESSAGE eventCode) {
             break;
         case 6:
             state = LEVEL_RETURN_MESSAGE::QUIT;
+            break;
+        case 7:
+            state = LEVEL_RETURN_MESSAGE::RESTART;
             break;
         default:
             break;
@@ -129,20 +141,30 @@ void Game::hiddenLevel() {
     else return;
 
     player->setPosition(Vector2{20, 0});
-    level->update(0.0f);
+    level->update(0.01f);
     level->attachPlayer(player);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
+}
+
+void Game::restartLevel() {
+    level = factory.CreateLevel(level->GetLevelType());
+    player->setPosition(Vector2{20, 0});
+    level->update(0.01f);
+    level->attachPlayer(player);
 }
 
 void Game::handleState() {
     switch (state) {
         case LEVEL_RETURN_MESSAGE::PAUSE:
             //drawPauseMenu();
+            level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
+            level->continueLevel();
             // Handle continue state
             break;
         case LEVEL_RETURN_MESSAGE::RUNNING:
+            level->continueLevel();
             // Handle running state
             break;
         case LEVEL_RETURN_MESSAGE::HIDDEN:
@@ -156,6 +178,9 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             //drawQuitButton();
+            break;
+        case LEVEL_RETURN_MESSAGE::RESTART:
+            restartLevel();
             break;
     }
 }
