@@ -78,6 +78,9 @@ int main() {
         {
             starman->onNotify();
         }
+        if (IsKeyPressed(KEY_E)) {
+            starman->setHit();
+        }
         coin1->Update(deltatime);
         coin->Update(deltatime);
         mushroom->Update(deltatime);

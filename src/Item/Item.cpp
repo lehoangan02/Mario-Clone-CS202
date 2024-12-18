@@ -8,7 +8,7 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
      elapsedTime(0), currentFrame(0), isReturning(false), APPEARED(appeared),
-    Notify(false)    
+    Notify(false), hit(false), FinishedSpawning(false)
 {
     position = startPosition;
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
@@ -79,8 +79,7 @@ void Coin::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true), hit(false)
-{
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true){
     if (startPosition.x < endPosition.x) {
         this->velocity.x = fabs(this->velocity.x);
     }
@@ -178,7 +177,7 @@ void Coin::Draw() { //animation
 }
 Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
-    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
+    , isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
 
 void Mushroom::applyEffect(Character* character) {
     return;
@@ -263,7 +262,7 @@ void Mushroom::Draw() {
 
 FireFlower::FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, FIREFLOWER_FRAME_COUNT, FIREFLOWER_FRAME_TIME, velocity, false),
-    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
 void FireFlower::applyEffect(Character* character) {
     return;
 }
@@ -327,7 +326,7 @@ void FireFlower::Draw() {
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
     Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, false),
-    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), FinishedSpawning(false), hit(false) {}
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
