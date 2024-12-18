@@ -160,6 +160,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
         if (IsKeyPressed(KEY_E))
         {
             CurrentItem->onNotify();
+            SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
         }
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
         AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i].first->m_Position, m_EnvironmentInteractive[i].first->getSize());
@@ -328,6 +329,7 @@ void Level::handleItemLogic()
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player -> powerUp();
+                SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 MushroomItem->setHit();
                 m_Player->increaseScore();
             }
@@ -663,13 +665,13 @@ void Level::EnemyHandler::update()
             {
                 if (!m_Level->m_Player->isDead())
                 {
-                    m_Level->m_Player->killEnemy();
+                    EnemyBox.setFixed(true);
+                    resolveCollisions(PlayerBox, EnemyBox);
+                    m_Level->m_Player->setPosition(PlayerBox.getPosition());
                     m_Level->m_Player->touchEnemy();
                     std::cout << "Touching Enemy" << std::endl;
                 }
-                EnemyBox.setFixed(true);
-                resolveCollisions(PlayerBox, EnemyBox);
-                m_Level->m_Player->setPosition(PlayerBox.getPosition());
+                
 
             }
         }
