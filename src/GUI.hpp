@@ -48,12 +48,10 @@ public:
     void setChoose(bool newChoose);
 };
 
-class QuitButton : public Button {
-private:
-    Texture2D texture;
+class CircleButton : public Button {
 public:
-    QuitButton() = default;
-    QuitButton(Rectangle rect);
+    CircleButton(Rectangle rect, Color defaultColor, const std::string& text, Color textColor, float fontSize, Font font, bool isChoose) :Button(rect, defaultColor, text, textColor, fontSize, font, isChoose) {}
+    CircleButton() = default;
     void draw();
 };
 
@@ -69,19 +67,15 @@ private:
     Texture2D playTexture;
     Button continueButton;
     Button newGameButton;
+    Button quit1Button;
 
     Texture2D settingTexture;
-    Button characterButton;
-    Button soundButton;
-
-    Texture2D characterTexture;
-    Button characterButtons[2];
-
-    Texture2D soundTexture;
-    Button soundButtons[2];
+    Button characterButton[2];
+    CircleButton levelButton[3];
+    Button quit2Button;
 
     Texture2D highScoreTexture;
-    QuitButton quitButton;
+    Button quitButton;
 
     Texture2D inforTexture;
     int type;
@@ -90,7 +84,7 @@ public:
     Menu();
     void draw();
     int characterMenu();
-    int soundMenu();
+    int levelMenu();
 
     int handle();
 };

@@ -4,17 +4,18 @@ void Application::run() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
-            
-        if (tab >= 0 && tab < 10) {
-            menu.draw();
-            tab = menu.handle();
-        } 
-        else  if (tab == 10){
+
+        int currentState = menu.handle(); 
+
+        if (currentState == 10) {
+            game.start();  
+
+        }
+        else if (currentState == 11) {
+            game = Game(menu.characterMenu(), menu.levelMenu());
             game.start();
         }
-        else if (tab == 11) {
-            game.start();
-        }
+        menu.draw();
         EndDrawing();
     }
 
