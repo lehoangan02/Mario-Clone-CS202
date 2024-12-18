@@ -59,9 +59,9 @@ public:
     void setDirection(slidingDirection direction);
 
     void setDead(bool isDead) { this->isDead = isDead; };
-    bool getIsDead() const { return isDead; };
+    bool getIsDead() const { return isDying; };
 
-    bool isHit() const { return isDead; };
+    bool isHit() const { return isDying; };
     
     void setBound(float left, float right, float top, float bottom) ;
     void setBoundLR(float left, float right) { leftBound = left; rightBound = right; };
