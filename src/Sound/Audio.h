@@ -21,7 +21,7 @@ enum SoundTrack {
 	POWERDOWN_SOUND,
 	DIE_SOUND,
 	ITEMPOPUP_SOUND,
-	FLAGDOWN_SOUND,
+	FLAGDOWN_SOUND
 };
 
 class SoundManager {
@@ -52,6 +52,7 @@ enum MusicTrack {
 	UnderGround,
 	SMB,
 	LevelFinished,
+    FlagDown
 };
 
 class MusicManager {

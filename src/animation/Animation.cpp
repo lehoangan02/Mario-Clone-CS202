@@ -24,10 +24,19 @@ void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire, b
 	currentImage.y = 0; // modify this if texture having states
 	if (state == 0) currentImage.x = 0;
 	else if (state == 2) currentImage.x = 5;
+	else if (state == 6) {
+		if (currentImage.x != 6 && currentImage.x != 7) currentImage.x = 6;
+		totalTime += 0.01f;
+		if (totalTime >= switchTime) {
+			totalTime = 0;
+			currentImage.x++;
+			if (currentImage.x >= 8) currentImage.x = 6;
+		}
+	}
 	else if (state == 3)
 	{
 		totalTime += 0.02f;
-		currentImage.x = 6;
+		currentImage.x = 8;
 		//std::cout << totalTime << std::endl;
 		if (totalTime >= switchTime) {
 			totalTime = 0;
@@ -43,8 +52,7 @@ void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire, b
 		}
 	}
 	else if (state == 5) {
-		totalTime += deltaTime;
-		currentImage.x = 6;
+		currentImage.x = 8;
 	}
 	else if (state == 1) {
 		totalTime += deltaTime;
