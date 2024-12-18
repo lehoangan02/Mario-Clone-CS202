@@ -238,10 +238,12 @@ void Level::handleItemLogic()
             //     std::cout << "Trying to flip" << std::endl;
             //     MushroomItem->FlipDirection();
             // }
+            
             if (MushroomItem->isFinishSpawning())
             {
                 MushroomItem->Accelerate(GetFrameTime());
             }
+            if (!(MushroomItem->isHit()) && !MushroomItem->isFinishSpawning()) continue;
             for (int j = 0; j < m_EnvironmentInteractive.size(); ++j)
             {
                 AABBox ItemBox = AABBox(MushroomItem->GetPosition(), MushroomItem->GetSize());
