@@ -69,17 +69,14 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
-    while (!WindowShouldClose()) {
-        update(GetFrameTime());
-        draw();
-        if (IsKeyDown(KEY_N)) {
-            nextLevel();
-        }
-        else if (IsKeyDown(KEY_O)) {
-            hiddenLevel();
-        }
+    update(GetFrameTime());
+    draw();
+    if (IsKeyDown(KEY_N)) {
+        nextLevel();
     }
-    CloseWindow();
+    else if (IsKeyDown(KEY_O)) {
+        hiddenLevel();
+    }
 }
 
 void Game::update(float deltaTime) {
@@ -89,12 +86,9 @@ void Game::update(float deltaTime) {
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
     if (level) {
         level->render();
     }
-    EndDrawing();
 }
 
 
@@ -156,7 +150,7 @@ void Game::nextLevel() {
     } else {
     }
     player->setPosition(Vector2{20, 0});
-    level->update(0.0f);
+    level->update(0.01f);
     level->attachPlayer(player);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }

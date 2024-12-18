@@ -73,6 +73,8 @@ Menu::Menu() {
     type = 0;
 }
 
+
+
 void Menu::draw(){
     DrawTextureEx(pageTexture, {0, 0}, 0, 0.125, WHITE);
     playButton.draw();
@@ -162,3 +164,4 @@ int Menu::levelMenu() {
     else if (levelButton[0].getChoose()) return 1;
     else return 2;
 }
+
