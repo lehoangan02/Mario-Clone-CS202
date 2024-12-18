@@ -25,11 +25,13 @@ int main() {
 //     // ShyGuy shy({500, 500});
 //     // InversePiranhaPlant inversePiranha({600, 600});
 //     // Lakitu lakitu({100, 100});
+//     Texture2D texture = LoadTexture("assets/textures/quit.png");
 //     while(!WindowShouldClose()) {
 //         BeginDrawing();
 //         ClearBackground(RAYWHITE);
 //         DrawRectangleLines(300, 300, 42, 58, RED);
-        
+
+//         DrawTextureEx(texture, {100, 100}, 0.0f, 0.13, WHITE);
 //         goomba.update(0.01f);
 //         goomba.render();
 //         if (IsKeyPressed(KEY_SPACE)) {
