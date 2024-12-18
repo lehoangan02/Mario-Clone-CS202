@@ -22,7 +22,7 @@ IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
     : position(pos), size(size), texture(tex), switchTime(COIN_FRAME_TIME), totalFrames(COIN_FRAME_COUNT), 
     APPEARED(true), elapsedTime(0), currentFrame(0), hit(false) {
     frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
-    
+   
     
 }
 void IdleCoin::Update(float deltaTime) {
@@ -40,7 +40,7 @@ void IdleCoin::Draw() {
                 frameSize.x,
                 frameSize.y
     };
-    Rectangle destRect = { position.x , position.y , size.x , size.y };
+    Rectangle destRect = { position.x + 25, position.y , size.x , size.y };
     Vector2 origin = { 0, 0 };
     DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
 }
