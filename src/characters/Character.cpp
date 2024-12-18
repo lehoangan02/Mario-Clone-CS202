@@ -210,23 +210,30 @@ void Character::updateFormChangeAnimation() {
 	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
 	std::cout << "scale: " << scale << std::endl;*/
 }
-void Character::hitFlag(Vector2 flagPos) {
-	/*if (!pullFlag) {
-		std::cout << "not pull flag" << std::endl;
+void Character::hitFlag() {
+	if (!pullFlag) {
 		return;
 	};
-	static const float Speed =100;
-	static const float EndPosition = 600;
-	position.x = flagPos.x;
-	position.y += Speed*
-	if (position.y > EndPosition)
+	float EndPosition = 700.0f - size.y;
+	velocity.x = 0.0f;
+	velocity.y = 300.0f;
+	if (position.y >= EndPosition)
 	{
-		std::cout << "Cc";
-		position.y = 1;
-		pullFlag = false;
-	}*/
+		position.y = 700.0f-size.y;
+		velocity.y = 0;
+		if (faceRight) {
+			position.x += size.x;
+			faceRight = false;
+		}
+	}
 }
-
+void Character::setPullFlag(bool pullFlag) {
+	if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);	
+	this->pullFlag = pullFlag;
+	if (!this->pullFlag) {
+		position.y = 750.0f - size.y;
+	}
+}
 void Character::powerUp() {
 	if (form == 0) {
 		changeForm(1);
@@ -273,12 +280,12 @@ void Character::Draw()
 
 Mario::Mario() : Character(400.0f) {
 	Chartype = MARIO;
-	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
-	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
-	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
-	imageCounts.push_back({ 7,1 });
-	imageCounts.push_back({ 6,1 });
-	imageCounts.push_back({ 7,1 });
+	textures.push_back(LoadTexture("assets/textures/marioSmall3.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig3.png"));
+	textures.push_back(LoadTexture("assets/textures/marioFire3.png"));
+	imageCounts.push_back({ 9,1 });
+	imageCounts.push_back({ 8,1 });
+	imageCounts.push_back({ 9,1 });
 	float switchTime = 0.1f;
 	animation = Animation(&textures[form], imageCounts[form], switchTime);
 	size = { (float) textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale};
@@ -286,7 +293,9 @@ Mario::Mario() : Character(400.0f) {
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
-	if (velocity.x == 0.0f || sliding) {
+
+	if (pullFlag) state = 6;
+	else if (velocity.x == 0.0f || sliding) {
 		state = 0;
 	}
 	else if (!canJump) state = 2;
@@ -310,6 +319,7 @@ void Mario::Update(float deltaTime) {
 	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
+	hitFlag();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();	
 }
@@ -401,23 +411,54 @@ void InHole::execute(float deltaTime) {
 
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
-	if (totalTime == 0.0f) {
-		MusicManager::getInstance().PlayMusic(LevelFinished);
-	}
-	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
-		MusicManager::getInstance().StopMusic();
-	}
-	if (totalTime < 5.0f) {
-		character->control(false);
-		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
-		character->Update(deltaTime);
-		totalTime += deltaTime;
-		//std::cout << totalTime;
+	if (!character->isPullFlag()) {
+		if (totalTime == 0.0f) {
+			MusicManager::getInstance().PlayMusic(LevelFinished);
+		}
+		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+			MusicManager::getInstance().StopMusic();
+		}
+		if (totalTime < 5.0) {
+			character->control(false);
+			character->setVelocity(Vector2{ 225.0f, 1.0f });
+			character->Update(deltaTime);
+			totalTime += deltaTime;
+			//std::cout << totalTime;
+		}
+		else {
+			character->setWin();
+			character->control(false);
+			character->setVelocity(Vector2{ 0.0f, 0.0f });
+			character->Update(deltaTime);
+		}
 	}
 	else {
-		character->setWin();
-		character->control(false);
-		character->setVelocity(Vector2{ 0.0f, 0.0f });
 		character->Update(deltaTime);
 	}
+
 }
+
+
+//Backup 
+//AutoMove* AutoMove::instance = nullptr;
+//void AutoMove::execute(float deltaTime) {
+//	if (totalTime == 0.0f) {
+//		MusicManager::getInstance().PlayMusic(LevelFinished);
+//	}
+//	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+//		MusicManager::getInstance().StopMusic();
+//	}
+//	if (totalTime < 5.0f) {
+//		character->control(false);
+//		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
+//		character->Update(deltaTime);
+//		totalTime += deltaTime;
+//		//std::cout << totalTime;
+//	}
+//	else {
+//		character->setWin();
+//		character->control(false);
+//		character->setVelocity(Vector2{ 0.0f, 0.0f });
+//		character->Update(deltaTime);
+//	}
+//}

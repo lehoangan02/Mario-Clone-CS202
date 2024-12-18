@@ -60,7 +60,9 @@ public:
 
 	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
 
-	void hitFlag(Vector2 flagPos);
+	void hitFlag();
+	void setPullFlag(bool pullFlag) ;
+	bool isPullFlag() { return pullFlag; };
 
 	void increaseScore(int Incre) { this->score += Incre; };
 	void increaseScore() { this->score += 1; };
