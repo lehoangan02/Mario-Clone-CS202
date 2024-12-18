@@ -505,7 +505,7 @@ void FlagPole::update()
 void FlagPole::pullFlag()
 {
     if (!m_Pull) return;
-    static const float Speed = 300;
+    static const float Speed = 600;
     static const float EndPosition = 750 - 200;
     m_FlagPosition.y += Speed * GetFrameTime();
     if (m_FlagPosition.y > EndPosition)
