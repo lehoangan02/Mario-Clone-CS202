@@ -11,6 +11,7 @@ void Button::draw(float radius) {
     
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
     if (isChoose) this->isHovered = false;
+    DrawRectangleRounded({outerRect.x + 1.7f, outerRect.y + 1.7f, outerRect.width, outerRect.height}, radius/55, 32, Fade(BLACK, 0.7f));
     DrawRectangleRounded(this->outerRect, radius/55, 32, this->isHovered ? hoverColor : tmpColor);
     DrawTextPro(this->font, this->content.c_str(), this->contentPos, {0,0}, 0, this->fontSize, 2, this->contentColor);
 
@@ -46,11 +47,11 @@ void QuitButton::draw() {
 Menu::Menu() {
     this->pageTexture = ResourceManager::GetInstance()->GetTexture("pageTexture");
     
-    playButton = Button({271, 595, 205, 59}, Color{255, 232, 147, 255} ,"Play", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
-    settingButton = Button({547, 595, 205, 59 }, Color{255, 232, 147, 255} ,"Setting", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
-    highScoreButton = Button({271, 665, 205, 59}, Color{255, 232, 147, 255} ,"High Score", BLACK, 26,
+    playButton = Button({177, 560, 205, 59}, Color{240, 193, 225, 255} ,"Play", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    settingButton = Button({662, 560, 205, 59 }, Color{240, 193, 225, 255} ,"Setting", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    highScoreButton = Button({177, 659, 205, 59}, Color{240, 193, 225, 255} ,"High Score", BLACK, 26,
         ResourceManager::GetInstance()->GetFont(), 0);
-    inforButton = Button({547, 665, 205, 59}, Color{255, 232, 147, 255},"Info", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    inforButton = Button({662, 659, 205, 59}, Color{240, 193, 225, 255},"Info", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
     
     this->playTexture = ResourceManager::GetInstance()->GetTexture("playTexture");
     this->settingTexture = ResourceManager::GetInstance()->GetTexture("settingTexture");
@@ -59,26 +60,26 @@ Menu::Menu() {
     this->highScoreTexture = ResourceManager::GetInstance()->GetTexture("highScoreTexture");
     this->inforTexture = ResourceManager::GetInstance()->GetTexture("inforTexture");
  
-    continueButton = Button({432, 342, 141, 42}, Color{251, 180, 165, 255} ,"Continue", BLACK, 22,
+    continueButton = Button({441, 290, 141, 42}, Color{240, 193, 225, 255} ,"Continue", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    newGameButton = Button({432, 419, 141, 42}, Color{251, 180, 165, 255},"New Game", BLACK, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    newGameButton = Button({441, 363, 141, 42}, Color{240, 193, 225, 255},"New Game", BLACK, 22, ResourceManager::GetInstance()->GetFont(), 0);
 
-    characterButton = Button({431, 286, 141, 42}, Color{251, 180, 165, 255} ,"Character", BLACK, 22,
+    characterButton = Button({441, 239, 141, 42}, Color{240, 193, 225, 255} ,"Character", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    soundButton = Button({431, 363, 141, 42}, Color{251, 180, 165, 255} ,"Sound", BLACK, 22,
+    soundButton = Button({441, 316, 141, 42}, Color{240, 193, 225, 255} ,"Sound", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
 
-    characterButtons[0] = Button({286, 488, 141, 42}, Color{251, 180, 165, 255} ,"Mario", BLACK, 22,
+    characterButtons[0] = Button({288, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    characterButtons[1] = Button({579, 488, 141, 42}, Color{251, 180, 165, 255} ,"Luigi", BLACK, 22,
+    characterButtons[1] = Button({582, 422, 141, 42}, Color{240, 193, 225, 255} ,"Luigi", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     
-    soundButtons[0] = Button({432, 323, 141, 42}, Color{251, 180, 165, 255} ,"Yes", BLACK, 22,
+    soundButtons[0] = Button({441, 258, 141, 42}, Color{240, 193, 225, 255} ,"Yes", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    soundButtons[1] = Button({432, 402, 141, 42}, Color{251, 180, 165, 255} ,"No", BLACK, 22,
+    soundButtons[1] = Button({441, 332, 141, 42}, Color{240, 193, 225, 255} ,"No", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
 
-    quitButton = QuitButton(Rectangle{242, 250, 30, 30});
+    quitButton = QuitButton(Rectangle{256, 189, 30, 30});
     type = 0;
 }
 
@@ -92,35 +93,35 @@ void Menu::draw(){
     inforButton.draw();
     
     if (type == 1) {
-        DrawTextureEx(playTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(playTexture, {236, 167}, 0, 0.125, WHITE);
         continueButton.draw();
         newGameButton.draw();
         quitButton.draw();
     }
     else if (type == 2) {
-        DrawTextureEx(settingTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(settingTexture, {236, 167}, 0, 0.125, WHITE);
         characterButton.draw();
         soundButton.draw();
         quitButton.draw();
     }
     else if (type == 3) {
-        DrawTextureEx(characterTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(characterTexture, {236, 167}, 0, 0.125, WHITE);
         characterButtons[0].draw();
         characterButtons[1].draw();
         quitButton.draw();
     }
     else if (type == 4) {
-        DrawTextureEx(soundTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(soundTexture, {236, 167}, 0, 0.125, WHITE);
         soundButtons[0].draw();
         soundButtons[1].draw();
         quitButton.draw();
     }
     else if (type == 5) {
-        DrawTextureEx(highScoreTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(highScoreTexture, {236, 167}, 0, 0.125, WHITE);
         quitButton.draw();
     }
     else if (type == 6) {
-        DrawTextureEx(inforTexture, {227, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(inforTexture, {236, 167}, 0, 0.125, WHITE);
         quitButton.draw();
     }
 }

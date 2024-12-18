@@ -110,6 +110,9 @@ void Game::nextLevel() {
          level = factory.CreateLevel(LevelFactory::LEVEL_103);
     } 
     else return;
+
+    //delete player;
+    //player = new Mario;
     player->setPosition(Vector2{20, 0});
     level->update(0.01f);
     level->attachPlayer(player);
