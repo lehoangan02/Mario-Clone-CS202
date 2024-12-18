@@ -161,6 +161,7 @@ public:
 class StarMan : public Item {
 private:
 	bool isRising;
+	float gravity = 100;
 	float riseProgress;
 	float riseSpeed;
 	bool FinishedSpawning;
@@ -176,7 +177,15 @@ public:
 	Itemtype getItemID() const override;
 	bool isFinishedSpawning() { return FinishedSpawning; }
 	void Move(float upperBoundary, float lowerBoundary, float deltaTime);
-	void setHit();
-	bool isHit();
+	void setHit() {
+		hit = true;
+		APPEARED = false;
+	}
+	bool isHit() {
+		return hit;
+	}
+	void slantDirection();
+	void Accelerate(float deltaTime);
+	void FlipDirection();
 };
 

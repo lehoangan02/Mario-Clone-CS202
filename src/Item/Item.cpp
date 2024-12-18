@@ -358,12 +358,18 @@ void StarMan::Update(float deltaTime) {
     if (APPEARED) {
         onFalling = true;
         position.x += velocity.x;
-        position.y += velocity.y;
-        if (position.y >= 500.0f) {
-            onFalling = false;
-            velocity.y *= -1;
-        }
+        
     }
+}
+void StarMan::slantDirection() {
+    velocity.y *= -1;
+}
+void StarMan::Accelerate(float deltaTime) {
+    velocity.y += gravity * deltaTime;
+}
+void StarMan::FlipDirection() {
+    velocity.x *= -1;
+    velocity.y *= -1;
 }
 void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {
     
