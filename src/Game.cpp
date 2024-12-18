@@ -2,39 +2,23 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101)),
-      character(ResourceManager::GetInstance()->GetTexture("mario"))
+      level(factory.CreateLevel(LevelFactory::LEVEL_101))
 {
-    // character = ResourceManager::GetInstance()->GetTexture("mario");
-    // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player = new Mario;
     std::cout << "Level Type: " << level -> GetLevelType() << std::endl;
     player->setPosition(Vector2{20, 0});  
     level->attachPlayer(player);  
 }
 
-Game::Game(int characterMenu, int levelMenu) 
+Game::Game(int characterMenu, int soundMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
       level(nullptr)  
 {
-    if (levelMenu == 0) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    }
-    else if (levelMenu == 1) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
-    }
-    else {
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    }
-    
     if (characterMenu == 0) {
-        character = ResourceManager::GetInstance()->GetTexture("mario");
+        player = new Mario;
+    } else {
+        player = new Luigi;
     }
-    else {
-        character = ResourceManager::GetInstance()->GetTexture("mario");
-    }
-
-    player = new Mario;
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
 }
@@ -56,11 +40,9 @@ Game& Game::operator=(const Game& other) {
     if (this == &other) {
         return *this; 
     }
-
     if (level) {
         level = nullptr;
     }
-
     factory = other.factory; 
     level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
 
@@ -91,9 +73,7 @@ void Game::draw() {
     }
 }
 
-
-
-void Game::notify(Component* sender, int eventCode) {
+void Game::notify(Component* sender, LEVEL_RETURN_MESSAGE eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;
@@ -121,34 +101,15 @@ void Game::notify(Component* sender, int eventCode) {
     }
 }
 
-void Game::pause() {
-    notify(nullptr, 0); // Pause event
-}
-
-void Game::resume() {
-    notify(nullptr, 1); // Continue event
-}
-
-void Game::win() {
-    notify(nullptr, 4); // Win event
-}
-
-void Game::lose() {
-    notify(nullptr, 5); // Lose event
-}
-
-void Game::quit() {
-    notify(nullptr, 6); // Quit event
-}
 
 void Game::nextLevel() {
-    // Logic to switch to the next level
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    // } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    } else {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102);
     }
+     else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+         level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    } 
+    else return;
     player->setPosition(Vector2{20, 0});
     level->update(0.01f);
     level->attachPlayer(player);
@@ -157,11 +118,13 @@ void Game::nextLevel() {
 
 void Game::hiddenLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    // else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
-    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
+    else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
     else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103);
+    else return;
+
     player->setPosition(Vector2{20, 0});
     level->update(0.0f);
     level->attachPlayer(player);
