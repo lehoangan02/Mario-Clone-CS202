@@ -86,6 +86,7 @@ void Level::checkEnvironmentCollisions()
 }
 void Level::resolveEnvironmentCollisions()
 {
+    if (m_Player->isDead()) return;
     for (int i = 0; i < m_Environment.size(); i++)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -205,6 +206,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
 }
 void Level::applyBoundaries()
 {
+    if (m_Player->isDead()) return;
     // std::cout << "Applying Boundaries" << std::endl;
     if (isPlayerInHole())
     {
@@ -541,6 +543,11 @@ void Level::update(float DeltaTime)
     handleItemLogic();
     resolveFlagPoleCollisions();
     isPlayerFinished = isPlayerInHole();
+    if (m_Player -> haveWon())
+    {
+        // for winning
+        // SoundManager::getInstance().PlaySoundEffect(LEVELCOMPLETE_SOUND);
+    }
 }
 bool Level::isPlayerInHole()
 {
