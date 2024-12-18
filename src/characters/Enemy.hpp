@@ -5,6 +5,15 @@
 #include <vector>
 
 
+enum class EnemyType {
+    GOOMBA,
+    KOOPA_TROOPA,
+    PIRANHA_PLANT,
+    INVERSE_PIRANHA_PLANT,
+    LAKITU,
+    SHY_GUY,
+    PROJECTILE
+ };
 
 class Enemy{
 protected:
@@ -19,7 +28,8 @@ protected:
     bool isDown;
     bool isRight;
     bool isDead;
-    bool isCollisionTrue;
+    bool isDying;
+    float dyingTime;
 
     float animationTime;       
     float timer;               
@@ -28,9 +38,10 @@ protected:
     float leftBound, rightBound, topBound, bottomBound;   
 public:
     Enemy() = default;
-    Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0) {}
-    Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
-    Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0) {}
+    Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
+    Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
+    virtual EnemyType getEnemyType() const = 0;
 
     void accelerate(float deltaTime);
     virtual void flipDirection();
@@ -50,8 +61,7 @@ public:
     void setDead(bool isDead) { this->isDead = isDead; };
     bool getIsDead() const { return isDead; };
 
-    virtual void setHit(bool isCollisionTrue) { this->isCollisionTrue = isCollisionTrue; };
-    bool isHit() const { return isCollisionTrue; };
+    bool isHit() const { return isDead; };
     
     void setBound(float left, float right, float top, float bottom) ;
     void setBoundLR(float left, float right) { leftBound = left; rightBound = right; };
@@ -64,16 +74,6 @@ public:
 
 class EnemyFactory
 {
-    public:
-        enum EnemyType {
-            GOOMBA,
-            KOOPA_TROOPA,
-            PIRANHA_PLANT,
-            INVERSE_PIRANHA_PLANT,
-            LAKITU,
-            SHY_GUY,
-            PROJECTILE
-        };
     private:
         EnemyFactory() = default;
         ~EnemyFactory() = default;
@@ -85,13 +85,10 @@ class EnemyFactory
 //isCollisionTrue la neu va cham true thi se chuyen sang texture flat vai khung hinh roi chet, other is die...
 class Goomba : public Enemy {
     friend class EnemyFactory;
-private:
-    bool isDying;
-    float dyingTime;
 public:
     Goomba(Vector2 position);
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
-    EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::GOOMBA; };
+    EnemyType getEnemyType() const  { return EnemyType::GOOMBA; };
 
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
     void hit() override;
@@ -105,11 +102,14 @@ class KoopaTroopa : public Enemy {
     private:
         bool isShell;
         Vector2 shellSpeed;
+        float fallSpeed;
+        bool isBouncing;
+        float bounceTime;
     public:
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::KOOPA_TROOPA; };
+        EnemyType getEnemyType() const { return EnemyType::KOOPA_TROOPA; };
 
         void setShell(bool isShell) { this->isShell = isShell; };
         bool getIsShell() const { return isShell; };
@@ -132,7 +132,7 @@ class PiranhaPlant : public Enemy {
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PIRANHA_PLANT; };
+        EnemyType getEnemyType() const { return EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
         float getHeightInGround() const { return heightInGround; };
@@ -155,7 +155,7 @@ class InversePiranhaPlant : public PiranhaPlant {
     public:
         InversePiranhaPlant(Vector2 position);
         InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
-        EnemyFactory::EnemyType getEnemyType() const  { return EnemyFactory::EnemyType::INVERSE_PIRANHA_PLANT; };
+        EnemyType getEnemyType() const  { return EnemyType::INVERSE_PIRANHA_PLANT; };
 
         Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
         void update(float deltaTime) override;
@@ -167,11 +167,15 @@ class InversePiranhaPlant : public PiranhaPlant {
 //neu va cham dung thi shy guy moi bien mat(tuc ham hit duoc goi se set isDead = true neu isCollisionTrue = true)
 class ShyGuy : public Enemy {
     friend class EnemyFactory;
+    private:
+        float fallSpeed;
+        bool isBouncing;
+        float bounceTime;
     public:
         ShyGuy(Vector2 position);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-        EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::SHY_GUY; };
+        EnemyType getEnemyType() const { return EnemyType::SHY_GUY; };
 
         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
         void hit() override;
@@ -187,7 +191,7 @@ public:
     ~Projectile() = default;
     Projectile(Vector2 position);
 
-    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::PROJECTILE; };
+    EnemyType getEnemyType() const { return EnemyType::PROJECTILE; };
     void update(float deltaTime);
     void render();
     void hit();
@@ -212,7 +216,7 @@ public:
     Lakitu(Vector2 position);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
-    EnemyFactory::EnemyType getEnemyType() const { return EnemyFactory::EnemyType::LAKITU; };
+    EnemyType getEnemyType() const { return EnemyType::LAKITU; };
 
     void hit() override;
     void update(float deltaTime) override;
