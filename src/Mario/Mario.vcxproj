@@ -130,6 +130,8 @@
     <ClCompile Include="..\animation\Animation.cpp" />
     <ClCompile Include="..\Application.cpp" />
     <ClCompile Include="..\characters\Character.cpp" />
+    <ClCompile Include="..\characters\Enemy.cpp" />
+    <ClCompile Include="..\characters\Fireball.cpp" />
     <ClCompile Include="..\Game.cpp" />
     <ClCompile Include="..\GUI.cpp" />
     <ClCompile Include="..\Item\Item.cpp" />
@@ -138,7 +140,9 @@
     <ClCompile Include="..\levels\Flyweight.cpp" />
     <ClCompile Include="..\levels\Level.cpp" />
     <ClCompile Include="..\levels\MapLoader.cpp" />
+    <ClCompile Include="..\Obstacle\Obstacle.cpp" />
     <ClCompile Include="..\ResourceManager.cpp" />
+    <ClCompile Include="..\Sound\Audio.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +150,8 @@
     <ClInclude Include="..\Application.hpp" />
     <ClInclude Include="..\characters\Character.h" />
     <ClInclude Include="..\characters\Enemy.h" />
+    <ClInclude Include="..\characters\Enemy.hpp" />
+    <ClInclude Include="..\characters\Fireball.h" />
     <ClInclude Include="..\characters\Luigi.h" />
     <ClInclude Include="..\characters\Mario.h" />
     <ClInclude Include="..\Game.hpp" />
@@ -157,7 +163,15 @@
     <ClInclude Include="..\levels\Level.hpp" />
     <ClInclude Include="..\levels\MapLoader.hpp" />
     <ClInclude Include="..\levels\Serialization.hpp" />
+    <ClInclude Include="..\Obstacle\Obstacle.h" />
     <ClInclude Include="..\ResourceManager.hpp" />
+    <ClInclude Include="..\Sound\Audio.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Maps\0.txt" />
+    <Text Include="..\..\Maps\1.txt" />
+    <Text Include="..\..\Maps\2.txt" />
+    <Text Include="..\..\Maps\5.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

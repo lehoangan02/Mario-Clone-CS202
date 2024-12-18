@@ -13,12 +13,13 @@ enum TextureType
     LIFT,
     GRASS,
     MOUNTAIN,
-    END_PIPE,
+    END_PIPE_TOP,
     EMPTY_QUESTION_BLOCK,
     DIRT,
     LEFT_GRASS_PLATFORM,
     MID_GRASS_PLATFORM,
-    RIGHT_GRASS_PLATFORM
+    RIGHT_GRASS_PLATFORM,
+    END_PIPE_SIDE,
 };
 class Flyweight
 {
@@ -186,7 +187,20 @@ class EndPipeTopTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
     private:
         EndPipeTopTextureFlyWeight();
         ~EndPipeTopTextureFlyWeight();
+    private:
+        Texture2D m_AdditionalTexture = LoadTexture("assets/textures/PipeTop.png");
     public:
         static EndPipeTopTextureFlyWeight* GetEndPipeTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class EndPipeSideTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        EndPipeSideTextureFlyWeight();
+        ~EndPipeSideTextureFlyWeight();
+    private:
+        Texture2D m_AdditionalTexture = LoadTexture("assets/textures/PipeBottom.png");
+    public:
+        static EndPipeSideTextureFlyWeight* GetEndPipeSideTextureFlyWeight();
         void render(Vector2 Position);
 };

@@ -5,6 +5,7 @@
 #include "AABBox.hpp"
 #include "MapLoader.hpp"
 #include "../Item/Item.h"
+#include "../characters/Enemy.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -15,7 +16,8 @@ enum LEVEL_RETURN_MESSAGE
     HIDDEN,
     WIN,
     LOSE,
-    QUIT
+    QUIT,
+    RESTART
 };
 
 class Level : public Subject
@@ -32,6 +34,16 @@ class Level : public Subject
         void addEndPipe(EndPipe* Pipe);
         void attachPlayer(Character* Player);
         bool update();
+        bool isPlayerInPipe() { return inPipe; };
+    };
+    class EnemyHandler
+    {
+        Level* m_Level;
+        public:
+        EnemyHandler() = default;
+        void setLevel(Level* Level) { m_Level = Level; };
+        void update();
+
     };
     class Background
     {
@@ -86,20 +98,23 @@ class Level : public Subject
         };
     friend class MapLoader;
     // private:
-        FlagPole m_FlagPole = FlagPole(1000);
+    
     protected:
+    FlagPole *m_FlagPole = nullptr;
     int m_LevelID;
     std::vector<Enemy*> m_Enemies;
     std::vector<EnvironmentObject*> m_Environment;
+    std::vector<IdleCoin*> m_IdleCoin;
     std::vector<std::pair<EnvironmentObjectInteractive*, Item*>> m_EnvironmentInteractive;
     std::vector<DrawableObject*> m_Drawables;
     std::vector<Lift*> m_Lifts;
-    std::vector<EndPipeTop*> m_EndPipes;
+    std::vector<EndPipe*> m_EndPipes;
     Character* m_Player;
     Vector2 m_PlayerSpawn;
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
     Background m_Background;
+    
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
@@ -107,7 +122,10 @@ class Level : public Subject
     private:
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
+        EnemyHandler m_EnemyHandler;
         bool m_InControl = true;
+        bool m_TouchedFlag = false;
+        Vector2 m_StartPosition = {0, 0};
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
@@ -126,7 +144,7 @@ class Level : public Subject
         void resolveInteractiveEnvironmentCollisions();
         void handleItemLogic();
         void applyBoundaries();
-        bool isInHole();
+        bool isPlayerInHole();
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();

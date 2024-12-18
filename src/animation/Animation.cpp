@@ -42,6 +42,10 @@ void Animation::Update(int state, float deltaTime, bool faceRight, bool& fire, b
 			brake= false;
 		}
 	}
+	else if (state == 5) {
+		totalTime += deltaTime;
+		currentImage.x = 6;
+	}
 	else if (state == 1) {
 		totalTime += deltaTime;
 		if (totalTime >= switchTime) {

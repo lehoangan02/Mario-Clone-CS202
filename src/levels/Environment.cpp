@@ -1,5 +1,6 @@
 #include "Environment.hpp"
 #include "Level.hpp"
+#include "AABBox.hpp"
 EnvironmentObjectFactory& EnvironmentObjectFactory::GetEnvironmentFactory()
 {
     static EnvironmentObjectFactory Factory;
@@ -154,6 +155,17 @@ void Ground::addHole(float x, unsigned int y)
         m_HoleSet.insert(HolePosition + i);
     }
     m_Holes.push_back(std::make_pair(x, y));
+}
+bool Ground::isInHole(AABBox Box)
+{
+    for (auto& hole : m_Holes)
+    {
+        if (Box.getPosition().x + Box.getSize().x < hole.first + hole.second * 100 && Box.getPosition().x > hole.first)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
@@ -418,13 +430,15 @@ void Dirt::render()
 
 Castle::Castle(Vector2 Position) : DrawableObject(Position)
 {
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
 }
 Castle::~Castle()
 {
 }
 void Castle::render()
 {
-    DrawTexture(m_Texture, m_Position.x, m_Position.y, WHITE);
+    DrawTextureEx(m_Texture, m_Position, 0, 2, WHITE);
 }
 
 EndPipe::EndPipe(Vector2 Position, Vector2 Size, int Type) : EnvironmentObject(Position, Size), m_Type(Type)
@@ -441,7 +455,7 @@ EndPipeTop::~EndPipeTop()
 }
 void EndPipeTop::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_TOP)->render(m_Position);
 }
 void EndPipeTop::update()
 {
@@ -454,7 +468,7 @@ EndPipeSide::~EndPipeSide()
 }
 void EndPipeSide::render()
 {
-    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE)->render(m_Position);
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::END_PIPE_SIDE)->render(m_Position);
 }
 void EndPipeSide::update()
 {
@@ -464,6 +478,12 @@ FlagPole::FlagPole(float Position) : MapObject(Vector2{Position, 100}, Vector2{1
     m_Position.x = Position;
     m_Position.y = 750 - 900;
     m_FlagPosition = {m_Position.x - 50, m_Position.y + 50};
+    SetTextureFilter(m_Flag, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Flag, TEXTURE_WRAP_CLAMP);
+    SetTextureFilter(m_Pole, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Pole, TEXTURE_WRAP_CLAMP);
+    SetTextureFilter(m_Brick, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Brick, TEXTURE_WRAP_CLAMP);
 }
 FlagPole::~FlagPole()
 {
@@ -485,7 +505,7 @@ void FlagPole::update()
 void FlagPole::pullFlag()
 {
     if (!m_Pull) return;
-    static const float Speed = 100;
+    static const float Speed = 300;
     static const float EndPosition = 750 - 200;
     m_FlagPosition.y += Speed * GetFrameTime();
     if (m_FlagPosition.y > EndPosition)

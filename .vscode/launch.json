@@ -19,8 +19,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/holamngocbao/Desktop/CS202-Mario/src/Mario",
-      "program": "/Users/holamngocbao/Desktop/CS202-Mario/src/Mario/build/Debug/outDebug"
+      "cwd": "/Users/holamngocbao/Desktop/CS202-Mario/src/levels",
+      "program": "/Users/holamngocbao/Desktop/CS202-Mario/src/levels/build/Debug/outDebug"
     }
   ]
 }

@@ -3,6 +3,8 @@
 #include "vector"
 #include "string"
 #include "../animation/Animation.h"
+#include "Fireball.h"
+#include "../Sound/Audio.h"
 
 #define MAX_VEC_X = 10.0f
 class Command {
@@ -20,10 +22,21 @@ enum slidingDirection {
 
 class Character {
 private:
-	float glitch;
 	bool isChangingForm;
 	float formChangeTime;
 	float formChangeDuration;
+	bool isflicking;
+	int flickSwitch;
+	float flickDuration;
+	bool isVisible;
+	int invincibleSwitch;
+	float invincibleDuration;
+	bool isInvincible;
+	Color InvincibleColor;
+	std::vector<Fireball> fireballs;
+	const int maxFireballs = 2;
+	float reloadTime = 1.0f; // Time in seconds to reload a fireball
+	float currentReloadTime = 0.0f;
 public:
 
 	Character(float jumpHeight);
@@ -39,7 +52,6 @@ public:
 	void accelerate(Vector2 acceleration, float deltaTime);
 	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
 	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
-	void changeForm(int form);
 	void updateFormChangeAnimation();
 	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
 
@@ -48,6 +60,30 @@ public:
 	bool isSliding() { return sliding; };
 
 	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
+
+	void hitFlag(Vector2 flagPos);
+
+	void increaseScore(int Incre) { this->score += Incre; };
+	void increaseScore() { this->score += 1; };
+	int getScore() { return score; }
+
+	bool haveWon() { return isWin; };
+	void setWin() { isWin = true; };
+
+	void powerUp();
+	void powerDown(); //need invicile effect
+
+	void touchEnemy();
+	void killEnemy();
+	bool isDead() { return isDie; };
+	bool isflick() { return isflicking; };
+
+	void invincile() { this->isInvincible = true; };
+	bool isSuper() { return isInvincible; };
+
+	void ShootFireball();
+	void UpdateFireballs(float deltaTime);
+	void DrawFireballs();
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -66,11 +102,19 @@ protected:
 	bool canJump;
 	bool fire;
 	bool brake;
+	bool isDie;
 
 	float scale ;
 
 	Vector2 SlideDist;
 	bool teleport;
+
+	bool pullFlag;
+
+	int score;
+
+	bool isWin;
+	void changeForm(int form);
 
 public:
 	float accX;
@@ -125,7 +169,17 @@ public:
 class AutoMove : public Command {
 private:
 	Character* character;
+	float totalTime; 
+	static AutoMove* instance; 
+	AutoMove(Character* character) : totalTime(0.0f) { this->character = character; }
+
 public:
-	AutoMove(Character* Player) { this->character = Player; };
+	static AutoMove* getInstance(Character* character) {
+		if (instance == nullptr) {
+			instance = new AutoMove(character);
+		}
+		return instance;
+	}
+	void reset() {totalTime = 0.0f;}
 	void execute(float deltaTime) override;
 };
