@@ -20,6 +20,7 @@ enum TextureType
     MID_GRASS_PLATFORM,
     RIGHT_GRASS_PLATFORM,
     END_PIPE_SIDE,
+    BLUE_HARD_BLOCK,
 };
 class Flyweight
 {
@@ -116,6 +117,15 @@ class RightGrassPlatformTextureFlyWeight : public StaticFlyweight // Singleton F
         ~RightGrassPlatformTextureFlyWeight();
     public:
         static RightGrassPlatformTextureFlyWeight* GetRightGrassPlatformTextureFlyWeight();
+        void render(Vector2 Position);
+};
+class BlueHardBlockTextureFlyWeight : public StaticFlyweight // Singleton Flyweight
+{
+    private:
+        BlueHardBlockTextureFlyWeight();
+        ~BlueHardBlockTextureFlyWeight();
+    public:
+        static BlueHardBlockTextureFlyWeight* GetBlueHardBlockTextureFlyWeight();
         void render(Vector2 Position);
 };
 class LiftTextureFlyWeight : public StaticFlyweight // Singleton Flyweight

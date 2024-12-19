@@ -160,54 +160,102 @@ void Level::resolveInteractiveEnvironmentCollisions()
 {
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
-        Item* CurrentItem = m_EnvironmentInteractive[i].second;
-        if (!CurrentItem) continue;
-        if (IsKeyPressed(KEY_E))
-        {
-            CurrentItem->onNotify();
-        }
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
         AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i].first->m_Position, m_EnvironmentInteractive[i].first->getSize());
         EnvironmentBox.setFixed(true);
         if (isColliding(PlayerBox, EnvironmentBox))
-        {
+        {        
             if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
             {
-                m_Player->resetVelocity();
                 if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
                     m_Player->onPlatform();
                 }
                 else if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
-                    m_EnvironmentInteractive[i].first->onNotify();                   
-                    CurrentItem->onNotify();
-                    if (m_EnvironmentInteractive[i].first -> isHit())
-                    {
-                        if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
+                    Item* CurrentItem = m_EnvironmentInteractive[i].second;
+                    if (CurrentItem)
+                    {       
+                        m_EnvironmentInteractive[i].first->onNotify();        
+                        CurrentItem->onNotify();
+                        if (m_EnvironmentInteractive[i].first -> isHit())
                         {
-                            if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                            if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
                             {
-                                std::cout << "Mushroom" << std::endl;
-                                SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+                                if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                                {
+                                    // std::cout << "Mushroom" << std::endl;
+                                    if (m_EnvironmentInteractive[i].first->isHit())
+                                    {}
+                                    else
+                                    {
+                                        SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+                                    }
+                                }
                             }
-                        }
-                        else if (CurrentItem->getItemID() == Itemtype::COIN)
-                        {
-                            
-                            if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                            else if (CurrentItem->getItemID() == Itemtype::COIN)
                             {
-                                std::cout << "Coin" << std::endl;
-                                SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                                
+                                if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                                {
+                                    // std::cout << "Coin" << std::endl;
+                                    if (m_EnvironmentInteractive[i].first->isHit())
+                                    {}
+                                    else
+                                    {
+                                        SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            resolveCollisions(PlayerBox, EnvironmentBox);
-            m_Player->setPosition(PlayerBox.getPosition());
-            m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
-            
+            if (!(m_EnvironmentInteractive[i].first->getObjectID() == EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK))
+            {
+                if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                {
+                    m_Player->resetVelocity();
+                }
+                resolveCollisions(PlayerBox, EnvironmentBox);
+                m_Player->setPosition(PlayerBox.getPosition());
+                m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                // std::cout << "Resolving Collisions" << std::endl;
+                // std::cout << "Not Breakable Brick" << std::endl;
+                // std::cout << "Interactive Item Type: " << m_EnvironmentInteractive[i].first->getType() << std::endl;
+            }
+            else
+            {
+                if (!(m_Player->isSuper()))
+                {
+                    if (!(m_EnvironmentInteractive[i].first->isHit()))
+                    {
+                        if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                        {
+                            m_Player->resetVelocity();
+                        }
+                        resolveCollisions(PlayerBox, EnvironmentBox);
+                        m_Player->setPosition(PlayerBox.getPosition());
+                        m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                    }
+                }
+                else 
+                {
+                    BreakableBrick* BreakBrick = dynamic_cast<BreakableBrick*>(m_EnvironmentInteractive[i].first);
+                    if (!(BreakBrick->m_BreakAnimation.isFinished()))
+                    {
+                        if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                        {
+                            std::cout << "Not Finished" << std::endl;
+                            m_Player->resetVelocity();
+                            m_EnvironmentInteractive[i].first->onNotify();
+                        }
+                        resolveCollisions(PlayerBox, EnvironmentBox);
+                        m_Player->setPosition(PlayerBox.getPosition());
+                        m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                    }
+                }
+            }
         }
     }
 }
@@ -294,6 +342,7 @@ void Level::handleItemLogic()
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
         Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (!CurrentItem) continue;
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
@@ -340,6 +389,7 @@ void Level::handleItemLogic()
     for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
     {
         Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (!CurrentItem) continue;
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
@@ -472,13 +522,11 @@ void Level::render()
     }
     float HidePositionX = m_ScreenSize.x * 2;
     DrawRectangle((HidePositionX) + m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
-    m_BreakableBrick->render();
     EndMode2D();
     
 }
 void Level::update(float DeltaTime)
 {
-    m_BreakableBrick->update();
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
@@ -532,7 +580,8 @@ void Level::update(float DeltaTime)
         object.first ->update();
     }
     for (auto& object : m_EnvironmentInteractive)
-    {        object.second ->Update(DeltaTime);
+    {        
+        if (object.second) object.second ->Update(DeltaTime);
     }
     for (auto& object : m_Lifts)
     {
@@ -677,14 +726,14 @@ void Level::EnemyHandler::update()
         {
             if (enemy->getIsDead())
             {
-                std::cout << "Dead" << std::endl;
+                // std::cout << "Dead" << std::endl;
                 break;
             }
-            std::cout << "Hit" << std::endl;
+            // std::cout << "Hit" << std::endl;
             if (isCollidingVertically(PlayerBox, EnemyBox))
             {
                 enemy->hit();
-                std::cout << "Colliding Vertically" << std::endl;
+                // std::cout << "Colliding Vertically" << std::endl;
                 m_Level->m_Player->killEnemy();
 
                 EnemyBox.setFixed(true);
@@ -700,7 +749,7 @@ void Level::EnemyHandler::update()
                     resolveCollisions(PlayerBox, EnemyBox);
                     m_Level->m_Player->setPosition(PlayerBox.getPosition());
                     m_Level->m_Player->touchEnemy();
-                    std::cout << "Touching Enemy" << std::endl;
+                    // std::cout << "Touching Enemy" << std::endl;
                 }
                 
 

@@ -48,6 +48,11 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
             RightGrassPlatform* rightGrassPlatform = new RightGrassPlatform(Position);
             return rightGrassPlatform;
         }
+        case EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK:
+        {
+            BlueHardBlock* blueHardBlock = new BlueHardBlock(Position);
+            return blueHardBlock;
+        }
         default:
         {
             std::cerr << "Invalid Environment Object Type\n";
@@ -272,7 +277,20 @@ void RightGrassPlatform::render()
 void RightGrassPlatform::update()
 {
 }
-
+BlueHardBlock::BlueHardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK;
+}
+BlueHardBlock::~BlueHardBlock()
+{
+}
+void BlueHardBlock::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::BLUE_HARD_BLOCK)->render(m_Position);
+}
+void BlueHardBlock::update()
+{
+}
 QuestionBlock::HitAnimationCommander::HitAnimationCommander(float MoveUpDistance, float BottomPosition) : m_MoveUpDistance(MoveUpDistance), m_BottomPosition(BottomPosition)
 {
     m_TopPosition = m_BottomPosition - m_MoveUpDistance;
@@ -351,6 +369,7 @@ void QuestionBlock::onNotify()
 BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),
  m_BreakAnimation(&m_AnimatedTexture, Vector2{3, 1}, 0.3f)
 {
+    m_BreakAnimation.setTexture(&m_AnimatedTexture);
 }
 BreakableBrick::~BreakableBrick()
 {
@@ -369,6 +388,7 @@ void BreakableBrick::render()
         }
         else
         {
+            // std::cout << "Finished Animation" << std::endl;
         }
     }
 }
@@ -376,6 +396,7 @@ void BreakableBrick::update()
 {
     if (m_IsHit)
     {
+        // std::cout << "Updating Animation" << std::endl;
         m_BreakAnimation.Update(GetFrameTime());
     }
     if (IsKeyPressed(KEY_B))

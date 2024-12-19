@@ -81,6 +81,7 @@ class EnvironmentObjectFactory // Singleton Factory
         LEFT_GRASS_PLATFORM,
         MID_GRASS_PLATFORM,
         RIGHT_GRASS_PLATFORM,
+        BLUE_HARD_BLOCK,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -201,6 +202,15 @@ class RightGrassPlatform : public EnvironmentObject
     void update() override;
     int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::RIGHT_GRASS_PLATFORM;}
 };
+class BlueHardBlock : public EnvironmentObject
+{
+    public:
+    BlueHardBlock(Vector2 Position);
+    ~BlueHardBlock();
+    void render() override;
+    void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK;}
+};
 class QuestionBlock : public EnvironmentObjectInteractive
 {
     class HitAnimationCommander
@@ -244,12 +254,16 @@ class BreakableBrick : public EnvironmentObjectInteractive
     void update() override;
     void onNotify() override;
     bool isHit() override;
-    int getObjectID() override { return EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK; };
+    int getObjectID() override { 
+        return EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK;
+    };
+public:
+    OneTimeAnimation m_BreakAnimation;
 private:
     bool m_IsHit = false;
     Texture2D m_Texture = LoadTexture("assets/textures/grey_brick.png");
     Texture2D m_AnimatedTexture = LoadTexture("assets/textures/breakable.png");
-    OneTimeAnimation m_BreakAnimation;
+    
 };
 
 class Cloud : public DrawableObject

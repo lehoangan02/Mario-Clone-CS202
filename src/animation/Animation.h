@@ -29,6 +29,7 @@ public:
 	Rectangle getCurrentTextureRect();
 	void draw(Vector2 Position, float Scale);
 	bool isFinished();
+	void setTexture(Texture* texture);
 private:
 	bool m_IsFinished = false;
 	Texture* m_Texture;

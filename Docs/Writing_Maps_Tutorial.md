@@ -18,6 +18,7 @@ class EnvironmentObjectFactory // Singleton Factory
         LEFT_GRASS_PLATFORM,
         MID_GRASS_PLATFORM,
         RIGHT_GRASS_PLATFORM,
+        BLUE_HARD_BLOCK
     };
 ```
 ```cpp
@@ -26,7 +27,8 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
     public:
     enum EnvironmentInteractiveObjectType
     {
-        QUESTION_BLOCK
+        QUESTION_BLOCK,
+        BREAKABLE_BRICK
     };
 ```
 ```cpp
