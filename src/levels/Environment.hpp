@@ -94,7 +94,8 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
     public:
     enum EnvironmentInteractiveObjectType
     {
-        QUESTION_BLOCK
+        QUESTION_BLOCK,
+        BREAKABLE_BRICK,
     };
     private:
         EnvironmentInteractiveObjectFactory() = default;
@@ -234,6 +235,23 @@ class QuestionBlock : public EnvironmentObjectInteractive
     private:
     Rectangle getCurrentTextureRect();
 };
+class BreakableBrick : public EnvironmentObjectInteractive
+{
+    public:
+    BreakableBrick(Vector2 Position);
+    ~BreakableBrick();
+    void render() override;
+    void update() override;
+    void onNotify() override;
+    bool isHit() override;
+    int getObjectID() override { return EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK; };
+private:
+    bool m_IsHit = false;
+    Texture2D m_Texture = LoadTexture("assets/textures/grey_brick.png");
+    Texture2D m_AnimatedTexture = LoadTexture("assets/textures/breakable.png");
+    OneTimeAnimation m_BreakAnimation;
+};
+
 class Cloud : public DrawableObject
 {
     public:

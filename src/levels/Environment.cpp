@@ -70,6 +70,11 @@ EnvironmentObjectInteractive* EnvironmentInteractiveObjectFactory::CreateEnviron
             return block;
         }
         break;
+        case EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK:
+        {
+            BreakableBrick* brick = new BreakableBrick(Position);
+            return brick;
+        }
         default:
         {
             std::cerr << "Invalid Environment Interactive Object Type\n";
@@ -340,6 +345,49 @@ Rectangle QuestionBlock::getCurrentTextureRect()
     return m_IdleAnimation.uvRect;
 }
 void QuestionBlock::onNotify()
+{
+    m_IsHit = true;
+}
+BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),
+ m_BreakAnimation(&m_Texture, Vector2{3, 1}, 0.3f)
+{
+}
+BreakableBrick::~BreakableBrick()
+{
+}
+void BreakableBrick::render()
+{
+    if (!m_IsHit)
+    {
+        DrawTextureEx(m_Texture, m_Position, 0, 6.25f, WHITE);
+    }
+    else
+    {
+        if (!(m_BreakAnimation.isFinished()))
+        {
+            m_BreakAnimation.draw(m_Position, 6.25f);
+        }
+        else
+        {
+        }
+    }
+}
+void BreakableBrick::update()
+{
+    if (m_IsHit)
+    {
+        m_BreakAnimation.Update(GetFrameTime());
+    }
+    if (IsKeyPressed(KEY_B))
+    {
+        onNotify();
+    }
+}
+bool BreakableBrick::isHit()
+{
+    return m_IsHit;
+}
+void BreakableBrick::onNotify()
 {
     m_IsHit = true;
 }

@@ -35,7 +35,7 @@ Level* LevelFactory::CreateLevel(int Type)
             break;
     }
 }
-Level::Level()
+Level::Level(): m_BrickBreakAnimation(&m_BrickBreakTexture, Vector2{3, 1}, 0.3f)
 {
     m_CameraPosition = {0, 0};
     m_Ground = Ground::GetGround();
@@ -186,13 +186,20 @@ void Level::resolveInteractiveEnvironmentCollisions()
                     {
                         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
                         {
-                            std::cout << "Mushroom" << std::endl;
-                            SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+                            if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                            {
+                                std::cout << "Mushroom" << std::endl;
+                                SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+                            }
                         }
                         else if (CurrentItem->getItemID() == Itemtype::COIN)
                         {
-                            std::cout << "Coin" << std::endl;
-                            SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                            
+                            if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                            {
+                                std::cout << "Coin" << std::endl;
+                                SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                            }
                         }
                     }
                 }
@@ -406,7 +413,11 @@ void Level::render()
     camera.offset = {0, Offset * (Zoom)};
     camera.zoom = Zoom;
     BeginMode2D(camera);
+    
     m_Background.render();
+    DrawTexture(m_BrickBreakTexture, 0, -100, WHITE);
+    Rectangle BreakingBrick = m_BrickBreakAnimation.uvRect;
+    DrawTexturePro(m_BrickBreakTexture, BreakingBrick, Rectangle{0, 0, 100, 100}, Vector2{0, 0}, 0.0f, WHITE);
     if (m_FlagPole != nullptr)
     {
         m_FlagPole -> render();
@@ -469,6 +480,7 @@ void Level::render()
 }
 void Level::update(float DeltaTime)
 {
+    m_BrickBreakAnimation.Update(DeltaTime);
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
