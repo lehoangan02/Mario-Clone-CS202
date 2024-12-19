@@ -376,6 +376,12 @@ void StarMan::FlipDirection() {
     velocity.x *= -1;
     velocity.y *= -1;
 }
+void StarMan::FlipDirectionX() {
+    velocity.x *= -1;
+}
+void StarMan::FlipDirectionY() {
+    velocity.y *= -1;
+}
 void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {
     
     
