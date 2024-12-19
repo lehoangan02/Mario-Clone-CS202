@@ -349,7 +349,7 @@ void QuestionBlock::onNotify()
     m_IsHit = true;
 }
 BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),
- m_BreakAnimation(&m_Texture, Vector2{3, 1}, 0.3f)
+ m_BreakAnimation(&m_AnimatedTexture, Vector2{3, 1}, 0.3f)
 {
 }
 BreakableBrick::~BreakableBrick()

@@ -126,8 +126,7 @@ class Level : public Subject
         bool m_InControl = true;
         bool m_TouchedFlag = false;
         Vector2 m_StartPosition = {0, 0};
-        Texture2D m_BrickBreakTexture = LoadTexture("assets/textures/breakable.png");
-        Animation m_BrickBreakAnimation;
+        BreakableBrick* m_BreakableBrick = new BreakableBrick(Vector2{100, 0});
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;

@@ -96,7 +96,8 @@ void OneTimeAnimation::Update(float deltaTime) {
 	uvRect.width = fabs(uvRect.width);
 }
 void OneTimeAnimation::draw(Vector2 Position, float Scale) {
-	DrawTexturePro(*m_Texture, uvRect, Rectangle{ Position.x, Position.y, uvRect.width, uvRect.height }, Vector2{ 0, 0 }, 0.0f, WHITE);
+	Rectangle destRect = { Position.x, Position.y, uvRect.width * Scale, uvRect.height * Scale };
+	DrawTexturePro(*m_Texture, uvRect, destRect, Vector2{ 0, 0 }, 0.0f, WHITE);
 }
 bool OneTimeAnimation::isFinished() {
 	return m_IsFinished;

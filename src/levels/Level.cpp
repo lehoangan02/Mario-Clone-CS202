@@ -35,7 +35,7 @@ Level* LevelFactory::CreateLevel(int Type)
             break;
     }
 }
-Level::Level(): m_BrickBreakAnimation(&m_BrickBreakTexture, Vector2{3, 1}, 0.3f)
+Level::Level()
 {
     m_CameraPosition = {0, 0};
     m_Ground = Ground::GetGround();
@@ -415,9 +415,6 @@ void Level::render()
     BeginMode2D(camera);
     
     m_Background.render();
-    DrawTexture(m_BrickBreakTexture, 0, -100, WHITE);
-    Rectangle BreakingBrick = m_BrickBreakAnimation.uvRect;
-    DrawTexturePro(m_BrickBreakTexture, BreakingBrick, Rectangle{0, 0, 100, 100}, Vector2{0, 0}, 0.0f, WHITE);
     if (m_FlagPole != nullptr)
     {
         m_FlagPole -> render();
@@ -475,12 +472,13 @@ void Level::render()
     }
     float HidePositionX = m_ScreenSize.x * 2;
     DrawRectangle((HidePositionX) + m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
+    m_BreakableBrick->render();
     EndMode2D();
     
 }
 void Level::update(float DeltaTime)
 {
-    m_BrickBreakAnimation.Update(DeltaTime);
+    m_BreakableBrick->update();
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
