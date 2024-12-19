@@ -67,6 +67,8 @@ MusicManager::MusicManager() {
 	musicSet.push_back(LoadMusicStream("assets/audio/background_UnderGround.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/background_SMB.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/level_finished.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/flag_down.wav"));
+
 }
 
 MusicManager::~MusicManager() {
@@ -115,6 +117,10 @@ void MusicManager::PlayMusic(MusicTrack music) {
 	case LevelFinished:
 		PlayMusicStream(musicSet[LevelFinished]);
 		currentTrack = 8;
+		break;
+	case FlagDown:
+		PlayMusicStream(musicSet[FlagDown]);
+		currentTrack = 9;
 		break;
 	}
 }
