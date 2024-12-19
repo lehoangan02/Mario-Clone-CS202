@@ -50,7 +50,6 @@ void SoundManager::PlaySoundEffect(SoundTrack sound) {
 	case FLAGDOWN_SOUND:
 		PlaySound(soundSet[8]);
 		break;
-
     }
 }
 
@@ -59,9 +58,15 @@ std::vector<Music> MusicManager::musicSet;
 
 MusicManager::MusicManager() {
 	currentTrack = -1;
-	musicSet.push_back(LoadMusicStream("assets/audio/background_open.wav"));
-	musicSet.push_back(LoadMusicStream("assets/audio/background_underground.wav"));
-	musicSet.push_back(LoadMusicStream("assets/audio/background_castle.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_Overworld.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_Underworld.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_Invincible.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_SuperBellHill.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_FlowerGarden.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_Athletic.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_UnderGround.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/background_SMB.wav"));
+	musicSet.push_back(LoadMusicStream("assets/audio/level_finished.wav"));
 }
 
 MusicManager::~MusicManager() {
@@ -79,13 +84,37 @@ void MusicManager::PlayMusic(MusicTrack music) {
 		PlayMusicStream(musicSet[OverWorld]);
 		currentTrack = 0;
 		break;
-	case UnderGround:
-		PlayMusicStream(musicSet[UnderGround]);
+	case Origin_UnderWorld:
+		PlayMusicStream(musicSet[Origin_UnderWorld]);
 		currentTrack = 1;
 		break;
     case Invincible:
 		PlayMusicStream(musicSet[Invincible]);
 		currentTrack = 2;
+		break;
+	case SuperBellHill:
+		PlayMusicStream(musicSet[SuperBellHill]);
+		currentTrack = 3;
+		break;
+	case FlowerGarden:
+		PlayMusicStream(musicSet[FlowerGarden]);
+		currentTrack = 4;
+		break;
+	case Athletic:
+		PlayMusicStream(musicSet[Athletic]);
+		currentTrack = 5;
+		break;
+	case UnderGround:
+		PlayMusicStream(musicSet[UnderGround]);
+		currentTrack = 6;
+		break;
+	case SMB:
+		PlayMusicStream(musicSet[SMB]);
+		currentTrack = 7;
+		break;
+	case LevelFinished:
+		PlayMusicStream(musicSet[LevelFinished]);
+		currentTrack = 8;
 		break;
 	}
 }
@@ -99,8 +128,12 @@ void MusicManager::UpdateMusic() {
 }
 
 void MusicManager::StopMusic() {
-    for (auto& music : musicSet) {
-        StopMusicStream(music);
-    }
+	if (currentTrack == -1) return;
+	StopMusicStream(musicSet[currentTrack]);
     currentTrack = -1;
+}
+
+bool MusicManager::IsMusicPlaying() {
+	if (currentTrack == -1) return false;
+	return IsMusicStreamPlaying(musicSet[currentTrack]);
 }

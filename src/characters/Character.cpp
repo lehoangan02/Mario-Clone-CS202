@@ -7,7 +7,7 @@
 #define SLOW_BRAKE 800.0f
 #define GRAVITY 3500.0f
 
-Character::Character(float jumpHeight) 
+Character::Character(float jumpHeight) : firePool(nullptr)
 {
 	this->form = 0;
 	this->accX = 0.0f;
@@ -36,6 +36,9 @@ Character::Character(float jumpHeight)
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
 	this->score = 0;
+	if (this->firePool == nullptr) {
+		this->firePool = new FirePool(2);
+	}
 	position = Vector2{ 20 , 0 };
 }
 
@@ -102,29 +105,32 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
-	if (IsKeyPressed(KEY_ONE)) {
-		SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+	if (IsKeyPressed(KEY_F1)) {
+		MusicManager::getInstance().PlayMusic(OverWorld);
 	}
-	if (IsKeyPressed(KEY_TWO)) {
-		SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
+	if (IsKeyPressed(KEY_F2)) {
+		MusicManager::getInstance().PlayMusic(Origin_UnderWorld);
 	}
-	if (IsKeyPressed(KEY_THREE)) {
-		SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+	if (IsKeyPressed(KEY_F3)) {
+		MusicManager::getInstance().PlayMusic(Invincible);
 	}
-	if (IsKeyPressed(KEY_FOUR)) {
-		SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+	if (IsKeyPressed(KEY_F4)) {
+		MusicManager::getInstance().PlayMusic(SuperBellHill);
 	}
-	if (IsKeyPressed(KEY_FIVE)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+	if (IsKeyPressed(KEY_F5)) {
+		MusicManager::getInstance().PlayMusic(FlowerGarden);
 	}
-	if (IsKeyPressed(KEY_SIX)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
+	if (IsKeyPressed(KEY_F6)) {
+		MusicManager::getInstance().PlayMusic(Athletic);
 	}
-	if (IsKeyPressed(KEY_SEVEN)) {
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	if (IsKeyPressed(KEY_F7)) {
+		MusicManager::getInstance().PlayMusic(UnderGround);
 	}
-	if (IsKeyPressed(KEY_EIGHT)) {
-		SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
+	if (IsKeyPressed(KEY_F8)) {
+		MusicManager::getInstance().PlayMusic(SMB);
+	}
+	if (IsKeyPressed(KEY_F9)) {
+		MusicManager::getInstance().StopMusic();
 	}
 
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
@@ -134,8 +140,26 @@ void Character::control(bool enabled) {
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
-		ShootFireball();
+		Vector2 direction = { 0,0 };
+		if (faceRight) direction = { 1,0.3f };
+		else direction = { -1,0.3f };
+		Vector2 firePos = { position.x + size.x, position.y + size.y / 2 };
+		firePool->GetAvailableFireBall(firePos, direction);
 	}
+		/*for (int i = 0; i < this->firePool->fireballs.size(); i++) {
+			if (firePool->fireballs[i].IsActive()) {
+				if (firePool->fireballs[i].getPosition().y > 600.0f) {
+					firePool->fireballs[i].Bounce();
+					std::cout << "bounce" << " ball " << i + 1 << std::endl;
+				}
+				if (firePool->fireballs[i].getPosition().x > 1200.0f) {
+					firePool->fireballs[i].Deactivate();
+					std::cout << "Deact" << std::endl;
+				}
+			}
+		}*/
+	// Deactivate if out of bounds
+
 }
 void Character::changeForm(int form) {
 	this->form = form;
@@ -177,7 +201,6 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
-			MusicManager::getInstance().StopMusic();
 			MusicManager::getInstance().PlayMusic(OverWorld);
 			isInvincible = false;
 			InvincibleColor = WHITE;
@@ -234,34 +257,7 @@ void Character::killEnemy() {
 	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
 }
-void Character::ShootFireball() {
-	if (fireballs.size() < maxFireballs && currentReloadTime <= 0.0f) {
-		Vector2 fireballPos = { position.x + size.x / 2, position.y + size.y / 2 };
-		Vector2 fireballVel = { faceRight ? 500.0f : -500.0f, 0.0f };
-		float fireballScale = 3.0f; // Example scaling factor
-		float fireballMaxDistance = 1000.0f; // Example maximum distance
-		fireballs.push_back(Fireball(fireballPos, fireballVel, fireballScale, fireballMaxDistance));
-		currentReloadTime = reloadTime; // Reset the reload timer
-	}
-}
 
-void Character::UpdateFireballs(float deltaTime) {
-	for (auto& fireball : fireballs) {
-		fireball.Update(deltaTime);
-	}
-	// Update the reload timer
-	if (currentReloadTime > 0.0f) {
-		currentReloadTime -= deltaTime;
-	}
-}
-
-void Character::DrawFireballs() {
-	for (auto& fireball : fireballs) {
-		if (!fireball.HasExceededMaxDistance() && fireball.position.x >= 0 && fireball.position.x <= GetScreenWidth()) {
-			fireball.Draw();
-		}
-	}
-}
 void Character::Draw()
 {
 	//std::cout << "Score" << score << std::endl;
@@ -272,10 +268,11 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
-	DrawFireballs();
+	firePool->Draw();
 };
 
 Mario::Mario() : Character(400.0f) {
+	Chartype = MARIO;
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
@@ -314,7 +311,7 @@ void Mario::Update(float deltaTime) {
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
-	UpdateFireballs(deltaTime);
+	firePool->Update();	
 }
 
 void Character::SlidePipe(slidingDirection direction) {
@@ -347,6 +344,17 @@ void Character::SlidePipe(slidingDirection direction) {
 };
 
 Luigi::Luigi() : Character(3.0f) {
+	Chartype = LUIGI;
+	/*textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiFire.png"));
+	imageCounts.push_back({ 7,1 });
+	imageCounts.push_back({ 6,1 });
+	imageCounts.push_back({ 7,1 });
+	float switchTime = 0.1f;
+	animation = Animation(&textures[form], imageCounts[form], switchTime);
+	size = { (float)textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale };
+	this->SlideDist = { size.x,size.y };*/
 	
 }
 void Luigi::Update(float deltaTime) {
@@ -393,17 +401,23 @@ void InHole::execute(float deltaTime) {
 
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
-if (totalTime < 5.0f) {
-	character->control(false);
-	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
-	character->Update(deltaTime);
-	totalTime += deltaTime;
-	std::cout << totalTime;
-}
-else {
-	character->setWin();
-	character->control(false);
-	character->setVelocity(Vector2{ 0.0f, 0.0f });
-	character->Update(deltaTime);
-}
+	if (totalTime == 0.0f) {
+		MusicManager::getInstance().PlayMusic(LevelFinished);
+	}
+	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+		MusicManager::getInstance().StopMusic();
+	}
+	if (totalTime < 5.0f) {
+		character->control(false);
+		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
+		character->Update(deltaTime);
+		totalTime += deltaTime;
+		//std::cout << totalTime;
+	}
+	else {
+		character->setWin();
+		character->control(false);
+		character->setVelocity(Vector2{ 0.0f, 0.0f });
+		character->Update(deltaTime);
+	}
 }

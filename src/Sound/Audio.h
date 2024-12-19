@@ -44,8 +44,14 @@ private:
 
 enum MusicTrack {
     OverWorld,
-	UnderGround,
+	Origin_UnderWorld,
 	Invincible,
+	SuperBellHill,
+	FlowerGarden,
+	Athletic,
+	UnderGround,
+	SMB,
+	LevelFinished,
 };
 
 class MusicManager {
@@ -58,7 +64,7 @@ public:
     void PlayMusic(MusicTrack music);
     void UpdateMusic();
     void StopMusic();
-
+	bool IsMusicPlaying();
 private:
     int currentTrack;
     MusicManager();

@@ -1,40 +1,82 @@
 #include "Fireball.h"
 
-
-Fireball::Fireball(Vector2 pos, Vector2 vel, float scale, float maxDist) {
-    position = pos;
-    velocity = vel;
+const float FIREGRAVITY = 1000.0f; // Gravity constant
+const float FIRESPEED = 1000.0f;
+Fireball::Fireball() {
+    position = { 0,0 };
+    velocity = { 0,0 };
     texture = LoadTexture("assets/textures/Ball.png"); // Load the fireball texture
-    float switchTime = 0.1f;
-    animation = Animation(&texture, Vector2 { 4,1 }, switchTime);
-    this->scale = scale;
-    this->maxDistance = maxDist;
-    this->startPosition = pos;
-}
+    float switchTime = 0.06f;
+    animation = Animation(&texture, Vector2{ 4,1 }, switchTime);
 
-Fireball::~Fireball() {
-    /*UnloadTexture(texture);*/ // Unload the texture when the fireball is destroyed
+    this->scale = 3.0f;
+    this->active = false;
 }
 
 void Fireball::Update(float deltaTime) {
-    position.x += velocity.x * deltaTime;
-    position.y += velocity.y * deltaTime;
-	animation.Update(deltaTime);
+    if (this->active) {
+        // Apply gravity
+        velocity.y += FIREGRAVITY * deltaTime;
+
+        // Update position
+        position.x += velocity.x * deltaTime;
+        position.y += velocity.y * deltaTime;
+
+    }
+    animation.Update(deltaTime);
 }
 
+void Fireball :: Bounce() {
+	velocity.y = -300.0f;
+}
 void Fireball::Draw() {
-    Rectangle sourceRect = animation.uvRect;
-
-    // Define the destination rectangle (where to draw the texture on the screen)
-    Rectangle destRect = { position.x, position.y, static_cast<float>(fabs(texture.width / 4) * scale), texture.height * scale };
-    // Define the origin point (center of the texture)
-    Vector2 origin = { (texture.width * scale) / 2, (texture.height * scale) / 2 };
-
-    // Draw the texture with the specified rectangles
-    DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    if (active) {
+        Rectangle sourceRect = animation.uvRect;
+  /*      std::cout << "draw" << std::endl;*/
+        Rectangle destRect = { position.x, position.y, fabs(texture.width / 4) * scale, texture.height * scale };
+		/*std::cout << animation.uvRect.width * scale << " " << animation.uvRect.height * scale << std::endl;*/
+        /*std::cout << position.x << " " << position.y << std::endl;*/
+        Vector2 origin = { (texture.width * scale) / 2, (texture.height * scale) / 2 };
+        DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    }
 }
 
-bool Fireball::HasExceededMaxDistance() {
-    float distanceTraveled = sqrtf(powf(position.x - startPosition.x, 2) + powf(position.y - startPosition.y, 2));
-    return distanceTraveled > maxDistance;
+void Fireball::Shoot(Vector2 pos, Vector2 direction) {
+    position = pos;
+    this->velocity = { direction.x * FIRESPEED, direction.y * FIRESPEED };
+    active = true;
+}
+
+bool Fireball::IsActive() const {
+    return active;
+}
+
+void Fireball::Deactivate() {
+    active = false;
+}
+
+FirePool::FirePool(int size) {
+    fireballs.resize(size);
+}
+
+Fireball* FirePool::GetAvailableFireBall(Vector2 position, Vector2 direction) {
+    for (int i = 0; i < fireballs.size(); i++) {
+        if (!fireballs[i].IsActive()) {
+            fireballs[i].Shoot(position, direction);
+            return &fireballs[i];
+        }
+    }
+    return nullptr;
+}
+
+void FirePool::Update() {
+    for (int i = 0; i < fireballs.size(); i++) {
+        fireballs[i].Update(GetFrameTime());
+    }
+}
+
+void FirePool::Draw() {
+    for (int i = 0; i < fireballs.size(); i++) {
+        fireballs[i].Draw();
+    }
 }
