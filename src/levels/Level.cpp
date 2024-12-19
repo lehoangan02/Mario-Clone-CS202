@@ -652,6 +652,7 @@ bool Level::EndPipeHandler::update()
 }
 void Level::EnemyHandler::update()
 {
+    if (m_Level->m_Player->isDead()) return;
     for (auto& enemy : m_Level->m_Enemies)
     {
         enemy->update(GetFrameTime());

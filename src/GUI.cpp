@@ -159,6 +159,6 @@ int Menu::characterMenu() {
 
 int Menu::levelMenu() {
     if (levelButton[0].getChoose()) return 0;
-    else if (levelButton[0].getChoose()) return 1;
+    else if (levelButton[1].getChoose()) return 1;
     else return 2;
 }
