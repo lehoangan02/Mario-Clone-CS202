@@ -265,6 +265,22 @@ void Character::killEnemy() {
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
 }
 
+void Character::reset() {
+	position = { 20, 0 };
+	velocity = { 0, 0 };
+	accX = 0.0f;
+	canJump = false;
+	fire = false;
+	brake = false;
+	isDie = false;
+	isChangingForm = false;
+	isflicking = false;
+	isInvincible = false;
+	pullFlag = false;
+	isWin = false;
+	//powerDown();
+	score = 0;
+}
 void Character::Draw()
 {
 	//std::cout << "Score" << score << std::endl;
@@ -276,6 +292,7 @@ void Character::Draw()
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
 	firePool->Draw();
+
 };
 
 Mario::Mario() : Character(400.0f) {
@@ -353,22 +370,51 @@ void Character::SlidePipe(slidingDirection direction) {
 	}
 };
 
-Luigi::Luigi() : Character(3.0f) {
+Luigi::Luigi() : Character(600.0f) {
 	Chartype = LUIGI;
-	/*textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
-	textures.push_back(LoadTexture("assets/textures/luigiFire.png"));
-	imageCounts.push_back({ 7,1 });
-	imageCounts.push_back({ 6,1 });
-	imageCounts.push_back({ 7,1 });
+	textures.push_back(LoadTexture("assets/textures/marioFire3.png"));
+	imageCounts.push_back({ 9,1 });
+	imageCounts.push_back({ 8,1 });
+	imageCounts.push_back({ 9,1 });
 	float switchTime = 0.1f;
 	animation = Animation(&textures[form], imageCounts[form], switchTime);
 	size = { (float)textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale };
-	this->SlideDist = { size.x,size.y };*/
+	this->SlideDist = { size.x,size.y };
 	
 }
 void Luigi::Update(float deltaTime) {
+	if (velocity.y > GRAVITY * deltaTime * 1.2f) canJump = false; //handle double jump 
 
+	if (pullFlag) state = 6;
+	else if (velocity.x == 0.0f || sliding) {
+		state = 0;
+	}
+	else if (!canJump) state = 2;
+	else if (brake) state = 4;
+	else {
+		state = 1;
+	}
+	if (fire) {
+		state = 3;
+	}
+	if (velocity.x > 0.0f) {
+		faceRight = true;
+	}
+	else if (velocity.x < 0.0f) {
+		faceRight = false;
+	}
+
+	if (isDie) {
+		velocity.x = 0;
+		state = 5;
+	}
+	animation.Update(state, deltaTime, faceRight, fire, brake);
+	updateFormChangeAnimation();
+	hitFlag();
+	setPosition(Vector2{ position.x + velocity.x * deltaTime, position.y + velocity.y * deltaTime });
+	firePool->Update();
 }
 
 
