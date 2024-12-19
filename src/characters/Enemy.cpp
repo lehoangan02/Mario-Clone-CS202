@@ -2,6 +2,58 @@
 
 #include "raylib.h"
 
+
+EnemyFactory& EnemyFactory::GetEnemyFactory()
+{
+    static EnemyFactory Factory;
+    return Factory;
+}
+Enemy* EnemyFactory::CreateEnemy(EnemyType type, Vector2 position, float leftBound, float rightBound)
+{
+    switch (type)
+    {
+        case EnemyType::GOOMBA:
+        {
+            Goomba* goomba = new Goomba(position);
+            goomba->setBoundLR(leftBound, rightBound);
+            return goomba;
+        }
+        case EnemyType::KOOPA_TROOPA:
+        {
+            KoopaTroopa* koopa = new KoopaTroopa(position);
+            koopa->setBoundLR(leftBound, rightBound);
+            return koopa;
+        }
+        case EnemyType::PIRANHA_PLANT:
+        {
+            PiranhaPlant* piranha = new PiranhaPlant(position);
+            piranha->setBoundLR(leftBound, rightBound);
+            return piranha;
+        }
+        case EnemyType::INVERSE_PIRANHA_PLANT:
+        {
+            InversePiranhaPlant* inversePiranha = new InversePiranhaPlant(position);
+            inversePiranha->setBoundLR(leftBound, rightBound);
+            return inversePiranha;
+        }
+        case EnemyType::SHY_GUY:
+        {
+            ShyGuy* shyGuy = new ShyGuy(position);
+            shyGuy->setBoundLR(leftBound, rightBound);
+            return shyGuy;
+        }
+        case EnemyType::LAKITU:
+        {
+            Lakitu* lakitu = new Lakitu(position);
+            lakitu->setBoundLR(leftBound, rightBound);
+            return lakitu;
+        }
+    }
+    return nullptr; 
+}
+
+
+
 void Enemy::accelerate(float deltaTime) {
     const float gravity = 9.8f; 
     speed.y += gravity * deltaTime; 
@@ -73,13 +125,13 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     size = { 60, 60 };
-    speed = { 40, 0 };
+    speed = { 140, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
     isDying = false;
-    isCollisionTrue = false;
 
+    setBound(0, 1024, 0, 768);
 }
 
 Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) {
@@ -107,21 +159,20 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     isDown = false;
     isDead = false;
     isDying = false;
-    isCollisionTrue = false;
+    
+    setBound(0, 1024, 0, 768);
 }
 void Goomba::hit() {
-    if (isCollisionTrue) {
-        this->texture = textures[2];           
-    }
+    this->texture = textures[2];           
     isDying = true;              
-        dyingTime = 0.0f; 
+    dyingTime = 0.0f; 
 }
   
 
 void Goomba::update(float deltaTime) {
     if (isDying) {
         dyingTime += deltaTime;
-        if (dyingTime >= 1.0f) {
+        if (dyingTime >= 0.2f) {
             isDead = true;
             isDying = false;
         }
@@ -156,7 +207,7 @@ void Goomba::update(float deltaTime) {
 }
 
 void Goomba::render() {
-    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, WHITE);
+    if (!isDead) DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
 }
 
 
@@ -175,14 +226,14 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
 
-    size = { 32, 66 };
-    speed = { 0, 10};
+    size = { 64, 132 };
+    speed = { 0, 60};
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
@@ -205,44 +256,43 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     isRight = false;
     isDown = false;
     isDead = false;
-    isPauseCollision = false;
 
     heightInGround = 0;
+    setBound(0, 1024, 0, 768);
     topBound = size.y + position.y;
     bottomBound = position.y;
 }
 void PiranhaPlant::update(float deltaTime) {
     if (isDead) return;
+    if (isDying) {
+        isDown = true;
+        speed.y *= 1.1f;
+    }
+    if (isDying && heightInGround >= size.y) {
+        isDead = true;
+        isDying = false;
+    }
 
-    if (!isPauseCollision) {
-            timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime; 
-            currentTextureIndex = (currentTextureIndex + 1) % 2; 
-            texture = textures[currentTextureIndex];
-        }
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime; 
+        currentTextureIndex = (currentTextureIndex + 1) % 2; 
+        texture = textures[currentTextureIndex];
+    }
 
-        if(isDown) {
-            position.y += speed.y * deltaTime;
-            heightInGround += speed.y * deltaTime;
-        }
-        else {
-            position.y -= speed.y * deltaTime;
-            heightInGround -= speed.y * deltaTime;
-        }
-        if(position.y > topBound|| position.y < bottomBound ) {
-            isDown = !isDown;
-        }
-
-        heightInGround = Clamp(heightInGround, 0.0f, size.y);
+    if(isDown) {
+        position.y += speed.y * deltaTime;
+        heightInGround += speed.y * deltaTime;
     }
     else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime; 
-            isPauseCollision = false;
-        }
+        position.y -= speed.y * deltaTime;
+        heightInGround -= speed.y * deltaTime;
     }
+    if(position.y > topBound|| position.y < bottomBound ) {
+        isDown = !isDown;
+    }
+
+    heightInGround = Clamp(heightInGround, 0.0f, size.y);
 }
 
 void PiranhaPlant::render() {
@@ -250,19 +300,21 @@ void PiranhaPlant::render() {
         Rectangle sourceRec = { 0.0f, 0.0f, (float)texture.width, (float)texture.height - heightInGround/size.y * 66};
         Rectangle destRec = { position.x, position.y, size.x, size.y - heightInGround};
         Vector2 origin = { 0.0f, 0.0f };
-        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
     }
 }
 
 void PiranhaPlant::hit() {
-    isDead = true;
+    isDying = true;
+    dyingTime = 0.0f;
 }
 
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position) : PiranhaPlant(position) {
-    heightInGround = 66;
-    topBound = position.y + 66;
+    heightInGround = size.y;
+    topBound = position.y + size.y;
     bottomBound = position.y;
+    isDown = true;;
 }
 
 InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : PiranhaPlant(position, size, speed) {
@@ -273,32 +325,33 @@ InversePiranhaPlant::InversePiranhaPlant(Vector2 position, Vector2 size, Vector2
 }
 void InversePiranhaPlant::update(float deltaTime) {
     if (isDead) return;
-
-    if (!isPauseCollision) {
-        timer += deltaTime;
-        if (timer >= animationTime) {
-            timer -= animationTime;
-            currentTextureIndex = (currentTextureIndex + 1) % 2;
-            texture = textures[currentTextureIndex];
-        }
-
-        if (isDown) {
-            position.y += speed.y * deltaTime; 
-            heightInGround -= speed.y * deltaTime; 
-        } else {
-            position.y -= speed.y * deltaTime; 
-            heightInGround += speed.y * deltaTime; 
-        }
-        if (position.y <= bottomBound || position.y >= topBound) {
-            isDown = !isDown;
-        }
-    } else {
-        timer += deltaTime;
-        if (timer >= 6 * animationTime) {
-            timer -= 6 * animationTime;
-            isPauseCollision = false;
-        }
+    if (isDying) {
+        isDown = false;
+        speed.y *= 1.1f;
     }
+    if (isDying && heightInGround >= size.y) {
+        isDead = true;
+        isDying = false;
+    }
+    timer += deltaTime;
+    if (timer >= animationTime) {
+        timer -= animationTime;
+        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        texture = textures[currentTextureIndex];
+    }
+
+    if (isDown) {
+        position.y += speed.y * deltaTime; 
+        heightInGround -= speed.y * deltaTime; 
+    } else {
+        position.y -= speed.y * deltaTime; 
+        heightInGround += speed.y * deltaTime; 
+    }
+    if (position.y <= bottomBound || position.y >= topBound) {
+        isDown = !isDown;
+    }
+    heightInGround = Clamp(heightInGround, 0.0f, size.y);
+   
 }
 
 
@@ -320,15 +373,10 @@ void InversePiranhaPlant::render() {
 
         Vector2 origin = {0.0f, 0.0f };
 
-        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+        DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
     }
 }
 
-void InversePiranhaPlant::test() {
-    if (IsKeyDown(KEY_A)) {
-        setIsPauseCollision(true);
-    }
-}
 
 ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     this->position = position;
@@ -340,17 +388,29 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
-    size = { 21, 29 };
-    speed = { 10, 0 };
+    size = { 63, 87 };
+    speed = { 130, 0 };
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
@@ -363,15 +423,27 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
+    setBound(0, 1024, 0, 768);
 }
 
 ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
@@ -384,24 +456,437 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
 
     textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
     textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
+    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
     isRight = false;
     isDown = false;
     isDead = false;
-    isCollisionTrue = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
 }
 
 void ShyGuy::hit() {
-    if (isCollisionTrue) {
-        isDead = true;
-    }
+    isDying = true;
+    isBouncing = true;
+    bounceTime = 0.15f; 
+    fallSpeed = -200.0f;
 }
 
 void ShyGuy::update(float deltaTime) {
+    if (isDead) return;
+
+    if (isDying) {
+        if (isBouncing) {
+            bounceTime -= deltaTime;
+            position.y += fallSpeed * deltaTime;
+            if (bounceTime <= 0.0f) {
+                isBouncing = false;
+                fallSpeed = 0.0f;
+            }
+        } 
+        else {
+            fallSpeed += 981.0f*3 * deltaTime; 
+            position.y += fallSpeed * deltaTime;
+            if (position.y > bottomBound) {
+                isDead = true;
+                isDying = false;
+            }
+        }
+    } 
+    else {
+        if (isRight) {
+            position.x += speed.x * deltaTime;
+        } else {
+            position.x -= speed.x * deltaTime;
+        }
+
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 6;
+            texture = textures[currentTextureIndex];
+            size.x = texture.width;
+            size.y = texture.height;
+        }
+
+        if (position.x < leftBound) {
+            isRight = true;
+        }
+        if (position.x + size.x * 1.5f > rightBound) {
+            isRight = false;
+        }
+
+        if (position.y <= topBound) {
+            isDown = true;
+        }
+
+        if (position.y + size.y * 1.5f >= bottomBound) {
+            isDown = false;
+        }
+    }
+}
+
+void ShyGuy::render() {
+    if (!isDead) {
+        if (isRight == false) {
+            DrawTextureEx(texture, position, 0.0f, 1.5f, RAYWHITE);
+        } else {
+            Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
+            Rectangle destRec = { position.x, position.y, size.x * 1.5f, size.y * 1.5f };
+            Vector2 origin = { 0.0f, 0.0f };
+            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
+        }
+    }
+}
+
+
+KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+
+    size = { 72, 108 };
+    speed = { 140, 0 };
+    shellSpeed = { 280, 0 };
+
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isShell = false;
+    setBound(0, 1024, 0, 768);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
+}
+
+KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+
+    shellSpeed.x = 2 * speed.x;
+    shellSpeed.y = 2 * speed.y;
+
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isShell = false;
+    setBound(0, 1024, 0, 768);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
+}
+
+KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+
+    isRight = false;
+    isDown = false;
+    isDead = false;
+    isShell = false;
+    setBound(leftBound, rightBound, topBound, bottomBound);
+
+    fallSpeed = 0.0f;
+    isBouncing = false;
+    bounceTime = 0.0f;
+}
+
+void KoopaTroopa::hit() {
+    if (isShell) {
+        isDying = true;
+        isBouncing = true;
+        bounceTime = 0.15f; 
+        fallSpeed = -200.0f; 
+    } 
+    else {
+        isShell = true;
+        shellSpeed.x = 2 * speed.x;
+        shellSpeed.y = 2 * speed.y;
+    }
+}
+
+void KoopaTroopa::update(float deltaTime) {
+    if (isDead) return;
+
+    if (isDying) {
+        if (isBouncing) {
+            bounceTime -= deltaTime;
+            position.y += fallSpeed * deltaTime;
+            if (bounceTime <= 0.0f) {
+                isBouncing = false;
+                fallSpeed = 0.0f;
+            }
+        } 
+        else {
+            fallSpeed += 981.0f*3 * deltaTime; 
+            position.y += fallSpeed * deltaTime;
+            if (position.y > bottomBound) {
+                isDead = true;
+                isDying = false;
+            }
+        }
+    } 
+    else {
+        if (isShell) {
+            if (isRight) {
+                position.x += shellSpeed.x * deltaTime;
+            } else {
+                position.x -= shellSpeed.x * deltaTime;
+            }
+        } 
+        else {
+            if (isRight) {
+                position.x += speed.x * deltaTime;
+            } 
+            else {
+                position.x -= speed.x * deltaTime;
+            }
+
+            timer += deltaTime;
+            if (timer >= animationTime) {
+                timer -= animationTime;
+                currentTextureIndex = (currentTextureIndex + 1) % 2;
+                texture = textures[currentTextureIndex];
+            }
+        }
+    }
+    if (position.x < leftBound || position.x + texture.width * size.x / 16 > rightBound) {
+        isRight = !isRight;
+    }
+}
+
+void KoopaTroopa::render() {
+    if (!isDead ) {
+        if (isShell || isDying) {
+            DrawTextureEx(textures[2], position, 0.0f, size.x/16, RAYWHITE);
+        } else  if (isRight == false) {
+            DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
+        }
+        else {
+            Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
+            Rectangle destRec = { position.x, position.y, size.x, size.y };
+            Vector2 origin = { 0.0f, 0.0f };
+            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
+        }
+    }
+}
+
+
+Projectile::Projectile(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    this->texture = LoadTexture("assets/textures/Projectile1.png");
+    textures.push_back(LoadTexture("assets/textures/Projectile1.png"));
+    textures.push_back(LoadTexture("assets/textures/Projectile2.png"));
+
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+
+    size = { 66, 70 };
+    this->speed = {220, 153};
+    active = true;
+}
+
+void Projectile::update(float deltaTime) {
+    if (active) {
+        if (!isRight && speed.x > 0) speed.x *= -1;
+
+        speed.y += 9.81f * deltaTime;
+        
+        position.x += speed.x * deltaTime;
+       
+        position.y += speed.y * deltaTime;
+
+        timer += deltaTime;
+        if (timer >= animationTime) {
+            timer -= animationTime;
+            currentTextureIndex = (currentTextureIndex + 1) % 2;
+            texture = textures[currentTextureIndex];
+        }
+    }
+
+
+}
+
+
+
+void Projectile::render() {
+    if (active) {
+        DrawTextureEx(texture, position, 0.0f, 1.0f, RAYWHITE);
+    }
+}
+
+
+void Projectile::hit() {
+    active = false;
+}
+
+void Projectile::setActivate(bool newActive) {
+    active = newActive;
+}
+
+void Projectile::deactivate() {
+    active = false;
+}
+
+bool Projectile::isActive() {
+    return active;
+}
+
+void Projectile::setRight(bool isRight) {
+    this->isRight = isRight;
+}
+
+Lakitu::Lakitu(Vector2 position) : Enemy(position) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    size = { 72, 108 };
+    speed = { 150, 0 };
+    shootTime = 2.0f;
+    curentTimer = 0.0f;
+
+    setBound(0, 1024, 0, 768);
+}
+
+Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    shootTime = 6.0f;
+    curentTimer = 0.0f;
+
+    setBound(0, 1024, 0, 768);
+}
+
+Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
+    this->position = position;
+    this->originPosition = position;
+    
+    texture = LoadTexture("assets/textures/Lakitu1.png");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+
+    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
+    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
+    SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+
+    shootTime = 6.0f;
+    curentTimer = 0.0f;
+
+    setBound(leftBound, rightBound, topBound, bottomBound);
+}
+
+void Lakitu::hit() {
+    isDead = true;
+}
+
+void Lakitu::update(float deltaTime) {
     if (isDead) return;
 
     if (isRight) {
@@ -413,36 +898,46 @@ void ShyGuy::update(float deltaTime) {
     timer += deltaTime;
     if (timer >= animationTime) {
         timer -= animationTime;
-        currentTextureIndex = (currentTextureIndex + 1) % 2;
+        currentTextureIndex = (currentTextureIndex + 1) % 3;
         texture = textures[currentTextureIndex];
     }
 
-    if (position.x < leftBound) {
-        isRight = true;
+    curentTimer += deltaTime;
+    if (curentTimer >= shootTime) {
+        curentTimer -= shootTime;
+        projectiles.push_back(std::make_shared<Projectile>(Projectile{position}));
+        projectiles.back()->setRight(isRight);
+        isShoot = true;
     }
-    if (position.x + size.x > rightBound) {
-        isRight = false;
+    else {
+        isShoot = false;
     }
 
-    if (position.y <= topBound) {
-        isDown = true;
+    for (auto& projectile : projectiles) {
+        projectile->update(deltaTime);
     }
 
-    if (position.y + size.y >= bottomBound) {
-        isDown = false;
+    if (position.x < leftBound || position.x + size.x > rightBound) {
+        isRight = !isRight;
     }
 }
 
-void ShyGuy::render() {
+void Lakitu::render() {
     if (!isDead) {
         if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, size.x/21, WHITE);
-        } else {
+            if (!isShoot) DrawTextureEx(texture, position, 0.0f, size.x/60, RAYWHITE);
+            else DrawTextureEx(textures[3], position, 0.0f, size.x/60, RAYWHITE);
+        }
+        else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
             Rectangle destRec = { position.x, position.y, size.x, size.y };
             Vector2 origin = { 0.0f, 0.0f };
-            DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
+            if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
+            else DrawTexturePro(textures[3], sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
     }
-}
 
+    for (auto& projectile : projectiles) {
+        projectile->render();
+    }
+}

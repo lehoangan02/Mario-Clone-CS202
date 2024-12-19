@@ -28,18 +28,38 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     fin >> NumberOfEnemies;
     for (int i = 0; i < NumberOfEnemies; i++)
     {
-        // int Type;
-        // fin >> Type;
-        // float X, Y;
-        // fin >> X >> Y;
-        // switch (Type)
-        // {
-        // case EnemyType::GOOMBA:
-        //     Level -> m_Enemies.push_back(new Goomba(Vector2{X, Y}));
-        //     break;
-        // default:
-        //     break;
-        // }
+        int Type;
+        fin >> Type;
+        float X, Y;
+        fin >> X >> Y;
+        float LeftBound, RightBound;
+        fin >> LeftBound >> RightBound;
+        EnemyFactory& Factory = EnemyFactory::GetEnemyFactory();
+        switch (Type)
+        {
+        case EnemyType::GOOMBA:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::GOOMBA, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyType::KOOPA_TROOPA:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::KOOPA_TROOPA, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyType::PIRANHA_PLANT:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::PIRANHA_PLANT, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        case EnemyType::SHY_GUY:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::SHY_GUY, Vector2{X, Y}, LeftBound, RightBound));
+            }
+            break;
+        default:
+            break;
+        }
     }
     int NumberOfItems;
     fin >> NumberOfItems;
@@ -85,32 +105,36 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         std::pair<EnvironmentObjectInteractive*, Item*> Pair;
         Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
         Item* NewItem = nullptr;
-        switch (MyItemType)
+        if (Pair.first->getObjectID() == EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK)
         {
-        case Itemtype::COIN:
+                switch (MyItemType)
             {
-                NewItem = new Coin(
-                Vector2{ X + 40, Y },   //Start position
-                Vector2{ X + 40, Y - 300 },    //End position
-                Vector2{ 40,100},      // size of coin
-                LoadTexture("assets/textures/Coin.png"),
-                Vector2{ 0, 400 }     //velocity
-                );
+            case Itemtype::COIN:
+                {
+                    NewItem = new Coin(
+                    Vector2{ X + 40, Y },   //Start position
+                    Vector2{ X + 40, Y - 300 },    //End position
+                    Vector2{ 40,100},      // size of coin
+                    LoadTexture("assets/textures/Coin.png"),
+                    Vector2{ 0, 400 }     //velocity
+                    );
+                }
+                break;
+            case Itemtype::MUSHROOM:
+                {
+                    NewItem = new Mushroom(
+                    Vector2{ X + 20, Y},   //Start position
+                    Vector2{ 0, 0 },    //End position
+                    Vector2{ 50, 50},      // size of coin
+                    LoadTexture("assets/textures/MagicMushroom.png"),
+                    Vector2{ 100, 0 }     //velocity
+                    );
+                }
+                break;
+            default:
+                NewItem = nullptr;
+                break;
             }
-            break;
-        case Itemtype::MUSHROOM:
-            {
-                NewItem = new Mushroom(
-                Vector2{ X + 20, Y},   //Start position
-                Vector2{ 0, 0 },    //End position
-                Vector2{ 50, 50},      // size of coin
-                LoadTexture("assets/textures/MagicMushroom.png"),
-                Vector2{ 100, 0 }     //velocity
-                );
-            }
-            break;
-        default:
-            break;
         }
         Pair.second = NewItem;
         Level -> m_EnvironmentInteractive.push_back(Pair);

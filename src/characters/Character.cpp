@@ -7,7 +7,7 @@
 #define SLOW_BRAKE 800.0f
 #define GRAVITY 3500.0f
 
-Character::Character(float jumpHeight) 
+Character::Character(float jumpHeight) : firePool(nullptr)
 {
 	this->form = 0;
 	this->accX = 0.0f;
@@ -36,8 +36,10 @@ Character::Character(float jumpHeight)
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
 	this->score = 0;
+	if (this->firePool == nullptr) {
+		this->firePool = new FirePool(2);
+	}
 	position = Vector2{ 20 , 0 };
-
 }
 
 Character::~Character()
@@ -95,17 +97,66 @@ void Character::control(bool enabled) {
 	}
 	if (IsKeyPressed(KEY_I)) {
 		invincile();
+		MusicManager::getInstance().PlayMusic(Invincible);
+	}
+	if (IsKeyPressed(KEY_L)) {
+		killEnemy();
 	}
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
+	if (IsKeyPressed(KEY_ONE)) {
+		SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+	}
+	if (IsKeyPressed(KEY_TWO)) {
+		SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
+	}
+	if (IsKeyPressed(KEY_THREE)) {
+		SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+	}
+	if (IsKeyPressed(KEY_FOUR)) {
+		SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+	}
+	if (IsKeyPressed(KEY_FIVE)) {
+		SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+	}
+	if (IsKeyPressed(KEY_SIX)) {
+		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
+	}
+	if (IsKeyPressed(KEY_SEVEN)) {
+		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	}
+	if (IsKeyPressed(KEY_EIGHT)) {
+		SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
+	}
+
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+		SoundManager::getInstance().PlaySoundEffect(JUMP_SOUND);
 	}
 	if (form==2 && IsKeyPressed(KEY_M)) {
 		fire = true;
+		Vector2 direction = { 0,0 };
+		if (faceRight) direction = { 1,0.3f };
+		else direction = { -1,0.3f };
+		Vector2 firePos = { position.x + size.x, position.y + size.y / 2 };
+		firePool->GetAvailableFireBall(firePos, direction);
 	}
+		/*for (int i = 0; i < this->firePool->fireballs.size(); i++) {
+			if (firePool->fireballs[i].IsActive()) {
+				if (firePool->fireballs[i].getPosition().y > 600.0f) {
+					firePool->fireballs[i].Bounce();
+					std::cout << "bounce" << " ball " << i + 1 << std::endl;
+				}
+				if (firePool->fireballs[i].getPosition().x > 1200.0f) {
+					firePool->fireballs[i].Deactivate();
+					std::cout << "Deact" << std::endl;
+				}
+			}
+		}*/
+	// Deactivate if out of bounds
+
 }
 void Character::changeForm(int form) {
 	this->form = form;
@@ -147,6 +198,8 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
+			MusicManager::getInstance().StopMusic();
+			MusicManager::getInstance().PlayMusic(OverWorld);
 			isInvincible = false;
 			InvincibleColor = WHITE;
 			invincibleDuration = 6.0f;
@@ -189,15 +242,23 @@ void Character::powerDown() {
 void Character::touchEnemy() {
     if (form != 0) {
 		powerDown();
+		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
 		return;
 	}
 	else {
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
 		isDie = true;
+		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
 	}
 }
+void Character::killEnemy() {
+	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
+	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+}
+
 void Character::Draw()
 {
+	//std::cout << "Score" << score << std::endl;
 	if (!isVisible) return;
 	//std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;
 	Rectangle sourceRec = animation.uvRect; // The part of the texture to use for drawing
@@ -205,9 +266,10 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
+	firePool->Draw();
 };
 
-Mario::Mario() : Character(300.0f) {
+Mario::Mario() : Character(400.0f) {
 	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
 	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
@@ -246,6 +308,7 @@ void Mario::Update(float deltaTime) {
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
+	firePool->Update();	
 }
 
 void Character::SlidePipe(slidingDirection direction) {
