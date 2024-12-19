@@ -1,5 +1,6 @@
 #include "Application.hpp"
 
+
 void Application::run() {
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -11,9 +12,15 @@ void Application::run() {
         } 
         else  if (tab == 10){
             game.start();
+            if (game.getState() == LEVEL_RETURN_MESSAGE::QUIT) {
+                tab = 0;
+            }
         }
         else if (tab == 11) {
             game.start();
+            if (game.getState() == LEVEL_RETURN_MESSAGE::QUIT) {
+                tab = 0;
+            }
         }
         EndDrawing();
     }

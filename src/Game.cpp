@@ -121,13 +121,17 @@ void Game::nextLevel() {
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
          level = factory.CreateLevel(LevelFactory::LEVEL_103);
     } 
-    else return;
+    else {
+        //draw menu win
+        state = LEVEL_RETURN_MESSAGE::RESTART;
+        return;
+    }
 
     //delete player;
     //player = new Mario;
     player->setPosition(Vector2{20, 0});
-    level->update(0.01f);
     level->attachPlayer(player);
+    level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
@@ -141,16 +145,16 @@ void Game::hiddenLevel() {
     else return;
 
     player->setPosition(Vector2{20, 0});
-    level->update(0.01f);
     level->attachPlayer(player);
+    level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::restartLevel() {
     level = factory.CreateLevel(level->GetLevelType());
     player->setPosition(Vector2{20, 0});
-    level->update(0.01f);
     level->attachPlayer(player);
+    level->update(0.01f);
 }
 
 void Game::handleState() {
@@ -161,7 +165,7 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
             level->continueLevel();
-            // Handle continue state
+            //drawContinueButton();
             break;
         case LEVEL_RETURN_MESSAGE::RUNNING:
             level->continueLevel();
@@ -175,9 +179,9 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
             //drawLoseButton();
+            level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
-            //drawQuitButton();
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();

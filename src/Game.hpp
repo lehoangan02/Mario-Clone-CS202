@@ -39,6 +39,8 @@ public:
     void drawWinButton();
     void drawLoseButton();
     void drawQuitButton();
+
+    LEVEL_RETURN_MESSAGE getState() { return state; };
 };
 
 #endif /* GAME_hpp */

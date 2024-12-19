@@ -87,10 +87,12 @@ Menu::Menu() {
 
 void Menu::draw(){
     DrawTextureEx(pageTexture, {0, 0}, 0, 0.125, WHITE);
-    playButton.draw();
-    settingButton.draw();
-    highScoreButton.draw();
-    inforButton.draw();
+    if (type == 0) {
+        playButton.draw();
+        settingButton.draw();
+        highScoreButton.draw();
+        inforButton.draw();
+    }
     
     if (type == 1) {
         DrawTextureEx(playTexture, {236, 167}, 0, 0.125, WHITE);
