@@ -182,5 +182,6 @@ public:
 	void slantDirection();
 	void Accelerate(float deltaTime);
 	void FlipDirection();
+	void setFalling();
 };
 
