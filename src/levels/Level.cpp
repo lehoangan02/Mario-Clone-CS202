@@ -480,7 +480,7 @@ void Level::update(float DeltaTime)
         object->update();
     }
     for (auto& object : m_EnvironmentInteractive)
-    {
+    { 
         object.first ->update();
     }
     for (auto& object : m_EnvironmentInteractive)

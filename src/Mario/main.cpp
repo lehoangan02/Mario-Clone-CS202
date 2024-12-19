@@ -70,6 +70,9 @@ int main() {
     //        mushroom->onNotify();
 
     //    }
+    //    if (IsKeyPressed(KEY_G)) {
+    //        mushroom->setHit();
+    //    }
     //    if (IsKeyPressed(KEY_C))
     //    {
     //        fireflower->onNotify();
