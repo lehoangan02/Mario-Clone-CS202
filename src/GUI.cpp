@@ -20,7 +20,7 @@ void Button::draw(float radius) {
 bool Button::isClicked() {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && this->isHovered) {
         this->isHovered = false;
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return 1;
     }
     return 0;
@@ -162,13 +162,10 @@ int Menu::handle() {
     else if (highScoreButton.isClicked()) type = 6;
     else if (inforButton.isClicked()) type = 7;
     
-    if (quitButton.isClicked() && (type == 3 || type == 4 || type ==5)) {
-        type = 2;
-    }
-    else if (quitButton.isClicked()) {
+    if (quitButton.isClicked()) {
         type = 0;
     }
-    else if (newGameButton.isClicked()) {
+    if (newGameButton.isClicked()) {
         type = 10;
     }
     else if (continueButton.isClicked()) {
