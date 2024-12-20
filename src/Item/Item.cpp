@@ -371,6 +371,8 @@ void StarMan::slantDirection() {
 }
 void StarMan::Accelerate(float deltaTime) {
     velocity.y += gravity * deltaTime;
+    std::cout << "Accelerating" << std::endl;
+    std::cout << "Velocity: " << velocity.y << std::endl;
 }
 void StarMan::FlipDirection() {
     velocity.x *= -1;

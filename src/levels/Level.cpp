@@ -346,6 +346,42 @@ void Level::handleItemLogic()
                 // m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
             }
         }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            // if (StarManItem->isFinishSpawning())
+            // {
+            StarManItem->Accelerate(GetFrameTime());
+            // }
+            // if (!(StarManItem->isHit()) && !StarManItem->isFinishSpawning()) continue;
+            for (int j = 0; j < m_EnvironmentInteractive.size(); ++j)
+            {
+                AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[j].first->m_Position, m_EnvironmentInteractive[j].first->getSize());
+                EnvironmentBox.setFixed(true);
+                if (isCollidingVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    StarManItem->FlipDirectionX();
+                    std::cout << "Flipping X" << std::endl;
+                }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                StarManItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                // m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+            }
+        }
     }
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
@@ -700,49 +736,38 @@ void Level::reset()
         delete m_FlagPole;
         m_FlagPole = nullptr;
     }
-    for (auto& Enemy : m_Enemies)
-    {
-        delete Enemy;
-    }
     m_Enemies.clear();
     for (auto& object : m_Environment)
     {
-        delete object;
+        if (object) delete object;
     }
     m_Environment.clear();
     for (auto& object : m_EnvironmentInteractive)
     {
-        delete object.first;
-        delete object.second;
+        if (object.first) delete object.first;
+        if (object.second) delete object.second;
     }
     m_EnvironmentInteractive.clear();
     for (auto& coin : m_IdleCoin)
     {
-        delete coin;
+        if (coin) delete coin;
     }
     m_IdleCoin.clear();
-    for (auto& Interactive : m_EnvironmentInteractive)
-    {
-        delete Interactive.first;
-        delete Interactive.second;
-    }
-    m_EnvironmentInteractive.clear();
     for (auto& object : m_Drawables)
     {
-        delete object;
+        if (object) delete object;
     }
     m_Drawables.clear();
     for (auto& object : m_Lifts)
     {
-        delete object;
+        if (object) delete object;
     }
     m_Lifts.clear();
     for (auto& object : m_EndPipes)
     {
-        delete object;
+        if (object) delete object;
     }
     m_EndPipes.clear();
-    delete m_Player;
     m_Player = nullptr;
     isPlayerFinished = false;
     m_Paused = false;

@@ -143,6 +143,14 @@ void MapLoader::LoadMap(Level* Level, int MapID)
             }
             case Itemtype::STARMAN:
             {
+                Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
+                NewItem = new StarMan(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 60, 60 },
+                    starmanTexture,
+                    Vector2{ 1.0f, 1.0f }
+                );
                 break;
             }
             default:
