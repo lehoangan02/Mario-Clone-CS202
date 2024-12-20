@@ -10,7 +10,7 @@ Game::Game()
     level->attachPlayer(player);  
 }
 
-Game::Game(int characterMenu, int soundMenu) 
+Game::Game(int characterMenu, int mapMenu, int levelMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
       level(nullptr)  
 {
@@ -82,7 +82,7 @@ void Game::draw() {
     }
 }
 
-void Game::notify(Component* sender, LEVEL_RETURN_MESSAGE eventCode) {
+void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;

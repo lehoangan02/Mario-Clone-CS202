@@ -48,13 +48,13 @@ public:
     void setChoose(bool newChoose);
 };
 
-class CircleButton : public Button {
+class QuitButton : public Button {
+private:
+    Texture2D texture;
 public:
-    CircleButton(Rectangle rect, Color defaultColor, const std::string& text, Color textColor, float fontSize, Font font, bool isChoose) :Button(rect, defaultColor, text, textColor, fontSize, font, isChoose) {}
-    CircleButton() = default;
+    QuitButton(Rectangle rect);
     void draw();
 };
-
 class Menu {
 private:
     Texture2D pageTexture;
@@ -67,26 +67,39 @@ private:
     Texture2D playTexture;
     Button continueButton;
     Button newGameButton;
-    Button quit1Button;
+    Button quitButton;
 
     Texture2D settingTexture;
-    Button characterButton[2];
-    CircleButton levelButton[3];
-    Button quit2Button;
+    Button characterButton;
+    Button mapButton;
+    Button levelButton;
+
+    Texture2D characterTexture;
+    Button characterButtons[2];
+
+    Texture2D mapTexture;
+    Button mapButtons[5];
+
+    Texture2D levelTexture;
+    Button levelButtons[3];
 
     Texture2D highScoreTexture;
-    Button quitButton;
 
     Texture2D inforTexture;
     int type;
+    bool isChange;
 
 public:
     Menu();
     void draw();
     int characterMenu();
+    int mapMenu();
     int levelMenu();
 
     int handle();
+
+    bool getIsChange() const { return isChange; };
+    void setIsChange(bool newIsChange) { isChange = newIsChange; };
 };
 
 
