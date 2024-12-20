@@ -12,7 +12,7 @@ constexpr int FIREFLOWER_FRAME_COUNT = 5;
 constexpr float FIREFLOWER_FRAME_TIME = 0.5f;
 
 constexpr int STARMAN_FRAME_COUNT = 5;
-constexpr float STARMAN_FRAME_TIME = 0.5f;
+constexpr float STARMAN_FRAME_TIME = 0.1f;
 
 #include <string>
 #include "raylib.h"
