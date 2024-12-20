@@ -1,15 +1,17 @@
 #include "GUI.hpp"
 
-Button::Button(Rectangle rect, Color defaultColor, const std::string& text, Color textColor, float fontSize, Font font, bool isChoose) : outerRect(rect), defaultColor(defaultColor),content(text), contentColor(textColor), fontSize(fontSize), font(font), isHovered(false), isChoose(isChoose), hoverColor(Color{198, 198, 35, 255}){
+Button::Button(Rectangle rect, Color defaultColor, const std::string& text, Color textColor, float fontSize, Font font, bool isChoose) : outerRect(rect), defaultColor(defaultColor),content(text), contentColor(textColor), fontSize(fontSize), font(font), isHovered(false), isChoose(isChoose), hoverColor(Color{251, 158, 198, 255}){
     
     Vector2 textSize = MeasureTextEx(this->font, text.c_str(), this->fontSize,2);
     this->contentPos = {this->outerRect.x + (this->outerRect.width-textSize.x)/2,  (rect.y + (rect.height - textSize.y)/2)};
 }
 
 void Button::draw(float radius) {
-    Color tmpColor = isChoose ? Color{218, 40, 90, 255} : defaultColor;
+    Color tmpColor = isChoose ? Color{255, 206, 12, 255} : defaultColor;
     
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
+    if (isChoose) this->isHovered = false;
+    DrawRectangleRounded({outerRect.x + 1.7f, outerRect.y + 1.7f, outerRect.width, outerRect.height}, radius/55, 32, Fade(BLACK, 0.7f));
     DrawRectangleRounded(this->outerRect, radius/55, 32, this->isHovered ? hoverColor : tmpColor);
     DrawTextPro(this->font, this->content.c_str(), this->contentPos, {0,0}, 0, this->fontSize, 2, this->contentColor);
 
@@ -18,7 +20,7 @@ void Button::draw(float radius) {
 bool Button::isClicked() {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && this->isHovered) {
         this->isHovered = false;
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return 1;
     }
     return 0;
@@ -32,76 +34,124 @@ void Button::setChoose(bool newChoose) {
     isChoose = newChoose;
 }
 
-void CircleButton::draw() {
-    Color tempColor = isChoose ? Color{218, 40, 90, 255} : Color{3, 121, 255, 255};
+QuitButton::QuitButton(Rectangle rect) {
+    this->texture = ResourceManager::GetInstance()->GetTexture("quitTexture");
+    this->outerRect = rect;
+}
+
+void QuitButton::draw(float radius) {
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
-    DrawCircle(outerRect.x + outerRect.width/2, outerRect.y + outerRect.height/2, outerRect.width/2, isHovered ? Color{241, 241, 29 ,255} : tempColor);
-    DrawTextPro(this->font, this->content.c_str(), this->contentPos, {0,0}, 0, this->fontSize, 2, this->contentColor);
+    DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f , BLACK);
 }
 
 Menu::Menu() {
     this->pageTexture = ResourceManager::GetInstance()->GetTexture("pageTexture");
     
-    playButton = Button({271, 595, 205, 59}, Color{70, 231, 193, 255} ,"Play", WHITE, 26, ResourceManager::GetInstance()->GetFont(), 0);
-    settingButton = Button({547, 595, 205, 59 }, Color{70, 231, 124, 255} ,"Setting", WHITE, 26, ResourceManager::GetInstance()->GetFont(), 0);
-    highScoreButton = Button({271, 665, 205, 59}, Color{255, 104, 170, 255} ,"High Score", WHITE, 26,
+    playButton = Button({177, 560, 205, 59}, Color{240, 193, 225, 255} ,"Play", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    settingButton = Button({662, 560, 205, 59 }, Color{240, 193, 225, 255} ,"Setting", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    highScoreButton = Button({177, 659, 205, 59}, Color{240, 193, 225, 255} ,"High Score", BLACK, 26,
         ResourceManager::GetInstance()->GetFont(), 0);
-    inforButton = Button({547, 665, 205, 59}, Color{255, 75, 78, 255},"Infor", WHITE, 26, ResourceManager::GetInstance()->GetFont(), 0);
+    inforButton = Button({662, 659, 205, 59}, Color{240, 193, 225, 255},"Info", BLACK, 26, ResourceManager::GetInstance()->GetFont(), 0);
     
     this->playTexture = ResourceManager::GetInstance()->GetTexture("playTexture");
     this->settingTexture = ResourceManager::GetInstance()->GetTexture("settingTexture");
+    this->characterTexture = ResourceManager::GetInstance()->GetTexture("settingCharacter");
+    this->mapTexture = ResourceManager::GetInstance()->GetTexture("settingMap");
+    this->levelTexture = ResourceManager::GetInstance()->GetTexture("settingLevel");
     this->highScoreTexture = ResourceManager::GetInstance()->GetTexture("highScoreTexture");
     this->inforTexture = ResourceManager::GetInstance()->GetTexture("inforTexture");
-    
-    continueButton = Button({441, 344, 141, 42}, Color{3, 121, 255, 255} ,"Continue", WHITE, 22,
+ 
+    continueButton = Button({450, 286, 141, 42}, Color{240, 193, 225, 255} ,"Continue", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    newGameButton = Button({441, 434, 141, 42}, Color{3, 121, 255, 255},"New Game", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
-    quit1Button = Button({441, 514, 141, 42}, Color{3, 121, 255, 255},"Quit", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
-    
-    characterButton[0] = Button({420, 280, 141, 42}, Color{3, 121, 255, 255},"Mario", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 1);
-    characterButton[1] = Button({618, 280, 141, 42}, Color{3, 121, 255, 255},"Luigi", WHITE, 22,
+    newGameButton = Button({450, 356, 141, 42}, Color{240, 193, 225, 255},"New Game", BLACK, 22, ResourceManager::GetInstance()->GetFont(), 0);
+
+    characterButton = Button({450, 248, 141, 42}, Color{240, 193, 225, 255} ,"Character", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButton = Button({450, 314, 141, 42}, Color{240, 193, 225, 255} ,"Map", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    levelButton = Button({450, 380, 141, 42}, Color{240, 193, 225, 255} ,"Level", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
 
-    levelButton[0] = CircleButton({447.5, 383, 50, 50}, Color{3, 121, 255, 255},"1", WHITE, 22,
-        ResourceManager::GetInstance()->GetFont(), 1);
-    levelButton[1] = CircleButton({560, 383, 50, 50}, Color{3, 121, 255, 255},"2", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
-    levelButton[2] = CircleButton({669, 383, 50, 50}, Color{3, 121, 255, 255},"3", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    characterButtons[0] = Button({288, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    characterButtons[1] = Button({583, 422, 141, 42}, Color{240, 193, 225, 255} ,"Luigi", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
     
-    quit2Button = Button({560, 502, 141, 42}, Color{3, 121, 255, 255},"Quit", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[0] = Button({275.5, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 1", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[1] = Button({444, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 2", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[2] = Button({613, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 3", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[3] = Button({361, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 1", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[4] = Button({545, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 2", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
     
-    quitButton = Button({247, 253, 141, 42}, Color{3, 121, 255, 255}, "Quit", WHITE, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    levelButtons[0] = Button({450, 251, 141, 42}, Color{240, 193, 225, 255} ,"Easy", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    levelButtons[1] = Button({450, 316, 141, 42}, Color{240, 193, 225, 255} ,"Medium", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    levelButtons[2] = Button({450, 384, 141, 42}, Color{240, 193, 225, 255} ,"Hard", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+
+    quitButton = QuitButton(Rectangle{255, 183, 24, 24});
+    isChange = false;
     type = 0;
 }
 
+
+
 void Menu::draw(){
     DrawTextureEx(pageTexture, {0, 0}, 0, 0.125, WHITE);
-    playButton.draw();
-    settingButton.draw();
-    highScoreButton.draw();
-    inforButton.draw();
+    if (type == 0) {
+        playButton.draw();
+        settingButton.draw();
+        highScoreButton.draw();
+        inforButton.draw();
+    }
     
     if (type == 1) {
-        DrawTextureEx(playTexture, {236, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(playTexture, {236, 167}, 0, 0.125, WHITE);
         continueButton.draw();
         newGameButton.draw();
-        quit1Button.draw();
+        quitButton.draw();
     }
-    else if (type == 2 || type == 5 || type == 6 || type == 7 || type == 8 || type == 9) {
-        DrawTextureEx(settingTexture, {236, 235}, 0, 0.125, WHITE);
-        levelButton[0].draw();
-        levelButton[1].draw();
-        levelButton[2].draw();
-        
-        characterButton[0].draw();
-        characterButton[1].draw();
-        quit2Button.draw();
+    else if (type == 2) {
+        DrawTextureEx(settingTexture, {236, 167}, 0, 0.125, WHITE);
+        characterButton.draw();
+        mapButton.draw();
+        levelButton.draw();
+        quitButton.draw();
     }
     else if (type == 3) {
-        DrawTextureEx(highScoreTexture, {236, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(characterTexture, {236, 167}, 0, 0.125, WHITE);
+        characterButtons[0].draw();
+        characterButtons[1].draw();
         quitButton.draw();
     }
     else if (type == 4) {
-        DrawTextureEx(inforTexture, {236, 235}, 0, 0.125, WHITE);
+        DrawTextureEx(mapTexture, {236, 167}, 0, 0.125, WHITE);
+        mapButtons[0].draw();
+        mapButtons[1].draw();
+        mapButtons[2].draw();
+        mapButtons[3].draw();
+        mapButtons[4].draw();
+        quitButton.draw();
+    }
+    else if (type == 5) {
+        DrawTextureEx(levelTexture, {236, 167}, 0, 0.125, WHITE);
+        levelButtons[0].draw();
+        levelButtons[1].draw();
+        levelButtons[2].draw();
+        quitButton.draw();
+    }
+    else if (type == 6) {
+        DrawTextureEx(highScoreTexture, {236, 167}, 0, 0.125, WHITE);
+        quitButton.draw();
+    }
+    else if (type == 7) {
+        DrawTextureEx(inforTexture, {236, 167}, 0, 0.125, WHITE);
         quitButton.draw();
     }
 }
@@ -109,56 +159,123 @@ void Menu::draw(){
 int Menu::handle() {
     if (playButton.isClicked()) type = 1;
     else if (settingButton.isClicked()) type = 2;
-    else if (highScoreButton.isClicked()) type = 3;
-    else if (inforButton.isClicked()) type = 4;
+    else if (highScoreButton.isClicked()) type = 6;
+    else if (inforButton.isClicked()) type = 7;
     
-    if (quitButton.isClicked() || quit1Button.isClicked() || quit2Button.isClicked()) {
+    if (quitButton.isClicked()) {
         type = 0;
     }
-    else if (newGameButton.isClicked()) {
+    if (newGameButton.isClicked()) {
         type = 10;
     }
     else if (continueButton.isClicked()) {
         type = 11;
     }
-    else if (characterButton[0].isClicked() && !characterButton[0].getChoose()) {
-        characterButton[0].setChoose(true);
-        characterButton[1].setChoose(false);
+    else if (characterButton.isClicked()) {
+        type = 3;
+    }
+    else if (mapButton.isClicked()) {
+        type = 4;
+    }
+    else if (levelButton.isClicked()) {
         type = 5;
     }
-    else if (characterButton[1].isClicked() && !characterButton[1].getChoose()) {
-        characterButton[1].setChoose(true);
-        characterButton[0].setChoose(false);
-        type = 6;
+    else if (characterButtons[0].isClicked() && !characterButtons[0].getChoose()) {
+        characterButtons[0].setChoose(true);
+        characterButtons[1].setChoose(false);
+        type = 3;
+        isChange = true;
     }
-    else if (levelButton[0].isClicked() && !levelButton[0].getChoose()) {
-        levelButton[0].setChoose(true);
-        levelButton[1].setChoose(false);
-        levelButton[2].setChoose(false);
-        type = 7;
+    else if (characterButtons[1].isClicked() && !characterButtons[1].getChoose()) {
+        characterButtons[1].setChoose(true);
+        characterButtons[0].setChoose(false);
+        type = 3;
+        isChange = true;
     }
-    else if (levelButton[1].isClicked() && !levelButton[1].getChoose()) {
-        levelButton[0].setChoose(false);
-        levelButton[1].setChoose(true);
-        levelButton[2].setChoose(false);
-        type = 8;
+    else if (mapButtons[0].isClicked() && !mapButtons[0].getChoose()) {
+        mapButtons[0].setChoose(true);
+        mapButtons[1].setChoose(false);
+        mapButtons[2].setChoose(false);
+        mapButtons[3].setChoose(false);
+        mapButtons[4].setChoose(false);
+        type = 4;
+        isChange = true;
     }
-    else if (levelButton[2].isClicked() && !levelButton[2].getChoose()) {
-        levelButton[0].setChoose(false);
-        levelButton[1].setChoose(false);
-        levelButton[2].setChoose(true);
-        type = 9;
+    else if (mapButtons[1].isClicked() && !mapButtons[1].getChoose()) {
+        mapButtons[1].setChoose(true);
+        mapButtons[0].setChoose(false);
+        mapButtons[2].setChoose(false);
+        mapButtons[3].setChoose(false);
+        mapButtons[4].setChoose(false);
+        type = 4;
+        isChange = true;
+    }
+    else if (mapButtons[2].isClicked() && !mapButtons[2].getChoose()) {
+        mapButtons[2].setChoose(true);
+        mapButtons[1].setChoose(false);
+        mapButtons[0].setChoose(false);
+        mapButtons[3].setChoose(false);
+        mapButtons[4].setChoose(false);
+        type = 4;
+        isChange = true;
+    }
+    else if (mapButtons[3].isClicked() && !mapButtons[3].getChoose()) {
+        mapButtons[3].setChoose(true);
+        mapButtons[1].setChoose(false);
+        mapButtons[2].setChoose(false);
+        mapButtons[0].setChoose(false);
+        mapButtons[4].setChoose(false);
+        type = 4;
+        isChange = true;
+    }
+    else if (mapButtons[4].isClicked() && !mapButtons[4].getChoose()) {
+        mapButtons[4].setChoose(true);
+        mapButtons[1].setChoose(false);
+        mapButtons[2].setChoose(false);
+        mapButtons[3].setChoose(false);
+        mapButtons[0].setChoose(false);
+        type = 4;
+        isChange = true;
+    }
+    else if (levelButtons[0].isClicked() && !levelButtons[0].getChoose()) {
+        levelButtons[0].setChoose(true);
+        levelButtons[1].setChoose(false);
+        levelButtons[2].setChoose(false);
+        type = 5;
+        isChange = true;
+    }
+    else if (levelButtons[1].isClicked() && !levelButtons[1].getChoose()) {
+        levelButtons[1].setChoose(true);
+        levelButtons[0].setChoose(false);
+        levelButtons[2].setChoose(false);
+        type = 5;
+        isChange = true;
+    }
+    else if (levelButtons[2].isClicked() && !levelButtons[2].getChoose()) {
+        levelButtons[2].setChoose(true);
+        levelButtons[1].setChoose(false);
+        levelButtons[0].setChoose(false);
+        type = 5;
+        isChange = true;
     }
     return type;
 }
 
 int Menu::characterMenu() {
-    if (characterButton[0].getChoose()) return 0;
+    if (characterButtons[0].getChoose()) return 0;
     else return 1;
 }
 
+int Menu::mapMenu() {
+    if (mapButtons[0].getChoose()) return 0;
+    else if (mapButtons[1].getChoose()) return 1;
+    else if (mapButtons[2].getChoose()) return 2;
+    else if (mapButtons[3].getChoose()) return 3;
+    else return 4;
+}
+
 int Menu::levelMenu() {
-    if (levelButton[0].getChoose()) return 0;
-    else if (levelButton[1].getChoose()) return 1;
+    if (levelButtons[0].getChoose()) return 0;
+    else if (levelButtons[1].getChoose()) return 1;
     else return 2;
 }

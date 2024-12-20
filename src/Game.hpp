@@ -19,7 +19,7 @@ private:
 
 public:
     Game();
-    Game(int characterMenu, int levelMenu);
+    Game(int characterMenu, int mapMenu, int levelMenu);
     Game& operator=(const Game& other);
     Game(const Game& other);
     void start();
@@ -33,6 +33,7 @@ public:
     void quit();
     void nextLevel();
     void hiddenLevel();
+    void restartLevel();
 
     // Implement notify method
     void notify(Component* sender, int eventCode) override;
@@ -44,6 +45,8 @@ public:
     void drawWinButton();
     void drawLoseButton();
     void drawQuitButton();
+
+    LEVEL_RETURN_MESSAGE getState() { return state; };
 };
 
 #endif /* GAME_hpp */

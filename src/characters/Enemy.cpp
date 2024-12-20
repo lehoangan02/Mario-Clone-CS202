@@ -405,7 +405,7 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
-    size = { 63, 87 };
+    size = { 40, 40 };
     speed = { 130, 0 };
     isRight = false;
     isDown = false;
@@ -519,8 +519,6 @@ void ShyGuy::update(float deltaTime) {
             timer -= animationTime;
             currentTextureIndex = (currentTextureIndex + 1) % 6;
             texture = textures[currentTextureIndex];
-            size.x = texture.width;
-            size.y = texture.height;
         }
 
         if (position.x < leftBound) {
@@ -543,10 +541,10 @@ void ShyGuy::update(float deltaTime) {
 void ShyGuy::render() {
     if (!isDead) {
         if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, 1.5f, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
         } else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, size.x * 1.5f, size.y * 1.5f };
+            Rectangle destRec = { position.x, position.y, size.x * 2.0f, size.y * 2.0f };
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
@@ -557,20 +555,42 @@ void ShyGuy::render() {
 KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
-    
-    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+
+    texture = LoadTexture("assets/textures/Koopa1.png");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa3.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa4.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa5.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa6.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa7.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa8.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa9.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa10.png"));
+
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[6], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[7], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[8], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[9], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[6], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[7], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[8], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[9], TEXTURE_WRAP_CLAMP);
 
     size = { 72, 108 };
     speed = { 140, 0 };
@@ -585,25 +605,49 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     fallSpeed = 0.0f;
     isBouncing = false;
     bounceTime = 0.0f;
+
+    isToShell = false;
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,size,speed) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+    texture = LoadTexture("assets/textures/Koopa1.png");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa3.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa4.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa5.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa6.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa7.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa8.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa9.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa10.png"));
+
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[6], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[7], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[8], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[9], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[6], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[7], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[8], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[9], TEXTURE_WRAP_CLAMP);
 
     shellSpeed.x = 2 * speed.x;
     shellSpeed.y = 2 * speed.y;
@@ -617,25 +661,49 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     fallSpeed = 0.0f;
     isBouncing = false;
     bounceTime = 0.0f;
+
+    isToShell = false;
 }
 
 KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : Enemy(position,size,speed,leftBound,rightBound,topBound,bottomBound) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Koopa_Walk1.png");
+    texture = LoadTexture("assets/textures/Koopa1.png");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Koopa_Shell.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa1.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa2.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa3.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa4.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa5.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa6.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa7.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa8.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa9.png"));
+    textures.push_back(LoadTexture("assets/textures/Koopa10.png"));
+
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[3], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[4], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[5], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[6], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[7], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[8], TEXTURE_FILTER_POINT);
+    SetTextureFilter(textures[9], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[1], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[6], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[7], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[8], TEXTURE_WRAP_CLAMP);
+    SetTextureWrap(textures[9], TEXTURE_WRAP_CLAMP);
 
     isRight = false;
     isDown = false;
@@ -646,6 +714,8 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     fallSpeed = 0.0f;
     isBouncing = false;
     bounceTime = 0.0f;
+
+    isToShell = false;
 }
 
 void KoopaTroopa::hit() {
@@ -656,16 +726,35 @@ void KoopaTroopa::hit() {
         fallSpeed = -200.0f; 
     } 
     else {
+        isToShell = true;
         isShell = true;
         shellSpeed.x = 2 * speed.x;
         shellSpeed.y = 2 * speed.y;
+
+        timer = 0.0f;
+        toShellTime = 0.2f;
+        currentTextureIndex = 6;
     }
 }
 
 void KoopaTroopa::update(float deltaTime) {
     if (isDead) return;
-
-    if (isDying) {
+    if (isToShell) {
+            timer += deltaTime;
+            if (timer <= toShellTime/3) {
+                currentTextureIndex = 6;
+            }
+            else if (timer <= toShellTime *2/3) {
+                currentTextureIndex = 7;
+            }
+            else if (timer <= toShellTime) {
+                currentTextureIndex = 8;
+            }
+            else isToShell = false;
+            texture = textures[currentTextureIndex];
+            
+        }
+    else if (isDying) {
         if (isBouncing) {
             bounceTime -= deltaTime;
             position.y += fallSpeed * deltaTime;
@@ -684,14 +773,17 @@ void KoopaTroopa::update(float deltaTime) {
         }
     } 
     else {
-        if (isShell) {
+        if (isShell && !isToShell) {
             if (isRight) {
                 position.x += shellSpeed.x * deltaTime;
             } else {
                 position.x -= shellSpeed.x * deltaTime;
             }
+            if (position.x < leftBound || position.x + texture.width * 0.25f > rightBound) {
+                isRight = !isRight;
+            }
         } 
-        else {
+        else if (!isToShell){
             if (isRight) {
                 position.x += speed.x * deltaTime;
             } 
@@ -702,26 +794,26 @@ void KoopaTroopa::update(float deltaTime) {
             timer += deltaTime;
             if (timer >= animationTime) {
                 timer -= animationTime;
-                currentTextureIndex = (currentTextureIndex + 1) % 2;
+                currentTextureIndex = (currentTextureIndex + 1) % 6;
                 texture = textures[currentTextureIndex];
             }
+            if (position.x < leftBound || position.x + texture.width * 0.25f > rightBound) {
+                isRight = !isRight;
+            }
         }
-    }
-    if (position.x < leftBound || position.x + texture.width * size.x / 16 > rightBound) {
-        isRight = !isRight;
     }
 }
 
 void KoopaTroopa::render() {
     if (!isDead ) {
-        if (isShell || isDying) {
-            DrawTextureEx(textures[2], position, 0.0f, size.x/16, RAYWHITE);
+        if ((isShell && !isToShell) || isDying) {
+            DrawTextureEx(textures[9], position, 0.0f, 0.5f, RAYWHITE);
         } else  if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, size.x/16, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 0.25f, RAYWHITE);
         }
         else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, size.x, size.y };
+            Rectangle destRec = { position.x, position.y, texture.width * 0.25f, texture.height * 0.25f };
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }

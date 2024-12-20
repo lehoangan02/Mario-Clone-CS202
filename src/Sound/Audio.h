@@ -21,7 +21,7 @@ enum SoundTrack {
 	POWERDOWN_SOUND,
 	DIE_SOUND,
 	ITEMPOPUP_SOUND,
-	FLAGDOWN_SOUND,
+	FLAGDOWN_SOUND
 };
 
 class SoundManager {
@@ -44,8 +44,15 @@ private:
 
 enum MusicTrack {
     OverWorld,
-	UnderGround,
+	Origin_UnderWorld,
 	Invincible,
+	SuperBellHill,
+	FlowerGarden,
+	Athletic,
+	UnderGround,
+	SMB,
+	LevelFinished,
+    FlagDown
 };
 
 class MusicManager {
@@ -58,7 +65,7 @@ public:
     void PlayMusic(MusicTrack music);
     void UpdateMusic();
     void StopMusic();
-
+	bool IsMusicPlaying();
 private:
     int currentTrack;
     MusicManager();

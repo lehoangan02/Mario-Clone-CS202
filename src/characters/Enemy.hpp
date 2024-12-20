@@ -106,6 +106,9 @@ class KoopaTroopa : public Enemy {
         float fallSpeed;
         bool isBouncing;
         float bounceTime;
+
+        bool isToShell;
+        float toShellTime;
     public:
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
