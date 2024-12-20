@@ -149,7 +149,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                     Vector2{ 0, 0 },
                     Vector2{ 60, 60 },
                     starmanTexture,
-                    Vector2{ 1.0f, 1.0f }
+                    Vector2{ 3.0f, 3.0f }
                 );
                 break;
             }
