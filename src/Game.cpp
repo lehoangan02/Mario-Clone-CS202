@@ -10,7 +10,7 @@ Game::Game()
     level->attachPlayer(player);  
 }
 
-Game::Game(int characterMenu, int mapMenu, int levelMenu) 
+Game::Game(int characterMenu, int levelMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
       level(nullptr)  
 {
@@ -18,6 +18,20 @@ Game::Game(int characterMenu, int mapMenu, int levelMenu)
         player = new Mario;
     } else {
         player = new Luigi;
+    }
+
+    if (levelMenu == 0) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_101);
+    } else if (levelMenu == 1) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102);
+    } else if (levelMenu == 2) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    }
+    else if (levelMenu == 3) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
+    }
+    else if (levelMenu == 4) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
     }
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);

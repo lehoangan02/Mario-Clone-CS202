@@ -19,7 +19,7 @@ private:
 
 public:
     Game();
-    Game(int characterMenu, int mapMenu, int levelMenu);
+    Game(int characterMenu, int levelMenu);
     Game& operator=(const Game& other);
     Game(const Game& other);
     void start();

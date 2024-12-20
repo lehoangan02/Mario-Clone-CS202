@@ -9,6 +9,10 @@ void Application::run() {
         if (tab >= 0 && tab < 10) {
             menu.draw();
             tab = menu.handle();
+            if(menu.getIsChange()) {
+                menu.setIsChange(false);
+                game = Game(menu.characterMenu(), menu.levelMenu());
+            }
         } 
         else  if (tab == 10){
             game.start();

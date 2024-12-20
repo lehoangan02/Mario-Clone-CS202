@@ -57,7 +57,7 @@ Menu::Menu() {
     this->settingTexture = ResourceManager::GetInstance()->GetTexture("settingTexture");
     this->characterTexture = ResourceManager::GetInstance()->GetTexture("settingCharacter");
     this->mapTexture = ResourceManager::GetInstance()->GetTexture("settingMap");
-    this->levelTexture = ResourceManager::GetInstance()->GetTexture("settingLevel");
+    //this->levelTexture = ResourceManager::GetInstance()->GetTexture("settingLevel");
     this->highScoreTexture = ResourceManager::GetInstance()->GetTexture("highScoreTexture");
     this->inforTexture = ResourceManager::GetInstance()->GetTexture("inforTexture");
  
@@ -67,10 +67,10 @@ Menu::Menu() {
 
     characterButton = Button({450, 248, 141, 42}, Color{240, 193, 225, 255} ,"Character", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    mapButton = Button({450, 314, 141, 42}, Color{240, 193, 225, 255} ,"Map", BLACK, 22,
+    mapButton = Button({450, 314, 141, 42}, Color{240, 193, 225, 255} ,"Level", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    levelButton = Button({450, 380, 141, 42}, Color{240, 193, 225, 255} ,"Level", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
+    // levelButton = Button({450, 380, 141, 42}, Color{240, 193, 225, 255} ,"Level", BLACK, 22,
+    //     ResourceManager::GetInstance()->GetFont(), 0);
 
     characterButtons[0] = Button({288, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
@@ -88,12 +88,12 @@ Menu::Menu() {
     mapButtons[4] = Button({545, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 2", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     
-    levelButtons[0] = Button({450, 251, 141, 42}, Color{240, 193, 225, 255} ,"Easy", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
-    levelButtons[1] = Button({450, 316, 141, 42}, Color{240, 193, 225, 255} ,"Medium", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
-    levelButtons[2] = Button({450, 384, 141, 42}, Color{240, 193, 225, 255} ,"Hard", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
+    // levelButtons[0] = Button({450, 251, 141, 42}, Color{240, 193, 225, 255} ,"Easy", BLACK, 22,
+    //     ResourceManager::GetInstance()->GetFont(), 0);
+    // levelButtons[1] = Button({450, 316, 141, 42}, Color{240, 193, 225, 255} ,"Medium", BLACK, 22,
+    //     ResourceManager::GetInstance()->GetFont(), 0);
+    // levelButtons[2] = Button({450, 384, 141, 42}, Color{240, 193, 225, 255} ,"Hard", BLACK, 22,
+    //     ResourceManager::GetInstance()->GetFont(), 0);
 
     quitButton = QuitButton(Rectangle{255, 183, 24, 24});
     isChange = false;
@@ -121,7 +121,7 @@ void Menu::draw(){
         DrawTextureEx(settingTexture, {236, 167}, 0, 0.125, WHITE);
         characterButton.draw();
         mapButton.draw();
-        levelButton.draw();
+        //levelButton.draw();
         quitButton.draw();
     }
     else if (type == 3) {
@@ -139,13 +139,13 @@ void Menu::draw(){
         mapButtons[4].draw();
         quitButton.draw();
     }
-    else if (type == 5) {
-        DrawTextureEx(levelTexture, {236, 167}, 0, 0.125, WHITE);
-        levelButtons[0].draw();
-        levelButtons[1].draw();
-        levelButtons[2].draw();
-        quitButton.draw();
-    }
+    // else if (type == 5) {
+    //     DrawTextureEx(levelTexture, {236, 167}, 0, 0.125, WHITE);
+    //     levelButtons[0].draw();
+    //     levelButtons[1].draw();
+    //     levelButtons[2].draw();
+    //     quitButton.draw();
+    // }
     else if (type == 6) {
         DrawTextureEx(highScoreTexture, {236, 167}, 0, 0.125, WHITE);
         quitButton.draw();
@@ -177,9 +177,9 @@ int Menu::handle() {
     else if (mapButton.isClicked()) {
         type = 4;
     }
-    else if (levelButton.isClicked()) {
-        type = 5;
-    }
+    // else if (levelButton.isClicked()) {
+    //     type = 5;
+    // }
     else if (characterButtons[0].isClicked() && !characterButtons[0].getChoose()) {
         characterButtons[0].setChoose(true);
         characterButtons[1].setChoose(false);
@@ -237,27 +237,27 @@ int Menu::handle() {
         type = 4;
         isChange = true;
     }
-    else if (levelButtons[0].isClicked() && !levelButtons[0].getChoose()) {
-        levelButtons[0].setChoose(true);
-        levelButtons[1].setChoose(false);
-        levelButtons[2].setChoose(false);
-        type = 5;
-        isChange = true;
-    }
-    else if (levelButtons[1].isClicked() && !levelButtons[1].getChoose()) {
-        levelButtons[1].setChoose(true);
-        levelButtons[0].setChoose(false);
-        levelButtons[2].setChoose(false);
-        type = 5;
-        isChange = true;
-    }
-    else if (levelButtons[2].isClicked() && !levelButtons[2].getChoose()) {
-        levelButtons[2].setChoose(true);
-        levelButtons[1].setChoose(false);
-        levelButtons[0].setChoose(false);
-        type = 5;
-        isChange = true;
-    }
+    // else if (levelButtons[0].isClicked() && !levelButtons[0].getChoose()) {
+    //     levelButtons[0].setChoose(true);
+    //     levelButtons[1].setChoose(false);
+    //     levelButtons[2].setChoose(false);
+    //     type = 5;
+    //     isChange = true;
+    // }
+    // else if (levelButtons[1].isClicked() && !levelButtons[1].getChoose()) {
+    //     levelButtons[1].setChoose(true);
+    //     levelButtons[0].setChoose(false);
+    //     levelButtons[2].setChoose(false);
+    //     type = 5;
+    //     isChange = true;
+    // }
+    // else if (levelButtons[2].isClicked() && !levelButtons[2].getChoose()) {
+    //     levelButtons[2].setChoose(true);
+    //     levelButtons[1].setChoose(false);
+    //     levelButtons[0].setChoose(false);
+    //     type = 5;
+    //     isChange = true;
+    // }
     return type;
 }
 
@@ -266,7 +266,7 @@ int Menu::characterMenu() {
     else return 1;
 }
 
-int Menu::mapMenu() {
+int Menu::levelMenu() {
     if (mapButtons[0].getChoose()) return 0;
     else if (mapButtons[1].getChoose()) return 1;
     else if (mapButtons[2].getChoose()) return 2;
@@ -274,8 +274,8 @@ int Menu::mapMenu() {
     else return 4;
 }
 
-int Menu::levelMenu() {
-    if (levelButtons[0].getChoose()) return 0;
-    else if (levelButtons[1].getChoose()) return 1;
-    else return 2;
-}
+// int Menu::levelMenu() {
+//     if (levelButtons[0].getChoose()) return 0;
+//     else if (levelButtons[1].getChoose()) return 1;
+//     else return 2;
+// }
