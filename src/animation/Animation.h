@@ -12,11 +12,25 @@ public:
 public:
 	Rectangle uvRect;
 
-private:
+protected:
 	Vector2 imageCount;
 	Vector2 currentImage;
 	Vector2 prevImage;
 
 	float totalTime;
 	float switchTime;
+};
+class OneTimeAnimation : public Animation
+{
+public:
+	OneTimeAnimation(Texture2D* texture, Vector2 imageCount, float switchTime);
+	~OneTimeAnimation();
+	void Update(float deltaTime);
+	Rectangle getCurrentTextureRect();
+	void draw(Vector2 Position, float Scale);
+	bool isFinished();
+	void setTexture(Texture* texture);
+private:
+	bool m_IsFinished = false;
+	Texture* m_Texture;
 };

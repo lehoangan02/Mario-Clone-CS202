@@ -36,6 +36,7 @@ class EnvironmentObject : public MapObject
         virtual void update() = 0;
         // virtual void render() = 0;
         int getType() { return m_Type; };
+        virtual int getObjectID() = 0;
     protected:
         int m_Type;
 };
@@ -44,6 +45,7 @@ class EnvironmentObjectInteractive : public EnvironmentObject, public Observer
     public:
         EnvironmentObjectInteractive(Vector2 Position, Vector2 Size) : EnvironmentObject(Position, Size) {};
         virtual ~EnvironmentObjectInteractive() = default;
+        virtual bool isHit() = 0;
     protected:
         void move(Vector2 Position);
 };
@@ -79,6 +81,7 @@ class EnvironmentObjectFactory // Singleton Factory
         LEFT_GRASS_PLATFORM,
         MID_GRASS_PLATFORM,
         RIGHT_GRASS_PLATFORM,
+        BLUE_HARD_BLOCK,
     };
     private:
         EnvironmentObjectFactory() = default;
@@ -92,7 +95,8 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
     public:
     enum EnvironmentInteractiveObjectType
     {
-        QUESTION_BLOCK
+        QUESTION_BLOCK,
+        BREAKABLE_BRICK,
     };
     private:
         EnvironmentInteractiveObjectFactory() = default;
@@ -142,8 +146,8 @@ class WarpPipe : public EnvironmentObject
     ~WarpPipe();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE; };
 };
-
 class Brick : public EnvironmentObject
 {
     public:
@@ -151,6 +155,7 @@ class Brick : public EnvironmentObject
     ~Brick();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::BRICK; };
 };
 class HardBlock : public EnvironmentObject
 {
@@ -159,7 +164,7 @@ class HardBlock : public EnvironmentObject
     ~HardBlock();
     void render() override;
     void update() override;
-    
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::HARD_BLOCK; };
 };
 class BlueBrick : public EnvironmentObject
 {
@@ -168,6 +173,7 @@ class BlueBrick : public EnvironmentObject
     ~BlueBrick();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::BLUE_BRICK;}
 };
 class LeftGrassPlatform : public EnvironmentObject
 {
@@ -176,6 +182,7 @@ class LeftGrassPlatform : public EnvironmentObject
     ~LeftGrassPlatform();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::LEFT_GRASS_PLATFORM;}
 };
 class MiddleGrassPlatform : public EnvironmentObject
 {
@@ -184,6 +191,7 @@ class MiddleGrassPlatform : public EnvironmentObject
     ~MiddleGrassPlatform();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::MID_GRASS_PLATFORM;}
 };
 class RightGrassPlatform : public EnvironmentObject
 {
@@ -192,6 +200,16 @@ class RightGrassPlatform : public EnvironmentObject
     ~RightGrassPlatform();
     void render() override;
     void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::RIGHT_GRASS_PLATFORM;}
+};
+class BlueHardBlock : public EnvironmentObject
+{
+    public:
+    BlueHardBlock(Vector2 Position);
+    ~BlueHardBlock();
+    void render() override;
+    void update() override;
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK;}
 };
 class QuestionBlock : public EnvironmentObjectInteractive
 {
@@ -217,6 +235,8 @@ class QuestionBlock : public EnvironmentObjectInteractive
     void render() override;
     void update() override;
     void onNotify() override;
+    bool isHit() override { return m_IsHit; };
+    int getObjectID() override { return EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK; };
     private:
     bool m_IsHit = false;
     Animation m_IdleAnimation;
@@ -225,6 +245,27 @@ class QuestionBlock : public EnvironmentObjectInteractive
     private:
     Rectangle getCurrentTextureRect();
 };
+class BreakableBrick : public EnvironmentObjectInteractive
+{
+    public:
+    BreakableBrick(Vector2 Position);
+    ~BreakableBrick();
+    void render() override;
+    void update() override;
+    void onNotify() override;
+    bool isHit() override;
+    int getObjectID() override { 
+        return EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK;
+    };
+public:
+    OneTimeAnimation m_BreakAnimation;
+private:
+    bool m_IsHit = false;
+    Texture2D m_Texture = LoadTexture("assets/textures/grey_brick.png");
+    Texture2D m_AnimatedTexture = LoadTexture("assets/textures/breakable.png");
+    
+};
+
 class Cloud : public DrawableObject
 {
     public:
@@ -281,7 +322,7 @@ class EndPipe : public EnvironmentObject
     virtual void update() = 0;
     private:
     int m_Type;
-
+    int getObjectID() override { return EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE; };
 };
 class EndPipeTop : public EndPipe
 {
@@ -290,6 +331,7 @@ class EndPipeTop : public EndPipe
     ~EndPipeTop();
     void render() override;
     void update() override;
+    
 };
 class EndPipeSide : public EndPipe
 {

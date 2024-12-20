@@ -1,4 +1,5 @@
 #include "Flyweight.hpp"
+#include <iostream>
 StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
 {
     switch (Type)
@@ -67,6 +68,14 @@ StaticFlyweight* StaticFlyweightFactory::getFlyweight(int Type)
             return EndPipeSideTextureFlyWeight::GetEndPipeSideTextureFlyWeight();
         }
         break;
+        case TextureType::BLUE_HARD_BLOCK:
+        {
+            return BlueHardBlockTextureFlyWeight::GetBlueHardBlockTextureFlyWeight();
+        }
+        default:
+        {
+            std::cerr << "Invalid Texture Type\n";
+        }
     }
     return nullptr;
 }
@@ -222,6 +231,25 @@ void RightGrassPlatformTextureFlyWeight::render(Vector2 Position)
     Position.x -= 20;
     DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
 }
+BlueHardBlockTextureFlyWeight::BlueHardBlockTextureFlyWeight()
+{
+    m_Texture = LoadTexture("assets/textures/blue_hard_block.png");
+    SetTextureFilter(m_Texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(m_Texture, TEXTURE_WRAP_CLAMP);
+}
+BlueHardBlockTextureFlyWeight::~BlueHardBlockTextureFlyWeight()
+{
+}
+BlueHardBlockTextureFlyWeight* BlueHardBlockTextureFlyWeight::GetBlueHardBlockTextureFlyWeight()
+{
+    static BlueHardBlockTextureFlyWeight texture;
+    return &texture;
+}
+void BlueHardBlockTextureFlyWeight::render(Vector2 Position)
+{
+    DrawTextureEx(m_Texture, Position, 0.0f, 6.25f, WHITE);
+}
+
 
 LiftTextureFlyWeight::LiftTextureFlyWeight()
 {
