@@ -20,9 +20,6 @@
 
 
   #include "../Application.hpp"
-
-
-  #include "../levels/Level.hpp"
   int main() {
       const int screenWidth = 1024;
       const int screenHeight = 896;
@@ -30,20 +27,25 @@
       InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
       SetTargetFPS(60);
-      LevelFactory& factory = LevelFactory::GetLevelFactory();
-      Level* level = factory.CreateLevel(LevelFactory::LEVEL_101);
-
+    
+      Texture2D starmanTexture = LoadTexture("assets/textures/StarMan.png");
+      StarMan* starman = new StarMan(
+          Vector2{ 200, 200 },
+          Vector2{ 0, 0 },
+          Vector2{ 60, 60 },
+          starmanTexture,
+          Vector2{ 1.0f, 1.0f }
+      );
       while (!WindowShouldClose()) {
 
           BeginDrawing();
           ClearBackground(RAYWHITE);
-
-          if(IsKeyPressed(KEY_P)) {
-              level = factory.CreateLevel(LevelFactory::LEVEL_103);
+          if (IsKeyPressed(KEY_A)) {
+              starman->onNotify();
           }
-          level->update(GetFrameTime());
-
-          level->render();
+          
+          starman->Update(GetFrameTime());
+          starman->Draw();
           EndDrawing();
       }
 
