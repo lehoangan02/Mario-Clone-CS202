@@ -227,7 +227,7 @@ void Character::hitFlag() {
 	}
 }
 void Character::setPullFlag(bool pullFlag) {
-	if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);	
+	//if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);	
 	this->pullFlag = pullFlag;
 	if (!this->pullFlag) {
 		position.y = 750.0f - size.y;
