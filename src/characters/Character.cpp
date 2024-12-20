@@ -36,6 +36,8 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
 	this->score = 0;
+	this->lives = 3;
+	this->endGame = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
@@ -44,9 +46,6 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 
 Character::~Character()
 {
-}
-Vector2 Character::GetCenter() {
-	return Vector2{ position.x + size.x / 2, position.y + size.y / 2 };
 }
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
@@ -257,6 +256,10 @@ void Character::touchEnemy() {
 	else {
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
 		isDie = true;
+		lives--;
+		if (lives == 0) {
+			endGame = true;
+		}
 		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
 	}
 }
@@ -440,12 +443,12 @@ Character* CharacterFactory::createCharacter(CharacterType type) {
 }
 
 void FullControl::execute(float deltaTime) {
-	if (character->sliding) {
+	if (character->isSliding()) {
 		character->SlidePipe(character->slideDirection);
 	}
 	else {
 		character->control(true);
-		character->accelerate(Vector2{ character->accX, GRAVITY }, deltaTime);
+		character->accelerate({character->getAcceleration(), GRAVITY}, deltaTime);
 	}
 	character->Update(deltaTime);
 }

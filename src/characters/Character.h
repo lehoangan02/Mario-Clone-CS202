@@ -21,6 +21,95 @@ enum slidingDirection {
 };
 
 class Character {
+public:
+	Character(float jumpHeight);
+	~Character();
+	virtual void Update(float deltaTime)=0;
+	void Draw();
+
+	void setPosition(Vector2 position) { this->position = position; };
+	void resetVelocity() { velocity.y = 0; };
+	void onPlatform() { canJump = true; };
+
+	void setTeleport() { this->teleport = true; };
+	void SlidePipe(slidingDirection direction);
+	bool isSliding() { return sliding; };
+	slidingDirection slideDirection;
+
+
+	void hitFlag();
+	void setPullFlag(bool pullFlag) ;
+	bool isPullFlag() { return pullFlag; };
+
+	void touchEnemy();
+	void killEnemy();
+	void invincile() { this->isInvincible = true; };
+	void powerUp();
+	void powerDown();
+	void setWin() { isWin = true; };
+
+
+	void control(bool enabled);
+	void accelerate(Vector2 acceleration, float deltaTime);
+	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
+	float getAcceleration() { return accX; };
+	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
+
+
+	void increaseScore(int Incre) { this->score += Incre; };
+	void increaseScore() { this->score += 1; };
+	int getScore() { return score; }
+
+
+	bool isflick() { return isflicking; };
+	bool isSuper() { return isInvincible; };
+	bool haveWon() { return isWin; };
+	bool isDead() { return isDie; };
+
+	int getType() { return Chartype; };
+	int getLives() { return lives; }
+	bool getEndGame() { return endGame; }
+	
+	Vector2 GetPosition() { return position; };
+	Vector2 GetSize() { return size; };
+
+	FirePool* firePool;
+
+	void reset();
+protected:
+	std::vector<Texture2D> textures;
+	std::vector<Vector2> imageCounts;
+	int form; //small = 0, big = 1, fire = 2
+
+	Animation animation;
+	unsigned int state; //0 = stop , 1 = run
+
+	Vector2 position;
+	Vector2 size;
+	Vector2 velocity;
+	Vector2 SlideDist;
+
+	float jumpHeight;
+	float scale;
+	float accX;
+
+
+	bool faceRight;
+	bool canJump;
+	bool fire;
+	bool brake;
+	bool teleport;
+	bool sliding;
+	bool isDie;
+	bool isWin;
+	bool endGame;
+	bool pullFlag;
+
+	int Chartype;
+	int score;
+	int lives;
+
+	void updateFormChangeAnimation();
 private:
 	bool isChangingForm;
 	float formChangeTime;
@@ -33,94 +122,7 @@ private:
 	float invincibleDuration;
 	bool isInvincible;
 	Color InvincibleColor;
-public:
-	Character(float jumpHeight);
-	~Character();
-	virtual void Update(float deltaTime)=0;
-	void Draw();
-	void setPosition(Vector2 position) { this->position = position; };
-	Vector2 GetPosition() { return position; };
-	Vector2 GetSize() { return size; };
-	Vector2 GetCenter();
-
-	void control(bool enabled);
-	void accelerate(Vector2 acceleration, float deltaTime);
-	void onPlatform() { canJump = true; }; // lehoangan added, if there are any issues, please contact me
-	void resetVelocity() { velocity.y = 0; }; // lehoangan added, if there are any issues, please contact me
-	void updateFormChangeAnimation();
-	void executeCommand(Command* command, float deltaTime) { command->execute(deltaTime); };
-
-	void setTeleport() { this->teleport = true; };
-	void SlidePipe(slidingDirection direction);
-	bool isSliding() { return sliding; };
-
-	void setVelocity(Vector2 velocity) { this->velocity = velocity; };
-
-	void hitFlag();
-	void setPullFlag(bool pullFlag) ;
-	bool isPullFlag() { return pullFlag; };
-
-	void increaseScore(int Incre) { this->score += Incre; };
-	void increaseScore() { this->score += 1; };
-	int getScore() { return score; }
-
-	bool haveWon() { return isWin; };
-	void setWin() { isWin = true; };
-
-	void powerUp();
-	void powerDown(); //need invicile effect
-
-	void touchEnemy();
-	void killEnemy();
-	bool isDead() { return isDie; };
-
-	bool isflick() { return isflicking; };
-	void invincile() { this->isInvincible = true; };
-	bool isSuper() { return isInvincible; };
-	
-	void reset();
-protected:
-	std::vector<Texture2D> textures;
-	std::vector<Vector2> imageCounts;
-	int form; //small = 0, big = 1, fire = 2
-	Animation animation;
-
-	Vector2 position;
-	Vector2 size;
-	Vector2 velocity;
-
-	unsigned int state; //0 = stop , 1 = run
-
-	float jumpHeight;
-
-	bool faceRight;
-	bool canJump;
-	bool fire;
-	bool brake;
-	bool isDie;
-
-	float scale ;
-
-	Vector2 SlideDist;
-	bool teleport;
-
-	bool pullFlag;
-
-	int score;
-
-	bool isWin;
 	void changeForm(int form);
-
-	int Chartype;
-
-public:
-	FirePool* firePool;
-	float accX;
-	bool sliding;
-	slidingDirection slideDirection;
-
-	int points;
-	int getType() { return Chartype; };
 };
 
 //CharacterFactory
