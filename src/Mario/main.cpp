@@ -34,7 +34,7 @@
           Vector2{ 0, 0 },
           Vector2{ 60, 60 },
           starmanTexture,
-          Vector2{ 1.0f, 1.0f }
+          Vector2{ 50, 50 }
       );
       
       while (!WindowShouldClose()) {
