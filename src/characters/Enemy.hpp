@@ -62,6 +62,7 @@ public:
     bool getIsDead() const { return isDead; };
 
     bool isHit() const { return isDead; };
+    bool getIsDying() const { return isDying; };
     
     void setBound(float left, float right, float top, float bottom) ;
     void setBoundLR(float left, float right) { leftBound = left; rightBound = right; };

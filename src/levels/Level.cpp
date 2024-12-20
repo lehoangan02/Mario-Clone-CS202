@@ -302,6 +302,17 @@ void Level::handleItemLogic()
                 MushroomItem->ResetYVelocity();
             }
         }
+        else if (CurrentItem -> getItemID() == Itemtype::STARMAN)
+        {
+            AABBox ItemBox = AABBox(CurrentItem->GetPosition(), CurrentItem->GetSize());
+            if (m_Ground->isInHole(ItemBox)) continue;
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->GetPosition().y > m_Ground->m_Position.y - StarManItem->GetSize().y)
+            {
+                StarManItem->setPosition(StarManItem->GetPosition().x, m_Ground->m_Position.y - StarManItem->GetSize().y);
+                StarManItem->FlipDirectionY();
+            }
+        }
     }
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
@@ -349,11 +360,12 @@ void Level::handleItemLogic()
         else if (CurrentItem->getItemID() == Itemtype::STARMAN)
         {
             StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
-            // if (StarManItem->isFinishSpawning())
-            // {
-            StarManItem->Accelerate(GetFrameTime());
-            // }
-            // if (!(StarManItem->isHit()) && !StarManItem->isFinishSpawning()) continue;
+            if (StarManItem->isFinishedSpawning())
+            {
+                StarManItem->setFalling();
+                StarManItem->Accelerate(GetFrameTime());
+            }
+            if (!(StarManItem->isHit()) && !StarManItem->isFinishedSpawning()) continue;
             for (int j = 0; j < m_EnvironmentInteractive.size(); ++j)
             {
                 AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
@@ -428,6 +440,47 @@ void Level::handleItemLogic()
                 MushroomItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
                 m_Environment[j]->m_Position = EnvironmentBox.getPosition();
             }
+
+        }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->isFinishedSpawning())
+            {
+                StarManItem->setFalling();
+                StarManItem->Accelerate(GetFrameTime());
+            }
+            else
+            {
+                continue;
+            }
+            for (int j = 0; j < m_Environment.size(); j++)
+            {
+                AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_Environment[j]->m_Position, m_Environment[j]->getSize());
+                EnvironmentBox.setFixed(true);
+                if (isCollidingVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    StarManItem->FlipDirectionX();
+                    std::cout << "Flipping X" << std::endl;
+                }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                StarManItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                m_Environment[j]->m_Position = EnvironmentBox.getPosition();
+            }
         }
     }
     for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
@@ -460,6 +513,20 @@ void Level::handleItemLogic()
                 m_Player -> powerUp();
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 FireFlowerItem->setHit();
+                m_Player->increaseScore();
+            }
+        }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->isHit()) continue;
+            AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> invincile();
+                MusicManager::getInstance().PlayMusic(Invincible);
+                StarManItem->setHit();
                 m_Player->increaseScore();
             }
         }
@@ -842,12 +909,15 @@ void Level::EnemyHandler::update()
         AABBox PlayerBox = AABBox(m_Level->m_Player->GetPosition(), m_Level->m_Player->GetSize());
         if (isColliding(EnemyBox, PlayerBox))
         {
-            if (enemy->getIsDead())
+            if (enemy->getIsDead() || enemy->getIsDying())
             {
-                // std::cout << "Dead" << std::endl;
+                std::cout << "Dead" << std::endl;
                 break;
             }
-            // std::cout << "Hit" << std::endl;
+            if (m_Level->m_Player->isSuper())
+            {
+                enemy->hit();
+            }
             if (isCollidingVertically(PlayerBox, EnemyBox))
             {
                 enemy->hit();
@@ -866,7 +936,17 @@ void Level::EnemyHandler::update()
                     EnemyBox.setFixed(true);
                     resolveCollisions(PlayerBox, EnemyBox);
                     m_Level->m_Player->setPosition(PlayerBox.getPosition());
-                    m_Level->m_Player->touchEnemy();
+                    if (m_Level->m_Player->isSuper())
+                    {
+                        enemy->hit();
+                        std::cout << "Super Kill" << std::endl;
+                        // enemy->setDead(true);
+                        std::cout << "Is Dead: " << enemy->getIsDead() << std::endl;
+                    }
+                    else
+                    {
+                        m_Level->m_Player->touchEnemy();
+                    }
                     // std::cout << "Touching Enemy" << std::endl;
                 }
                 
