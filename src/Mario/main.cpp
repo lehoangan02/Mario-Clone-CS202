@@ -36,6 +36,7 @@
           starmanTexture,
           Vector2{ 1.0f, 1.0f }
       );
+      
       while (!WindowShouldClose()) {
 
           BeginDrawing();
