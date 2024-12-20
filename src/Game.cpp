@@ -7,6 +7,7 @@ Game::Game()
 {
     // character = ResourceManager::GetInstance()->GetTexture("mario");
     // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
+    level -> reset();
     player = new Mario;
     std::cout << "Level Type: " << level -> GetLevelType() << std::endl;
     player->setPosition(Vector2{20, 0});  
@@ -20,14 +21,17 @@ Game::Game(int characterMenu, int levelMenu)
     std::cout << "Level Menu: " << levelMenu << std::endl;
     if (levelMenu == 0) {
         level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
+        level->reset();
     }
     else if (levelMenu == 1) {
         std::cout << "Creating Level 102" << std::endl;
         level = factory.CreateLevel(LevelFactory::LEVEL_102);
+        level->reset();
     }
     else {
         std::cout << "Creating Level 103" << std::endl;
         level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level->reset();
     }
     
     if (characterMenu == 0) {

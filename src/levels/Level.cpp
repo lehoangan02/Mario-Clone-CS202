@@ -693,6 +693,64 @@ unsigned int Level::doPauseLogic()
     }
     return LEVEL_RETURN_MESSAGE::RUNNING;
 }
+void Level::reset()
+{
+    if (m_FlagPole != nullptr)
+    {
+        delete m_FlagPole;
+        m_FlagPole = nullptr;
+    }
+    for (auto& Enemy : m_Enemies)
+    {
+        delete Enemy;
+    }
+    m_Enemies.clear();
+    for (auto& object : m_Environment)
+    {
+        delete object;
+    }
+    m_Environment.clear();
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        delete object.first;
+        delete object.second;
+    }
+    m_EnvironmentInteractive.clear();
+    for (auto& coin : m_IdleCoin)
+    {
+        delete coin;
+    }
+    m_IdleCoin.clear();
+    for (auto& Interactive : m_EnvironmentInteractive)
+    {
+        delete Interactive.first;
+        delete Interactive.second;
+    }
+    m_EnvironmentInteractive.clear();
+    for (auto& object : m_Drawables)
+    {
+        delete object;
+    }
+    m_Drawables.clear();
+    for (auto& object : m_Lifts)
+    {
+        delete object;
+    }
+    m_Lifts.clear();
+    for (auto& object : m_EndPipes)
+    {
+        delete object;
+    }
+    m_EndPipes.clear();
+    delete m_Player;
+    m_Player = nullptr;
+    isPlayerFinished = false;
+    m_Paused = false;
+    m_TouchedFlag = false;
+    m_InControl = true;
+    m_StartPosition = {0, 0};
+
+}
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
 {
     m_EndPipes.push_back(Pipe);
@@ -903,6 +961,11 @@ Level101* Level101::GetLevel101()
     static Level101 level;
     return &level;
 }
+void Level101::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+}
 LevelTesting::LevelTesting()
 {
     m_LevelID = LevelFactory::LEVEL_TESTING;
@@ -929,6 +992,11 @@ LevelTesting* LevelTesting::GetLevelTesting()
     static LevelTesting level;
     return &level;
 }
+void LevelTesting::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+}
 Level103::Level103()
 {
     m_LevelID = LevelFactory::LEVEL_103;
@@ -953,6 +1021,11 @@ void Level103::update(float DeltaTime)
 void Level103::render()
 {
     Level::render();
+}
+void Level103::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 HiddenLevel101::HiddenLevel101()
 {
@@ -979,6 +1052,11 @@ void HiddenLevel101::render()
 {
     Level::render();
 }
+void HiddenLevel101::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+}
 Level102::Level102()
 {
     m_LevelID = LevelFactory::LEVEL_102;
@@ -1003,6 +1081,11 @@ void Level102::update(float DeltaTime)
 void Level102::render()
 {
     Level::render();
+}
+void Level102::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 HiddenLevel102::HiddenLevel102()
 {
@@ -1029,6 +1112,11 @@ void HiddenLevel102::render()
 {
     Level::render();
 }
+void HiddenLevel102::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+}
 HiddenLevel103::HiddenLevel103()
 {
     m_LevelID = LevelFactory::HIDDEN_LEVEL_103;
@@ -1053,4 +1141,9 @@ void HiddenLevel103::update(float DeltaTime)
 void HiddenLevel103::render()
 {
     Level::render();
+}
+void HiddenLevel103::reset()
+{
+    Level::reset();
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }
