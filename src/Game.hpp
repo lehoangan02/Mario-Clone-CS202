@@ -13,6 +13,7 @@ class Game : public Mediator {
 private:
     LevelFactory& factory;
     Level* level;
+    Texture2D character;
     Character* player;
     LEVEL_RETURN_MESSAGE state;
 
@@ -25,12 +26,17 @@ public:
     void update(float deltaTime);
     void draw();
 
+    void pause();
+    void resume();
+    void win();
+    void lose();
+    void quit();
     void nextLevel();
     void hiddenLevel();
     void restartLevel();
 
     // Implement notify method
-    void notify(Component* sender, LEVEL_RETURN_MESSAGE eventCode) override;
+    void notify(Component* sender, int eventCode) override;
 
     // Methods to handle game states
     void handleState();

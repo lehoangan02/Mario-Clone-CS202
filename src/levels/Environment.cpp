@@ -48,6 +48,11 @@ EnvironmentObject* EnvironmentObjectFactory::CreateEnvironmentObject(int Type, V
             RightGrassPlatform* rightGrassPlatform = new RightGrassPlatform(Position);
             return rightGrassPlatform;
         }
+        case EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK:
+        {
+            BlueHardBlock* blueHardBlock = new BlueHardBlock(Position);
+            return blueHardBlock;
+        }
         default:
         {
             std::cerr << "Invalid Environment Object Type\n";
@@ -70,6 +75,11 @@ EnvironmentObjectInteractive* EnvironmentInteractiveObjectFactory::CreateEnviron
             return block;
         }
         break;
+        case EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK:
+        {
+            BreakableBrick* brick = new BreakableBrick(Position);
+            return brick;
+        }
         default:
         {
             std::cerr << "Invalid Environment Interactive Object Type\n";
@@ -267,7 +277,20 @@ void RightGrassPlatform::render()
 void RightGrassPlatform::update()
 {
 }
-
+BlueHardBlock::BlueHardBlock(Vector2 Position) : EnvironmentObject(Position, Vector2{100, 100})
+{
+    m_Type = EnvironmentObjectFactory::EnvironmentObjectType::BLUE_HARD_BLOCK;
+}
+BlueHardBlock::~BlueHardBlock()
+{
+}
+void BlueHardBlock::render()
+{
+    StaticFlyweightFactory::GetStaticFlyweightFactory()->getFlyweight(TextureType::BLUE_HARD_BLOCK)->render(m_Position);
+}
+void BlueHardBlock::update()
+{
+}
 QuestionBlock::HitAnimationCommander::HitAnimationCommander(float MoveUpDistance, float BottomPosition) : m_MoveUpDistance(MoveUpDistance), m_BottomPosition(BottomPosition)
 {
     m_TopPosition = m_BottomPosition - m_MoveUpDistance;
@@ -340,6 +363,53 @@ Rectangle QuestionBlock::getCurrentTextureRect()
     return m_IdleAnimation.uvRect;
 }
 void QuestionBlock::onNotify()
+{
+    std::cout << "Notified\n";
+    m_IsHit = true;
+}
+BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),
+ m_BreakAnimation(&m_AnimatedTexture, Vector2{3, 1}, 0.3f)
+{
+    m_BreakAnimation.setTexture(&m_AnimatedTexture);
+}
+BreakableBrick::~BreakableBrick()
+{
+}
+void BreakableBrick::render()
+{
+    if (!m_IsHit)
+    {
+        DrawTextureEx(m_Texture, m_Position, 0, 6.25f, WHITE);
+    }
+    else
+    {
+        if (!(m_BreakAnimation.isFinished()))
+        {
+            m_BreakAnimation.draw(m_Position, 6.25f);
+        }
+        else
+        {
+            // std::cout << "Finished Animation" << std::endl;
+        }
+    }
+}
+void BreakableBrick::update()
+{
+    if (m_IsHit)
+    {
+        // std::cout << "Updating Animation" << std::endl;
+        m_BreakAnimation.Update(GetFrameTime());
+    }
+    if (IsKeyPressed(KEY_B))
+    {
+        onNotify();
+    }
+}
+bool BreakableBrick::isHit()
+{
+    return m_IsHit;
+}
+void BreakableBrick::onNotify()
 {
     m_IsHit = true;
 }
@@ -505,7 +575,7 @@ void FlagPole::update()
 void FlagPole::pullFlag()
 {
     if (!m_Pull) return;
-    static const float Speed = 300;
+    static const float Speed = 600;
     static const float EndPosition = 750 - 200;
     m_FlagPosition.y += Speed * GetFrameTime();
     if (m_FlagPosition.y > EndPosition)

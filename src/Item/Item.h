@@ -39,14 +39,14 @@ protected:
 	float switchTime;  // Thoi gian chuyen doi giua cac frame
 	float elapsedTime; // Thoi gian troi qua tu lan doi frame truoc
 	bool Notify;
-	
+	bool hit;
 	Vector2 velocity;
 	Vector2	startPosition;
 	Vector2 endPosition;
 	bool APPEARED;
 	bool isReturning;
 	int moves;
-
+	bool FinishedSpawning;
 public:
 	Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D texture, int totalFrames, float switchTime, Vector2 velocity, bool appeared);
 	virtual ~Item();
@@ -66,6 +66,8 @@ public:
 		position.x = x;
 		position.y = y;
 	}
+	virtual void setHit() = 0;
+	virtual bool isHit() = 0;
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
@@ -96,7 +98,6 @@ public:
 };
 class Coin : public Item {
 private:
-	bool hit;
 public:
 	void onNotify() override;
 	Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0,0 });
@@ -104,8 +105,8 @@ public:
 	void Update(float deltaTime) override;
 	void Draw() override;
 	Itemtype getItemID() const override;
-	bool isHit() { return hit; }
-	void setHit() {
+	bool isHit() override { return hit; }
+	void setHit() override {
 		hit = true;
 		APPEARED = false;
 	}
@@ -118,8 +119,6 @@ private:
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
-	bool FinishedSpawning;
-	bool hit;
 public:
 	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
 	void onNotify() override;
@@ -132,8 +131,8 @@ public:
 	void Rising(float deltaTime);
 	Itemtype getItemID() const override;
 	bool isFinishSpawning() { return FinishedSpawning; }
-	bool isHit();
-	void setHit();
+	bool isHit() override;
+	void setHit() override;
 
 };
 class FireFlower : public Item {
@@ -141,8 +140,6 @@ private:
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
-	bool FinishedSpawning;
-	bool hit;
 	
 public:
 	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
@@ -152,11 +149,11 @@ public:
 	void Draw() override;
 	Itemtype getItemID() const override;
 	bool isFinishedSpawning() { return FinishedSpawning; }
-	void setHit() {
+	void setHit() override {
 		hit = true;
 		APPEARED = false;
 	}
-	bool isHit() { return hit; }
+	bool isHit() override { return hit; }
 };
 class StarMan : public Item {
 private:
@@ -164,9 +161,7 @@ private:
 	float gravity = 100;
 	float riseProgress;
 	float riseSpeed;
-	bool FinishedSpawning;
 	bool onFalling;
-	bool hit;
 	
 public:
 	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
@@ -177,15 +172,18 @@ public:
 	Itemtype getItemID() const override;
 	bool isFinishedSpawning() { return FinishedSpawning; }
 	void Move(float upperBoundary, float lowerBoundary, float deltaTime);
-	void setHit() {
+	void setHit() override {
 		hit = true;
 		APPEARED = false;
 	}
-	bool isHit() {
+	bool isHit() override {
 		return hit;
 	}
 	void slantDirection();
 	void Accelerate(float deltaTime);
 	void FlipDirection();
+	void setFalling();
+	void FlipDirectionX();
+	void FlipDirectionY();
 };
 

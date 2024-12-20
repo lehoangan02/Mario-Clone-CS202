@@ -11,7 +11,7 @@ Animation::Animation(Texture2D* texture, Vector2 imageCount, float switchTime)
 		std::cerr << "Texture is null" << std::endl;
 	}
 	uvRect.width = texture->width / imageCount.x;
-	// std::cout << "Width: " << uvRect.width << std::endl;
+	std::cout << "Width: " << uvRect.width << std::endl;
 	uvRect.height = texture->height;
 	// std::cout << "Height: " << uvRect.height << std::endl;
 	uvRect.y = 0;
@@ -82,4 +82,61 @@ void Animation::Update(float deltaTime) {
 	}
 	uvRect.x = currentImage.x * uvRect.width;
 	uvRect.width = fabs(uvRect.width);
+}
+OneTimeAnimation::OneTimeAnimation(Texture2D* texture, Vector2 imageCount, float switchTime) : Animation(texture, imageCount, switchTime)
+{
+	m_Texture = texture;
+	totalTime = 0.0;
+	currentImage.x = 0;
+	if (texture == nullptr) {
+		std::cerr << "Texture is null" << std::endl;
+	}
+	uvRect.width = texture->width / imageCount.x;
+	std::cout << "Width: " << uvRect.width << std::endl;
+	uvRect.height = texture->height;
+	// std::cout << "Height: " << uvRect.height << std::endl;
+	uvRect.y = 0;
+}
+OneTimeAnimation::~OneTimeAnimation()
+{
+}
+void OneTimeAnimation::Update(float deltaTime) {
+	// std::cout << "Finished: " << m_IsFinished << std::endl;
+	if (m_IsFinished) return;
+	totalTime += deltaTime;
+	if (totalTime >= switchTime) {
+		totalTime = 0;
+		currentImage.x++;
+		if (currentImage.x >= imageCount.x) {
+			m_IsFinished = true;
+		}
+	}
+	uvRect.x = currentImage.x * uvRect.width;
+	uvRect.width = fabs(uvRect.width);
+}
+void OneTimeAnimation::draw(Vector2 Position, float Scale) {
+	// std::cout << "Drawing" << std::endl;
+	// Texture2D Texture = LoadTexture("assets/textures/breakable.png");
+	// DrawTexture(Texture, Position.x, Position.y, WHITE);
+	Rectangle destRect = { Position.x, Position.y, uvRect.width * Scale, uvRect.height * Scale };
+	DrawTexturePro(*m_Texture, uvRect, destRect, Vector2{ 0, 0 }, 0.0f, WHITE);
+	// std::cout << "uvRect: " << uvRect.x << ", " << uvRect.y << ", " << uvRect.width << ", " << uvRect.height << std::endl;
+	// std::cout << "Position: " << Position.x << ", " << Position.y << std::endl;
+	// std::cout << "Scale: " << Scale << std::endl;
+}
+bool OneTimeAnimation::isFinished() {
+	return m_IsFinished;
+}
+void OneTimeAnimation::setTexture(Texture* texture) {
+	m_Texture = texture;
+	totalTime = 0.0;
+	currentImage.x = 0;
+	if (texture == nullptr) {
+		std::cerr << "Texture is null" << std::endl;
+	}
+	uvRect.width = texture->width / imageCount.x;
+	std::cout << "Width: " << uvRect.width << std::endl;
+	uvRect.height = texture->height;
+	// std::cout << "Height: " << uvRect.height << std::endl;
+	uvRect.y = 0;
 }

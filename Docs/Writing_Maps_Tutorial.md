@@ -18,6 +18,7 @@ class EnvironmentObjectFactory // Singleton Factory
         LEFT_GRASS_PLATFORM,
         MID_GRASS_PLATFORM,
         RIGHT_GRASS_PLATFORM,
+        BLUE_HARD_BLOCK
     };
 ```
 ```cpp
@@ -26,7 +27,8 @@ class EnvironmentInteractiveObjectFactory // Singleton Factory
     public:
     enum EnvironmentInteractiveObjectType
     {
-        QUESTION_BLOCK
+        QUESTION_BLOCK,
+        BREAKABLE_BRICK
     };
 ```
 ```cpp
@@ -82,6 +84,16 @@ class EnemyFactory
         };
 ```
 
+``` cpp
+enum Itemtype {
+	COIN,
+	MUSHROOM,
+	FIREFLOWER,
+	STARMAN,
+	IDLECOIN
+};
+```
+
 ## Format of the map file
 All map files should be .txt files, with their name corresponding with the enum specified.
 
@@ -124,7 +136,7 @@ You have to input lists in a specified order (shown after this part). Each list 
 
 ## Start Position
 
-Simply input the XY cordinate where you want Mario to spawn at.
+Simply input the XY coordinate where you want Mario to spawn at.
 
 Example:
 
@@ -140,9 +152,11 @@ Explanation:
 
 ## Animated Environment Object
 
-This is the question blocks in the map.
+This is the question blocks or the breakable block in the map.
 
-Explanation: 0 1200 400 0. This means that the object is type 0 (question block), followed by its coordinate. After that it's the enum of the item type (0 for coin, 1 for magic mushroom).
+Explanation for question blocks: 0 1200 400 0. This means that the object is type 0 (question block), followed by its coordinate. After that it's the enum of the item type (0 for coin, 1 for magic mushroom).
+
+For breakable block, there is no item so there will be no number after the coordninate.
 
 ## Lift
 
@@ -164,7 +178,7 @@ class Level
 
 ## End Flag
 
-If there is a flag, input 1, followed by the X cordinate. Else, input 0. You can only have maximum end flag per level. The flag is always set to be on ground level.
+If there is a flag, input 1, followed by the X coordinate. Else, input 0. You can only have maximum end flag per level. The flag is always set to be on ground level.
 
 Example:
 ```

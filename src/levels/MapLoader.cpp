@@ -105,32 +105,50 @@ void MapLoader::LoadMap(Level* Level, int MapID)
         std::pair<EnvironmentObjectInteractive*, Item*> Pair;
         Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
         Item* NewItem = nullptr;
-        switch (MyItemType)
+        if (Pair.first->getObjectID() == EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK)
         {
-        case Itemtype::COIN:
+                switch (MyItemType)
             {
-                NewItem = new Coin(
-                Vector2{ X + 40, Y },   //Start position
-                Vector2{ X + 40, Y - 300 },    //End position
-                Vector2{ 40,100},      // size of coin
-                LoadTexture("assets/textures/Coin.png"),
-                Vector2{ 0, 400 }     //velocity
+            case Itemtype::COIN:
+                {
+                    NewItem = new Coin(
+                    Vector2{ X + 40, Y },   //Start position
+                    Vector2{ X + 40, Y - 300 },    //End position
+                    Vector2{ 40,100},      // size of coin
+                    LoadTexture("assets/textures/Coin.png"),
+                    Vector2{ 0, 400 }     //velocity
+                    );
+                }
+                break;
+            case Itemtype::MUSHROOM:
+                {
+                    NewItem = new Mushroom(
+                    Vector2{ X + 20, Y},   //Start position
+                    Vector2{ 0, 0 },    //End position
+                    Vector2{ 50, 50},      // size of coin
+                    LoadTexture("assets/textures/MagicMushroom.png"),
+                    Vector2{ 100, 0 }     //velocity
+                    );
+                }
+                break;
+            case Itemtype::FIREFLOWER:
+            {
+                Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+                NewItem = new FireFlower(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 50, 50 },
+                    fireflowerTexture
                 );
             }
-            break;
-        case Itemtype::MUSHROOM:
+            case Itemtype::STARMAN:
             {
-                NewItem = new Mushroom(
-                Vector2{ X + 20, Y},   //Start position
-                Vector2{ 0, 0 },    //End position
-                Vector2{ 50, 50},      // size of coin
-                LoadTexture("assets/textures/MagicMushroom.png"),
-                Vector2{ 100, 0 }     //velocity
-                );
+                break;
             }
-            break;
-        default:
-            break;
+            default:
+                NewItem = nullptr;
+                break;
+            }
         }
         Pair.second = NewItem;
         Level -> m_EnvironmentInteractive.push_back(Pair);

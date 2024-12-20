@@ -33,7 +33,7 @@ void Fireball::Draw() {
     if (active) {
         Rectangle sourceRect = animation.uvRect;
   /*      std::cout << "draw" << std::endl;*/
-        Rectangle destRect = { position.x, position.y, (float)fabs(texture.width / 4) * scale, texture.height * scale };
+        Rectangle destRect = { position.x, position.y, float(fabs(texture.width / 4) * scale), float(texture.height * scale)};
 		/*std::cout << animation.uvRect.width * scale << " " << animation.uvRect.height * scale << std::endl;*/
         /*std::cout << position.x << " " << position.y << std::endl;*/
         Vector2 origin = { (texture.width * scale) / 2, (texture.height * scale) / 2 };

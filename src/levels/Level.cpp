@@ -86,6 +86,7 @@ void Level::checkEnvironmentCollisions()
 }
 void Level::resolveEnvironmentCollisions()
 {
+    if (m_Player->isDead()) return;
     for (int i = 0; i < m_Environment.size(); i++)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -104,6 +105,10 @@ void Level::resolveEnvironmentCollisions()
                     else if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f))
                     {
                         m_Player->resetVelocity();
+                    }
+                    if (m_Environment[i]->getType() == EnvironmentObjectFactory::EnvironmentObjectType::BRICK)
+                    {
+                        SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
                     }
                 }
                 else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
@@ -155,44 +160,116 @@ void Level::resolveInteractiveEnvironmentCollisions()
 {
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
-        Item* CurrentItem = m_EnvironmentInteractive[i].second;
-        if (!CurrentItem) continue;
-        if (IsKeyPressed(KEY_E))
-        {
-            CurrentItem->onNotify();
-        }
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
         AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[i].first->m_Position, m_EnvironmentInteractive[i].first->getSize());
         EnvironmentBox.setFixed(true);
         if (isColliding(PlayerBox, EnvironmentBox))
-        {
+        {        
             if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
             {
-                m_Player->resetVelocity();
                 if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
                     m_Player->onPlatform();
                 }
                 else if (isCollidingOnBottom(PlayerBox, EnvironmentBox))
                 {
-                    m_EnvironmentInteractive[i].first->onNotify();                   
-                    CurrentItem->onNotify();
-                    if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
-                    {
-                        std::cout << "Mushroom" << std::endl;
+                    Item* CurrentItem = m_EnvironmentInteractive[i].second;
+                    if (CurrentItem)
+                    {               
+                        CurrentItem->onNotify();
+                        if (!(m_EnvironmentInteractive[i].first -> isHit()))
+                        {
+                            if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
+                            {
+                                if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                                {
+                                    std::cout << "Mushroom" << std::endl;
+                                    if (m_EnvironmentInteractive[i].first->isHit())
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+                                    }
+                                }
+                            }
+                            else if (CurrentItem->getItemID() == Itemtype::COIN)
+                            {
+                                
+                                if (!(m_EnvironmentInteractive[i].second -> isHit()))
+                                {
+                                    std::cout << "Coin" << std::endl;
+                                    if (m_EnvironmentInteractive[i].first->isHit())
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                                    }
+                                }
+                            }
+                            else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+                            {
+                                std::cout << "FireFlower" << std::endl;
+                            }
+                        }
+                        m_EnvironmentInteractive[i].first->onNotify();
                     }
-                    
                 }
             }
-            resolveCollisions(PlayerBox, EnvironmentBox);
-            m_Player->setPosition(PlayerBox.getPosition());
-            m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
-            
+            if (!(m_EnvironmentInteractive[i].first->getObjectID() == EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK))
+            {
+                if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                {
+                    m_Player->resetVelocity();
+                }
+                resolveCollisions(PlayerBox, EnvironmentBox);
+                m_Player->setPosition(PlayerBox.getPosition());
+                m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                // std::cout << "Resolving Collisions" << std::endl;
+                // std::cout << "Not Breakable Brick" << std::endl;
+                // std::cout << "Interactive Item Type: " << m_EnvironmentInteractive[i].first->getType() << std::endl;
+            }
+            else
+            {
+                if (!(m_Player->isSuper()))
+                {
+                    if (!(m_EnvironmentInteractive[i].first->isHit()))
+                    {
+                        if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                        {
+                            m_Player->resetVelocity();
+                        }
+                        resolveCollisions(PlayerBox, EnvironmentBox);
+                        m_Player->setPosition(PlayerBox.getPosition());
+                        m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                    }
+                }
+                else 
+                {
+                    BreakableBrick* BreakBrick = dynamic_cast<BreakableBrick*>(m_EnvironmentInteractive[i].first);
+                    if (!(BreakBrick->m_BreakAnimation.isFinished()))
+                    {
+                        if (isCollidingVertically(PlayerBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f)))
+                        {
+                            std::cout << "Not Finished" << std::endl;
+                            m_Player->resetVelocity();
+                            m_EnvironmentInteractive[i].first->onNotify();
+                        }
+                        resolveCollisions(PlayerBox, EnvironmentBox);
+                        m_Player->setPosition(PlayerBox.getPosition());
+                        m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+                    }
+                }
+            }
         }
     }
 }
 void Level::applyBoundaries()
 {
+    if (m_Player->isDead()) return;
     // std::cout << "Applying Boundaries" << std::endl;
     if (isPlayerInHole())
     {
@@ -273,6 +350,7 @@ void Level::handleItemLogic()
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
         Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (!CurrentItem) continue;
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
@@ -319,6 +397,7 @@ void Level::handleItemLogic()
     for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
     {
         Item* CurrentItem = m_EnvironmentInteractive[i].second;
+        if (!CurrentItem) continue;
         if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
         {
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(CurrentItem);
@@ -328,7 +407,23 @@ void Level::handleItemLogic()
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player -> powerUp();
+                SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 MushroomItem->setHit();
+                m_Player->increaseScore();
+            }
+        }
+        else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(CurrentItem);
+            if (FireFlowerItem->isHit()) continue;
+            AABBox ItemBox = AABBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> powerUp();
+                m_Player -> powerUp();
+                SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+                FireFlowerItem->setHit();
                 m_Player->increaseScore();
             }
         }
@@ -342,6 +437,7 @@ void Level::handleItemLogic()
         if (isColliding(ItemBox, PlayerBox) && !object->isHit())
         {
             object->setHit();
+            SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
             m_Player->increaseScore();
         }
     }
@@ -390,6 +486,7 @@ void Level::render()
     camera.offset = {0, Offset * (Zoom)};
     camera.zoom = Zoom;
     BeginMode2D(camera);
+    
     m_Background.render();
     if (m_FlagPole != nullptr)
     {
@@ -421,6 +518,18 @@ void Level::render()
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
             if (MushroomItem->isHit()) continue;
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
+        }
+        else if (object.second->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(object.second);
+            if (FireFlowerItem->isHit())
+            {
+                std::cout << "Fire Flower is hitted" << std::endl;
+                continue;
+            }
+            std::cout << "Position: " << FireFlowerItem->GetPosition().x << ", " << FireFlowerItem->GetPosition().y << std::endl;
+            // DrawCircle(FireFlowerItem->GetPosition().x, FireFlowerItem->GetPosition().y, 10, RED);
+            DrawBoundingBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize(), RED);
         }
         
     }
@@ -502,11 +611,12 @@ void Level::update(float DeltaTime)
         object->update();
     }
     for (auto& object : m_EnvironmentInteractive)
-    {
+    { 
         object.first ->update();
     }
     for (auto& object : m_EnvironmentInteractive)
-    {        object.second ->Update(DeltaTime);
+    {        
+        if (object.second) object.second ->Update(DeltaTime);
     }
     for (auto& object : m_Lifts)
     {
@@ -527,6 +637,11 @@ void Level::update(float DeltaTime)
     handleItemLogic();
     resolveFlagPoleCollisions();
     isPlayerFinished = isPlayerInHole();
+    if (m_Player -> haveWon())
+    {
+        // for winning
+        // SoundManager::getInstance().PlaySoundEffect(LEVELCOMPLETE_SOUND);
+    }
 }
 bool Level::isPlayerInHole()
 {
@@ -631,6 +746,7 @@ bool Level::EndPipeHandler::update()
 }
 void Level::EnemyHandler::update()
 {
+    if (m_Level->m_Player->isDead()) return;
     for (auto& enemy : m_Level->m_Enemies)
     {
         enemy->update(GetFrameTime());
@@ -645,15 +761,16 @@ void Level::EnemyHandler::update()
         {
             if (enemy->getIsDead())
             {
-                std::cout << "Dead" << std::endl;
+                // std::cout << "Dead" << std::endl;
                 break;
             }
-            enemy->hit();
-            std::cout << "Hit" << std::endl;
+            // std::cout << "Hit" << std::endl;
             if (isCollidingVertically(PlayerBox, EnemyBox))
             {
-                std::cout << "Colliding Vertically" << std::endl;
+                enemy->hit();
+                // std::cout << "Colliding Vertically" << std::endl;
                 m_Level->m_Player->killEnemy();
+
                 EnemyBox.setFixed(true);
                 resolveCollisions(PlayerBox, EnemyBox);
                 m_Level->m_Player->setPosition(PlayerBox.getPosition());
@@ -663,13 +780,13 @@ void Level::EnemyHandler::update()
             {
                 if (!m_Level->m_Player->isDead())
                 {
-                    m_Level->m_Player->killEnemy();
+                    EnemyBox.setFixed(true);
+                    resolveCollisions(PlayerBox, EnemyBox);
+                    m_Level->m_Player->setPosition(PlayerBox.getPosition());
                     m_Level->m_Player->touchEnemy();
-                    std::cout << "Touching Enemy" << std::endl;
+                    // std::cout << "Touching Enemy" << std::endl;
                 }
-                EnemyBox.setFixed(true);
-                resolveCollisions(PlayerBox, EnemyBox);
-                m_Level->m_Player->setPosition(PlayerBox.getPosition());
+                
 
             }
         }
@@ -752,6 +869,7 @@ void Level::resolveFlagPoleCollisions()
         m_Player->setPosition(PlayerBox.getPosition());
         m_FlagPole -> m_Position = EnvironmentBox.getPosition();
         m_FlagPole -> notifyPull();
+        SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
     }
     PullDone = m_FlagPole -> isDone();
     if (PullDone)
