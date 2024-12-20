@@ -179,6 +179,7 @@ public:
 	bool isHit() override {
 		return hit;
 	}
+
 	void slantDirection();
 	void Accelerate(float deltaTime);
 	void FlipDirection();
