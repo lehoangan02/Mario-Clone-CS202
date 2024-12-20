@@ -57,8 +57,9 @@ public:
 
 
 	void increaseScore(int Incre) { this->score += Incre; };
-	void increaseScore() { this->score += 1; };
+	void increaseScore() { this->score += 1; this->coins += 1; };
 	int getScore() { return score; }
+	int getCoins() { return coins; }
 
 
 	bool isflick() { return isflicking; };
@@ -108,6 +109,7 @@ protected:
 	int Chartype;
 	int score;
 	int lives;
+	int coins;
 
 	void updateFormChangeAnimation();
 private:

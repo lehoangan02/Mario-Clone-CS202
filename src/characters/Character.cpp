@@ -37,6 +37,7 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->InvincibleColor = WHITE;
 	this->score = 0;
 	this->lives = 3;
+	this->coins = 0;
 	this->endGame = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
@@ -256,7 +257,7 @@ void Character::touchEnemy() {
 	else {
 		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
 		isDie = true;
-		lives--;
+		if (lives!=0) lives--;
 		if (lives == 0) {
 			endGame = true;
 		}
