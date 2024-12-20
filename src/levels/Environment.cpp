@@ -364,6 +364,7 @@ Rectangle QuestionBlock::getCurrentTextureRect()
 }
 void QuestionBlock::onNotify()
 {
+    std::cout << "Notified\n";
     m_IsHit = true;
 }
 BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),

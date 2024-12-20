@@ -175,18 +175,19 @@ void Level::resolveInteractiveEnvironmentCollisions()
                 {
                     Item* CurrentItem = m_EnvironmentInteractive[i].second;
                     if (CurrentItem)
-                    {       
-                        m_EnvironmentInteractive[i].first->onNotify();        
+                    {               
                         CurrentItem->onNotify();
-                        if (m_EnvironmentInteractive[i].first -> isHit())
+                        if (!(m_EnvironmentInteractive[i].first -> isHit()))
                         {
                             if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
                             {
                                 if (!(m_EnvironmentInteractive[i].second -> isHit()))
                                 {
-                                    // std::cout << "Mushroom" << std::endl;
+                                    std::cout << "Mushroom" << std::endl;
                                     if (m_EnvironmentInteractive[i].first->isHit())
-                                    {}
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
                                     else
                                     {
                                         SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
@@ -198,9 +199,11 @@ void Level::resolveInteractiveEnvironmentCollisions()
                                 
                                 if (!(m_EnvironmentInteractive[i].second -> isHit()))
                                 {
-                                    // std::cout << "Coin" << std::endl;
+                                    std::cout << "Coin" << std::endl;
                                     if (m_EnvironmentInteractive[i].first->isHit())
-                                    {}
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
                                     else
                                     {
                                         SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
@@ -208,6 +211,7 @@ void Level::resolveInteractiveEnvironmentCollisions()
                                 }
                             }
                         }
+                        m_EnvironmentInteractive[i].first->onNotify();
                     }
                 }
             }
