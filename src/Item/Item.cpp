@@ -355,10 +355,11 @@ void StarMan::Update(float deltaTime) {
 
     }
     if (APPEARED) {
-
+        velocity.x += gravity * deltaTime;
         position.x += velocity.x;
         if (onFalling)
         {
+            velocity.y += gravity * deltaTime;
             position.y += velocity.y;
         }
     }
