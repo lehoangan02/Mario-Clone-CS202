@@ -131,6 +131,20 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                     );
                 }
                 break;
+            case Itemtype::FIREFLOWER:
+            {
+                Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+                NewItem = new FireFlower(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 50, 50 },
+                    fireflowerTexture
+                );
+            }
+            case Itemtype::STARMAN:
+            {
+                break;
+            }
             default:
                 NewItem = nullptr;
                 break;

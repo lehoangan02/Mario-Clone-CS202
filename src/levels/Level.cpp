@@ -210,6 +210,10 @@ void Level::resolveInteractiveEnvironmentCollisions()
                                     }
                                 }
                             }
+                            else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+                            {
+                                std::cout << "FireFlower" << std::endl;
+                            }
                         }
                         m_EnvironmentInteractive[i].first->onNotify();
                     }
@@ -408,6 +412,21 @@ void Level::handleItemLogic()
                 m_Player->increaseScore();
             }
         }
+        else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(CurrentItem);
+            if (FireFlowerItem->isHit()) continue;
+            AABBox ItemBox = AABBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> powerUp();
+                m_Player -> powerUp();
+                SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+                FireFlowerItem->setHit();
+                m_Player->increaseScore();
+            }
+        }
     }
     for (auto& object : m_IdleCoin)
     {
@@ -499,6 +518,18 @@ void Level::render()
             Mushroom* MushroomItem = dynamic_cast<Mushroom*>(object.second);
             if (MushroomItem->isHit()) continue;
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
+        }
+        else if (object.second->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(object.second);
+            if (FireFlowerItem->isHit())
+            {
+                std::cout << "Fire Flower is hitted" << std::endl;
+                continue;
+            }
+            std::cout << "Position: " << FireFlowerItem->GetPosition().x << ", " << FireFlowerItem->GetPosition().y << std::endl;
+            // DrawCircle(FireFlowerItem->GetPosition().x, FireFlowerItem->GetPosition().y, 10, RED);
+            DrawBoundingBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize(), RED);
         }
         
     }

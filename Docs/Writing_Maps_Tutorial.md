@@ -84,6 +84,16 @@ class EnemyFactory
         };
 ```
 
+``` cpp
+enum Itemtype {
+	COIN,
+	MUSHROOM,
+	FIREFLOWER,
+	STARMAN,
+	IDLECOIN
+};
+```
+
 ## Format of the map file
 All map files should be .txt files, with their name corresponding with the enum specified.
 

@@ -19,7 +19,7 @@ Game::Game(int characterMenu, int levelMenu)
 {
     std::cout << "Level Menu: " << levelMenu << std::endl;
     if (levelMenu == 0) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_101);
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING);
     }
     else if (levelMenu == 1) {
         std::cout << "Creating Level 102" << std::endl;
