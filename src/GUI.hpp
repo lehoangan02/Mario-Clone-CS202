@@ -52,8 +52,9 @@ class QuitButton : public Button {
 private:
     Texture2D texture;
 public:
+    QuitButton() = default;
     QuitButton(Rectangle rect);
-    void draw();
+    void draw(float radius = 50) override;
 };
 class Menu {
 private:
@@ -67,7 +68,7 @@ private:
     Texture2D playTexture;
     Button continueButton;
     Button newGameButton;
-    Button quitButton;
+    QuitButton quitButton;
 
     Texture2D settingTexture;
     Button characterButton;

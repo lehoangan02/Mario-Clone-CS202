@@ -39,9 +39,9 @@ QuitButton::QuitButton(Rectangle rect) {
     this->outerRect = rect;
 }
 
-void QuitButton::draw() {
+void QuitButton::draw(float radius) {
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
-    DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.275 : 0.25 , BLACK);
+    DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f , BLACK);
 }
 
 Menu::Menu() {
@@ -95,7 +95,7 @@ Menu::Menu() {
     levelButtons[2] = Button({450, 384, 141, 42}, Color{240, 193, 225, 255} ,"Hard", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
 
-    quitButton = QuitButton(Rectangle{245, 179, 24, 24});
+    quitButton = QuitButton(Rectangle{255, 183, 24, 24});
     isChange = false;
     type = 0;
 }
