@@ -692,24 +692,32 @@ void Level::produceSwitchSignal()
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
+        m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
         std::cout << "Notifying Lose" << std::endl;
     }
     else if (m_Player->haveWon())
     {
+        m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
         std::cout << "Notifying Win" << std::endl;
+        
     }
     else if (m_Player->isSlidingFinished())
     {
         m_Player->resetSlidingFinished();
+        m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        
         std::cout << "Notifying Hidden" << std::endl;
+        
     }
     else if (IsKeyPressed(KEY_LEFT_BRACKET))
     {
+        m_Player->reset();
         std::cout << "Notifying Hidden" << std::endl;
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        
     }
 }
 void Level::update(float DeltaTime)
