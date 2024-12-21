@@ -30,6 +30,8 @@ Level* LevelFactory::CreateLevel(int Type)
         case HIDDEN_LEVEL_102:
             return HiddenLevel102::GetHiddenLevel102();
             break;
+        case HIDDEN_LEVEL_112:
+            break;
         default:
             return nullptr;
             break;
