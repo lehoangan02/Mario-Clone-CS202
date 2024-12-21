@@ -30,6 +30,7 @@ int main() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawRectangleLines(300, 300, 42, 58, RED);
+        DrawLineEx({300,300}, {300,400}, 2.0f, RED);
         // DrawRectangleLines(400, 300, 48, 99, RED);
 
         // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);

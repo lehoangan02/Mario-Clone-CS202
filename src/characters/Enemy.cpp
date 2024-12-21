@@ -747,12 +747,12 @@ void KoopaTroopa::update(float deltaTime) {
             } else {
                 position.x -= shellSpeed.x * deltaTime;
             }
-            if (position.x <= leftBound || position.x + texture.width * 4.0f >= rightBound) {
+            if (position.x <= leftBound || position.x + texture.width * 6.0f >= rightBound) {
                 if (position.x < leftBound) {
                     position.x = leftBound;
                 }
-                if (position.x + texture.width * 4.0f > rightBound) {
-                    position.x = rightBound - texture.width * 4.0f;
+                if (position.x + texture.width * 6.0f > rightBound) {
+                    position.x = rightBound - texture.width * 6.0f;
                 }
                 isRight = !isRight;
             }
@@ -794,7 +794,7 @@ void KoopaTroopa::update(float deltaTime) {
 void KoopaTroopa::render() {
     if (!isDead ) {
         if ((isShell) || isDying) {
-            DrawTextureEx(texture, position, 0.0f, 4.0f, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 6.0f, RAYWHITE);
         } else  if (isRight == true) {
             DrawTextureEx(texture, position, 0.0f, 4.0f, RAYWHITE);
         }
