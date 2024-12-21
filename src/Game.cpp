@@ -2,12 +2,17 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101))
+      level(factory.CreateLevel(LevelFactory::LEVEL_101, this))
 {
     player = new Mario;
+    if (level == nullptr) {
+        std::cerr << "Level is null" << std::endl;
+    }
     std::cout << "Level Type: " << level -> GetLevelType() << std::endl;
     player->setPosition(Vector2{20, 0});  
+    level-> reset();
     level->attachPlayer(player);
+    
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 }
 
@@ -22,17 +27,17 @@ Game::Game(int characterMenu, int levelMenu)
     }
 
     if (levelMenu == 0) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_101);
+        level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
     } else if (levelMenu == 1) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
     } else if (levelMenu == 2) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
     }
     else if (levelMenu == 3) {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
     }
     else if (levelMenu == 4) {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
@@ -66,7 +71,7 @@ Game::Game(const Game& other)
       player(other.player)     
 {
     if (other.level) {
-        level = factory.CreateLevel(other.level->GetLevelType());
+        level = factory.CreateLevel(other.level->GetLevelType(), this);
         if (level) {
             level->attachPlayer(player); 
         }
@@ -81,7 +86,7 @@ Game& Game::operator=(const Game& other) {
         level = nullptr;
     }
     factory = other.factory; 
-    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
+    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType(), this) : nullptr;
 
     player = other.player;
 
@@ -154,12 +159,12 @@ void Game::notify(Component* sender, int eventCode) {
 
 void Game::nextLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
     } 
@@ -181,19 +186,19 @@ void Game::hiddenLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
     {
         
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
     {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
     {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103);
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103, this);
         level -> reset();
     }
     else return;
@@ -205,7 +210,7 @@ void Game::hiddenLevel() {
 }
 
 void Game::restartLevel() {
-    level = factory.CreateLevel(level->GetLevelType());
+    level = factory.CreateLevel(level->GetLevelType(), this);
     level -> reset();
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);

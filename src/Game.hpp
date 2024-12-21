@@ -14,7 +14,7 @@ private:
     LevelFactory& factory;
     Level* level;
     Texture2D character;
-    Character* player;
+    Character* player = nullptr;
     LEVEL_RETURN_MESSAGE state;
 
 public:

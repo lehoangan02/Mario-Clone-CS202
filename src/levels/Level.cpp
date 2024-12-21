@@ -4,36 +4,52 @@ LevelFactory& LevelFactory::GetLevelFactory()
     static LevelFactory Factory;
     return Factory;
 }
-Level* LevelFactory::CreateLevel(int Type)
+Level* LevelFactory::CreateLevel(int Type, Mediator* mediator)
 {
+    Level *level = nullptr;
     switch (Type)
     {
         case LEVEL_101:
-            return Level101::GetLevel101();
+            level = Level101::GetLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_TESTING:
-            return LevelTesting::GetLevelTesting();
+            level = LevelTesting::GetLevelTesting();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_102:
-            std::cout << "Creating Level 102" << std::endl;
-            return Level102::GetLevel102();
+            level = Level102::GetLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_103:
-            return Level103::GetLevel103();
+            level = Level103::GetLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_101:
-            return HiddenLevel101::GetHiddenLevel101();
+            level = HiddenLevel101::GetHiddenLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_103:
-            return HiddenLevel103::GetHiddenLevel103();
+            level = HiddenLevel103::GetHiddenLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_102:
-            return HiddenLevel102::GetHiddenLevel102();
+            level = HiddenLevel102::GetHiddenLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         default:
             return nullptr;
             break;
+        
     }
+    return level;
 }
 Level::Level()
 {
@@ -77,6 +93,10 @@ Level::~Level()
 }
 void Level::attachPlayer(Character* Player)
 {
+    if (Player == nullptr) {
+        std::cerr << "Error: Trying to attach a nullptr as Player!" << std::endl;
+        return;
+    }  
     m_Player = Player;
     m_Player->setPosition(m_StartPosition);
     m_EndPipeHandler.attachPlayer(Player);
@@ -1072,6 +1092,7 @@ Level101* Level101::GetLevel101()
 void Level101::reset()
 {
     Level::reset();
+    this -> setName("Level101");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 LevelTesting::LevelTesting()
@@ -1103,6 +1124,7 @@ LevelTesting* LevelTesting::GetLevelTesting()
 void LevelTesting::reset()
 {
     Level::reset();
+    this -> setName("LevelTesting");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
 }
 Level103::Level103()
@@ -1133,6 +1155,7 @@ void Level103::render()
 void Level103::reset()
 {
     Level::reset();
+    this -> setName("Level103");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 HiddenLevel101::HiddenLevel101()
@@ -1163,6 +1186,7 @@ void HiddenLevel101::render()
 void HiddenLevel101::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel101");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
 }
 Level102::Level102()
@@ -1193,6 +1217,7 @@ void Level102::render()
 void Level102::reset()
 {
     Level::reset();
+    this -> setName("Level102");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 HiddenLevel102::HiddenLevel102()
@@ -1223,6 +1248,7 @@ void HiddenLevel102::render()
 void HiddenLevel102::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel102");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
 }
 HiddenLevel103::HiddenLevel103()
@@ -1253,5 +1279,6 @@ void HiddenLevel103::render()
 void HiddenLevel103::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel103");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }
