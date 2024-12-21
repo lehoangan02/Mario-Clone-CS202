@@ -58,6 +58,7 @@ std::vector<Music> MusicManager::musicSet;
 
 MusicManager::MusicManager() {
 	currentTrack = -1;
+	prevTrack = -1;
 	musicSet.push_back(LoadMusicStream("assets/audio/background_Overworld.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/background_Underworld.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/background_Invincible.wav"));
@@ -136,10 +137,15 @@ void MusicManager::UpdateMusic() {
 void MusicManager::StopMusic() {
 	if (currentTrack == -1) return;
 	StopMusicStream(musicSet[currentTrack]);
-    currentTrack = -1;
 }
 
 bool MusicManager::IsMusicPlaying() {
 	if (currentTrack == -1) return false;
 	return IsMusicStreamPlaying(musicSet[currentTrack]);
+}
+
+void MusicManager::PlayPreviousTrack() {
+	if (prevTrack == -1) return;
+	PlayMusicStream(musicSet[prevTrack]);
+	currentTrack = prevTrack;
 }

@@ -201,7 +201,7 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
-			MusicManager::getInstance().PlayMusic(OverWorld);
+			MusicManager::getInstance().PlayPreviousTrack();	
 			isInvincible = false;
 			InvincibleColor = WHITE;
 			invincibleDuration = 6.0f;
