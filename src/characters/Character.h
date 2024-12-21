@@ -42,6 +42,7 @@ public:
 	bool isPullFlag() { return pullFlag; };
 
 	void touchEnemy();
+	void DieAnimation();
 	void killEnemy();
 	void invincile() { this->isInvincible = true; };
 	void powerUp();
@@ -66,6 +67,7 @@ public:
 	bool isSuper() { return isInvincible; };
 	bool haveWon() { return isWin; };
 	bool isDead() { return isDie; };
+	bool isDeadFinished() { return isFinished; };
 
 	int getType() { return Chartype; };
 	int getLives() { return lives; }
@@ -94,6 +96,7 @@ protected:
 	float jumpHeight;
 	float scale;
 	float accX;
+	float deadTime;
 
 
 	bool faceRight;
@@ -103,6 +106,7 @@ protected:
 	bool teleport;
 	bool sliding;
 	bool isDie;
+	bool isFinished;
 	bool isWin;
 	bool endGame;
 	bool pullFlag;

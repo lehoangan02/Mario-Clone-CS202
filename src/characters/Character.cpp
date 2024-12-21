@@ -39,6 +39,8 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->lives = 3;
 	this->coins = 0;
 	this->endGame = false;
+	this->isFinished = false;
+	this->deadTime = 0.0f;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
@@ -247,7 +249,16 @@ void Character::powerDown() {
 	flickSwitch = 0;
 	changeForm(0);
 }
+void Character::DieAnimation() {
+	velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+	isDie = true;
+	if (lives != 0) lives--;
+	if (lives == 0) {
+		endGame = true;
+	}
+	SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
 
+}
 void Character::touchEnemy() {
     if (form != 0) {
 		powerDown();
@@ -255,13 +266,7 @@ void Character::touchEnemy() {
 		return;
 	}
 	else {
-		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
-		isDie = true;
-		if (lives!=0) lives--;
-		if (lives == 0) {
-			endGame = true;
-		}
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+		DieAnimation();
 	}
 }
 void Character::killEnemy() {
@@ -284,6 +289,8 @@ void Character::reset() {
 	isWin = false;
 	//powerDown();
 	score = 0;
+	deadTime = 0.0f;
+	isFinished = false;
 }
 void Character::Draw()
 {
@@ -314,7 +321,12 @@ Mario::Mario() : Character(400.0f) {
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
-
+	if (isDie) deadTime += deltaTime;
+	if (deadTime > 3.2f) {
+		deadTime = 0.0f;
+		isFinished = true;
+	}
+	if (position.y > 30000.0f) isFinished = true;
 	if (pullFlag) state = 6;
 	else if (velocity.x == 0.0f || sliding) {
 		state = 0;
