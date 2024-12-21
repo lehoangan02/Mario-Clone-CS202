@@ -134,15 +134,15 @@ void Level::resolveEnvironmentCollisions()
                 else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
                     
-                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103)
+                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103 && m_LevelID != LevelFactory::HIDDEN_LEVEL_101)
                     {
                         
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
-                    else if (m_LevelID == LevelFactory::LEVEL_103)
+                    else if (m_LevelID == LevelFactory::LEVEL_103 || m_LevelID == LevelFactory::HIDDEN_LEVEL_101)
                     {
-                        std::cout << "Resetting Velocity 103" << std::endl;
+                        // std::cout << "Resetting Velocity 103" << std::endl;
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
