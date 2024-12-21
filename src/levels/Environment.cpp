@@ -107,7 +107,7 @@ void Lift::render()
 void Lift::update(float DeltaTime)
 {
     m_Position.y -= m_Speed * DeltaTime;
-    if (m_Position.y < -100)
+    if (m_Position.y < -1200)
     {
         m_Position.y = 900;
     }
