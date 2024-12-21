@@ -187,6 +187,7 @@ void Game::nextLevel() {
 }
 
 void Game::hiddenLevel() {
+    player->reset();
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
     {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
@@ -236,11 +237,12 @@ void Game::hiddenLevel() {
 }
 
 void Game::restartLevel() {
-    level = factory.CreateLevel(level->GetLevelType(), this);
-    level -> reset();
     player->setPosition(Vector2{20, 0});
+    level -> reset();
     level->attachPlayer(player);
+    player->setPosition(Vector2{20, 0});
     level->update(0.01f);
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
 void Game::handleState() {
