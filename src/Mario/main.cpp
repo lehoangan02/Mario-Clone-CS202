@@ -1,25 +1,25 @@
-//#include "../Application.hpp"
+#include "../Application.hpp"
 
-//int main() {
-//
-//	
-//    SetTargetFPS(60);
-//    InitAudioDevice();
-//
-//    SetConfigFlags(FLAG_MSAA_4X_HINT);
-//    InitWindow(1024, 768, "Game Window");
-//    SetWindowState(FLAG_WINDOW_RESIZABLE);
-//    ResourceManager::GetInstance()->LoadResources();
-//    Application app;
-//    app.run();
-//    CloseAudioDevice();
-//}
+int main() {
 
-// #include "../characters/Enemy.hpp"
-// #include "raylib.h"
+	
+    SetTargetFPS(60);
+    InitAudioDevice();
+
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(1024, 768, "Game Window");
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    ResourceManager::GetInstance()->LoadResources();
+    Application app;
+    app.run();
+    CloseAudioDevice();
+}
+
+ #include "../characters/Enemy.hpp"
+ #include "raylib.h"
 
 
-  #include "../Application.hpp"
+  /*#include "../Application.hpp"
   int main() {
       const int screenWidth = 1024;
       const int screenHeight = 896;
@@ -51,5 +51,5 @@
       }
 
       CloseWindow();
-  }
+  }*/
 
