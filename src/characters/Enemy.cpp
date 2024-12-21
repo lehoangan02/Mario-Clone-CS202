@@ -364,6 +364,12 @@ void InversePiranhaPlant::update(float deltaTime) {
         heightInGround += speed.y * deltaTime; 
     }
     if (position.y <= bottomBound || position.y >= topBound) {
+        if (position.y <= bottomBound) {
+            position.y = bottomBound;
+        }
+        if (position.y >= topBound) {
+            position.y = topBound;
+        }
         isDown = !isDown;
     }
     heightInGround = Clamp(heightInGround, 0.0f, size.y);
