@@ -82,6 +82,7 @@ void MusicManager::PlayMusic(MusicTrack music) {
 	if (currentTrack != -1) {
 		StopMusic();
 	}
+	prevTrack = currentTrack;
 	switch (music) {
 	case OverWorld:
 		PlayMusicStream(musicSet[OverWorld]);
