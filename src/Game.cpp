@@ -98,7 +98,6 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
-    handleState();
     update(GetFrameTime());
     MusicManager::getInstance().UpdateMusic();
     draw();
@@ -111,6 +110,7 @@ void Game::start() {
     else if (IsKeyDown(KEY_C)) {
         restartLevel();
     }
+    handleState();
 }
 
 void Game::update(float deltaTime) {
