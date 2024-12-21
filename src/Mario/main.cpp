@@ -23,8 +23,7 @@ int main() {
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
-    
-    KoopaTroopa koopa({300, 300});
+    Lakitu koopa({900, 100});
     
     while(!WindowShouldClose()) {
         BeginDrawing();
