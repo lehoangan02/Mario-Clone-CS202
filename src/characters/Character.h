@@ -70,6 +70,7 @@ public:
 	int getType() { return Chartype; };
 	int getLives() { return lives; }
 	bool getEndGame() { return endGame; }
+	void setLives(int lives) { this->lives = lives; }
 	
 	Vector2 GetPosition() { return position; };
 	Vector2 GetSize() { return size; };
