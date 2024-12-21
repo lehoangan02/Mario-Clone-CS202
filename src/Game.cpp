@@ -17,6 +17,7 @@ Game::Game()
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 }
 
 Game::Game(int characterMenu, int levelMenu) 
@@ -42,6 +43,7 @@ Game::Game(int characterMenu, int levelMenu)
     else if (levelMenu == 4) {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
+    level->reset();
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
     int levelType = level->GetLevelType();
@@ -96,6 +98,7 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
+    handleState();
     update(GetFrameTime());
     MusicManager::getInstance().UpdateMusic();
     draw();
@@ -114,12 +117,6 @@ void Game::update(float deltaTime) {
     if (level) {
         level->update(deltaTime);
     }
-    // if (player.GetType() == Character::MARIO) {
-    //     player->update(deltaTime);
-    // }
-    // else if (player.GetType() == Character::LUIGI) {
-    //     player->update(deltaTime);
-    
 }
 
 void Game::draw() {
@@ -135,9 +132,11 @@ void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;
+            level -> pauseLevel();
             break;
         case 1:
             state = LEVEL_RETURN_MESSAGE::CONTINUE;
+            level -> continueLevel();
             break;
         case 2:
             state = LEVEL_RETURN_MESSAGE::RUNNING;
@@ -179,7 +178,6 @@ void Game::nextLevel() {
         state = LEVEL_RETURN_MESSAGE::RESTART;
         return;
     }
-
     //delete player;
     //player = new Mario;
     player->setPosition(Vector2{20, 0});
@@ -191,26 +189,48 @@ void Game::nextLevel() {
 void Game::hiddenLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
     {
-        
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
         level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{20, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
     {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
         level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{20, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
     {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103, this);
         level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{20, 0});
+
+    }
+    else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101)
+    {
+        level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+        level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{14850, 35});
+        std::cout << "Set Position: " << 14800 << " " << 35 << std::endl;
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    }
+    else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102)
+    {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+        level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{5100, 175});
+        std::cout << "Set Position: " << 5100 << " " << 175 << std::endl;
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
     else return;
-
-    player->setPosition(Vector2{20, 0});
-    level->attachPlayer(player);
     level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
@@ -225,18 +245,6 @@ void Game::restartLevel() {
 
 void Game::handleState() {
     switch (state) {
-        case LEVEL_RETURN_MESSAGE::PAUSE:
-            //drawPauseMenu();
-            level->pauseLevel();
-            break;
-        case LEVEL_RETURN_MESSAGE::CONTINUE:
-            level->continueLevel();
-            //drawContinueButton();
-            break;
-        case LEVEL_RETURN_MESSAGE::RUNNING:
-            level->continueLevel();
-            // Handle running state
-            break;
         case LEVEL_RETURN_MESSAGE::HIDDEN:
             hiddenLevel();
             break;
