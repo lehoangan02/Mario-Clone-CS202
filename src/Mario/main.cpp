@@ -16,6 +16,7 @@ int main() {
 
 // #include "../characters/Enemy.hpp"
 // #include "raylib.h"
+// #include <thread>
 
 // int main() {
 //     SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -23,7 +24,7 @@ int main() {
 //     SetWindowState(FLAG_WINDOW_RESIZABLE);
 //     SetTargetFPS(60);
     
-//     PiranhaPlant koopa({300, 300});
+//     KoopaTroopa koopa({300, 300});
     
 //     while(!WindowShouldClose()) {
 //         BeginDrawing();
@@ -43,7 +44,8 @@ int main() {
 //         DrawLineEx({700,100}, {700,400}, 2.0f, RED);
 //         koopa.update(0.01f);
 //         koopa.render();
-//         if (IsKeyDown(KEY_SPACE)) {
+//         if (IsKeyPressed(KEY_SPACE)) {
+//             std::this_thread::sleep_for(std::chrono::milliseconds(100));
 //             koopa.hit();
 //         }
 //         // shy.update(0.01f);

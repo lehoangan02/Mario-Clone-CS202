@@ -20,7 +20,7 @@ void Button::draw(float radius) {
 bool Button::isClicked() {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && this->isHovered) {
         this->isHovered = false;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
         return 1;
     }
     return 0;
@@ -73,12 +73,12 @@ Menu::Menu() {
     //     ResourceManager::GetInstance()->GetFont(), 0);
 
     characterButtons[0] = Button({288, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
+        ResourceManager::GetInstance()->GetFont(), 1);
     characterButtons[1] = Button({583, 422, 141, 42}, Color{240, 193, 225, 255} ,"Luigi", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     
     mapButtons[0] = Button({275.5, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 1", BLACK, 22,
-        ResourceManager::GetInstance()->GetFont(), 0);
+        ResourceManager::GetInstance()->GetFont(), 1);
     mapButtons[1] = Button({444, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 2", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     mapButtons[2] = Button({613, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 3", BLACK, 22,

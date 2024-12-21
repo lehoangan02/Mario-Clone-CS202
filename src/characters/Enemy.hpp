@@ -185,10 +185,10 @@ class ShyGuy : public Enemy {
         void hit() override;
         void update(float deltaTime) override;
         void render() override;
-
 };
 
 class Projectile : public Enemy {
+    friend class Lakitu;
 private:
     bool active;
 public:
@@ -209,6 +209,7 @@ public:
 
 class Lakitu : public Enemy {
     friend class EnemyFactory;
+    friend class Projectile;
 private:
     std::vector<std::shared_ptr<Projectile>> projectiles;
     Texture2D projectileTexture;

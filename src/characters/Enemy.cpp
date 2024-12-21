@@ -364,6 +364,12 @@ void InversePiranhaPlant::update(float deltaTime) {
         heightInGround += speed.y * deltaTime; 
     }
     if (position.y <= bottomBound || position.y >= topBound) {
+        if (position.y <= bottomBound) {
+            position.y = bottomBound;
+        }
+        if (position.y >= topBound) {
+            position.y = topBound;
+        }
         isDown = !isDown;
     }
     heightInGround = Clamp(heightInGround, 0.0f, size.y);
@@ -538,17 +544,21 @@ void ShyGuy::update(float deltaTime) {
         }
 
         if (position.x < leftBound) {
+            position.x = leftBound;
             isRight = true;
         }
         if (position.x + size.x * 1.5f > rightBound) {
+            position.x = rightBound - size.x * 1.5f;
             isRight = false;
         }
 
         if (position.y <= topBound) {
+            position.y = topBound;
             isDown = true;
         }
 
         if (position.y + size.y * 1.5f >= bottomBound) {
+            position.y = bottomBound - size.y * 1.5f;
             isDown = false;
         }
     }
@@ -783,6 +793,7 @@ void KoopaTroopa::update(float deltaTime) {
             fallSpeed += 981.0f*3 * deltaTime; 
             position.y += fallSpeed * deltaTime;
             if (position.y > bottomBound) {
+                position.y = bottomBound;
                 isDead = true;
                 isDying = false;
             }
@@ -795,7 +806,13 @@ void KoopaTroopa::update(float deltaTime) {
             } else {
                 position.x -= shellSpeed.x * deltaTime;
             }
-            if (position.x < leftBound || position.x + texture.width * 0.25f > rightBound) {
+            if (position.x <= leftBound || position.x + texture.width * 0.7f >= rightBound) {
+                if (position.x < leftBound) {
+                    position.x = leftBound;
+                }
+                if (position.x + texture.width * 0.7f > rightBound) {
+                    position.x = rightBound - texture.width * 0.7f;
+                }
                 isRight = !isRight;
             }
         } 
@@ -813,7 +830,13 @@ void KoopaTroopa::update(float deltaTime) {
                 currentTextureIndex = (currentTextureIndex + 1) % 6;
                 texture = textures[currentTextureIndex];
             }
-            if (position.x < leftBound || position.x + texture.width * 0.25f > rightBound) {
+            if (position.x <= leftBound || position.x + texture.width * 0.5f >= rightBound) {
+                if (position.x < leftBound) {
+                    position.x = leftBound;
+                }
+                if (position.x + texture.width * 0.5f > rightBound) {
+                    position.x = rightBound - texture.width * 0.5f;
+                }
                 isRight = !isRight;
             }
         }
@@ -823,13 +846,13 @@ void KoopaTroopa::update(float deltaTime) {
 void KoopaTroopa::render() {
     if (!isDead ) {
         if ((isShell && !isToShell) || isDying) {
-            DrawTextureEx(textures[9], position, 0.0f, 0.5f, RAYWHITE);
+            DrawTextureEx(textures[9], position, 0.0f, 0.7f, RAYWHITE);
         } else  if (isRight == false) {
-            DrawTextureEx(texture, position, 0.0f, 0.25f, RAYWHITE);
+            DrawTextureEx(texture, position, 0.0f, 0.5f, RAYWHITE);
         }
         else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, texture.width * 0.25f, texture.height * 0.25f };
+            Rectangle destRec = { position.x, position.y, texture.width * 0.5f, texture.height * 0.5f };
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
