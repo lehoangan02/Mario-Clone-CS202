@@ -11,7 +11,6 @@
 #include "GUI.hpp"
 #include "Game.hpp"
 
-
 class Application {
     private:
         int tab;
@@ -26,7 +25,7 @@ class Application {
             inGame = false;
         }
         void run();
-        //int handle();
+        int handle();
 };
 
 

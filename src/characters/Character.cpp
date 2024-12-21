@@ -36,17 +36,19 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->isInvincible = false;
 	this->InvincibleColor = WHITE;
 	this->score = 0;
+	this->lives = 3;
+	this->coins = 0;
+	this->endGame = false;
+	this->isFinished = false;
+	this->deadTime = 0.0f;
+	this->finishSliding = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
-	position = Vector2{ 20 , 0 };
 }
 
 Character::~Character()
 {
-}
-Vector2 Character::GetCenter() {
-	return Vector2{ position.x + size.x / 2, position.y + size.y / 2 };
 }
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
@@ -105,29 +107,32 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_Q)) {
 		pullFlag = true;
 	}
-	if (IsKeyPressed(KEY_ONE)) {
-		SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+	if (IsKeyPressed(KEY_F1)) {
+		MusicManager::getInstance().PlayMusic(OverWorld);
 	}
-	if (IsKeyPressed(KEY_TWO)) {
-		SoundManager::getInstance().PlaySoundEffect(HITBLOCK_SOUND);
+	if (IsKeyPressed(KEY_F2)) {
+		MusicManager::getInstance().PlayMusic(Origin_UnderWorld);
 	}
-	if (IsKeyPressed(KEY_THREE)) {
-		SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
+	if (IsKeyPressed(KEY_F3)) {
+		MusicManager::getInstance().PlayMusic(Invincible);
 	}
-	if (IsKeyPressed(KEY_FOUR)) {
-		SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
+	if (IsKeyPressed(KEY_F4)) {
+		MusicManager::getInstance().PlayMusic(SuperBellHill);
 	}
-	if (IsKeyPressed(KEY_FIVE)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+	if (IsKeyPressed(KEY_F5)) {
+		MusicManager::getInstance().PlayMusic(FlowerGarden);
 	}
-	if (IsKeyPressed(KEY_SIX)) {
-		SoundManager::getInstance().PlaySoundEffect(POWERDOWN_SOUND);
+	if (IsKeyPressed(KEY_F6)) {
+		MusicManager::getInstance().PlayMusic(Athletic);
 	}
-	if (IsKeyPressed(KEY_SEVEN)) {
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+	if (IsKeyPressed(KEY_F7)) {
+		MusicManager::getInstance().PlayMusic(UnderGround);
 	}
-	if (IsKeyPressed(KEY_EIGHT)) {
-		SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
+	if (IsKeyPressed(KEY_F8)) {
+		MusicManager::getInstance().PlayMusic(SMB);
+	}
+	if (IsKeyPressed(KEY_F9)) {
+		MusicManager::getInstance().StopMusic();
 	}
 
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
@@ -198,8 +203,7 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
-			MusicManager::getInstance().StopMusic();
-			MusicManager::getInstance().PlayMusic(OverWorld);
+			MusicManager::getInstance().PlayPreviousTrack();	
 			isInvincible = false;
 			InvincibleColor = WHITE;
 			invincibleDuration = 6.0f;
@@ -208,23 +212,30 @@ void Character::updateFormChangeAnimation() {
 	/*std::cout << "Size: " << size.x << " " << size.y << std::endl;
 	std::cout << "scale: " << scale << std::endl;*/
 }
-void Character::hitFlag(Vector2 flagPos) {
-	/*if (!pullFlag) {
-		std::cout << "not pull flag" << std::endl;
+void Character::hitFlag() {
+	if (!pullFlag) {
 		return;
 	};
-	static const float Speed =100;
-	static const float EndPosition = 600;
-	position.x = flagPos.x;
-	position.y += Speed*
-	if (position.y > EndPosition)
+	float EndPosition = 700.0f - size.y;
+	velocity.x = 0.0f;
+	velocity.y = 300.0f;
+	if (position.y >= EndPosition)
 	{
-		std::cout << "Cc";
-		position.y = 1;
-		pullFlag = false;
-	}*/
+		position.y = 700.0f-size.y;
+		velocity.y = 0;
+		if (faceRight) {
+			position.x += size.x;
+			faceRight = false;
+		}
+	}
 }
-
+void Character::setPullFlag(bool pullFlag) {
+	//if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);	
+	this->pullFlag = pullFlag;
+	if (!this->pullFlag) {
+		position.y = 750.0f - size.y;
+	}
+}
 void Character::powerUp() {
 	if (form == 0) {
 		changeForm(1);
@@ -238,7 +249,16 @@ void Character::powerDown() {
 	flickSwitch = 0;
 	changeForm(0);
 }
+void Character::DieAnimation() {
+	velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+	isDie = true;
+	if (lives != 0) lives--;
+	if (lives == 0) {
+		endGame = true;
+	}
+	SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
 
+}
 void Character::touchEnemy() {
     if (form != 0) {
 		powerDown();
@@ -246,9 +266,7 @@ void Character::touchEnemy() {
 		return;
 	}
 	else {
-		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
-		isDie = true;
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+		DieAnimation();
 	}
 }
 void Character::killEnemy() {
@@ -256,6 +274,24 @@ void Character::killEnemy() {
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
 }
 
+void Character::reset() {
+	position = { 20, 0 };
+	velocity = { 0, 0 };
+	accX = 0.0f;
+	canJump = false;
+	fire = false;
+	brake = false;
+	isDie = false;
+	isChangingForm = false;
+	isflicking = false;
+	isInvincible = false;
+	pullFlag = false;
+	isWin = false;
+	//powerDown();
+	score = 0;
+	deadTime = 0.0f;
+	isFinished = false;
+}
 void Character::Draw()
 {
 	//std::cout << "Score" << score << std::endl;
@@ -267,15 +303,17 @@ void Character::Draw()
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
 	firePool->Draw();
+
 };
 
 Mario::Mario() : Character(400.0f) {
-	textures.push_back(LoadTexture("assets/textures/marioSmall2.png"));
-	textures.push_back(LoadTexture("assets/textures/marioBig2.png"));
-	textures.push_back(LoadTexture("assets/textures/marioFire2.png"));
-	imageCounts.push_back({ 7,1 });
-	imageCounts.push_back({ 6,1 });
-	imageCounts.push_back({ 7,1 });
+	Chartype = MARIO;
+	textures.push_back(LoadTexture("assets/textures/marioSmall3.png"));
+	textures.push_back(LoadTexture("assets/textures/marioBig3.png"));
+	textures.push_back(LoadTexture("assets/textures/marioFire3.png"));
+	imageCounts.push_back({ 9,1 });
+	imageCounts.push_back({ 8,1 });
+	imageCounts.push_back({ 9,1 });
 	float switchTime = 0.1f;
 	animation = Animation(&textures[form], imageCounts[form], switchTime);
 	size = { (float) textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale};
@@ -283,7 +321,14 @@ Mario::Mario() : Character(400.0f) {
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
-	if (velocity.x == 0.0f || sliding) {
+	if (isDie) deadTime += deltaTime;
+	if (deadTime > 3.2f) {
+		deadTime = 0.0f;
+		isFinished = true;
+	}
+	if (position.y > 30000.0f) isFinished = true;
+	if (pullFlag) state = 6;
+	else if (velocity.x == 0.0f || sliding) {
 		state = 0;
 	}
 	else if (!canJump) state = 2;
@@ -307,6 +352,7 @@ void Mario::Update(float deltaTime) {
 	}
 	animation.Update(state, deltaTime, faceRight, fire, brake);
 	updateFormChangeAnimation();
+	hitFlag();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();	
 }
@@ -336,15 +382,56 @@ void Character::SlidePipe(slidingDirection direction) {
 	}
 	if (this->SlideDist.x <= 0 || this->SlideDist.y <= 0) {
 		this->sliding = false;
+		this->finishSliding = true;
 		this->SlideDist = { this->size.x, this->size.y };
 	}
 };
 
-Luigi::Luigi() : Character(3.0f) {
+Luigi::Luigi() : Character(500.0f) {
+	Chartype = LUIGI;
+	textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
+	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
+	textures.push_back(LoadTexture("assets/textures/marioFire3.png"));
+	imageCounts.push_back({ 9,1 });
+	imageCounts.push_back({ 8,1 });
+	imageCounts.push_back({ 9,1 });
+	float switchTime = 0.1f;
+	animation = Animation(&textures[form], imageCounts[form], switchTime);
+	size = { (float)textures[form].width / (imageCounts[form].x) * scale, (float)textures[form].height * scale };
+	this->SlideDist = { size.x,size.y };
 	
 }
 void Luigi::Update(float deltaTime) {
+	if (velocity.y > GRAVITY * deltaTime * 1.2f) canJump = false; //handle double jump 
 
+	if (pullFlag) state = 6;
+	else if (velocity.x == 0.0f || sliding) {
+		state = 0;
+	}
+	else if (!canJump) state = 2;
+	else if (brake) state = 4;
+	else {
+		state = 1;
+	}
+	if (fire) {
+		state = 3;
+	}
+	if (velocity.x > 0.0f) {
+		faceRight = true;
+	}
+	else if (velocity.x < 0.0f) {
+		faceRight = false;
+	}
+
+	if (isDie) {
+		velocity.x = 0;
+		state = 5;
+	}
+	animation.Update(state, deltaTime, faceRight, fire, brake);
+	updateFormChangeAnimation();
+	hitFlag();
+	setPosition(Vector2{ position.x + velocity.x * deltaTime, position.y + velocity.y * deltaTime });
+	firePool->Update();
 }
 
 
@@ -370,34 +457,75 @@ Character* CharacterFactory::createCharacter(CharacterType type) {
 }
 
 void FullControl::execute(float deltaTime) {
-	if (character->sliding) {
+	if (character->isSliding()) {
 		character->SlidePipe(character->slideDirection);
 	}
 	else {
 		character->control(true);
-		character->accelerate(Vector2{ character->accX, GRAVITY }, deltaTime);
+		character->accelerate({character->getAcceleration(), GRAVITY}, deltaTime);
 	}
 	character->Update(deltaTime);
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->setVelocity( Vector2{0.0f, 700.0f} );
+	if (!character->isDead() && character->GetPosition().y > 850.0f) {
+		character->resetVelocity();
+		character->DieAnimation();
+	}
+	else if (!character->isDead()) character->setVelocity( Vector2{0.0f, 700.0f} );
 	character->Update(deltaTime);
 };
 
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
-if (totalTime < 5.0f) {
-	character->control(false);
-	character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
-	character->Update(deltaTime);
-	totalTime += deltaTime;
-	std::cout << totalTime;
+	if (!character->isPullFlag()) {
+		if (totalTime == 0.0f) {
+			MusicManager::getInstance().PlayMusic(LevelFinished);
+		}
+		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+			MusicManager::getInstance().StopMusic();
+		}
+		if (totalTime < 5.0) {
+			character->control(false);
+			character->setVelocity(Vector2{ 225.0f, 1.0f });
+			character->Update(deltaTime);
+			totalTime += deltaTime;
+			//std::cout << totalTime;
+		}
+		else {
+			character->setWin();
+			character->control(false);
+			character->setVelocity(Vector2{ 0.0f, 0.0f });
+			character->Update(deltaTime);
+		}
+	}
+	else {
+		character->Update(deltaTime);
+	}
+
 }
-else {
-	character->setWin();
-	character->control(false);
-	character->setVelocity(Vector2{ 0.0f, 0.0f });
-	character->Update(deltaTime);
-}
-}
+
+
+//Backup 
+//AutoMove* AutoMove::instance = nullptr;
+//void AutoMove::execute(float deltaTime) {
+//	if (totalTime == 0.0f) {
+//		MusicManager::getInstance().PlayMusic(LevelFinished);
+//	}
+//	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+//		MusicManager::getInstance().StopMusic();
+//	}
+//	if (totalTime < 5.0f) {
+//		character->control(false);
+//		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
+//		character->Update(deltaTime);
+//		totalTime += deltaTime;
+//		//std::cout << totalTime;
+//	}
+//	else {
+//		character->setWin();
+//		character->control(false);
+//		character->setVelocity(Vector2{ 0.0f, 0.0f });
+//		character->Update(deltaTime);
+//	}
+//}

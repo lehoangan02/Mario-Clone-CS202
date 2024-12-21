@@ -11,7 +11,7 @@ private:
     Font commonFont;
     std::map<std::string, Texture2D> textures;
 
-    ResourceManager(); // Constructor private
+    ResourceManager(); 
 public:
     ~ResourceManager();
     static ResourceManager* GetInstance();
@@ -25,7 +25,6 @@ public:
 class ResourceInitializer {
 public:
     static void InitializeResources() {
-        // Nạp tài nguyên trước khi tạo cửa sổ
         ResourceManager::GetInstance()->LoadResources();
     }
 };
