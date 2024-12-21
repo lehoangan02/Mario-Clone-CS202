@@ -1032,11 +1032,14 @@ void Level::resolveFlagPoleCollisions()
         m_Player->setPosition(PlayerBox.getPosition());
         m_FlagPole -> m_Position = EnvironmentBox.getPosition();
         m_FlagPole -> notifyPull();
+        m_Player -> setPullFlag(true);
+        m_Player->setPosition({m_Player->GetPosition().x + 50, m_Player->GetPosition().y});
         SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
     }
     PullDone = m_FlagPole -> isDone();
     if (PullDone)
     {
+        m_Player -> setPullFlag(false);
         DrawText("Level Complete", 100, 100, 20, RED);
     }
 }
