@@ -309,14 +309,17 @@ void Game::drawInfo() {
     else if (world == LevelFactory::LEVEL_103 || world == LevelFactory::HIDDEN_LEVEL_103) {
         worldString = "1-3";
     }
-    float deltaTime;
-    deltaTime = GetFrameTime(); 
-    timer += deltaTime;
-    if (timer >= 1.0f) {
-        countdown--;
-        timer = 0.0f; 
-        if (countdown <= 0) {
-            countdown = 0;
+
+    if (state != LEVEL_RETURN_MESSAGE::PAUSE) {
+        float deltaTime;
+        deltaTime = GetFrameTime(); 
+        timer += deltaTime;
+        if (timer >= 1.0f) {
+            countdown--;
+            timer = 0.0f; 
+            if (countdown <= 0) {
+                countdown = 0;
+            }
         }
     }
 
