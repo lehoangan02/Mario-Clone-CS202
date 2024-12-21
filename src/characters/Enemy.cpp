@@ -298,7 +298,14 @@ void PiranhaPlant::update(float deltaTime) {
         heightInGround -= speed.y * deltaTime;
     }
     if(position.y > topBound|| position.y < bottomBound ) {
-        isDown = !isDown;
+        if (position.y > topBound) {
+            position.y = topBound;
+            isDown = false;
+        }
+        if (position.y < bottomBound) {
+            position.y = bottomBound;
+            isDown = true;
+        }
     }
 
     heightInGround = Clamp(heightInGround, 0.0f, size.y);
