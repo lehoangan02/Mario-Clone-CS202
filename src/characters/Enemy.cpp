@@ -195,9 +195,18 @@ void Goomba::update(float deltaTime) {
         texture = textures[currentTextureIndex];
     }
     if (position.x < leftBound || position.x + texture.width * size.x/16 > rightBound) {
-        isRight = !isRight;
+        if (position.x < leftBound) {
+            position.x = leftBound;
+            isRight = true;
+        }
+        if (position.x + texture.width * size.x/16 > rightBound) {
+            position.x = rightBound - texture.width * size.x/16;
+            isRight = false;
+        }
+        // isRight = !isRight;
     }
     if (position.y + size.y> bottomBound) {
+        position.y = bottomBound - size.y;
         isDown = false;
     }
 
