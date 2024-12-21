@@ -685,12 +685,31 @@ void Level::render()
 }
 void Level::produceSwitchSignal()
 {
-    std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
-    std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
+    // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
         std::cout << "Notifying Lose" << std::endl;
+    }
+    else if (m_Player->haveWon())
+    {
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
+        std::cout << "Notifying Win" << std::endl;
+    }
+    else if (m_Player->isSlidingFinished())
+    {
+        m_Player->resetSlidingFinished();
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        std::cout << "Notifying Hidden" << std::endl;
+    }
+    else if (IsKeyPressed(KEY_LEFT_BRACKET))
+    {
+        std::cout << "Notifying Hidden" << std::endl;
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
     }
 }
 void Level::update(float DeltaTime)
@@ -810,19 +829,24 @@ unsigned int Level::doPauseLogic()
         if (m_Paused)
         {
             continueLevel();
-            return LEVEL_RETURN_MESSAGE::CONTINUE;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::CONTINUE);
         }
         else
         {
             pauseLevel();
-            return LEVEL_RETURN_MESSAGE::PAUSE;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::PAUSE);
         }
     }
     if (m_Paused)
     {
         if (IsKeyPressed(KEY_Q))
         {
-            return LEVEL_RETURN_MESSAGE::QUIT;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::QUIT);
+        }
+        else if (IsKeyPressed(KEY_R))
+        {
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::RESTART);
+
         }
     }
     return LEVEL_RETURN_MESSAGE::RUNNING;
