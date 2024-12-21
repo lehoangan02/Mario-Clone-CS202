@@ -6,6 +6,7 @@
 #include "MapLoader.hpp"
 #include "../Item/Item.h"
 #include "../characters/Enemy.hpp"
+#include "../Mediator/Mediator.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -20,7 +21,7 @@ enum LEVEL_RETURN_MESSAGE
     RESTART
 };
 
-class Level : public Subject
+class Level : public Subject, public Component
 {
     class EndPipeHandler
     {
@@ -149,6 +150,7 @@ class Level : public Subject
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();
+        void produceSwitchSignal();
     public:
         virtual ~Level();
 };
@@ -172,7 +174,7 @@ class LevelFactory
         ~LevelFactory() = default;
     public:
         static LevelFactory& GetLevelFactory();
-        Level* CreateLevel(int Type);
+        Level* CreateLevel(int Type, Mediator* mediator);
 };
 class Level101 : public Level
 {

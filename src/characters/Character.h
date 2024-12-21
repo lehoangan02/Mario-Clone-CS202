@@ -34,6 +34,8 @@ public:
 	void setTeleport() { this->teleport = true; };
 	void SlidePipe(slidingDirection direction);
 	bool isSliding() { return sliding; };
+	bool isSlidingFinished() { return finishSliding; };
+	void resetSlidingFinished() { finishSliding = false; };
 	slidingDirection slideDirection;
 
 
@@ -42,6 +44,7 @@ public:
 	bool isPullFlag() { return pullFlag; };
 
 	void touchEnemy();
+	void DieAnimation();
 	void killEnemy();
 	void invincile() { this->isInvincible = true; };
 	void powerUp();
@@ -57,18 +60,21 @@ public:
 
 
 	void increaseScore(int Incre) { this->score += Incre; };
-	void increaseScore() { this->score += 1; };
+	void increaseScore() { this->score += 1; this->coins += 1; };
 	int getScore() { return score; }
+	int getCoins() { return coins; }
 
 
 	bool isflick() { return isflicking; };
 	bool isSuper() { return isInvincible; };
 	bool haveWon() { return isWin; };
 	bool isDead() { return isDie; };
+	bool isDeadFinished() { return isFinished; };
 
 	int getType() { return Chartype; };
 	int getLives() { return lives; }
 	bool getEndGame() { return endGame; }
+	void setLives(int lives) { this->lives = lives; }
 	
 	Vector2 GetPosition() { return position; };
 	Vector2 GetSize() { return size; };
@@ -92,6 +98,7 @@ protected:
 	float jumpHeight;
 	float scale;
 	float accX;
+	float deadTime;
 
 
 	bool faceRight;
@@ -100,7 +107,9 @@ protected:
 	bool brake;
 	bool teleport;
 	bool sliding;
+	bool finishSliding;
 	bool isDie;
+	bool isFinished;
 	bool isWin;
 	bool endGame;
 	bool pullFlag;
@@ -108,6 +117,7 @@ protected:
 	int Chartype;
 	int score;
 	int lives;
+	int coins;
 
 	void updateFormChangeAnimation();
 private:

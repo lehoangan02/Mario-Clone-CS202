@@ -37,11 +37,14 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->InvincibleColor = WHITE;
 	this->score = 0;
 	this->lives = 3;
+	this->coins = 0;
 	this->endGame = false;
+	this->isFinished = false;
+	this->deadTime = 0.0f;
+	this->finishSliding = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
-	position = Vector2{ 20 , 0 };
 }
 
 Character::~Character()
@@ -200,7 +203,7 @@ void Character::updateFormChangeAnimation() {
 
 		invincibleDuration -= GetFrameTime();
 		if (invincibleDuration < 0.0f) {
-			MusicManager::getInstance().PlayMusic(OverWorld);
+			MusicManager::getInstance().PlayPreviousTrack();	
 			isInvincible = false;
 			InvincibleColor = WHITE;
 			invincibleDuration = 6.0f;
@@ -246,7 +249,16 @@ void Character::powerDown() {
 	flickSwitch = 0;
 	changeForm(0);
 }
+void Character::DieAnimation() {
+	velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
+	isDie = true;
+	if (lives != 0) lives--;
+	if (lives == 0) {
+		endGame = true;
+	}
+	SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
 
+}
 void Character::touchEnemy() {
     if (form != 0) {
 		powerDown();
@@ -254,13 +266,7 @@ void Character::touchEnemy() {
 		return;
 	}
 	else {
-		velocity.y = -sqrtf(2.0f * GRAVITY * jumpHeight);
-		isDie = true;
-		lives--;
-		if (lives == 0) {
-			endGame = true;
-		}
-		SoundManager::getInstance().PlaySoundEffect(DIE_SOUND);
+		DieAnimation();
 	}
 }
 void Character::killEnemy() {
@@ -283,6 +289,8 @@ void Character::reset() {
 	isWin = false;
 	//powerDown();
 	score = 0;
+	deadTime = 0.0f;
+	isFinished = false;
 }
 void Character::Draw()
 {
@@ -313,7 +321,12 @@ Mario::Mario() : Character(400.0f) {
 }
 void Mario::Update(float deltaTime) {
 	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
-
+	if (isDie) deadTime += deltaTime;
+	if (deadTime > 3.2f) {
+		deadTime = 0.0f;
+		isFinished = true;
+	}
+	if (position.y > 30000.0f) isFinished = true;
 	if (pullFlag) state = 6;
 	else if (velocity.x == 0.0f || sliding) {
 		state = 0;
@@ -367,13 +380,14 @@ void Character::SlidePipe(slidingDirection direction) {
 		this->SlideDist.y -= offset;
 		break;
 	}
-	if (this->SlideDist.x <= 0 || this->SlideDist.y <= 0) {
+	if (this->SlideDist.x <= 10.0f || this->SlideDist.y <= 0) {
 		this->sliding = false;
+		this->finishSliding = true;
 		this->SlideDist = { this->size.x, this->size.y };
 	}
 };
 
-Luigi::Luigi() : Character(600.0f) {
+Luigi::Luigi() : Character(500.0f) {
 	Chartype = LUIGI;
 	textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
@@ -454,7 +468,11 @@ void FullControl::execute(float deltaTime) {
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->setVelocity( Vector2{0.0f, 700.0f} );
+	if (!character->isDead() && character->GetPosition().y > 850.0f) {
+		character->resetVelocity();
+		character->DieAnimation();
+	}
+	else if (!character->isDead()) character->setVelocity( Vector2{0.0f, 700.0f} );
 	character->Update(deltaTime);
 };
 

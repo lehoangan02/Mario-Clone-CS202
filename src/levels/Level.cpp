@@ -4,36 +4,52 @@ LevelFactory& LevelFactory::GetLevelFactory()
     static LevelFactory Factory;
     return Factory;
 }
-Level* LevelFactory::CreateLevel(int Type)
+Level* LevelFactory::CreateLevel(int Type, Mediator* mediator)
 {
+    Level *level = nullptr;
     switch (Type)
     {
         case LEVEL_101:
-            return Level101::GetLevel101();
+            level = Level101::GetLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_TESTING:
-            return LevelTesting::GetLevelTesting();
+            level = LevelTesting::GetLevelTesting();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_102:
-            std::cout << "Creating Level 102" << std::endl;
-            return Level102::GetLevel102();
+            level = Level102::GetLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_103:
-            return Level103::GetLevel103();
+            level = Level103::GetLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_101:
-            return HiddenLevel101::GetHiddenLevel101();
+            level = HiddenLevel101::GetHiddenLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_103:
-            return HiddenLevel103::GetHiddenLevel103();
+            level = HiddenLevel103::GetHiddenLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_102:
-            return HiddenLevel102::GetHiddenLevel102();
+            level = HiddenLevel102::GetHiddenLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         default:
             return nullptr;
             break;
+        
     }
+    return level;
 }
 Level::Level()
 {
@@ -77,6 +93,10 @@ Level::~Level()
 }
 void Level::attachPlayer(Character* Player)
 {
+    if (Player == nullptr) {
+        std::cerr << "Error: Trying to attach a nullptr as Player!" << std::endl;
+        return;
+    }  
     m_Player = Player;
     m_Player->setPosition(m_StartPosition);
     m_EndPipeHandler.attachPlayer(Player);
@@ -114,18 +134,19 @@ void Level::resolveEnvironmentCollisions()
                 else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
                     
-                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103)
+                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103 && m_LevelID != LevelFactory::HIDDEN_LEVEL_101)
                     {
                         
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
-                    else if (m_LevelID == LevelFactory::LEVEL_103)
+                    else if (m_LevelID == LevelFactory::LEVEL_103 || m_LevelID == LevelFactory::HIDDEN_LEVEL_101)
                     {
-                        std::cout << "Resetting Velocity 103" << std::endl;
+                        // std::cout << "Resetting Velocity 103" << std::endl;
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
+                    
                 }
                 
             }
@@ -663,6 +684,43 @@ void Level::render()
     EndMode2D();
     
 }
+void Level::produceSwitchSignal()
+{
+    // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
+    // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+
+    if (m_Player->isDead() && m_Player->isDeadFinished())
+    {
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
+        m_Player->reset();
+        std::cout << "Notifying Lose" << std::endl;
+    }
+    else if (m_Player->haveWon())
+    {
+        m_Player->reset();
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
+        std::cout << "Notifying Win" << std::endl;
+        
+    }
+    else if (m_Player->isSlidingFinished())
+    {
+        m_Player->resetSlidingFinished();
+        m_Player->reset();
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        
+        std::cout << "Notifying Hidden" << std::endl;
+        
+    }
+    else if (IsKeyPressed(KEY_LEFT_BRACKET))
+    {
+        m_Player->reset();
+        std::cout << "Notifying Hidden" << std::endl;
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        
+    }
+}
 void Level::update(float DeltaTime)
 {
     m_Ground->update(m_CameraPosition);
@@ -745,6 +803,8 @@ void Level::update(float DeltaTime)
         // for winning
         // SoundManager::getInstance().PlaySoundEffect(LEVELCOMPLETE_SOUND);
     }
+    produceSwitchSignal();
+
 }
 bool Level::isPlayerInHole()
 {
@@ -779,19 +839,24 @@ unsigned int Level::doPauseLogic()
         if (m_Paused)
         {
             continueLevel();
-            return LEVEL_RETURN_MESSAGE::CONTINUE;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::CONTINUE);
         }
         else
         {
             pauseLevel();
-            return LEVEL_RETURN_MESSAGE::PAUSE;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::PAUSE);
         }
     }
     if (m_Paused)
     {
         if (IsKeyPressed(KEY_Q))
         {
-            return LEVEL_RETURN_MESSAGE::QUIT;
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::QUIT);
+        }
+        else if (IsKeyPressed(KEY_R))
+        {
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::RESTART);
+
         }
     }
     return LEVEL_RETURN_MESSAGE::RUNNING;
@@ -841,6 +906,8 @@ void Level::reset()
     m_TouchedFlag = false;
     m_InControl = true;
     m_StartPosition = {0, 0};
+    m_Player->setPosition(m_StartPosition);
+    m_CameraPosition = {0, 0};
 
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
@@ -1072,6 +1139,7 @@ Level101* Level101::GetLevel101()
 void Level101::reset()
 {
     Level::reset();
+    this -> setName("Level101");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 LevelTesting::LevelTesting()
@@ -1103,6 +1171,7 @@ LevelTesting* LevelTesting::GetLevelTesting()
 void LevelTesting::reset()
 {
     Level::reset();
+    this -> setName("LevelTesting");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
 }
 Level103::Level103()
@@ -1133,6 +1202,7 @@ void Level103::render()
 void Level103::reset()
 {
     Level::reset();
+    this -> setName("Level103");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 HiddenLevel101::HiddenLevel101()
@@ -1163,6 +1233,7 @@ void HiddenLevel101::render()
 void HiddenLevel101::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel101");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
 }
 Level102::Level102()
@@ -1193,6 +1264,7 @@ void Level102::render()
 void Level102::reset()
 {
     Level::reset();
+    this -> setName("Level102");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 HiddenLevel102::HiddenLevel102()
@@ -1223,6 +1295,7 @@ void HiddenLevel102::render()
 void HiddenLevel102::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel102");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
 }
 HiddenLevel103::HiddenLevel103()
@@ -1253,5 +1326,6 @@ void HiddenLevel103::render()
 void HiddenLevel103::reset()
 {
     Level::reset();
+    this -> setName("HiddenLevel103");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }
