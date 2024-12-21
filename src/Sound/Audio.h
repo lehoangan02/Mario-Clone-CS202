@@ -66,8 +66,11 @@ public:
     void UpdateMusic();
     void StopMusic();
 	bool IsMusicPlaying();
+	void SetVolume(float volume);
+    void PlayPreviousTrack();
 private:
     int currentTrack;
+    int prevTrack;
     MusicManager();
     ~MusicManager();
     MusicManager(const MusicManager&) = delete;
