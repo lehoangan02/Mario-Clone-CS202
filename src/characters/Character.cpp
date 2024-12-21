@@ -467,7 +467,11 @@ void FullControl::execute(float deltaTime) {
 }
 void InHole::execute(float deltaTime) {
 	character->control(false);
-	character->setVelocity( Vector2{0.0f, 700.0f} );
+	if (!character->isDead() && character->GetPosition().y > 850.0f) {
+		character->resetVelocity();
+		character->DieAnimation();
+	}
+	else if (!character->isDead()) character->setVelocity( Vector2{0.0f, 700.0f} );
 	character->Update(deltaTime);
 };
 
