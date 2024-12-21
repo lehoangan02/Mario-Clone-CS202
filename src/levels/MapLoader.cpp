@@ -131,6 +131,28 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                     );
                 }
                 break;
+            case Itemtype::FIREFLOWER:
+            {
+                Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+                NewItem = new FireFlower(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 50, 50 },
+                    fireflowerTexture
+                );
+            }
+            case Itemtype::STARMAN:
+            {
+                Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
+                NewItem = new StarMan(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 60, 60 },
+                    starmanTexture,
+                    Vector2{ 3.0f, 3.0f }
+                );
+                break;
+            }
             default:
                 NewItem = nullptr;
                 break;

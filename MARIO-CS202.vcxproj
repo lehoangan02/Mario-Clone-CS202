@@ -123,6 +123,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\characters\Character.cpp" />
     <ClCompile Include="src\characters\Enemy.cpp" />
+    <ClCompile Include="src\characters\Fireball.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\item\Item.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="src\mario\main.cpp" />
     <ClCompile Include="src\Obstacle\Obstacle.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Sound\Audio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\raylib.h" />
@@ -145,6 +147,7 @@
     <ClInclude Include="src\characters\Character.h" />
     <ClInclude Include="src\characters\Enemy.h" />
     <ClInclude Include="src\characters\Enemy.hpp" />
+    <ClInclude Include="src\characters\Fireball.h" />
     <ClInclude Include="src\characters\Luigi.h" />
     <ClInclude Include="src\characters\Mario.h" />
     <ClInclude Include="src\Game.hpp" />
@@ -160,6 +163,7 @@
     <ClInclude Include="src\oberver\Observer.hpp" />
     <ClInclude Include="src\Obstacle\Obstacle.h" />
     <ClInclude Include="src\ResourceManager.hpp" />
+    <ClInclude Include="src\Sound\Audio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

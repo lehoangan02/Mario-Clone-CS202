@@ -107,7 +107,7 @@ void Lift::render()
 void Lift::update(float DeltaTime)
 {
     m_Position.y -= m_Speed * DeltaTime;
-    if (m_Position.y < -100)
+    if (m_Position.y < -1200)
     {
         m_Position.y = 900;
     }
@@ -364,6 +364,7 @@ Rectangle QuestionBlock::getCurrentTextureRect()
 }
 void QuestionBlock::onNotify()
 {
+    std::cout << "Notified\n";
     m_IsHit = true;
 }
 BreakableBrick::BreakableBrick(Vector2 Position) : EnvironmentObjectInteractive(Position, Vector2{100, 100}),

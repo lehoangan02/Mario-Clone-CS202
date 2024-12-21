@@ -326,7 +326,7 @@ void FireFlower::Draw() {
 }
 StarMan::StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 vel) :
     Item(startPos, endPos, size, tex, STARMAN_FRAME_COUNT, STARMAN_FRAME_TIME, vel, false),
-    isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
+    isRising(false), riseProgress(0.0f), riseSpeed(1.0f), onFalling(false) {}
 void StarMan::applyEffect(Character* character) {}
 Itemtype StarMan::getItemID() const {
     return Itemtype::STARMAN;
@@ -355,19 +355,34 @@ void StarMan::Update(float deltaTime) {
 
     }
     if (APPEARED) {
-        onFalling = true;
         position.x += velocity.x;
-        
+        if (onFalling)
+        {
+            velocity.y += gravity * deltaTime;
+            position.y += velocity.y;
+        }
     }
+}
+void StarMan::setFalling() {
+    onFalling = true;
 }
 void StarMan::slantDirection() {
     velocity.y *= -1;
 }
 void StarMan::Accelerate(float deltaTime) {
     velocity.y += gravity * deltaTime;
+    std::cout << "Accelerating" << std::endl;
+    std::cout << "Velocity: " << velocity.y << std::endl;
+    std::cout << "Velocity: " << velocity.x << std::endl;
 }
 void StarMan::FlipDirection() {
     velocity.x *= -1;
+    velocity.y *= -1;
+}
+void StarMan::FlipDirectionX() {
+    velocity.x *= -1;
+}
+void StarMan::FlipDirectionY() {
     velocity.y *= -1;
 }
 void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {

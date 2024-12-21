@@ -62,6 +62,7 @@ public:
     bool getIsDead() const { return isDead; };
 
     bool isHit() const { return isDead; };
+    bool getIsDying() const { return isDying; };
     
     void setBound(float left, float right, float top, float bottom) ;
     void setBoundLR(float left, float right) { leftBound = left; rightBound = right; };
@@ -105,6 +106,9 @@ class KoopaTroopa : public Enemy {
         float fallSpeed;
         bool isBouncing;
         float bounceTime;
+
+        bool isToShell;
+        float toShellTime;
     public:
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);

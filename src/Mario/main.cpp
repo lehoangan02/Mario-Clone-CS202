@@ -1,13 +1,14 @@
 #include "../Application.hpp"
 
 int main() {
+
+	
     SetTargetFPS(60);
     InitAudioDevice();
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(1024, 768, "Game Window");
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     ResourceManager::GetInstance()->LoadResources();
-
     Application app;
     app.run();
     CloseAudioDevice();
@@ -26,7 +27,7 @@ int main() {
     
 //     while(!WindowShouldClose()) {
 //         BeginDrawing();
-//         ClearBackground(RAYWHITE);
+//         ClearBackground(BLACK);
 //         DrawRectangleLines(300, 300, 42, 58, RED);
 //         // DrawRectangleLines(400, 300, 48, 99, RED);
 
@@ -55,6 +56,7 @@ int main() {
 
 // // #include "../Application.hpp"
 
+
 // // #include "../levels/Level.hpp"
 // // int main() {
 // //     const int screenWidth = 1024;
@@ -82,3 +84,4 @@ int main() {
 
 // //     CloseWindow();
 // // }
+

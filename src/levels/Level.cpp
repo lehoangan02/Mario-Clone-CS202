@@ -4,36 +4,52 @@ LevelFactory& LevelFactory::GetLevelFactory()
     static LevelFactory Factory;
     return Factory;
 }
-Level* LevelFactory::CreateLevel(int Type)
+Level* LevelFactory::CreateLevel(int Type, Mediator* mediator)
 {
+    Level *level = nullptr;
     switch (Type)
     {
         case LEVEL_101:
-            return Level101::GetLevel101();
+            level = Level101::GetLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_TESTING:
-            return LevelTesting::GetLevelTesting();
+            level = LevelTesting::GetLevelTesting();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_102:
-            std::cout << "Creating Level 102" << std::endl;
-            return Level102::GetLevel102();
+            level = Level102::GetLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         case LEVEL_103:
-            return Level103::GetLevel103();
+            level = Level103::GetLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_101:
-            return HiddenLevel101::GetHiddenLevel101();
+            level = HiddenLevel101::GetHiddenLevel101();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_103:
-            return HiddenLevel103::GetHiddenLevel103();
+            level = HiddenLevel103::GetHiddenLevel103();
+            level -> setMediator(mediator);
+            return level;
             break;
         case HIDDEN_LEVEL_102:
-            return HiddenLevel102::GetHiddenLevel102();
+            level = HiddenLevel102::GetHiddenLevel102();
+            level -> setMediator(mediator);
+            return level;
             break;
         default:
             return nullptr;
             break;
+        
     }
+    return level;
 }
 Level::Level()
 {
@@ -77,6 +93,10 @@ Level::~Level()
 }
 void Level::attachPlayer(Character* Player)
 {
+    if (Player == nullptr) {
+        std::cerr << "Error: Trying to attach a nullptr as Player!" << std::endl;
+        return;
+    }  
     m_Player = Player;
     m_Player->setPosition(m_StartPosition);
     m_EndPipeHandler.attachPlayer(Player);
@@ -175,18 +195,19 @@ void Level::resolveInteractiveEnvironmentCollisions()
                 {
                     Item* CurrentItem = m_EnvironmentInteractive[i].second;
                     if (CurrentItem)
-                    {       
-                        m_EnvironmentInteractive[i].first->onNotify();        
+                    {               
                         CurrentItem->onNotify();
-                        if (m_EnvironmentInteractive[i].first -> isHit())
+                        if (!(m_EnvironmentInteractive[i].first -> isHit()))
                         {
                             if (CurrentItem->getItemID() == Itemtype::MUSHROOM)
                             {
                                 if (!(m_EnvironmentInteractive[i].second -> isHit()))
                                 {
-                                    // std::cout << "Mushroom" << std::endl;
+                                    std::cout << "Mushroom" << std::endl;
                                     if (m_EnvironmentInteractive[i].first->isHit())
-                                    {}
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
                                     else
                                     {
                                         SoundManager::getInstance().PlaySoundEffect(ITEMPOPUP_SOUND);
@@ -198,16 +219,23 @@ void Level::resolveInteractiveEnvironmentCollisions()
                                 
                                 if (!(m_EnvironmentInteractive[i].second -> isHit()))
                                 {
-                                    // std::cout << "Coin" << std::endl;
+                                    std::cout << "Coin" << std::endl;
                                     if (m_EnvironmentInteractive[i].first->isHit())
-                                    {}
+                                    {
+                                        std::cout << "Hitted" << std::endl;
+                                    }
                                     else
                                     {
                                         SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
                                     }
                                 }
                             }
+                            else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+                            {
+                                std::cout << "FireFlower" << std::endl;
+                            }
                         }
+                        m_EnvironmentInteractive[i].first->onNotify();
                     }
                 }
             }
@@ -294,6 +322,17 @@ void Level::handleItemLogic()
                 MushroomItem->ResetYVelocity();
             }
         }
+        else if (CurrentItem -> getItemID() == Itemtype::STARMAN)
+        {
+            AABBox ItemBox = AABBox(CurrentItem->GetPosition(), CurrentItem->GetSize());
+            if (m_Ground->isInHole(ItemBox)) continue;
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->GetPosition().y > m_Ground->m_Position.y - StarManItem->GetSize().y)
+            {
+                StarManItem->setPosition(StarManItem->GetPosition().x, m_Ground->m_Position.y - StarManItem->GetSize().y);
+                StarManItem->FlipDirectionY();
+            }
+        }
     }
     for (int i = 0; i < m_EnvironmentInteractive.size(); i++)
     {
@@ -335,6 +374,43 @@ void Level::handleItemLogic()
                 }
                 resolveCollisions(ItemBox, EnvironmentBox);
                 MushroomItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                // m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
+            }
+        }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->isFinishedSpawning())
+            {
+                StarManItem->setFalling();
+                StarManItem->Accelerate(GetFrameTime());
+            }
+            if (!(StarManItem->isHit()) && !StarManItem->isFinishedSpawning()) continue;
+            for (int j = 0; j < m_EnvironmentInteractive.size(); ++j)
+            {
+                AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_EnvironmentInteractive[j].first->m_Position, m_EnvironmentInteractive[j].first->getSize());
+                EnvironmentBox.setFixed(true);
+                if (isCollidingVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    StarManItem->FlipDirectionX();
+                    std::cout << "Flipping X" << std::endl;
+                }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                StarManItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
                 // m_EnvironmentInteractive[i].first->m_Position = EnvironmentBox.getPosition();
             }
         }
@@ -384,6 +460,47 @@ void Level::handleItemLogic()
                 MushroomItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
                 m_Environment[j]->m_Position = EnvironmentBox.getPosition();
             }
+
+        }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->isFinishedSpawning())
+            {
+                StarManItem->setFalling();
+                StarManItem->Accelerate(GetFrameTime());
+            }
+            else
+            {
+                continue;
+            }
+            for (int j = 0; j < m_Environment.size(); j++)
+            {
+                AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+                AABBox EnvironmentBox = AABBox(m_Environment[j]->m_Position, m_Environment[j]->getSize());
+                EnvironmentBox.setFixed(true);
+                if (isCollidingVertically(ItemBox, EnvironmentBox) && !(isCollidingHorizontallyRawLess(ItemBox, EnvironmentBox, 10.0f)))
+                {
+                    if (isCollidingOnBottom(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                    else if (isCollidingOnTop(ItemBox, EnvironmentBox))
+                    {
+                        StarManItem->FlipDirectionY();
+                        std::cout << "Flipping Y" << std::endl;
+                    }
+                }
+                else if (isCollidingHorizontally(ItemBox, EnvironmentBox))
+                {
+                    StarManItem->FlipDirectionX();
+                    std::cout << "Flipping X" << std::endl;
+                }
+                resolveCollisions(ItemBox, EnvironmentBox);
+                StarManItem->setPosition(ItemBox.getPosition().x, ItemBox.getPosition().y);
+                m_Environment[j]->m_Position = EnvironmentBox.getPosition();
+            }
         }
     }
     for (int i = 0; i < m_EnvironmentInteractive.size(); ++i)
@@ -401,6 +518,35 @@ void Level::handleItemLogic()
                 m_Player -> powerUp();
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 MushroomItem->setHit();
+                m_Player->increaseScore();
+            }
+        }
+        else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(CurrentItem);
+            if (FireFlowerItem->isHit()) continue;
+            AABBox ItemBox = AABBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> powerUp();
+                m_Player -> powerUp();
+                SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
+                FireFlowerItem->setHit();
+                m_Player->increaseScore();
+            }
+        }
+        else if (CurrentItem->getItemID() == Itemtype::STARMAN)
+        {
+            StarMan* StarManItem = dynamic_cast<StarMan*>(CurrentItem);
+            if (StarManItem->isHit()) continue;
+            AABBox ItemBox = AABBox(StarManItem->GetPosition(), StarManItem->GetSize());
+            AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+            if (isColliding(ItemBox, PlayerBox))
+            {
+                m_Player -> invincile();
+                MusicManager::getInstance().PlayMusic(Invincible);
+                StarManItem->setHit();
                 m_Player->increaseScore();
             }
         }
@@ -496,6 +642,18 @@ void Level::render()
             if (MushroomItem->isHit()) continue;
             DrawBoundingBox(MushroomItem->GetPosition(), MushroomItem->GetSize(), RED);
         }
+        else if (object.second->getItemID() == Itemtype::FIREFLOWER)
+        {
+            FireFlower* FireFlowerItem = dynamic_cast<FireFlower*>(object.second);
+            if (FireFlowerItem->isHit())
+            {
+                std::cout << "Fire Flower is hitted" << std::endl;
+                continue;
+            }
+            std::cout << "Position: " << FireFlowerItem->GetPosition().x << ", " << FireFlowerItem->GetPosition().y << std::endl;
+            // DrawCircle(FireFlowerItem->GetPosition().x, FireFlowerItem->GetPosition().y, 10, RED);
+            DrawBoundingBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize(), RED);
+        }
         
     }
     for (auto& object : m_EnvironmentInteractive)
@@ -576,7 +734,7 @@ void Level::update(float DeltaTime)
         object->update();
     }
     for (auto& object : m_EnvironmentInteractive)
-    {
+    { 
         object.first ->update();
     }
     for (auto& object : m_EnvironmentInteractive)
@@ -658,6 +816,53 @@ unsigned int Level::doPauseLogic()
     }
     return LEVEL_RETURN_MESSAGE::RUNNING;
 }
+void Level::reset()
+{
+    if (m_FlagPole != nullptr)
+    {
+        delete m_FlagPole;
+        m_FlagPole = nullptr;
+    }
+    m_Enemies.clear();
+    for (auto& object : m_Environment)
+    {
+        if (object) delete object;
+    }
+    m_Environment.clear();
+    for (auto& object : m_EnvironmentInteractive)
+    {
+        if (object.first) delete object.first;
+        if (object.second) delete object.second;
+    }
+    m_EnvironmentInteractive.clear();
+    for (auto& coin : m_IdleCoin)
+    {
+        if (coin) delete coin;
+    }
+    m_IdleCoin.clear();
+    for (auto& object : m_Drawables)
+    {
+        if (object) delete object;
+    }
+    m_Drawables.clear();
+    for (auto& object : m_Lifts)
+    {
+        if (object) delete object;
+    }
+    m_Lifts.clear();
+    for (auto& object : m_EndPipes)
+    {
+        if (object) delete object;
+    }
+    m_EndPipes.clear();
+    m_Player = nullptr;
+    isPlayerFinished = false;
+    m_Paused = false;
+    m_TouchedFlag = false;
+    m_InControl = true;
+    m_StartPosition = {0, 0};
+
+}
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
 {
     m_EndPipes.push_back(Pipe);
@@ -724,12 +929,15 @@ void Level::EnemyHandler::update()
         AABBox PlayerBox = AABBox(m_Level->m_Player->GetPosition(), m_Level->m_Player->GetSize());
         if (isColliding(EnemyBox, PlayerBox))
         {
-            if (enemy->getIsDead())
+            if (enemy->getIsDead() || enemy->getIsDying())
             {
-                // std::cout << "Dead" << std::endl;
+                std::cout << "Dead" << std::endl;
                 break;
             }
-            // std::cout << "Hit" << std::endl;
+            if (m_Level->m_Player->isSuper())
+            {
+                enemy->hit();
+            }
             if (isCollidingVertically(PlayerBox, EnemyBox))
             {
                 enemy->hit();
@@ -748,7 +956,17 @@ void Level::EnemyHandler::update()
                     EnemyBox.setFixed(true);
                     resolveCollisions(PlayerBox, EnemyBox);
                     m_Level->m_Player->setPosition(PlayerBox.getPosition());
-                    m_Level->m_Player->touchEnemy();
+                    if (m_Level->m_Player->isSuper())
+                    {
+                        enemy->hit();
+                        std::cout << "Super Kill" << std::endl;
+                        // enemy->setDead(true);
+                        std::cout << "Is Dead: " << enemy->getIsDead() << std::endl;
+                    }
+                    else
+                    {
+                        m_Level->m_Player->touchEnemy();
+                    }
                     // std::cout << "Touching Enemy" << std::endl;
                 }
                 
@@ -834,11 +1052,14 @@ void Level::resolveFlagPoleCollisions()
         m_Player->setPosition(PlayerBox.getPosition());
         m_FlagPole -> m_Position = EnvironmentBox.getPosition();
         m_FlagPole -> notifyPull();
+        m_Player -> setPullFlag(true);
+        m_Player->setPosition({m_Player->GetPosition().x + 50, m_Player->GetPosition().y});
         SoundManager::getInstance().PlaySoundEffect(FLAGDOWN_SOUND);
     }
     PullDone = m_FlagPole -> isDone();
     if (PullDone)
     {
+        m_Player -> setPullFlag(false);
         DrawText("Level Complete", 100, 100, 20, RED);
     }
 }
@@ -868,6 +1089,12 @@ Level101* Level101::GetLevel101()
     static Level101 level;
     return &level;
 }
+void Level101::reset()
+{
+    Level::reset();
+    this -> setName("Level101");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+}
 LevelTesting::LevelTesting()
 {
     m_LevelID = LevelFactory::LEVEL_TESTING;
@@ -894,6 +1121,12 @@ LevelTesting* LevelTesting::GetLevelTesting()
     static LevelTesting level;
     return &level;
 }
+void LevelTesting::reset()
+{
+    Level::reset();
+    this -> setName("LevelTesting");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+}
 Level103::Level103()
 {
     m_LevelID = LevelFactory::LEVEL_103;
@@ -918,6 +1151,12 @@ void Level103::update(float DeltaTime)
 void Level103::render()
 {
     Level::render();
+}
+void Level103::reset()
+{
+    Level::reset();
+    this -> setName("Level103");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 HiddenLevel101::HiddenLevel101()
 {
@@ -944,6 +1183,12 @@ void HiddenLevel101::render()
 {
     Level::render();
 }
+void HiddenLevel101::reset()
+{
+    Level::reset();
+    this -> setName("HiddenLevel101");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+}
 Level102::Level102()
 {
     m_LevelID = LevelFactory::LEVEL_102;
@@ -968,6 +1213,12 @@ void Level102::update(float DeltaTime)
 void Level102::render()
 {
     Level::render();
+}
+void Level102::reset()
+{
+    Level::reset();
+    this -> setName("Level102");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 HiddenLevel102::HiddenLevel102()
 {
@@ -994,6 +1245,12 @@ void HiddenLevel102::render()
 {
     Level::render();
 }
+void HiddenLevel102::reset()
+{
+    Level::reset();
+    this -> setName("HiddenLevel102");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+}
 HiddenLevel103::HiddenLevel103()
 {
     m_LevelID = LevelFactory::HIDDEN_LEVEL_103;
@@ -1018,4 +1275,10 @@ void HiddenLevel103::update(float DeltaTime)
 void HiddenLevel103::render()
 {
     Level::render();
+}
+void HiddenLevel103::reset()
+{
+    Level::reset();
+    this -> setName("HiddenLevel103");
+    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }

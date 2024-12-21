@@ -12,7 +12,7 @@ constexpr int FIREFLOWER_FRAME_COUNT = 5;
 constexpr float FIREFLOWER_FRAME_TIME = 0.5f;
 
 constexpr int STARMAN_FRAME_COUNT = 5;
-constexpr float STARMAN_FRAME_TIME = 0.5f;
+constexpr float STARMAN_FRAME_TIME = 0.1f;
 
 #include <string>
 #include "raylib.h"
@@ -158,7 +158,7 @@ public:
 class StarMan : public Item {
 private:
 	bool isRising;
-	float gravity = 100;
+	float gravity = 2.0;
 	float riseProgress;
 	float riseSpeed;
 	bool onFalling;
@@ -179,8 +179,12 @@ public:
 	bool isHit() override {
 		return hit;
 	}
+
 	void slantDirection();
 	void Accelerate(float deltaTime);
 	void FlipDirection();
+	void setFalling();
+	void FlipDirectionX();
+	void FlipDirectionY();
 };
 

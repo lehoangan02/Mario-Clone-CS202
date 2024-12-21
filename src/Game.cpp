@@ -2,50 +2,72 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101)),
-      character()
+      level(factory.CreateLevel(LevelFactory::LEVEL_101, this))
 {
-    // character = ResourceManager::GetInstance()->GetTexture("mario");
-    // player = Character(&character, Vector2{10, 1}, 0.1f, 500.0f, 3.0f);
     player = new Mario;
+    if (level == nullptr) {
+        std::cerr << "Level is null" << std::endl;
+    }
     std::cout << "Level Type: " << level -> GetLevelType() << std::endl;
-    player->setPosition(Vector2{20, 0});  
-    level->attachPlayer(player);  
     myFont = LoadFont("assets/Font/MarioFont.ttf");
     countdown = 400;
 	timer = 0.0f;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    level-> reset();
+    level->attachPlayer(player);
+    
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 }
 
 Game::Game(int characterMenu, int levelMenu) 
     : factory(LevelFactory::GetLevelFactory()),  
       level(nullptr)  
 {
-    std::cout << "Level Menu: " << levelMenu << std::endl;
-    if (levelMenu == 0) {
-        level = factory.CreateLevel(LevelFactory::LEVEL_101);
-    }
-    else if (levelMenu == 1) {
-        std::cout << "Creating Level 102" << std::endl;
-        level = factory.CreateLevel(LevelFactory::LEVEL_102);
-    }
-    else {
-        std::cout << "Creating Level 103" << std::endl;
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    }
-    
     if (characterMenu == 0) {
-        character = ResourceManager::GetInstance()->GetTexture("mario");
-    }
-    else {
-        character = ResourceManager::GetInstance()->GetTexture("mario");
+        player = new Mario;
+    } else {
+        player = new Luigi;
     }
 
-    player = new Mario;
+    if (levelMenu == 0) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    } else if (levelMenu == 1) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (levelMenu == 2) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+    }
+    else if (levelMenu == 3) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+    }
+    else if (levelMenu == 4) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
+    int levelType = level->GetLevelType();
+    switch (levelType)
+    {
+    case LevelFactory::LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+        break;
+    case LevelFactory::LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        break;
+    case LevelFactory::LEVEL_103:
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
+        break;
+        
+    default:
+        break;
+    }
 }
 
 Game::Game(const Game& other) 
@@ -54,7 +76,7 @@ Game::Game(const Game& other)
       player(other.player)     
 {
     if (other.level) {
-        level = factory.CreateLevel(other.level->GetLevelType());
+        level = factory.CreateLevel(other.level->GetLevelType(), this);
         if (level) {
             level->attachPlayer(player); 
         }
@@ -65,50 +87,49 @@ Game& Game::operator=(const Game& other) {
     if (this == &other) {
         return *this; 
     }
-
     if (level) {
         level = nullptr;
     }
-
     factory = other.factory; 
-    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType()) : nullptr;
+    level = other.level ? other.factory.CreateLevel(other.level->GetLevelType(), this) : nullptr;
 
     player = other.player;
 
     return *this; 
 }
 void Game::start() {
-    while (!WindowShouldClose()) {
-        update(GetFrameTime());
-		MusicManager::getInstance().UpdateMusic();
-        draw();
-        if (IsKeyDown(KEY_N)) {
-            nextLevel();
-        }
-        else if (IsKeyDown(KEY_O)) {
-            hiddenLevel();
-        }
+    update(GetFrameTime());
+    MusicManager::getInstance().UpdateMusic();
+    draw();
+    if (IsKeyDown(KEY_A)) {
+        nextLevel();
     }
-    CloseWindow();
+    else if (IsKeyDown(KEY_B)) {
+        hiddenLevel();
+    }
+    else if (IsKeyDown(KEY_C)) {
+        restartLevel();
+    }
 }
 
 void Game::update(float deltaTime) {
     if (level) {
         level->update(deltaTime);
     }
+    // if (player.GetType() == Character::MARIO) {
+    //     player->update(deltaTime);
+    // }
+    // else if (player.GetType() == Character::LUIGI) {
+    //     player->update(deltaTime);
+    
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
 	drawInfo();
     if (level) {
         level->render();
     }
-    EndDrawing();
 }
-
-
 
 void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
@@ -133,67 +154,87 @@ void Game::notify(Component* sender, int eventCode) {
         case 6:
             state = LEVEL_RETURN_MESSAGE::QUIT;
             break;
+        case 7:
+            state = LEVEL_RETURN_MESSAGE::RESTART;
+            break;
         default:
             break;
     }
 }
 
-void Game::pause() {
-    notify(nullptr, 0); // Pause event
-}
-
-void Game::resume() {
-    notify(nullptr, 1); // Continue event
-}
-
-void Game::win() {
-    notify(nullptr, 4); // Win event
-}
-
-void Game::lose() {
-    notify(nullptr, 5); // Lose event
-}
-
-void Game::quit() {
-    notify(nullptr, 6); // Quit event
-}
 
 void Game::nextLevel() {
-    // Logic to switch to the next level
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    // } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    } else {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+        level -> reset();
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
+     else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+        level -> reset();
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+    } 
+    else {
+        //draw menu win
+        state = LEVEL_RETURN_MESSAGE::RESTART;
+        return;
+    }
+
+    //delete player;
+    //player = new Mario;
     player->setPosition(Vector2{20, 0});
-    level->update(0.0f);
     level->attachPlayer(player);
+    level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::hiddenLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
-    // else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
-    //     level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    {
+        
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+        level -> reset();
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+    }
+    else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
+    {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+        level -> reset();
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
+    }
     else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
-        level = factory.CreateLevel(LevelFactory::LEVEL_103);
+    {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103, this);
+        level -> reset();
+    }
+    else return;
+
     player->setPosition(Vector2{20, 0});
-    level->update(0.0f);
     level->attachPlayer(player);
+    level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
+}
+
+void Game::restartLevel() {
+    level = factory.CreateLevel(level->GetLevelType(), this);
+    level -> reset();
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
+    level->update(0.01f);
 }
 
 void Game::handleState() {
     switch (state) {
         case LEVEL_RETURN_MESSAGE::PAUSE:
             //drawPauseMenu();
+            level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
-            // Handle continue state
+            level->continueLevel();
+            //drawContinueButton();
             break;
         case LEVEL_RETURN_MESSAGE::RUNNING:
+            level->continueLevel();
             // Handle running state
             break;
         case LEVEL_RETURN_MESSAGE::HIDDEN:
@@ -204,9 +245,12 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
             //drawLoseButton();
+            level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
-            //drawQuitButton();
+            break;
+        case LEVEL_RETURN_MESSAGE::RESTART:
+            restartLevel();
             break;
     }
 }

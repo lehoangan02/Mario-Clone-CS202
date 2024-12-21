@@ -6,6 +6,7 @@
 #include "MapLoader.hpp"
 #include "../Item/Item.h"
 #include "../characters/Enemy.hpp"
+#include "../Mediator/Mediator.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -20,7 +21,7 @@ enum LEVEL_RETURN_MESSAGE
     RESTART
 };
 
-class Level : public Subject
+class Level : public Subject, public Component
 {
     class EndPipeHandler
     {
@@ -135,6 +136,7 @@ class Level : public Subject
         void pauseLevel();
         void continueLevel();
         int GetLevelType() { return m_LevelID; };
+        virtual void reset();
     protected:
         void setOpeningScreenSize(int Width, int Height) { m_ScreenSize = Vector2{(float)Width, (float)Height}; };
         virtual void load() = 0;
@@ -171,7 +173,7 @@ class LevelFactory
         ~LevelFactory() = default;
     public:
         static LevelFactory& GetLevelFactory();
-        Level* CreateLevel(int Type);
+        Level* CreateLevel(int Type, Mediator* mediator);
 };
 class Level101 : public Level
 {
@@ -182,6 +184,8 @@ class Level101 : public Level
         void load() override;
         void update(float DeltaTime) override;
         void render() override;
+    public:
+        void reset() override;
         static Level101* GetLevel101();
 };
 class HiddenLevel101 : public Level
@@ -194,6 +198,7 @@ class HiddenLevel101 : public Level
         void render() override;
     public:
         static HiddenLevel101* GetHiddenLevel101();
+        void reset() override;
 };
 class LevelTesting : public Level
 {
@@ -207,6 +212,7 @@ class LevelTesting : public Level
         void render() override;
     public:
         static LevelTesting* GetLevelTesting();
+        void reset() override;
 };
 class Level103 : public Level
 {
@@ -219,6 +225,7 @@ class Level103 : public Level
         void render() override;
     public:
         static Level103* GetLevel103();
+        void reset() override;
 };
 class Level102 : public Level
 {
@@ -231,6 +238,7 @@ class Level102 : public Level
         void render() override;
     public:
         static Level102* GetLevel102();
+        void reset() override;
 };
 class HiddenLevel102 : public Level
 {
@@ -242,6 +250,7 @@ class HiddenLevel102 : public Level
         void render() override;
     public:
         static HiddenLevel102* GetHiddenLevel102();
+        void reset() override;
 };
 class HiddenLevel103 : public Level
 {
@@ -253,4 +262,5 @@ class HiddenLevel103 : public Level
         void render() override;
     public:
         static HiddenLevel103* GetHiddenLevel103();
+        void reset() override;
 };
