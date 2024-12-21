@@ -374,7 +374,7 @@ void Character::SlidePipe(slidingDirection direction) {
 	}
 };
 
-Luigi::Luigi() : Character(600.0f) {
+Luigi::Luigi() : Character(500.0f) {
 	Chartype = LUIGI;
 	textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));
