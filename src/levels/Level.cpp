@@ -683,8 +683,19 @@ void Level::render()
     EndMode2D();
     
 }
+void Level::produceSwitchSignal()
+{
+    std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
+    std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    if (m_Player->isDead() && m_Player->isDeadFinished())
+    {
+        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
+        std::cout << "Notifying Lose" << std::endl;
+    }
+}
 void Level::update(float DeltaTime)
 {
+    produceSwitchSignal();
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))

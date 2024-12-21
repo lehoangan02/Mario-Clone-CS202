@@ -150,6 +150,7 @@ class Level : public Subject, public Component
         void resolveHoleCollisions();
         unsigned int doPauseLogic();
         void resolveFlagPoleCollisions();
+        void produceSwitchSignal();
     public:
         virtual ~Level();
 };

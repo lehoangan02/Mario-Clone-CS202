@@ -4,7 +4,7 @@
 class Mediator;
 class Component
 {
-    private:
+    protected:
     Mediator* m_Mediator;
     std::string m_Name;
     public:
@@ -19,6 +19,6 @@ class Component
 class Mediator
 {
     friend class Component;
-    private:
+    public:
         virtual void notify(Component* sender, int EventCode) = 0;
 }; 
