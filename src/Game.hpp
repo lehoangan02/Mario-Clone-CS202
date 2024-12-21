@@ -8,7 +8,6 @@
 #include "./animation/Animation.h"
 #include "./Mediator/Mediator.hpp"
 #include "ResourceManager.hpp"
-#include "ctime"
 
 class Game : public Mediator {
 private:
