@@ -27,7 +27,7 @@ int main() {
     
 //     while(!WindowShouldClose()) {
 //         BeginDrawing();
-//         ClearBackground(RAYWHITE);
+//         ClearBackground(BLACK);
 //         DrawRectangleLines(300, 300, 42, 58, RED);
 //         // DrawRectangleLines(400, 300, 48, 99, RED);
 

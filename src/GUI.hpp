@@ -73,7 +73,7 @@ private:
     Texture2D settingTexture;
     Button characterButton;
     Button mapButton;
-    Button levelButton;
+    //Button levelButton;
 
     Texture2D characterTexture;
     Button characterButtons[2];
@@ -81,8 +81,8 @@ private:
     Texture2D mapTexture;
     Button mapButtons[5];
 
-    Texture2D levelTexture;
-    Button levelButtons[3];
+    // Texture2D levelTexture;
+    // Button levelButtons[3];
 
     Texture2D highScoreTexture;
 
@@ -94,8 +94,8 @@ public:
     Menu();
     void draw();
     int characterMenu();
-    int mapMenu();
     int levelMenu();
+    //int levelMenu();
 
     int handle();
 
