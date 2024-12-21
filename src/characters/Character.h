@@ -34,6 +34,8 @@ public:
 	void setTeleport() { this->teleport = true; };
 	void SlidePipe(slidingDirection direction);
 	bool isSliding() { return sliding; };
+	bool isSlidingFinished() { return finishSliding; };
+	void resetSlidingFinished() { finishSliding = false; };
 	slidingDirection slideDirection;
 
 
@@ -105,6 +107,7 @@ protected:
 	bool brake;
 	bool teleport;
 	bool sliding;
+	bool finishSliding;
 	bool isDie;
 	bool isFinished;
 	bool isWin;

@@ -41,10 +41,10 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->endGame = false;
 	this->isFinished = false;
 	this->deadTime = 0.0f;
+	this->finishSliding = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
-	position = Vector2{ 20 , 0 };
 }
 
 Character::~Character()
@@ -382,6 +382,7 @@ void Character::SlidePipe(slidingDirection direction) {
 	}
 	if (this->SlideDist.x <= 0 || this->SlideDist.y <= 0) {
 		this->sliding = false;
+		this->finishSliding = true;
 		this->SlideDist = { this->size.x, this->size.y };
 	}
 };
