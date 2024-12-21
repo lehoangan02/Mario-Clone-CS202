@@ -54,6 +54,8 @@ private:
 public:
     QuitButton() = default;
     QuitButton(Rectangle rect);
+    QuitButton(Rectangle rect, Texture2D texture);
+    void setTexture(Texture2D newTexture) { texture = newTexture; };
     void draw(float radius = 50) override;
 };
 class Menu {

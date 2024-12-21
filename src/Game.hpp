@@ -20,6 +20,9 @@ private:
 	int countdown; //chau added this
 	float timer;//chau added this
 	std::vector<Texture2D> infoIcons;//chau added this
+
+    QuitButton pauseButton;
+    QuitButton continueButton;
 public:
     Game();
     Game(int characterMenu, int levelMenu);

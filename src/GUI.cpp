@@ -20,7 +20,7 @@ void Button::draw(float radius) {
 bool Button::isClicked() {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && this->isHovered) {
         this->isHovered = false;
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         return 1;
     }
     return 0;
@@ -39,6 +39,10 @@ QuitButton::QuitButton(Rectangle rect) {
     this->outerRect = rect;
 }
 
+QuitButton::QuitButton(Rectangle rect, Texture2D texture) {
+    this->texture = texture;
+    this->outerRect = rect;
+}
 void QuitButton::draw(float radius) {
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
     DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f , BLACK);

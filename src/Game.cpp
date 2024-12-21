@@ -18,6 +18,11 @@ Game::Game()
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
+    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
 Game::Game(int characterMenu, int levelMenu) 
@@ -43,9 +48,20 @@ Game::Game(int characterMenu, int levelMenu)
     else if (levelMenu == 4) {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
-    level->reset();
+
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
+
+    countdown = 400;
+	timer = 0.0f;
+    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
+    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+
     int levelType = level->GetLevelType();
     switch (levelType)
     {
@@ -103,13 +119,13 @@ void Game::start() {
     MusicManager::getInstance().UpdateMusic();
     draw();
     if (IsKeyDown(KEY_A)) {
-        nextLevel();
+        state = LEVEL_RETURN_MESSAGE::PAUSE;
     }
     else if (IsKeyDown(KEY_B)) {
-        hiddenLevel();
+        level->pauseLevel();
     }
     else if (IsKeyDown(KEY_C)) {
-        restartLevel();
+        level->continueLevel();
     }
 }
 
@@ -117,12 +133,20 @@ void Game::update(float deltaTime) {
     if (level) {
         level->update(deltaTime);
     }
+    if (pauseButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::PAUSE;
+    } else if (continueButton.isClicked()) {
+         state = LEVEL_RETURN_MESSAGE::CONTINUE;
+    }
 }
 
 void Game::draw() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
 	drawInfo();
+    if (state == LEVEL_RETURN_MESSAGE::PAUSE) continueButton.draw();
+    else pauseButton.draw();
+
     if (level) {
         level->render();
     }
@@ -132,7 +156,7 @@ void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;
-            level -> pauseLevel();
+            level->pauseLevel();
             break;
         case 1:
             state = LEVEL_RETURN_MESSAGE::CONTINUE;
@@ -261,6 +285,12 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();
+            break;
+        case LEVEL_RETURN_MESSAGE::PAUSE:
+            level->pauseLevel();
+            break;
+        case LEVEL_RETURN_MESSAGE::CONTINUE:
+            level->continueLevel();
             break;
     }
 }
