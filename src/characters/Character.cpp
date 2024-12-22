@@ -290,6 +290,7 @@ void Character::reset() {
 	//powerDown();
 	deadTime = 0.0f;
 	isFinished = false;
+	finishSliding = false;
 	isVisible = true;
 }
 void Character::increLives() {
