@@ -687,8 +687,8 @@ void Level::produceSwitchSignal()
 {
     // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
     // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -904,7 +904,7 @@ void Level::reset()
     m_TouchedFlag = false;
     m_InControl = true;
     m_StartPosition = {0, 0};
-
+    m_TouchedEndPipe = false;
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
 {
@@ -916,9 +916,9 @@ void Level::EndPipeHandler::attachPlayer(Character* Player)
 }
 bool Level::EndPipeHandler::update()
 {
+    std::cout << "End Pipe Handler Update" << std::endl;
     if (inPipe)
     {
-        // if (slidePipeComplete)
         // return true;
     }
     if (m_Player->isSliding())
@@ -936,22 +936,29 @@ bool Level::EndPipeHandler::update()
             {
                 m_Player ->SlidePipe(slidingDirection::right);
                 m_Player ->powerDown();
-                m_Player ->powerDown();
+                m_Player->setPosition(Vector2{m_Player->GetPosition().x, EnvironmentBox.getPosition().y});
                 inPipe = true;
+                // std::cout << "Sliding Right" << std::endl;
             }
             else
             {
-                if (isCollidingVertically(PlayerBox, EnvironmentBox))
+                // std::cout << "Colliding Vertically" << std::endl;
+                if (isCollidingVertically(PlayerBox, EnvironmentBox) && !inPipe)
                 {
+                    // std::cout << "Reseting Velocity" << std::endl;
                     m_Player->resetVelocity();
                     if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                     {
                         m_Player->onPlatform();
                     }
                 }
-                resolveCollisions(PlayerBox, EnvironmentBox);
-                m_Player->setPosition(PlayerBox.getPosition());
-                m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+                if (!inPipe)
+                {
+                    std::cout << "Not in Pipe" << std::endl;
+                    resolveCollisions(PlayerBox, EnvironmentBox);
+                    m_Player->setPosition(PlayerBox.getPosition());
+                    m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+                }
             }
         }
     }

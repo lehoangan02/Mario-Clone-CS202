@@ -127,6 +127,7 @@ class Level : public Subject, public Component
         bool m_InControl = true;
         bool m_TouchedFlag = false;
         Vector2 m_StartPosition = {0, 0};
+        bool m_TouchedEndPipe = false;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;
