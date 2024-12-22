@@ -201,6 +201,60 @@ void Game::change(const std::string& filename)
     file.close();
 }
 
+void Game::changeMenu(int characterMenu, int levelMenu) {
+    if (characterMenu == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+
+    if (levelMenu == 0) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    } else if (levelMenu == 1) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (levelMenu == 2) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+    }
+    else if (levelMenu == 3) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+    }
+    else if (levelMenu == 4) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
+
+    countdown = 400;
+    timer = 0.0f;
+    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
+    infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
+    infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
+    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+
+    int levelType = level->GetLevelType();
+    switch (levelType)
+    {
+    case LevelFactory::LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+        break;
+    case LevelFactory::LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        break;
+    case LevelFactory::LEVEL_103:
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
+        break;
+    }
+}
+
 Game::Game(const Game& other) 
     : factory(other.factory),  
       level(nullptr),          

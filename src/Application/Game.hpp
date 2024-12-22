@@ -30,6 +30,7 @@ public:
     void save(const std::string& filename);
     void saveScore(const std::string& filename);
     void change(const std::string& filename);
+    void changeMenu(int characterMenu, int levelMenu);
     Game& operator=(const Game& other);
     Game(const Game& other);
     void start();

@@ -10,8 +10,7 @@ void MenuState::handle(Application& app) {
     int tab = app.menu.handle();
     if (app.menu.getIsChange()) {
         app.menu.setIsChange(false);
-        app.game = Game(app.menu.characterMenu(), app.menu.levelMenu());
-        app.setState(new GameState());
+        app.game.changeMenu(app.menu.characterMenu(), app.menu.levelMenu());
     }
     if (tab == 11) {
         app.game.change("continue.txt");
@@ -19,7 +18,7 @@ void MenuState::handle(Application& app) {
         app.menu.reset();
     }
     if (tab == 10) {
-        app.game = Game(app.menu.characterMenu(), app.menu.levelMenu());
+        app.game.changeMenu(app.menu.characterMenu(), app.menu.levelMenu());
         app.setState(new GameState());
         app.menu.reset();
     }
