@@ -3,10 +3,10 @@
 #define GAME_hpp
 
 #include "GUI.hpp"
-#include "./characters/Character.h"
-#include "./levels/Level.hpp"
-#include "./animation/Animation.h"
-#include "./Mediator/Mediator.hpp"
+#include "../characters/Character.h"
+#include "../levels/Level.hpp"
+#include "../animation/Animation.h"
+#include "../Mediator/Mediator.hpp"
 #include "ResourceManager.hpp"
 #include <fstream>
 

@@ -1,7 +1,7 @@
 #include "Enemy.hpp"
 
 #include "raylib.h"
-#include "../ResourceManager.hpp"
+#include "../Application/ResourceManager.hpp"
 
 
 EnemyFactory& EnemyFactory::GetEnemyFactory()
