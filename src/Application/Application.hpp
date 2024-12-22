@@ -19,6 +19,7 @@ public:
     ~Application();
     void setState(State* state);
     void run();
+    StateType getStateType() { return currentState->getType(); }
 };
 
 #endif /* Application_hpp */

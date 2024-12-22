@@ -59,6 +59,7 @@ public:
 	void DrawTextCentered(Font font, const std::string& label, const std::string& value, Vector2 position, float fontSize, float spacing, Color color); // chau added this
 
     LEVEL_RETURN_MESSAGE getState() { return state; };
+    void setState(LEVEL_RETURN_MESSAGE state) { this->state = state; };
 };
 
 #endif /* GAME_hpp */

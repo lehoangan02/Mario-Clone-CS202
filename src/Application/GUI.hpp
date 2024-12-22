@@ -89,8 +89,8 @@ private:
     Texture2D highScoreTexture;
 
     Texture2D inforTexture;
-    int type;
-    bool isChange;
+    int type = 0;
+    bool isChange = false;
 
 public:
     Menu();
@@ -100,7 +100,7 @@ public:
     //int levelMenu();
 
     int handle();
-
+    void reset() { type = 0; isChange = false; };
     bool getIsChange() const { return isChange; };
     void setIsChange(bool newIsChange) { isChange = newIsChange; };
 };
