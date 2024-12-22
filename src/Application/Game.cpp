@@ -449,11 +449,9 @@ void Game::hiddenLevel() {
 }
 
 void Game::restartLevel() {
-    player->setPosition(Vector2{20, 0});
-    level -> reset();
-    level->attachPlayer(player);
-    player->setPosition(Vector2{20, 0});
-    level->update(0.01f);
+    level->reset();
+    // level->attachPlayer(player);
+    // level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
@@ -503,7 +501,7 @@ void Game::drawInfo() {
         worldString = "1-3";
     }
 
-    if (state != LEVEL_RETURN_MESSAGE::PAUSE) {
+    if (state != LEVEL_RETURN_MESSAGE::PAUSE && state != LEVEL_RETURN_MESSAGE::WIN && state != LEVEL_RETURN_MESSAGE::LOSE) {
         float deltaTime;
         deltaTime = GetFrameTime(); 
         timer += deltaTime;
