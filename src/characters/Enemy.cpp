@@ -570,7 +570,7 @@ void ShyGuy::render() {
             DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
         } else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, size.x * 2.0f, size.y * 2.0f };
+            Rectangle destRec = { position.x, position.y, size.x, size.y};
             Vector2 origin = { 0.0f, 0.0f };
             DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
