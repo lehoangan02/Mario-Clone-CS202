@@ -829,7 +829,7 @@ Projectile::Projectile(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[2], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[3], TEXTURE_WRAP_CLAMP);
 
-    size = { 66, 70 };
+    size = { 95, 95 };
     this->speed = {220, 153};
     active = true;
 }
@@ -859,7 +859,8 @@ void Projectile::update(float deltaTime) {
 
 void Projectile::render() {
     if (active) {
-        DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
+        // DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
+        DrawTexturePro(texture, {0, 0, (float)texture.width, (float)texture.height}, {position.x, position.y, size.x, size.y}, {0, 0}, 0.0f, RAYWHITE);
     }
 }
 
@@ -908,7 +909,7 @@ Lakitu::Lakitu(Vector2 position) : Enemy(position) {
         SetTextureWrap(textures[i], TEXTURE_WRAP_CLAMP);
     }
     
-    size = { 72, 108 };
+    size = { 144, 216 };
     speed = { 150, 0 };
     shootTime = 2.2f;
     curentTimer = 0.0f;
@@ -1031,12 +1032,15 @@ void Lakitu::update(float deltaTime) {
 void Lakitu::render() {
     if (!isDead) {
         if (isRight == false) {
-            if (!isShoot) DrawTextureEx(texture, position, 0.0f, 2.0f, RAYWHITE);
-            else DrawTextureEx(textures[10], position, 0.0f, 2.0f, RAYWHITE);
+            Rectangle sourceRec = { 0, 0, (float)texture.width, (float)texture.height }; 
+            Rectangle destRec = { position.x, position.y, texture.width * 4.0f, texture.height * 4.0f };
+            Vector2 origin = { 0.0f, 0.0f };
+            if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
+            else DrawTexturePro(textures[10], sourceRec, destRec, origin, 0.0f, RAYWHITE);
         }
         else {
             Rectangle sourceRec = { 0, 0, -(float)texture.width, (float)texture.height }; 
-            Rectangle destRec = { position.x, position.y, texture.width * 2.0f, texture.height * 2.0f };
+            Rectangle destRec = { position.x, position.y, texture.width * 4.0f, texture.height * 4.0f };
             Vector2 origin = { 0.0f, 0.0f };
             if (!isShoot) DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, RAYWHITE);
             else DrawTexturePro(textures[10], sourceRec, destRec, origin, 0.0f, RAYWHITE);

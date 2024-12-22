@@ -57,6 +57,10 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                 Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::SHY_GUY, Vector2{X, Y}, LeftBound, RightBound));
             }
             break;
+        case EnemyType::LAKITU:
+            {
+                Level -> m_Enemies.push_back(Factory.CreateEnemy(EnemyType::LAKITU, Vector2{X, Y}, LeftBound, RightBound));
+            }
         default:
             break;
         }

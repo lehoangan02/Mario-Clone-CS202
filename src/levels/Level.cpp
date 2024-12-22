@@ -631,6 +631,8 @@ void Level::render()
     {
         // if (object->isHit()) continue;
         object->render();
+        DrawCircle(object->getPosition().x, object->getPosition().y, 10, RED);
+        DrawBoundingBox(object->getPosition(), object->getSize(), RED);
     }
     for (auto& object : m_EnvironmentInteractive)
     {
@@ -916,7 +918,7 @@ void Level::EndPipeHandler::attachPlayer(Character* Player)
 }
 bool Level::EndPipeHandler::update()
 {
-    std::cout << "End Pipe Handler Update" << std::endl;
+    // std::cout << "End Pipe Handler Update" << std::endl;
     if (inPipe)
     {
         // return true;
@@ -970,6 +972,27 @@ void Level::EnemyHandler::update()
     for (auto& enemy : m_Level->m_Enemies)
     {
         enemy->update(GetFrameTime());
+        if (enemy->getEnemyType() == EnemyType::LAKITU)
+        {
+            Lakitu* LakituEnemy = dynamic_cast<Lakitu*>(enemy);
+            if (LakituEnemy->getIsShoot())
+            {
+                m_Projectiles.push_back(std::weak_ptr(LakituEnemy->getLastProjectile()));
+            }
+        }
+    }
+    std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
+    for (auto& projectile : m_Projectiles)
+    {
+        for (auto &object : m_Level->m_Environment)
+        {
+            AABBox ProjectileBox = AABBox(projectile.lock()->getPosition(), projectile.lock()->getSize());
+            AABBox EnvironmentBox = AABBox(object->m_Position, object->getSize());
+            if (isColliding(ProjectileBox, EnvironmentBox))
+            {
+                projectile.lock()->hit();
+            }
+        }
     }
     for (auto& enemy : m_Level->m_Enemies)
     {

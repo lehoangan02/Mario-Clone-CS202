@@ -44,7 +44,7 @@ class Level : public Subject, public Component
         EnemyHandler() = default;
         void setLevel(Level* Level) { m_Level = Level; };
         void update();
-
+        std::vector<std::weak_ptr<Projectile>> m_Projectiles = {};
     };
     class Background
     {

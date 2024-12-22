@@ -226,7 +226,7 @@ public:
     void render() override;
     void shoot();
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
-    std::shared_ptr<Projectile> getLastProjectile() { return projectiles.back(); };
+    std::shared_ptr<Projectile> getLastProjectile() { return projectiles.back(); isShoot = false; };
     bool getIsShoot() const { return isShoot; };
     
 
