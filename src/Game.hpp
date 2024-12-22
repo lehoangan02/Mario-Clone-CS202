@@ -16,10 +16,10 @@ private:
     Texture2D character;
     Character* player = nullptr;
     LEVEL_RETURN_MESSAGE state;
-	Font myFont; //chau added this
-	int countdown; //chau added this
-	float timer;//chau added this
-	std::vector<Texture2D> infoIcons;//chau added this
+    Font myFont; //chau added this
+    int countdown; //chau added this
+    float timer;//chau added this
+    std::vector<Texture2D> infoIcons;//chau added this
 public:
     Game();
     Game(int characterMenu, int levelMenu);
@@ -48,8 +48,8 @@ public:
     void drawWinButton();
     void drawLoseButton();
     void drawQuitButton();
-	void drawInfo(); // chau added this
-	void DrawTextCentered(Font font, const std::string& label, const std::string& value, Vector2 position, float fontSize, float spacing, Color color); // chau added this
+    void drawInfo(); // chau added this
+    void DrawTextCentered(Font font, const std::string& label, const std::string& value, Vector2 position, float fontSize, float spacing, Color color); // chau added this
 
     LEVEL_RETURN_MESSAGE getState() { return state; };
 };
