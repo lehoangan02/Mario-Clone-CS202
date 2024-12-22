@@ -81,7 +81,7 @@ private:
     Button characterButtons[2];
 
     Texture2D mapTexture;
-    Button mapButtons[5];
+    Button mapButtons[6];
 
     // Texture2D levelTexture;
     // Button levelButtons[3];

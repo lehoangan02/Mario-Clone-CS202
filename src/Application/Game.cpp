@@ -55,6 +55,9 @@ Game::Game(int characterMenu, int levelMenu)
     else if (levelMenu == 4) {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
+    else if (levelMenu == 5) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+    }
 
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
@@ -117,6 +120,9 @@ void Game::save(const std::string& filename)  {
     } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102) {
         file << "4 ";
     }
+    else if (level->GetLevelType() == LevelFactory::LEVEL_TESTING) {
+        file << "5 ";
+    }
 
     if (player->getType() == 0) {
         file << "0 ";
@@ -174,6 +180,9 @@ void Game::change(const std::string& filename)
     else if (level == 4) {
         this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
+    else if (level == 5) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+    }
     player->setPosition(Vector2{x * 1.0f, y * 1.0f});
     this->player->setScore(score);
     this->player->setCoins(coins);
@@ -229,6 +238,9 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
     }
     else if (levelMenu == 4) {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
+    else if (levelMenu == 5) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
