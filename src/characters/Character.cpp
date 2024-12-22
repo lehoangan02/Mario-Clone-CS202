@@ -293,6 +293,10 @@ void Character::reset() {
 	isFinished = false;
 	isVisible = true;
 }
+void Character::increLives() {
+	if (lives == 5) return;
+	else lives++;
+}
 void Character::Draw()
 {
 	//std::cout << "Score" << score << std::endl;
