@@ -35,6 +35,7 @@ class Level : public Subject, public Component
         void addEndPipe(EndPipe* Pipe);
         void attachPlayer(Character* Player);
         bool update();
+        void reset() { inPipe = false; };
         bool isPlayerInPipe() { return inPipe; };
     };
     class EnemyHandler

@@ -710,15 +710,16 @@ void Level::produceSwitchSignal()
         m_Player->resetSlidingFinished();
         m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
-        
+        m_EndPipeHandler.reset();
         std::cout << "Notifying Hidden" << std::endl;
         
     }
     else if (IsKeyPressed(KEY_LEFT_BRACKET))
     {
+        m_Player->resetSlidingFinished();
         m_Player->reset();
-        std::cout << "Notifying Hidden" << std::endl;
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        std::cout << "Notifying Hidden" << std::endl;
         
     }
 }
@@ -735,19 +736,25 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    
+    std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
+    std::cout << "In Control: " << m_InControl << std::endl;
+    std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
+    std::cout << "End Pipe Handler: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
 	if (isPlayerFinished)
 	{
+        std::cout << "Player Finished" << std::endl;
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
     else if (!isPlayerFinished && m_InControl && !m_TouchedFlag && !m_EndPipeHandler.isPlayerInPipe())
     {
+        std::cout << "In Control" << std::endl;
 		FullControl control(m_Player);
         control.execute(DeltaTime);
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
+        std::cout << "Touched Flag" << std::endl;
         Command *control = AutoMove::getInstance(m_Player);
         control->execute(DeltaTime);
     }
@@ -907,6 +914,7 @@ void Level::reset()
     m_InControl = true;
     m_StartPosition = {0, 0};
     m_TouchedEndPipe = false;
+    // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
 {
@@ -981,7 +989,7 @@ void Level::EnemyHandler::update()
             }
         }
     }
-    std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
+    // std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
     for (auto& projectile : m_Projectiles)
     {
         for (auto &object : m_Level->m_Environment)
