@@ -122,10 +122,10 @@ void Game::update(float deltaTime) {
 void Game::draw() {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-	drawInfo();
     if (level) {
         level->render();
     }
+    drawInfo();
 }
 
 void Game::notify(Component* sender, int eventCode) {
