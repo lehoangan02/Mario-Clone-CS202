@@ -736,25 +736,25 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
-    std::cout << "In Control: " << m_InControl << std::endl;
-    std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
-    std::cout << "End Pipe Handler: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
+    // std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
+    // std::cout << "In Control: " << m_InControl << std::endl;
+    // std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
+    // std::cout << "End Pipe Handler: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
 	if (isPlayerFinished)
 	{
-        std::cout << "Player Finished" << std::endl;
+        // std::cout << "Player Finished" << std::endl;
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
     else if (!isPlayerFinished && m_InControl && !m_TouchedFlag && !m_EndPipeHandler.isPlayerInPipe())
     {
-        std::cout << "In Control" << std::endl;
+        // std::cout << "In Control" << std::endl;
 		FullControl control(m_Player);
         control.execute(DeltaTime);
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
-        std::cout << "Touched Flag" << std::endl;
+        // std::cout << "Touched Flag" << std::endl;
         Command *control = AutoMove::getInstance(m_Player);
         control->execute(DeltaTime);
     }
