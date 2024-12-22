@@ -2,7 +2,7 @@
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_102, this))
+      level(factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this))
 {
     player = new Mario;
     if (level == nullptr) {

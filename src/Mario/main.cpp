@@ -14,47 +14,60 @@ int main() {
     CloseAudioDevice();
 }
 
-// #include "../characters/Enemy.hpp"
-// #include "raylib.h"
-// #include <thread>
+ //#include "../characters/Enemy.hpp"
+ //#include "raylib.h"
+ //#include <thread>
 
-// int main() {
-//     SetConfigFlags(FLAG_MSAA_4X_HINT);
-//     InitWindow(1024, 768, "Game Window");
-//     SetWindowState(FLAG_WINDOW_RESIZABLE);
-//     SetTargetFPS(60);
-    
-//     KoopaTroopa koopa({300, 300});
-    
-//     while(!WindowShouldClose()) {
-//         BeginDrawing();
-//         ClearBackground(BLACK);
-//         DrawRectangleLines(300, 300, 42, 58, RED);
-//         // DrawRectangleLines(400, 300, 48, 99, RED);
+ //int main() {
+ //    SetConfigFlags(FLAG_MSAA_4X_HINT);
+ //    InitWindow(1024, 768, "Game Window");
+ //    SetWindowState(FLAG_WINDOW_RESIZABLE);
+ //    SetTargetFPS(60);
+ //   
+ //    KoopaTroopa koopa({300, 300});
+ //    Texture2D mushroomTexture = LoadTexture("assets/textures/1upMushroom.png");
+ //    Mushroom* mushroom = new Mushroom(
+ //        Vector2{ 100, 100 },
+ //        Vector2{ 0, 0 },
+ //        Vector2{ 60, 60 },
+ //        mushroomTexture,
+ //        Vector2{ 100, 0}
 
-//         // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
-//         // goomba.test();
-//         // goomba.update(0.01f);
-//         // goomba.render();
-//         // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
+ //    );
+ //    while(!WindowShouldClose()) {
+ //        BeginDrawing();
+ //        ClearBackground(BLACK);
+ //        DrawRectangleLines(300, 300, 42, 58, RED);
+ //        if (IsKeyPressed(KEY_A)) {
+ //            mushroom->onNotify();
+ //        }
+ //        // DrawRectangleLines(400, 300, 48, 99, RED);
 
-//         // goomba2.test();
-//         // goomba2.update(0.01f);
-//         // goomba2.render();
-//         DrawLineEx({700,100}, {700,400}, 2.0f, RED);
-//         koopa.update(0.01f);
-//         koopa.render();
-//         if (IsKeyPressed(KEY_SPACE)) {
-//             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//             koopa.hit();
-//         }
-//         // shy.update(0.01f);
-//         // shy.render();
-//         EndDrawing();
-        
-//     }
-//     CloseWindow();
-// }
+ //        // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
+ //        // goomba.test();
+ //        // goomba.update(0.01f);
+ //        // goomba.render();
+ //        // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
+
+ //        // goomba2.test();
+ //        // goomba2.update(0.01f);
+ //        // goomba2.render();
+ //        DrawLineEx({700,100}, {700,400}, 2.0f, RED);
+ //        koopa.update(0.01f);
+ //        mushroom->Update(GetFrameTime());
+ //        koopa.render();
+ //        if (IsKeyPressed(KEY_SPACE)) {
+ //            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+ //            koopa.hit();
+ //        }
+ //        mushroom->Draw();
+ //        // shy.update(0.01f);
+ //        // shy.render();
+ //        EndDrawing();
+ //       
+ //    }
+ //    CloseWindow();
+ //}
 
 // // #include "../Application.hpp"
 
