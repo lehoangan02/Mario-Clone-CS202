@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "ResourceManager.hpp"
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
@@ -19,8 +20,14 @@ Game::Game()
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 
-    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
-    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
+    continueButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
+    replayButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
+    homeButton = QuitButton(Rectangle{542, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
+
+    pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
+    winGame = ResourceManager::GetInstance()->GetTexture("winGame");
+    loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
 
     state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
@@ -59,8 +66,15 @@ Game::Game(int characterMenu, int levelMenu)
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 
-    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
-    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
+    continueButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
+    replayButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
+    homeButton = QuitButton(Rectangle{542, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
+
+    pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
+    winGame = ResourceManager::GetInstance()->GetTexture("winGame");
+    loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
+
 
     int levelType = level->GetLevelType();
     switch (levelType)
@@ -167,13 +181,8 @@ void Game::change(const std::string& filename)
     this->timer = 0.0f;
     this->level->attachPlayer(player);
 
-    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
-	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
-	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 
-    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
-    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
 
     int levelType = this->level->GetLevelType();
 
@@ -226,13 +235,8 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
 
     countdown = 400;
     timer = 0.0f;
-    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
-    infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
-    infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 
-    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
-    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
 
     int levelType = level->GetLevelType();
     switch (levelType)
@@ -295,7 +299,7 @@ void Game::start() {
         state = LEVEL_RETURN_MESSAGE::LOSE;
     }
     else if (IsKeyDown(KEY_C)) {
-        level->continueLevel();
+        state = LEVEL_RETURN_MESSAGE::WIN;
     }
         
 }
@@ -308,6 +312,10 @@ void Game::update(float deltaTime) {
         state = LEVEL_RETURN_MESSAGE::PAUSE;
     } else if (continueButton.isClicked()) {
          state = LEVEL_RETURN_MESSAGE::CONTINUE;
+    } else if (replayButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::RESTART;
+    } else if (homeButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::QUIT;
     }
 }
 
@@ -315,11 +323,20 @@ void Game::draw() {
     // BeginDrawing();
     // ClearBackground(RAYWHITE);
 	drawInfo();
-    if (state == LEVEL_RETURN_MESSAGE::PAUSE) continueButton.draw();
-    else pauseButton.draw();
-
     if (level) {
         level->render();
+    }
+    if (state == LEVEL_RETURN_MESSAGE::PAUSE) {
+        drawContinueButton();
+    } else if (state == LEVEL_RETURN_MESSAGE::CONTINUE) {
+        drawPauseMenu();
+    } else if (state == LEVEL_RETURN_MESSAGE::WIN) {
+        drawWinButton();
+    } else if (state == LEVEL_RETURN_MESSAGE::LOSE) {
+        drawLoseButton();
+    }
+    else if (state == LEVEL_RETURN_MESSAGE::RUNNING) {
+        drawPauseMenu();
     }
 }
 
@@ -452,7 +469,7 @@ void Game::handleState() {
             }
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
-            //drawLoseButton();
+
             level->pauseLevel();
             saveScore("score.txt");
             break;
@@ -528,4 +545,26 @@ void Game::DrawTextCentered(Font font, const std::string& label, const std::stri
     float valueWidth = MeasureTextEx(font, value.c_str(), fontSize, spacing).x;
     DrawTextEx(font, label.c_str(), { position.x - labelWidth / 2, position.y }, fontSize, spacing, color);
     DrawTextEx(font, value.c_str(), { position.x - valueWidth / 2, position.y + 30 }, fontSize, spacing, color);
+}
+
+void Game::drawPauseMenu() {
+    pauseButton.draw();
+}
+
+void Game::drawContinueButton() {
+    DrawTextureEx(pauseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    continueButton.draw();
+    homeButton.draw();
+}
+
+void Game::drawWinButton() {
+    DrawTextureEx(winGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    replayButton.draw();
+    homeButton.draw();
+}
+
+void Game::drawLoseButton() {
+    DrawTextureEx(loseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    replayButton.draw();
+    homeButton.draw();
 }

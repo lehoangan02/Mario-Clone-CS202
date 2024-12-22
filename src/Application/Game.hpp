@@ -24,6 +24,12 @@ private:
 
     QuitButton pauseButton;
     QuitButton continueButton;
+    QuitButton homeButton;
+    QuitButton replayButton;
+
+    Texture2D pauseGame;
+    Texture2D winGame;
+    Texture2D loseGame;
 public:
     Game();
     Game(int characterMenu, int levelMenu);
@@ -55,7 +61,6 @@ public:
     void drawContinueButton();
     void drawWinButton();
     void drawLoseButton();
-    void drawQuitButton();
 	void drawInfo(); // chau added this
 	void DrawTextCentered(Font font, const std::string& label, const std::string& value, Vector2 position, float fontSize, float spacing, Color color); // chau added this
 

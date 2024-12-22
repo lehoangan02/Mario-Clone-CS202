@@ -64,6 +64,16 @@ void ResourceManager::LoadResources() {
     textures["lakitu9"] = (LoadTexture("assets/textures/Lakitu9.png"));
     textures["lakitu10"] = (LoadTexture("assets/textures/Lakitu10.png"));
     textures["lakitu11"] = (LoadTexture("assets/textures/Lakitu11.png"));
+
+
+    textures["pause"] = (LoadTexture("assets/textures/pause.png"));
+    textures["continue"] = (LoadTexture("assets/textures/continue.png"));
+    textures["replay"] = (LoadTexture("assets/textures/replay.png"));
+    textures["home"] = (LoadTexture("assets/textures/home.png"));
+    
+    textures["pauseGame"] = (LoadTexture("assets/textures/pauseGame.png"));
+    textures["winGame"] = (LoadTexture("assets/textures/winGame.png"));
+    textures["loseGame"] = (LoadTexture("assets/textures/loseGame.png"));
 }
 
 void ResourceManager::UnloadResources() {
