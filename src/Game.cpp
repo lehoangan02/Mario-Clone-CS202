@@ -3,6 +3,7 @@
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
       level(factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this))
+
 {
     player = new Mario;
     if (level == nullptr) {
@@ -98,7 +99,6 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
-    handleState();
     update(GetFrameTime());
     MusicManager::getInstance().UpdateMusic();
     draw();
@@ -111,6 +111,7 @@ void Game::start() {
     else if (IsKeyDown(KEY_C)) {
         restartLevel();
     }
+    handleState();
 }
 
 void Game::update(float deltaTime) {

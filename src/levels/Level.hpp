@@ -35,6 +35,7 @@ class Level : public Subject, public Component
         void addEndPipe(EndPipe* Pipe);
         void attachPlayer(Character* Player);
         bool update();
+        void reset() { inPipe = false; };
         bool isPlayerInPipe() { return inPipe; };
     };
     class EnemyHandler
@@ -44,7 +45,7 @@ class Level : public Subject, public Component
         EnemyHandler() = default;
         void setLevel(Level* Level) { m_Level = Level; };
         void update();
-
+        std::vector<std::weak_ptr<Projectile>> m_Projectiles = {};
     };
     class Background
     {
@@ -127,6 +128,7 @@ class Level : public Subject, public Component
         bool m_InControl = true;
         bool m_TouchedFlag = false;
         Vector2 m_StartPosition = {0, 0};
+        bool m_TouchedEndPipe = false;
     public:
         Level operator=(const Level& other) = delete;
         Level(const Level& other) = delete;

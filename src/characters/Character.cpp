@@ -291,6 +291,7 @@ void Character::reset() {
 	score = 0;
 	deadTime = 0.0f;
 	isFinished = false;
+	finishSliding = false;
 }
 void Character::Draw()
 {

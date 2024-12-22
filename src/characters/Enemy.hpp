@@ -107,8 +107,6 @@ class KoopaTroopa : public Enemy {
         bool isBouncing;
         float bounceTime;
 
-        bool isToShell;
-        float toShellTime;
     public:
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
@@ -228,6 +226,9 @@ public:
     void render() override;
     void shoot();
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
+    std::shared_ptr<Projectile> getLastProjectile() { return projectiles.back(); isShoot = false; };
+    bool getIsShoot() const { return isShoot; };
+    
 
 };
 

@@ -136,15 +136,15 @@ void Level::resolveEnvironmentCollisions()
                 else if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                 {
                     
-                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103)
+                    if (!isCollidingHorizontallyRawLess(PlayerBox, EnvironmentBox, 15.0f) && m_LevelID != LevelFactory::LEVEL_103 && m_LevelID != LevelFactory::HIDDEN_LEVEL_101)
                     {
                         
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
-                    else if (m_LevelID == LevelFactory::LEVEL_103)
+                    else if (m_LevelID == LevelFactory::LEVEL_103 || m_LevelID == LevelFactory::HIDDEN_LEVEL_101)
                     {
-                        std::cout << "Resetting Velocity 103" << std::endl;
+                        // std::cout << "Resetting Velocity 103" << std::endl;
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
@@ -633,6 +633,8 @@ void Level::render()
     {
         // if (object->isHit()) continue;
         object->render();
+        DrawCircle(object->getPosition().x, object->getPosition().y, 10, RED);
+        DrawBoundingBox(object->getPosition(), object->getSize(), RED);
     }
     for (auto& object : m_EnvironmentInteractive)
     {
@@ -689,8 +691,8 @@ void Level::produceSwitchSignal()
 {
     // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
     // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -710,15 +712,16 @@ void Level::produceSwitchSignal()
         m_Player->resetSlidingFinished();
         m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
-        
+        m_EndPipeHandler.reset();
         std::cout << "Notifying Hidden" << std::endl;
         
     }
     else if (IsKeyPressed(KEY_LEFT_BRACKET))
     {
+        m_Player->resetSlidingFinished();
         m_Player->reset();
-        std::cout << "Notifying Hidden" << std::endl;
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::HIDDEN);
+        std::cout << "Notifying Hidden" << std::endl;
         
     }
 }
@@ -735,19 +738,25 @@ void Level::update(float DeltaTime)
     {
         return;
     }
-    
+    // std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
+    // std::cout << "In Control: " << m_InControl << std::endl;
+    // std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
+    // std::cout << "End Pipe Handler: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
 	if (isPlayerFinished)
 	{
+        // std::cout << "Player Finished" << std::endl;
 		InHole control(m_Player);
 		control.execute(DeltaTime);
 	}
     else if (!isPlayerFinished && m_InControl && !m_TouchedFlag && !m_EndPipeHandler.isPlayerInPipe())
     {
+        // std::cout << "In Control" << std::endl;
 		FullControl control(m_Player);
         control.execute(DeltaTime);
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
+        // std::cout << "Touched Flag" << std::endl;
         Command *control = AutoMove::getInstance(m_Player);
         control->execute(DeltaTime);
     }
@@ -906,7 +915,8 @@ void Level::reset()
     m_TouchedFlag = false;
     m_InControl = true;
     m_StartPosition = {0, 0};
-
+    m_TouchedEndPipe = false;
+    // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
 {
@@ -918,9 +928,9 @@ void Level::EndPipeHandler::attachPlayer(Character* Player)
 }
 bool Level::EndPipeHandler::update()
 {
+    // std::cout << "End Pipe Handler Update" << std::endl;
     if (inPipe)
     {
-        // if (slidePipeComplete)
         // return true;
     }
     if (m_Player->isSliding())
@@ -938,22 +948,29 @@ bool Level::EndPipeHandler::update()
             {
                 m_Player ->SlidePipe(slidingDirection::right);
                 m_Player ->powerDown();
-                m_Player ->powerDown();
+                m_Player->setPosition(Vector2{m_Player->GetPosition().x, EnvironmentBox.getPosition().y});
                 inPipe = true;
+                // std::cout << "Sliding Right" << std::endl;
             }
             else
             {
-                if (isCollidingVertically(PlayerBox, EnvironmentBox))
+                // std::cout << "Colliding Vertically" << std::endl;
+                if (isCollidingVertically(PlayerBox, EnvironmentBox) && !inPipe)
                 {
+                    // std::cout << "Reseting Velocity" << std::endl;
                     m_Player->resetVelocity();
                     if (isCollidingOnTop(PlayerBox, EnvironmentBox))
                     {
                         m_Player->onPlatform();
                     }
                 }
-                resolveCollisions(PlayerBox, EnvironmentBox);
-                m_Player->setPosition(PlayerBox.getPosition());
-                m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+                if (!inPipe)
+                {
+                    std::cout << "Not in Pipe" << std::endl;
+                    resolveCollisions(PlayerBox, EnvironmentBox);
+                    m_Player->setPosition(PlayerBox.getPosition());
+                    m_EndPipes[i]->m_Position = EnvironmentBox.getPosition();
+                }
             }
         }
     }
@@ -965,6 +982,27 @@ void Level::EnemyHandler::update()
     for (auto& enemy : m_Level->m_Enemies)
     {
         enemy->update(GetFrameTime());
+        if (enemy->getEnemyType() == EnemyType::LAKITU)
+        {
+            Lakitu* LakituEnemy = dynamic_cast<Lakitu*>(enemy);
+            if (LakituEnemy->getIsShoot())
+            {
+                m_Projectiles.push_back(std::weak_ptr(LakituEnemy->getLastProjectile()));
+            }
+        }
+    }
+    // std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
+    for (auto& projectile : m_Projectiles)
+    {
+        for (auto &object : m_Level->m_Environment)
+        {
+            AABBox ProjectileBox = AABBox(projectile.lock()->getPosition(), projectile.lock()->getSize());
+            AABBox EnvironmentBox = AABBox(object->m_Position, object->getSize());
+            if (isColliding(ProjectileBox, EnvironmentBox))
+            {
+                projectile.lock()->hit();
+            }
+        }
     }
     for (auto& enemy : m_Level->m_Enemies)
     {

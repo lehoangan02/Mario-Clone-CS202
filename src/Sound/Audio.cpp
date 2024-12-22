@@ -42,6 +42,7 @@ void SoundManager::PlaySoundEffect(SoundTrack sound) {
 		PlaySound(soundSet[5]);
 		break;
 	case DIE_SOUND:
+		MusicManager::getInstance().StopMusic();
 		PlaySound(soundSet[6]);
 		break;
 	case ITEMPOPUP_SOUND:
