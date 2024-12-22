@@ -28,6 +28,7 @@ public:
     Game();
     Game(int characterMenu, int levelMenu);
     void save(const std::string& filename);
+    void saveScore(const std::string& filename);
     void change(const std::string& filename);
     Game& operator=(const Game& other);
     Game(const Game& other);

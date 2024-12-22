@@ -120,6 +120,16 @@ void Game::save(const std::string& filename)  {
 
     file.close();
 }
+
+void Game::saveScore(const std::string& filename) {
+    std::ofstream file(filename, std::ios::app);
+    if (!file.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
+    file << player->getScore() << std::endl;
+    file.close();
+}
 void Game::change(const std::string& filename) 
 {
     std::ifstream file(filename);
@@ -228,7 +238,7 @@ void Game::start() {
         state = LEVEL_RETURN_MESSAGE::QUIT;
     }
     else if (IsKeyDown(KEY_B)) {
-        level->pauseLevel();
+        state = LEVEL_RETURN_MESSAGE::LOSE;
     }
     else if (IsKeyDown(KEY_C)) {
         level->continueLevel();
@@ -383,10 +393,14 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
             nextLevel();
+            if (level->GetLevelType() == LevelFactory::LEVEL_103) {
+                saveScore("score.txt");
+            }
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
             //drawLoseButton();
             level->pauseLevel();
+            saveScore("score.txt");
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             save("continue.txt");
