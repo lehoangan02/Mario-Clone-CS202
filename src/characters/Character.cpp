@@ -288,7 +288,6 @@ void Character::reset() {
 	pullFlag = false;
 	isWin = false;
 	//powerDown();
-	score = 0;
 	deadTime = 0.0f;
 	isFinished = false;
 	isVisible = true;
