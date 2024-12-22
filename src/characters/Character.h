@@ -62,8 +62,10 @@ public:
 	void increaseScore(int Incre) { this->score += Incre; };
 	void increaseScore() { this->score += 1; this->coins += 1; };
 	int getScore() { return score; }
-	int getCoins() { return coins; }
+	void setScore(int score) { this->score = score; }
 
+	int getCoins() { return coins; }
+    void setCoins(int coins) { this->coins = coins; }
 
 	bool isflick() { return isflicking; };
 	bool isSuper() { return isInvincible; };

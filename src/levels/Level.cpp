@@ -81,10 +81,10 @@ Level::~Level()
     {
         delete object;
     }
-    for (auto& object : m_Enemies)
-    {
-        delete object;
-    }
+    // for (auto& object : m_Enemies)
+    // {
+    //     delete object;
+    // }
     for (auto& object : m_IdleCoin)
     {
         delete object;

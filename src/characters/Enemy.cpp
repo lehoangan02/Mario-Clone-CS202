@@ -1,6 +1,7 @@
 #include "Enemy.hpp"
 
 #include "raylib.h"
+#include "../ResourceManager.hpp"
 
 
 EnemyFactory& EnemyFactory::GetEnemyFactory()
@@ -110,10 +111,13 @@ Goomba::Goomba(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
+    texture = ResourceManager::GetInstance()->GetTexture("goomba1");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba3"));
+    
 
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
@@ -138,10 +142,12 @@ Goomba::Goomba(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position) 
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Goomba_Walk1.png");
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk1.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Walk2.png"));
-    textures.push_back(LoadTexture("assets/textures/Goomba_Flat.png"));
+    texture = ResourceManager::GetInstance()->GetTexture("goomba1");
+    SetTextureFilter(texture, TEXTURE_FILTER_POINT);
+    SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("goomba3"));
 
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
@@ -224,12 +230,12 @@ PiranhaPlant::PiranhaPlant(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/PiranhaPlant_0.png");
+    texture = ResourceManager::GetInstance()->GetTexture("piranha1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_0.png"));
-    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_1.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("piranha1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("piranha2"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
@@ -251,12 +257,12 @@ PiranhaPlant::PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed) : Enem
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/PiranhaPlant_0.png");
+    texture = ResourceManager::GetInstance()->GetTexture("piranha1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_0.png"));
-    textures.push_back(LoadTexture("assets/textures/PiranhaPlant_1.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("piranha1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("piranha2"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureWrap(textures[0], TEXTURE_WRAP_CLAMP);
@@ -404,16 +410,16 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("shyguy1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy6"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
@@ -439,16 +445,16 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("shyguy1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy6"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
@@ -472,16 +478,16 @@ ShyGuy::ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/ShyGuy1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("shyguy1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/ShyGuy1.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy2.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy3.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy4.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy5.png"));
-    textures.push_back(LoadTexture("assets/textures/ShyGuy6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("shyguy6"));
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[2], TEXTURE_FILTER_POINT);
@@ -582,16 +588,16 @@ KoopaTroopa::KoopaTroopa(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
 
-    texture = LoadTexture("assets/textures/kt1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("koopa1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/kt1.png"));
-    textures.push_back(LoadTexture("assets/textures/kt2.png"));
-    textures.push_back(LoadTexture("assets/textures/kt3.png"));
-    textures.push_back(LoadTexture("assets/textures/kt4.png"));
-    textures.push_back(LoadTexture("assets/textures/kt5.png"));
-    textures.push_back(LoadTexture("assets/textures/kt6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa6"));
 
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
@@ -626,16 +632,16 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed) : Enemy(
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/kt1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("koopa1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/kt1.png"));
-    textures.push_back(LoadTexture("assets/textures/kt2.png"));
-    textures.push_back(LoadTexture("assets/textures/kt3.png"));
-    textures.push_back(LoadTexture("assets/textures/kt4.png"));
-    textures.push_back(LoadTexture("assets/textures/kt5.png"));
-    textures.push_back(LoadTexture("assets/textures/kt6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa6"));
 
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
@@ -669,16 +675,16 @@ KoopaTroopa::KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float le
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/kt1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("koopa1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/kt1.png"));
-    textures.push_back(LoadTexture("assets/textures/kt2.png"));
-    textures.push_back(LoadTexture("assets/textures/kt3.png"));
-    textures.push_back(LoadTexture("assets/textures/kt4.png"));
-    textures.push_back(LoadTexture("assets/textures/kt5.png"));
-    textures.push_back(LoadTexture("assets/textures/kt6.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("koopa6"));;
 
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[1], TEXTURE_FILTER_POINT);
@@ -812,11 +818,11 @@ Projectile::Projectile(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
     
-    this->texture = LoadTexture("assets/textures/bullet1.png");
-    textures.push_back(LoadTexture("assets/textures/bullet1.png"));
-    textures.push_back(LoadTexture("assets/textures/bullet2.png"));
-    textures.push_back(LoadTexture("assets/textures/bullet3.png"));
-    textures.push_back(LoadTexture("assets/textures/bullet4.png"));
+    this->texture = ResourceManager::GetInstance()->GetTexture("bullet1");
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("bullet1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("bullet2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("bullet3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("bullet4"));
 
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureFilter(textures[0], TEXTURE_FILTER_POINT);
@@ -888,21 +894,21 @@ Lakitu::Lakitu(Vector2 position) : Enemy(position) {
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Lakitu1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("lakitu1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu5.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu6.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu7.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu8.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu9.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu10.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu11.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu6"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu7"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu8"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu9"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu10"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu11"));
     for (int i = 0; i< 10; i++) {
         SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
         SetTextureWrap(textures[i], TEXTURE_WRAP_CLAMP);
@@ -921,21 +927,21 @@ Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed) : Enemy(position,s
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Lakitu1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("lakitu1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu5.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu6.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu7.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu8.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu9.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu10.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu11.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu6"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu7"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu8"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu9"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu10"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu11"));
     for (int i = 0; i< 10; i++) {
         SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
         SetTextureWrap(textures[i], TEXTURE_WRAP_CLAMP);
@@ -952,21 +958,21 @@ Lakitu::Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, f
     this->position = position;
     this->originPosition = position;
     
-    texture = LoadTexture("assets/textures/Lakitu1.png");
+    texture = ResourceManager::GetInstance()->GetTexture("lakitu1");
     SetTextureFilter(texture, TEXTURE_FILTER_POINT);
     SetTextureWrap(texture, TEXTURE_WRAP_CLAMP);
 
-    textures.push_back(LoadTexture("assets/textures/Lakitu1.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu2.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu3.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu4.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu5.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu6.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu7.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu8.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu9.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu10.png"));
-    textures.push_back(LoadTexture("assets/textures/Lakitu11.png"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu1"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu2"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu3"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu4"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu5"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu6"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu7"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu8"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu9"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu10"));
+    textures.push_back(ResourceManager::GetInstance()->GetTexture("lakitu11"));
     for (int i = 0; i< 10; i++) {
         SetTextureFilter(textures[i], TEXTURE_FILTER_POINT);
         SetTextureWrap(textures[i], TEXTURE_WRAP_CLAMP);

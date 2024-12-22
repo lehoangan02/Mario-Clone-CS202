@@ -12,7 +12,7 @@ Game::Game()
     player->setPosition(Vector2{20, 0});  
     level->attachPlayer(player);  
     myFont = LoadFont("assets/Font/MarioFont.ttf");
-    countdown = 400;
+    countdown = 200;
 	timer = 0.0f;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
@@ -86,6 +86,111 @@ Game::Game(int characterMenu, int levelMenu)
     }
 }
 
+void Game::save(const std::string& filename)  {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
+    if (level->GetLevelType() == LevelFactory::LEVEL_101) {
+        file << "0 ";
+    } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+        file << "1 ";
+    } else if (level->GetLevelType() == LevelFactory::LEVEL_103) {
+        file << "2 ";
+    } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101) {
+        file << "3 ";
+    } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102) {
+        file << "4 ";
+    }
+
+    if (player->getType() == 0) {
+        file << "0 ";
+    } else {
+        file << "1 ";
+    }
+
+    Vector2 position = player->GetPosition();
+    file << position.x << " " << position.y << " ";
+
+    file << player->getScore() << " ";
+    file << player->getCoins() << " ";
+    file << countdown << " ";
+    file << player->getLives() << " ";
+
+    file.close();
+}
+void Game::change(const std::string& filename) 
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
+    int level, character, score, coins, lives, time;
+    float x, y;
+    file >> level >> character >> x >> y >> score >> coins >> time >> lives;
+    countdown = time;
+    if (character == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+
+    if (level == 0) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    } else if (level == 1) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (level == 2) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+    }
+    else if (level == 3) {
+        this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+    }
+    else if (level == 4) {
+        this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
+    player->setPosition(Vector2{x * 1.0f, y * 1.0f});
+    this->player->setScore(score);
+    this->player->setCoins(coins);
+    this->player->setLives(lives);
+    this->timer = 0.0f;
+    this->level->attachPlayer(player);
+
+    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/pause.png"));
+    continueButton = QuitButton(Rectangle{973, 20, 30, 30}, LoadTexture("assets/textures/continue.png"));
+
+    int levelType = this->level->GetLevelType();
+
+    switch (levelType)
+    {
+    case LevelFactory::LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+        break;
+    case LevelFactory::LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        break;
+    case LevelFactory::LEVEL_103:
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
+        break;
+        
+    default:
+        break;
+    }
+    file.close();
+}
+
 Game::Game(const Game& other) 
     : factory(other.factory),  
       level(nullptr),          
@@ -114,12 +219,13 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
+   
     handleState();
     update(GetFrameTime());
     MusicManager::getInstance().UpdateMusic();
     draw();
-    if (IsKeyDown(KEY_A)) {
-        state = LEVEL_RETURN_MESSAGE::PAUSE;
+    if (IsKeyPressed(KEY_A)) {
+        state = LEVEL_RETURN_MESSAGE::QUIT;
     }
     else if (IsKeyDown(KEY_B)) {
         level->pauseLevel();
@@ -127,6 +233,7 @@ void Game::start() {
     else if (IsKeyDown(KEY_C)) {
         level->continueLevel();
     }
+        
 }
 
 void Game::update(float deltaTime) {
@@ -141,8 +248,8 @@ void Game::update(float deltaTime) {
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
+    // BeginDrawing();
+    // ClearBackground(RAYWHITE);
 	drawInfo();
     if (state == LEVEL_RETURN_MESSAGE::PAUSE) continueButton.draw();
     else pauseButton.draw();
@@ -282,6 +389,7 @@ void Game::handleState() {
             level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
+            save("continue.txt");
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();

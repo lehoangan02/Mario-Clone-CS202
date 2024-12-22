@@ -8,6 +8,7 @@
 #include "./animation/Animation.h"
 #include "./Mediator/Mediator.hpp"
 #include "ResourceManager.hpp"
+#include <fstream>
 
 class Game : public Mediator {
 private:
@@ -26,6 +27,8 @@ private:
 public:
     Game();
     Game(int characterMenu, int levelMenu);
+    void save(const std::string& filename);
+    void change(const std::string& filename);
     Game& operator=(const Game& other);
     Game(const Game& other);
     void start();
