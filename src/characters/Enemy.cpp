@@ -427,7 +427,7 @@ ShyGuy::ShyGuy(Vector2 position) : Enemy(position) {
     SetTextureWrap(textures[4], TEXTURE_WRAP_CLAMP);
     SetTextureWrap(textures[5], TEXTURE_WRAP_CLAMP);
 
-    size = { 40, 40 };
+    size = { 70, 80 };
     speed = { 130, 0 };
     isRight = false;
     isDown = false;
