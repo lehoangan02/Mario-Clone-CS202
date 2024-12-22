@@ -81,6 +81,7 @@ public:
 
 	FirePool* firePool;
 
+	void setInvisible() { isVisible = false; };
 	void reset();
 protected:
 	std::vector<Texture2D> textures;
@@ -181,8 +182,9 @@ class AutoMove : public Command {
 private:
 	Character* character;
 	float totalTime; 
+	float startPosition;
 	static AutoMove* instance; 
-	AutoMove(Character* character) : totalTime(0.0f) { this->character = character; }
+	AutoMove(Character* character) : totalTime(0.0f), startPosition(0.0f) { this->character = character; }
 
 public:
 	static AutoMove* getInstance(Character* character) {
@@ -191,6 +193,6 @@ public:
 		}
 		return instance;
 	}
-	void reset() {totalTime = 0.0f;}
+	void reset() { totalTime = 0.0f; }
 	void execute(float deltaTime) override;
 };

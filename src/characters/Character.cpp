@@ -291,6 +291,7 @@ void Character::reset() {
 	score = 0;
 	deadTime = 0.0f;
 	isFinished = false;
+	isVisible = true;
 }
 void Character::Draw()
 {
@@ -479,7 +480,7 @@ void InHole::execute(float deltaTime) {
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
 	if (!character->isPullFlag()) {
-		if (totalTime == 0.0f) {
+		if (totalTime == 0.0f || totalTime < deltaTime*1.2f) {
 			MusicManager::getInstance().PlayMusic(LevelFinished);
 		}
 		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
@@ -488,6 +489,10 @@ void AutoMove::execute(float deltaTime) {
 		if (totalTime < 5.0) {
 			character->control(false);
 			character->setVelocity(Vector2{ 225.0f, 1.0f });
+			if (character->GetPosition().x - startPosition > 600.0f) {
+				character->setVelocity(Vector2{ 0.0f, 1.0f });
+				character->setInvisible();
+			}
 			character->Update(deltaTime);
 			totalTime += deltaTime;
 			//std::cout << totalTime;
@@ -497,9 +502,11 @@ void AutoMove::execute(float deltaTime) {
 			character->control(false);
 			character->setVelocity(Vector2{ 0.0f, 0.0f });
 			character->Update(deltaTime);
+			reset();
 		}
 	}
 	else {
+		startPosition = character->GetPosition().x;
 		character->Update(deltaTime);
 	}
 
