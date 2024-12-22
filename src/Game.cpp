@@ -161,16 +161,20 @@ void Game::notify(Component* sender, int eventCode) {
     }
 }
 
-
+void Game::resetCountdown() {
+	countdown = 400;
+}
 void Game::nextLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
         level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
         level -> reset();
+        this->resetCountdown();
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
         level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
         level -> reset();
+        this->resetCountdown();
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
     } 
     else {

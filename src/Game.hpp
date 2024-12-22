@@ -41,6 +41,10 @@ public:
     // Implement notify method
     void notify(Component* sender, int eventCode) override;
 
+
+    // Timer
+	void resetCountdown();
+
     // Methods to handle game states
     void handleState();
     void drawPauseMenu();
@@ -50,7 +54,6 @@ public:
     void drawQuitButton();
 	void drawInfo(); // chau added this
 	void DrawTextCentered(Font font, const std::string& label, const std::string& value, Vector2 position, float fontSize, float spacing, Color color); // chau added this
-
     LEVEL_RETURN_MESSAGE getState() { return state; };
 };
 
