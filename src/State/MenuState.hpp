@@ -8,6 +8,8 @@
 class MenuState : public State {
 public:
     void handle(Application& app) override;
+private:
+    StateType type = StateType::MENU_STATE;
 };
 
 #endif /* MenuState_hpp */

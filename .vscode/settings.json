@@ -115,6 +115,14 @@
     "unordered_set": "cpp",
     "variant": "cpp",
     "algorithm": "cpp",
-    "*.ds_store": "cpp"
-  }
+    "*.ds_store": "cpp",
+    "__config": "cpp"
+  },
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin",
+      "binaryPath": "/Volumes/Baracuda/Saved Github Repository/Mario-CS202/bin/main",
+      "binaryArgs": []
+    }
+  ]
 }

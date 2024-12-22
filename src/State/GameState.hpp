@@ -8,6 +8,8 @@
 class GameState : public State {
 public:
     void handle(Application& app) override;
+private:
+    StateType type = StateType::GAME_STATE;
 };
 
 #endif /* GameState_hpp */

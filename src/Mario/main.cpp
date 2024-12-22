@@ -1,4 +1,6 @@
-#include "../Application.hpp"
+#include "../animation/Animation.h"
+#include "../Application/ResourceManager.hpp"
+#include "../Application/Application.hpp"
 
 int main() {
 
