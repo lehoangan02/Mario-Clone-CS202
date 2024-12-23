@@ -981,7 +981,7 @@ void Level::EnemyHandler::update()
             Lakitu* LakituEnemy = dynamic_cast<Lakitu*>(enemy);
             if (LakituEnemy->getIsShoot())
             {
-                m_Projectiles.push_back(std::weak_ptr(LakituEnemy->getLastProjectile()));
+                m_Projectiles.push_back(std::weak_ptr<Projectile>(LakituEnemy->getLastProjectile()));
             }
         }
     }
@@ -995,6 +995,21 @@ void Level::EnemyHandler::update()
             if (isColliding(ProjectileBox, EnvironmentBox))
             {
                 projectile.lock()->hit();
+            }
+        }
+        AABBox ProjectileBox = AABBox(projectile.lock()->getPosition(), projectile.lock()->getSize());
+        AABBox PlayerBox = AABBox(m_Level->m_Player->GetPosition(), m_Level->m_Player->GetSize());
+        if (isColliding(ProjectileBox, PlayerBox))
+        {
+            if (!(projectile.lock()->isActive())) continue;
+            if (m_Level->m_Player->isSuper())
+            {
+                projectile.lock()->hit();
+            }
+            else
+            {
+                projectile.lock()->hit();
+                m_Level->m_Player->touchEnemy();
             }
         }
     }
