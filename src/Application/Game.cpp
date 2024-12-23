@@ -318,7 +318,7 @@ void Game::start() {
     else if (IsKeyDown(KEY_B)) {
         state = LEVEL_RETURN_MESSAGE::LOSE;
     }
-    else if (IsKeyDown(KEY_C)) {
+    else if (IsKeyPressed(KEY_C)) {
         state = LEVEL_RETURN_MESSAGE::WIN;
     }
         
@@ -350,7 +350,7 @@ void Game::draw() {
         drawContinueButton();
     } else if (state == LEVEL_RETURN_MESSAGE::CONTINUE) {
         drawPauseMenu();
-    } else if (state == LEVEL_RETURN_MESSAGE::WIN) {
+    } else if (state == LEVEL_RETURN_MESSAGE::WIN && level->GetLevelType() == LevelFactory::LEVEL_103) {
         drawWinButton();
     } else if (state == LEVEL_RETURN_MESSAGE::LOSE) {
         drawLoseButton();
@@ -406,12 +406,8 @@ void Game::nextLevel() {
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
     } 
     else {
-        //draw menu win
-        state = LEVEL_RETURN_MESSAGE::RESTART;
         return;
     }
-    //delete player;
-    //player = new Mario;
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
     level->update(0.01f);
@@ -434,14 +430,6 @@ void Game::hiddenLevel() {
         level->attachPlayer(player);
         player->setPosition(Vector2{20, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
-    }
-    else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
-    {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103, this);
-        level -> reset();
-        level->attachPlayer(player);
-        player->setPosition(Vector2{20, 0});
-
     }
     else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101)
     {
@@ -484,7 +472,7 @@ void Game::handleState() {
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
                 saveScore("score.txt");
             }
-            state = LEVEL_RETURN_MESSAGE::RUNNING; 
+            else state = LEVEL_RETURN_MESSAGE::RUNNING;
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
             //level->pauseLevel();
