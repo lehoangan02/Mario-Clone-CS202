@@ -20,7 +20,7 @@ void Button::draw(float radius) {
 bool Button::isClicked() {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && this->isHovered) {
         this->isHovered = false;
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         return 1;
     }
     return 0;
@@ -39,6 +39,10 @@ QuitButton::QuitButton(Rectangle rect) {
     this->outerRect = rect;
 }
 
+QuitButton::QuitButton(Rectangle rect, Texture2D texture) {
+    this->texture = texture;
+    this->outerRect = rect;
+}
 void QuitButton::draw(float radius) {
     this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
     DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f , BLACK);
@@ -83,9 +87,11 @@ Menu::Menu() {
         ResourceManager::GetInstance()->GetFont(), 0);
     mapButtons[2] = Button({613, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 3", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    mapButtons[3] = Button({361, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 1", BLACK, 22,
+    mapButtons[3] = Button({275.5, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 1", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    mapButtons[4] = Button({545, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 2", BLACK, 22,
+    mapButtons[4] = Button({444, 384, 136, 101}, Color{240, 193, 225, 255} ,"Hidden 2", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
+    mapButtons[5] = Button({613, 384, 136, 101}, Color{240, 193, 225, 255} ,"Custom", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     
     // levelButtons[0] = Button({450, 251, 141, 42}, Color{240, 193, 225, 255} ,"Easy", BLACK, 22,
@@ -137,6 +143,7 @@ void Menu::draw(){
         mapButtons[2].draw();
         mapButtons[3].draw();
         mapButtons[4].draw();
+        mapButtons[5].draw();
         quitButton.draw();
     }
     // else if (type == 5) {
@@ -198,6 +205,7 @@ int Menu::handle() {
         mapButtons[2].setChoose(false);
         mapButtons[3].setChoose(false);
         mapButtons[4].setChoose(false);
+        mapButtons[5].setChoose(false);
         type = 4;
         isChange = true;
     }
@@ -207,6 +215,7 @@ int Menu::handle() {
         mapButtons[2].setChoose(false);
         mapButtons[3].setChoose(false);
         mapButtons[4].setChoose(false);
+        mapButtons[5].setChoose(false);
         type = 4;
         isChange = true;
     }
@@ -216,6 +225,7 @@ int Menu::handle() {
         mapButtons[0].setChoose(false);
         mapButtons[3].setChoose(false);
         mapButtons[4].setChoose(false);
+        mapButtons[5].setChoose(false);
         type = 4;
         isChange = true;
     }
@@ -225,6 +235,7 @@ int Menu::handle() {
         mapButtons[2].setChoose(false);
         mapButtons[0].setChoose(false);
         mapButtons[4].setChoose(false);
+        mapButtons[5].setChoose(false);
         type = 4;
         isChange = true;
     }
@@ -233,6 +244,17 @@ int Menu::handle() {
         mapButtons[1].setChoose(false);
         mapButtons[2].setChoose(false);
         mapButtons[3].setChoose(false);
+        mapButtons[0].setChoose(false);
+        mapButtons[5].setChoose(false);
+        type = 4;
+        isChange = true;
+    }
+    else if (mapButtons[5].isClicked() && !mapButtons[5].getChoose()) {
+        mapButtons[5].setChoose(true);
+        mapButtons[1].setChoose(false);
+        mapButtons[2].setChoose(false);
+        mapButtons[3].setChoose(false);
+        mapButtons[4].setChoose(false);
         mapButtons[0].setChoose(false);
         type = 4;
         isChange = true;
@@ -271,7 +293,8 @@ int Menu::levelMenu() {
     else if (mapButtons[1].getChoose()) return 1;
     else if (mapButtons[2].getChoose()) return 2;
     else if (mapButtons[3].getChoose()) return 3;
-    else return 4;
+    else if (mapButtons[4].getChoose()) return 4;
+    else return 5;
 }
 
 // int Menu::levelMenu() {

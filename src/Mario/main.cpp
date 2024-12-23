@@ -1,4 +1,6 @@
-#include "../Application.hpp"
+#include "../animation/Animation.h"
+#include "../Application/ResourceManager.hpp"
+#include "../Application/Application.hpp"
 
 int main() {
 
@@ -23,13 +25,13 @@ int main() {
 //     InitWindow(1024, 768, "Game Window");
 //     SetWindowState(FLAG_WINDOW_RESIZABLE);
 //     SetTargetFPS(60);
-    
-//     KoopaTroopa koopa({300, 300});
+//     Lakitu koopa({900, 100});
     
 //     while(!WindowShouldClose()) {
 //         BeginDrawing();
-//         ClearBackground(BLACK);
+//         ClearBackground(RAYWHITE);
 //         DrawRectangleLines(300, 300, 42, 58, RED);
+//         DrawLineEx({300,300}, {300,400}, 2.0f, RED);
 //         // DrawRectangleLines(400, 300, 48, 99, RED);
 
 //         // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);

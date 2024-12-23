@@ -1,8 +1,9 @@
 #include "Game.hpp"
+#include "ResourceManager.hpp"
 
 Game::Game() 
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_TESTING, this))
+      level(factory.CreateLevel(LevelFactory::LEVEL_101, this))
 {
     player = new Mario;
     if (level == nullptr) {
@@ -12,12 +13,23 @@ Game::Game()
     player->setPosition(Vector2{20, 0});  
     level->attachPlayer(player);  
     myFont = LoadFont("assets/Font/MarioFont.ttf");
-    countdown = 400;
+    countdown = 200;
 	timer = 0.0f;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
+    continueButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
+    replayButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
+    homeButton = QuitButton(Rectangle{542, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
+
+    pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
+    winGame = ResourceManager::GetInstance()->GetTexture("winGame");
+    loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
+
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
 Game::Game(int characterMenu, int levelMenu) 
@@ -43,9 +55,30 @@ Game::Game(int characterMenu, int levelMenu)
     else if (levelMenu == 4) {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
-    level->reset();
+    else if (levelMenu == 5) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+    }
+
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
+
+    countdown = 400;
+	timer = 0.0f;
+    infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
+	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+    pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
+    continueButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
+    replayButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
+    homeButton = QuitButton(Rectangle{542, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
+
+    pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
+    winGame = ResourceManager::GetInstance()->GetTexture("winGame");
+    loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
+
+
     int levelType = level->GetLevelType();
     switch (levelType)
     {
@@ -66,6 +99,168 @@ Game::Game(int characterMenu, int levelMenu)
         break;
         
     default:
+        break;
+    }
+}
+
+void Game::save(const std::string& filename)  {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "File not opened" << std::endl;
+        return;
+    }
+    if (level->GetLevelType() == LevelFactory::LEVEL_101) {
+        file << LevelFactory::LEVEL_101 << " ";
+    } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
+        file << LevelFactory::LEVEL_102 << " ";
+    } else if (level->GetLevelType() == LevelFactory::LEVEL_103) {
+        file << LevelFactory::LEVEL_103 << " ";
+    } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101) {
+        file << LevelFactory::LEVEL_101 << " ";
+    } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102) {
+        file << LevelFactory::LEVEL_102 << " ";
+    }
+    else if (level->GetLevelType() == LevelFactory::LEVEL_TESTING) {
+        file << LevelFactory::LEVEL_TESTING << " ";
+    }
+
+    if (player->getType() == CharacterType::MARIO) {
+        file << CharacterType::MARIO << " ";
+    } else {
+        file << CharacterType::LUIGI << " ";
+    }
+
+    // Vector2 position = player->GetPosition();
+    file << 0 << " " << 0 << " ";
+    file.close();
+}
+
+void Game::saveScore(const std::string& filename) {
+    std::ofstream file(filename, std::ios::app);
+    if (!file.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
+    file << player->getScore() << std::endl;
+    file.close();
+}
+void Game::change(const std::string& filename) 
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
+    int level, character;
+    float x, y;
+    file >> level >> character >> x >> y;
+    countdown = 300;
+    if (character == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+
+    if (level == 0) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    } else if (level == 2) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (level == 5) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+    }
+    else if (level == 1) {
+        this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+    }
+    else if (level == 3) {
+        this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
+    else if (level == 7) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+    }
+    this->level->reset();
+    player->reset();
+    player->setPosition(Vector2{x * 1.0f, y * 1.0f});
+    this->player->setLives(3);
+    this->timer = 0.0f;
+    this->level->attachPlayer(player);
+
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+
+    int levelType = this->level->GetLevelType();
+
+    switch (levelType)
+    {
+    case LevelFactory::LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+        break;
+    case LevelFactory::LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        break;
+    case LevelFactory::LEVEL_103:
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
+        break;
+        
+    default:
+        break;
+    }
+    file.close();
+}
+
+void Game::changeMenu(int characterMenu, int levelMenu) {
+    if (characterMenu == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+
+    if (levelMenu == 0) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    } else if (levelMenu == 1) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (levelMenu == 2) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
+    }
+    else if (levelMenu == 3) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
+    }
+    else if (levelMenu == 4) {
+        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
+    }
+    else if (levelMenu == 5) {
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+    }
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
+
+    countdown = 400;
+    timer = 0.0f;
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+
+
+    int levelType = level->GetLevelType();
+    switch (levelType)
+    {
+    case LevelFactory::LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+        break;
+    case LevelFactory::LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        break;
+    case LevelFactory::LEVEL_103:
+        MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_101:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
+        break;
+    case LevelFactory::HIDDEN_LEVEL_102:
+        MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
     }
 }
@@ -98,41 +293,64 @@ Game& Game::operator=(const Game& other) {
     return *this; 
 }
 void Game::start() {
+   
+    handleState();
     update(GetFrameTime());
     MusicManager::getInstance().UpdateMusic();
     draw();
-    if (IsKeyDown(KEY_A)) {
-        nextLevel();
+    if (IsKeyPressed(KEY_A)) {
+        state = LEVEL_RETURN_MESSAGE::QUIT;
     }
     else if (IsKeyDown(KEY_B)) {
-        hiddenLevel();
+        state = LEVEL_RETURN_MESSAGE::LOSE;
     }
     else if (IsKeyDown(KEY_C)) {
-        restartLevel();
+        state = LEVEL_RETURN_MESSAGE::WIN;
     }
-    handleState();
+        
 }
 
 void Game::update(float deltaTime) {
     if (level) {
         level->update(deltaTime);
     }
+    if (pauseButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::PAUSE;
+    } else if (continueButton.isClicked()) {
+         state = LEVEL_RETURN_MESSAGE::CONTINUE;
+    } else if (replayButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::RESTART;
+    } else if (homeButton.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::QUIT;
+    }
 }
 
 void Game::draw() {
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
+    // BeginDrawing();
+    // ClearBackground(RAYWHITE);
+	drawInfo();
     if (level) {
         level->render();
     }
-    drawInfo();
+    if (state == LEVEL_RETURN_MESSAGE::PAUSE) {
+        drawContinueButton();
+    } else if (state == LEVEL_RETURN_MESSAGE::CONTINUE) {
+        drawPauseMenu();
+    } else if (state == LEVEL_RETURN_MESSAGE::WIN) {
+        drawWinButton();
+    } else if (state == LEVEL_RETURN_MESSAGE::LOSE) {
+        drawLoseButton();
+    }
+    else if (state == LEVEL_RETURN_MESSAGE::RUNNING) {
+        drawPauseMenu();
+    }
 }
 
 void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;
-            level -> pauseLevel();
+            level->pauseLevel();
             break;
         case 1:
             state = LEVEL_RETURN_MESSAGE::CONTINUE;
@@ -161,20 +379,16 @@ void Game::notify(Component* sender, int eventCode) {
     }
 }
 
-void Game::resetCountdown() {
-	countdown = 400;
-}
+
 void Game::nextLevel() {
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {     
         level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
         level -> reset();
-        this->resetCountdown();
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
         level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
         level -> reset();
-        this->resetCountdown();
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
     } 
     else {
@@ -191,6 +405,7 @@ void Game::nextLevel() {
 }
 
 void Game::hiddenLevel() {
+    player->reset();
     if (level->GetLevelType() == LevelFactory::LEVEL_101) 
     {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
@@ -234,25 +449,16 @@ void Game::hiddenLevel() {
         std::cout << "Set Position: " << 5100 << " " << 175 << std::endl;
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
-    else
-    {
-        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
-        level -> reset();
-        level->attachPlayer(player);
-        player->setPosition(Vector2{0, 0});
-        std::cout << "Set Position: " << 0 << " " << 0 << std::endl;
-        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
-    }
+    else return;
     level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::restartLevel() {
-    level = factory.CreateLevel(level->GetLevelType(), this);
-    level -> reset();
-    player->setPosition(Vector2{20, 0});
-    level->attachPlayer(player);
-    level->update(0.01f);
+    level->reset();
+    // level->attachPlayer(player);
+    // level->update(0.01f);
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
 void Game::handleState() {
@@ -262,15 +468,26 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
             nextLevel();
+            if (level->GetLevelType() == LevelFactory::LEVEL_103) {
+                saveScore("score.txt");
+            }
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
-            //drawLoseButton();
+
             level->pauseLevel();
+            saveScore("score.txt");
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
+            save("continue.txt");
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();
+            break;
+        case LEVEL_RETURN_MESSAGE::PAUSE:
+            level->pauseLevel();
+            break;
+        case LEVEL_RETURN_MESSAGE::CONTINUE:
+            level->continueLevel();
             break;
     }
 }
@@ -289,14 +506,17 @@ void Game::drawInfo() {
     else if (world == LevelFactory::LEVEL_103 || world == LevelFactory::HIDDEN_LEVEL_103) {
         worldString = "1-3";
     }
-    float deltaTime;
-    deltaTime = GetFrameTime(); 
-    timer += deltaTime;
-    if (timer >= 1.0f) {
-        countdown--;
-        timer = 0.0f; 
-        if (countdown <= 0) {
-            countdown = 0;
+
+    if (state != LEVEL_RETURN_MESSAGE::PAUSE && state != LEVEL_RETURN_MESSAGE::WIN && state != LEVEL_RETURN_MESSAGE::LOSE) {
+        float deltaTime;
+        deltaTime = GetFrameTime(); 
+        timer += deltaTime;
+        if (timer >= 1.0f) {
+            countdown--;
+            timer = 0.0f; 
+            if (countdown <= 0) {
+                countdown = 0;
+            }
         }
     }
 
@@ -329,4 +549,32 @@ void Game::DrawTextCentered(Font font, const std::string& label, const std::stri
     float valueWidth = MeasureTextEx(font, value.c_str(), fontSize, spacing).x;
     DrawTextEx(font, label.c_str(), { position.x - labelWidth / 2, position.y }, fontSize, spacing, color);
     DrawTextEx(font, value.c_str(), { position.x - valueWidth / 2, position.y + 30 }, fontSize, spacing, color);
+}
+
+void Game::drawPauseMenu() {
+    pauseButton.draw();
+}
+
+void Game::drawContinueButton() {
+    DrawTextureEx(pauseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    continueButton.draw();
+    homeButton.draw();
+}
+
+void Game::drawWinButton() {
+    DrawTextureEx(winGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    replayButton.draw();
+    homeButton.draw();
+}
+
+void Game::drawLoseButton() {
+    DrawTextureEx(loseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
+    replayButton.draw();
+    homeButton.draw();
+}
+void Game::reset()
+{
+    level->reset();
+    player->reset();
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
 }

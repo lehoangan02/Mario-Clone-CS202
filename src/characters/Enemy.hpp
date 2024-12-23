@@ -38,6 +38,7 @@ protected:
     float leftBound, rightBound, topBound, bottomBound;   
 public:
     Enemy() = default;
+    virtual ~Enemy() {}
     Enemy(Vector2 position) : position(position), animationTime(0.2f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed) : position(position), size(size), speed(speed), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
     Enemy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound) : position(position), size(size), speed(speed), leftBound(leftBound), rightBound(rightBound), topBound(topBound), bottomBound(bottomBound), animationTime(1.0f), timer(0.0f), currentTextureIndex(0), isDying(false), dyingTime(0.0f) {}
@@ -89,6 +90,7 @@ class Goomba : public Enemy {
 public:
     Goomba(Vector2 position);
     Goomba(Vector2 position, Vector2 size, Vector2 speed);
+    ~Goomba() {}
     EnemyType getEnemyType() const  { return EnemyType::GOOMBA; };
 
     Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
@@ -111,6 +113,7 @@ class KoopaTroopa : public Enemy {
         KoopaTroopa(Vector2 position);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed);
         KoopaTroopa(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+        ~KoopaTroopa() {}
         EnemyType getEnemyType() const { return EnemyType::KOOPA_TROOPA; };
 
         void setShell(bool isShell) { this->isShell = isShell; };
@@ -134,6 +137,7 @@ class PiranhaPlant : public Enemy {
     public:
         PiranhaPlant(Vector2 position);
         PiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
+        ~PiranhaPlant() {}
         EnemyType getEnemyType() const { return EnemyType::PIRANHA_PLANT; };
 
         void setHeightInGround(float heightInGround) { this->heightInGround = heightInGround; };
@@ -157,6 +161,7 @@ class InversePiranhaPlant : public PiranhaPlant {
     public:
         InversePiranhaPlant(Vector2 position);
         InversePiranhaPlant(Vector2 position, Vector2 size, Vector2 speed);
+        ~InversePiranhaPlant() {}
         EnemyType getEnemyType() const  { return EnemyType::INVERSE_PIRANHA_PLANT; };
 
         Rectangle getBoundingBox() const override { return {originPosition.x, originPosition.y, size.x, size.y - heightInGround}; };
@@ -177,6 +182,7 @@ class ShyGuy : public Enemy {
         ShyGuy(Vector2 position);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed);
         ShyGuy(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+        ~ShyGuy() {}
         EnemyType getEnemyType() const { return EnemyType::SHY_GUY; };
 
         Rectangle getBoundingBox() const { return {position.x, position.y, size.x, size.y}; };
@@ -190,7 +196,7 @@ class Projectile : public Enemy {
 private:
     bool active;
 public:
-    ~Projectile() = default;
+    ~Projectile() {}
     Projectile(Vector2 position);
 
     EnemyType getEnemyType() const { return EnemyType::PROJECTILE; };
@@ -219,6 +225,7 @@ public:
     Lakitu(Vector2 position);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed);
     Lakitu(Vector2 position, Vector2 size, Vector2 speed, float leftBound, float rightBound, float topBound, float bottomBound);
+    ~Lakitu() {}
     EnemyType getEnemyType() const { return EnemyType::LAKITU; };
 
     void hit() override;

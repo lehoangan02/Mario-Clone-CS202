@@ -81,10 +81,10 @@ Level::~Level()
     {
         delete object;
     }
-    for (auto& object : m_Enemies)
-    {
-        delete object;
-    }
+    // for (auto& object : m_Enemies)
+    // {
+    //     delete object;
+    // }
     for (auto& object : m_IdleCoin)
     {
         delete object;
@@ -146,6 +146,7 @@ void Level::resolveEnvironmentCollisions()
                         m_Player->resetVelocity();
                         m_Player->onPlatform();
                     }
+                    
                 }
                 
             }
@@ -693,8 +694,8 @@ void Level::produceSwitchSignal()
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
-        m_Player->reset();
         m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
+        m_Player->reset();
         std::cout << "Notifying Lose" << std::endl;
     }
     else if (m_Player->haveWon())
@@ -724,7 +725,6 @@ void Level::produceSwitchSignal()
 }
 void Level::update(float DeltaTime)
 {
-    produceSwitchSignal();
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
@@ -811,6 +811,8 @@ void Level::update(float DeltaTime)
         // for winning
         // SoundManager::getInstance().PlaySoundEffect(LEVELCOMPLETE_SOUND);
     }
+    produceSwitchSignal();
+
 }
 bool Level::isPlayerInHole()
 {

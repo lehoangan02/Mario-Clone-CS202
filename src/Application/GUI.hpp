@@ -54,6 +54,8 @@ private:
 public:
     QuitButton() = default;
     QuitButton(Rectangle rect);
+    QuitButton(Rectangle rect, Texture2D texture);
+    void setTexture(Texture2D newTexture) { texture = newTexture; };
     void draw(float radius = 50) override;
 };
 class Menu {
@@ -79,7 +81,7 @@ private:
     Button characterButtons[2];
 
     Texture2D mapTexture;
-    Button mapButtons[5];
+    Button mapButtons[6];
 
     // Texture2D levelTexture;
     // Button levelButtons[3];
@@ -87,8 +89,8 @@ private:
     Texture2D highScoreTexture;
 
     Texture2D inforTexture;
-    int type;
-    bool isChange;
+    int type = 0;
+    bool isChange = false;
 
 public:
     Menu();
@@ -98,7 +100,7 @@ public:
     //int levelMenu();
 
     int handle();
-
+    void reset() { type = 0; isChange = false; };
     bool getIsChange() const { return isChange; };
     void setIsChange(bool newIsChange) { isChange = newIsChange; };
 };
