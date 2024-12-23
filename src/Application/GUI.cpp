@@ -48,6 +48,10 @@ void QuitButton::draw(float radius) {
     DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f , BLACK);
 }
 
+void QuitButton::draw(Color alpha) {
+    this->isHovered = CheckCollisionPointRec(GetMousePosition(), this->outerRect);
+    DrawTextureEx(this->texture, {this->outerRect.x, this->outerRect.y}, 0.0f, this->isHovered ? 0.125f : 0.11f, alpha);
+}
 Menu::Menu() {
     this->pageTexture = ResourceManager::GetInstance()->GetTexture("pageTexture");
     

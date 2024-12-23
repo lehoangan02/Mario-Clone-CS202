@@ -576,7 +576,7 @@ void Game::drawPauseMenu() {
 
 void Game::drawContinueButton() {
     DrawTextureEx(pauseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
-    continueButton.draw();
+    continueButton.draw(RAYWHITE);
     homeButton.draw();
 }
 
