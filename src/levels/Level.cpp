@@ -731,10 +731,10 @@ void Level::produceSwitchSignal()
 }
 void Level::update(float DeltaTime)
 {
-    std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
-    std::cout << "In Control: " << m_InControl << std::endl;
-    std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
-    std::cout << "In End Pipe: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
+    // std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
+    // std::cout << "In Control: " << m_InControl << std::endl;
+    // std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
+    // std::cout << "In End Pipe: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
@@ -1173,7 +1173,33 @@ void Level101::load()
 }
 void Level101::update(float DeltaTime)
 {
-    return Level::update(DeltaTime);
+    bool isOnTopSpecialPipe = [=]()
+    {
+        auto m_SpecialPipe = m_Environment[2];
+        AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+        AABBox PipeBox = AABBox(m_SpecialPipe->m_Position, m_SpecialPipe->getSize());
+        float ErrorMargin = 10.0f;
+        if (PlayerBox.getPosition().y + PlayerBox.getSize().y + ErrorMargin < PipeBox.getPosition().y)
+        {
+            return false;
+        }
+        if (PlayerBox.getPosition().y + PlayerBox.getSize().y > PipeBox.getPosition().y + ErrorMargin)
+        {
+            return false;
+        }
+        if (PlayerBox.getPosition().x > PipeBox.getPosition().x && PlayerBox.getPosition().x + PlayerBox.getSize().x < PipeBox.getPosition().x + PipeBox.getSize().x)
+        {
+            std::cout << "On Top of Special Pipe" << std::endl;
+            return true;
+        }
+        return false;
+    }();
+    if (isOnTopSpecialPipe && IsKeyDown(KEY_DOWN))
+    {
+        std::cout << "Trying Sliding Down" << std::endl;
+        m_Player->SlidePipe(slidingDirection::down);
+    }
+    Level::update(DeltaTime);
 }
 void Level101::render()
 {
