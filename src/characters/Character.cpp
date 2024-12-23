@@ -269,6 +269,10 @@ void Character::touchEnemy() {
 		DieAnimation();
 	}
 }
+void Character::increaseScore() {
+	this->score += 100;
+	this->coins++;
+}
 void Character::killEnemy() {
 	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);
@@ -386,7 +390,7 @@ void Character::SlidePipe(slidingDirection direction) {
 		this->SlideDist.y -= offset;
 		break;
 	}
-	if (this->SlideDist.x <= 10.0f || this->SlideDist.y <= 0) {
+	if (this->SlideDist.x <= 15.0f || this->SlideDist.y <= 0) {
 		this->sliding = false;
 		this->finishSliding = true;
 		this->SlideDist = { this->size.x, this->size.y };

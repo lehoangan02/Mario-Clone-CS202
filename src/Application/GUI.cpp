@@ -162,6 +162,17 @@ void Menu::draw(){
     // }
     else if (type == 6) {
         DrawTextureEx(highScoreTexture, {236, 167}, 0, 0.125, WHITE);
+        std::string score1Text = std::to_string(score[0]);
+        std::string score2Text = std::to_string(score[1]);
+        std::string score3Text = std::to_string(score[2]);
+
+        Vector2 score1Size = MeasureTextEx(ResourceManager::GetInstance()->GetFont(), score1Text.c_str(), 22, 2);
+        Vector2 score2Size = MeasureTextEx(ResourceManager::GetInstance()->GetFont(), score2Text.c_str(), 22, 2);
+        Vector2 score3Size = MeasureTextEx(ResourceManager::GetInstance()->GetFont(), score3Text.c_str(), 22, 2);
+
+        DrawTextPro(ResourceManager::GetInstance()->GetFont(), score1Text.c_str(), {418 + (230 - score1Size.x) / 2, 267 + (48 - score1Size.y) / 2}, {0, 0}, 0, 22, 2, BLACK);
+        DrawTextPro(ResourceManager::GetInstance()->GetFont(), score2Text.c_str(), {418 + (230 - score2Size.x) / 2, 343 + (48 - score2Size.y) / 2}, {0, 0}, 0, 22, 2, BLACK);
+        DrawTextPro(ResourceManager::GetInstance()->GetFont(), score3Text.c_str(), {418 + (230 - score3Size.x) / 2, 419 + (48 - score3Size.y) / 2}, {0, 0}, 0, 22, 2, BLACK);
         quitButton.draw();
     }
     else if (type == 7) {
@@ -173,7 +184,10 @@ void Menu::draw(){
 int Menu::handle() {
     if (playButton.isClicked()) type = 1;
     else if (settingButton.isClicked()) type = 2;
-    else if (highScoreButton.isClicked()) type = 6;
+    else if (highScoreButton.isClicked()) {
+        type = 6;
+        getScore(score[0], score[1], score[2], "./score.txt");
+    }
     else if (inforButton.isClicked()) type = 7;
     
     if (quitButton.isClicked()) {
@@ -312,3 +326,38 @@ int Menu::levelMenu() {
 //     else if (levelButtons[1].getChoose()) return 1;
 //     else return 2;
 // }
+
+void Menu::getScore(int &score1, int &score2, int &score3, const std::string &filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "File score not opened" << std::endl;
+        return;
+    }
+    std::vector <int> a;
+    int x;
+    while (file >> x) {
+        a.push_back(x);
+    }
+    file.close();
+    sort(a.begin(), a.end(), std::greater<int>());
+    if (a.size() >= 3) {
+        score1 = a[0];
+        score2 = a[1];
+        score3 = a[2];
+    }
+    else if (a.size() == 2) {
+        score1 = a[0];
+        score2 = a[1];
+        score3 = 0;
+    }
+    else if (a.size() == 1) {
+        score1 = a[0];
+        score2 = 0;
+        score3 = 0;
+    }
+    else {
+        score1 = 0;
+        score2 = 0;
+        score3 = 0;
+    }
+}
