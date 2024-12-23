@@ -68,6 +68,7 @@ public:
 	bool IsMusicPlaying();
 	void SetVolume(float volume);
     void PlayPreviousTrack();
+	void PlayCurrentTrack();
 private:
     int currentTrack;
     int prevTrack;

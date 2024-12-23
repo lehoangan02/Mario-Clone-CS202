@@ -13,7 +13,7 @@ Game::Game()
     player->setPosition(Vector2{20, 0});  
     level->attachPlayer(player);  
     myFont = LoadFont("assets/Font/MarioFont.ttf");
-    countdown = 200;
+    countdown = 300;
 	timer = 0.0f;
 	state = LEVEL_RETURN_MESSAGE::RUNNING;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
@@ -64,7 +64,7 @@ Game::Game(int characterMenu, int levelMenu)
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
 
-    countdown = 400;
+    countdown = 300;
 	timer = 0.0f;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
@@ -243,7 +243,7 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
 
-    countdown = 400;
+    countdown = 300;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 
@@ -421,6 +421,8 @@ void Game::nextLevel() {
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
     level->update(0.01f);
+    state = LEVEL_RETURN_MESSAGE::RUNNING; 
+	resetCountdown();
 }
 
 void Game::hiddenLevel() {
@@ -469,6 +471,8 @@ void Game::restartLevel() {
     level->reset();
     // level->attachPlayer(player);
     // level->update(0.01f);
+	resetCountdown();
+	MusicManager::getInstance().PlayCurrentTrack();
     state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
@@ -594,4 +598,8 @@ void Game::reset()
     level->reset();
     player->reset();
     state = LEVEL_RETURN_MESSAGE::RUNNING;
+}
+
+void Game::resetCountdown() {
+	countdown = 300;
 }
