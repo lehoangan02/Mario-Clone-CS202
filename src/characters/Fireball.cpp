@@ -53,6 +53,8 @@ bool Fireball::IsActive() const {
 
 void Fireball::Deactivate() {
     active = false;
+    position = { 0,0 };
+    velocity = { 0,0 };
 }
 
 FirePool::FirePool(int size) {

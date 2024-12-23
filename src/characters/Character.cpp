@@ -315,7 +315,6 @@ void Character::Draw()
 	float rotation = 0.0f;
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
-	firePool->Draw();
 	//if (pullFlag) std::cout << "mmm" << std::endl;
 	//std::cout << "Instance1 " << this << std::endl;
 

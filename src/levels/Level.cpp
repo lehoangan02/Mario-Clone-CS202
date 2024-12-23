@@ -620,11 +620,6 @@ void Level::render()
     {
         m_FlagPole->render();
     }
-    for (auto& object : m_Enemies)
-    {
-        // if (object->isHit()) continue;
-        object->render();
-    }
     for (auto& object : m_EnvironmentInteractive)
     {
         if (object.second == nullptr) continue;
@@ -674,9 +669,11 @@ void Level::render()
     {
         object->render();
     }
-    Ground::GetGround()->render();
-    m_Player->Draw();
-    
+    for (auto& object : m_Enemies)
+    {
+        // if (object->isHit()) continue;
+        object->render();
+    }
     for (auto& object : m_Environment)
     {
         if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
@@ -685,6 +682,9 @@ void Level::render()
         }
         object->render();
     }
+    Ground::GetGround()->render();
+    m_Player->Draw();
+    m_Player->firePool->Draw();
     DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
 
@@ -1100,11 +1100,12 @@ void Level::FireballHandler::update()
             if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y)
             {
                 // std::cout << "Touching Ground" << std::endl;
-                if (m_Level->m_Ground->isInHole(AABBox(fireball.getPosition(), fireball.getSize())))
+                bool IsInHole = m_Level->m_Ground->isInHole(AABBox(fireball.getPosition(), fireball.getSize()));
+                if (IsInHole)
                 {
-                    fireball.Deactivate();
+                    // fireball.Deactivate();
                     int HoleIndex = m_Level->m_Ground->findHole(AABBox(fireball.getPosition(), fireball.getSize()));
-                    std::pair<int, int> Hole = m_Level->m_Ground->getHole(HoleIndex);
+                    std::pair<int, int> Hole = m_Level->m_Ground->getHolePosition(HoleIndex);
                     if (fireball.getPosition().x < Hole.first)
                     {
                         fireball.position.x = Hole.first;
@@ -1113,19 +1114,24 @@ void Level::FireballHandler::update()
                     {
                         fireball.position.x = Hole.second - fireball.getSize().x;
                     }
+                    if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y + 300)
+                    {
+                        fireball.Deactivate();
+                    }
                 }
                 else
                 {
                     fireball.position = {fireball.getPosition().x, m_Level->m_Ground->m_Position.y - fireball.getSize().y};
+                    fireball.Bounce();
                 }
                 // std::cout << "Position After Reset: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
-                fireball.Bounce();
+                
             }
             if (fireball.getPosition().x > m_Level->m_CameraPosition.x + 3000)
             {
                 fireball.Deactivate();
             }
-            if (fireball.getPosition().x < m_Level->m_CameraPosition.x - 500)
+            if (fireball.getPosition().x < m_Level->m_Player->GetPosition().x - 500)
             {
                 fireball.Deactivate();
             }
