@@ -483,7 +483,7 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
-                level->reset();
+                level->pauseLevel();
                 if (!isSaveScore) {
                     saveScore("score.txt");
                     isSaveScore = true;
