@@ -58,6 +58,7 @@ public:
     void setTexture(Texture2D newTexture) { texture = newTexture; };
     void draw(float radius = 50) override;
     void draw(Color alpha);
+
 };
 class Menu {
 private:
@@ -94,6 +95,8 @@ private:
     int type = 0;
     bool isChange = false;
 
+    int score[3];
+
 public:
     Menu();
     void draw();
@@ -105,6 +108,7 @@ public:
     void reset() { type = 0; isChange = false; };
     bool getIsChange() const { return isChange; };
     void setIsChange(bool newIsChange) { isChange = newIsChange; };
+    void getScore(int &score1, int &score2, int &score3, const std::string& filename);
 };
 
 
