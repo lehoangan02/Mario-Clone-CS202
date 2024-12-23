@@ -368,6 +368,7 @@ void Mario::Update(float deltaTime) {
 }
 
 void Character::SlidePipe(slidingDirection direction) {
+	slideDirection = direction;
 	this->sliding = true;
 	this->velocity.x = 0;
 	this->velocity.y = 0;

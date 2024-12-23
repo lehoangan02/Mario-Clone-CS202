@@ -1194,7 +1194,7 @@ void Level101::update(float DeltaTime)
         }
         return false;
     }();
-    if (isOnTopSpecialPipe && IsKeyDown(KEY_DOWN))
+    if (isOnTopSpecialPipe && IsKeyPressed(KEY_DOWN))
     {
         std::cout << "Trying Sliding Down" << std::endl;
         m_Player->SlidePipe(slidingDirection::down);
