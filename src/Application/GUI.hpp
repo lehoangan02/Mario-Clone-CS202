@@ -57,6 +57,7 @@ public:
     QuitButton(Rectangle rect, Texture2D texture);
     void setTexture(Texture2D newTexture) { texture = newTexture; };
     void draw(float radius = 50) override;
+    void draw(Color alpha) { DrawTextureEx(texture, {outerRect.x, outerRect.y}, 0.0f, 0.125f, alpha); };
 };
 class Menu {
 private:

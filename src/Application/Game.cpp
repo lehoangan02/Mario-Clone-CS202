@@ -552,7 +552,7 @@ void Game::DrawTextCentered(Font font, const std::string& label, const std::stri
 }
 
 void Game::drawPauseMenu() {
-    pauseButton.draw();
+    pauseButton.draw(YELLOW);
 }
 
 void Game::drawContinueButton() {
