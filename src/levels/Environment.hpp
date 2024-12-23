@@ -138,6 +138,8 @@ class Ground : public MapObject // Singleton
         int getHoleCount() { return m_Holes.size(); };
         void setWorldType(int Type) { m_WorldType = Type; };
         bool isInHole(AABBox Box);
+        int findHole(AABBox Box);
+        std::pair<int, int> getHolePosition(int index) { return std::make_pair(m_Holes[index].first, m_Holes[index].second); };
 };
 class WarpPipe : public EnvironmentObject
 {

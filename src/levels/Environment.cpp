@@ -177,7 +177,17 @@ bool Ground::isInHole(AABBox Box)
     }
     return false;
 }
-
+int Ground::findHole(AABBox Box)
+{
+    for (int i = 0; i < m_Holes.size(); ++i)
+    {
+        if (Box.getPosition().x + Box.getSize().x < m_Holes[i].first + m_Holes[i].second * 100 && Box.getPosition().x > m_Holes[i].first)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 WarpPipe::WarpPipe(Vector2 Position) : EnvironmentObject(Position, Vector2{209, 195})
 {
     m_Type = EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE;

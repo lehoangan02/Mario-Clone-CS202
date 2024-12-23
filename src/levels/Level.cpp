@@ -525,7 +525,6 @@ void Level::handleItemLogic()
                 m_Player->increaseScore(200);
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 MushroomItem->setHit();
-                m_Player->increaseScore();
             }
         }
         else if (CurrentItem->getItemID() == Itemtype::FIREFLOWER)
@@ -540,7 +539,6 @@ void Level::handleItemLogic()
                 m_Player->increaseScore(300);
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 FireFlowerItem->setHit();
-                m_Player->increaseScore();
             }
         }
         else if (CurrentItem->getItemID() == Itemtype::STARMAN)
@@ -555,7 +553,6 @@ void Level::handleItemLogic()
                 m_Player->increaseScore(1000);
                 MusicManager::getInstance().PlayMusic(Invincible);
                 StarManItem->setHit();
-                m_Player->increaseScore();
             }
         }
     }
@@ -623,19 +620,6 @@ void Level::render()
     {
         m_FlagPole->render();
     }
-    for (auto& object : m_Drawables)
-    {
-        object->render();
-    }
-    m_Player->Draw();
-    for (auto& object : m_Environment)
-    {
-        if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
-        {
-            // std::cout << "Warp Pipe at: " << object->m_Position.x << " " << object->m_Position.y << std::endl;
-        }
-        object->render();
-    }
     for (auto& object : m_Enemies)
     {
         // if (object->isHit()) continue;
@@ -669,8 +653,6 @@ void Level::render()
     {
         object.first->render();
     }
-
-    Ground::GetGround()->render();
     for (auto& object : m_Lifts)
     {
         object->render();
@@ -688,6 +670,21 @@ void Level::render()
     }
     m_FireballHandler.draw();
     float HidePositionX = m_ScreenSize.x * 2;
+    for (auto& object : m_Drawables)
+    {
+        object->render();
+    }
+    Ground::GetGround()->render();
+    m_Player->Draw();
+    
+    for (auto& object : m_Environment)
+    {
+        if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
+        {
+            // std::cout << "Warp Pipe at: " << object->m_Position.x << " " << object->m_Position.y << std::endl;
+        }
+        object->render();
+    }
     DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
 
@@ -1093,27 +1090,43 @@ void Level::FireballHandler::update()
     for (auto& fireball : m_Level->m_Player->firePool->fireballs)
     {
         if (!fireball.IsActive()) continue;
-        std::cout << "Ball is Active" << std::endl;
+        // std::cout << "Ball is Active" << std::endl;
         // fireball.position = {10, 10};
-        std::cout << "Position: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
+        // std::cout << "Position: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
         if (fireball.IsActive())
         {
-            std::cout << "Size: " << fireball.getSize().x << ", " << fireball.getSize().y << std::endl;
-            std::cout << "Ground Position: " << m_Level->m_Ground->m_Position.y << std::endl;
+            // std::cout << "Size: " << fireball.getSize().x << ", " << fireball.getSize().y << std::endl;
+            // std::cout << "Ground Position: " << m_Level->m_Ground->m_Position.y << std::endl;
             if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y)
             {
-                std::cout << "Touching Ground" << std::endl;
-                fireball.position.y = m_Level->m_Ground->m_Position.y - fireball.getSize().y;
-                std::cout << "Position After Reset: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
+                // std::cout << "Touching Ground" << std::endl;
+                if (m_Level->m_Ground->isInHole(AABBox(fireball.getPosition(), fireball.getSize())))
+                {
+                    int HoleIndex = m_Level->m_Ground->findHole(AABBox(fireball.getPosition(), fireball.getSize()));
+                    std::pair<int, int> Hole = m_Level->m_Ground->getHole(HoleIndex);
+                    if (fireball.getPosition().x < Hole.first)
+                    {
+                        fireball.position.x = Hole.first;
+                    }
+                    else if (fireball.getPosition().x + fireball.getSize().x > Hole.second)
+                    {
+                        fireball.position.x = Hole.second - fireball.getSize().x;
+                    }
+                }
+                else
+                {
+                    fireball.position = {fireball.getPosition().x, m_Level->m_Ground->m_Position.y - fireball.getSize().y};
+                }
+                // std::cout << "Position After Reset: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
                 fireball.Bounce();
             }
             if (fireball.getPosition().x > m_Level->m_CameraPosition.x + 3000)
             {
-                fireball.Deactivate();
+                // fireball.Deactivate();
             }
-            if (fireball.getPosition().x < m_Level->m_CameraPosition.x)
+            if (fireball.getPosition().x < m_Level->m_CameraPosition.x - 500)
             {
-                fireball.Deactivate();
+                // fireball.Deactivate();
             }
         }
         for (auto& Environment : m_Level->m_Environment)
@@ -1125,7 +1138,7 @@ void Level::FireballHandler::update()
             {
                 if (isCollidingHorizontally(FireballBox, EnvironmentBox))
                 {
-                    fireball.Deactivate();
+                    // fireball.Deactivate();
                 }
                 else if (isCollidingVertically(FireballBox, EnvironmentBox))
                 {
@@ -1144,7 +1157,7 @@ void Level::FireballHandler::update()
             {
                 if (isCollidingHorizontallyRawLess(FireballBox, EnvironmentBox, 20.0f))
                 {
-                    fireball.Deactivate();
+                    // fireball.Deactivate();
                 }
                 else if (isCollidingVertically(FireballBox, EnvironmentBox))
                 {
@@ -1161,7 +1174,7 @@ void Level::FireballHandler::update()
             AABBox EnemyBox = AABBox(Enemy->getPosition(), Enemy->getSize());
             if (isColliding(FireballBox, EnemyBox))
             {
-                fireball.Deactivate();
+                // fireball.Deactivate();
                 Enemy->hit();
             }
         }
