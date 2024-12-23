@@ -60,7 +60,7 @@ Game::Game(int characterMenu, int levelMenu)
     else if (levelMenu == 5) {
         level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
-
+    level -> reset();
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
 
@@ -493,9 +493,11 @@ void Game::handleState() {
                 saveScore("score.txt");
                 isSaveScore = true;
             }
+            level->reset();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             save("continue.txt");
+            level->reset();
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();
