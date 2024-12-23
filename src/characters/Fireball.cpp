@@ -36,7 +36,7 @@ void Fireball::Draw() {
         Rectangle destRect = { position.x, position.y, float(fabs(texture.width / 4) * scale), float(texture.height * scale)};
 		/*std::cout << animation.uvRect.width * scale << " " << animation.uvRect.height * scale << std::endl;*/
         /*std::cout << position.x << " " << position.y << std::endl;*/
-        Vector2 origin = { (texture.width * scale) / 2, (texture.height * scale) / 2 };
+        Vector2 origin = { 0.0f, 0.0f };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
