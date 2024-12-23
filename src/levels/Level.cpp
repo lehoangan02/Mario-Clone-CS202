@@ -651,7 +651,7 @@ void Level::render()
                 std::cout << "Fire Flower is hitted" << std::endl;
                 continue;
             }
-            std::cout << "Position: " << FireFlowerItem->GetPosition().x << ", " << FireFlowerItem->GetPosition().y << std::endl;
+            // std::cout << "Position: " << FireFlowerItem->GetPosition().x << ", " << FireFlowerItem->GetPosition().y << std::endl;
             // DrawCircle(FireFlowerItem->GetPosition().x, FireFlowerItem->GetPosition().y, 10, RED);
             DrawBoundingBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize(), RED);
         }
@@ -686,10 +686,10 @@ void Level::render()
 }
 void Level::produceSwitchSignal()
 {
-    std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
-    std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
+    // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -946,7 +946,7 @@ bool Level::EndPipeHandler::update()
             {
                 m_Player ->SlidePipe(slidingDirection::right);
                 m_Player ->powerDown();
-                m_Player->setPosition(Vector2{m_Player->GetPosition().x, EnvironmentBox.getPosition().y});
+                m_Player->setPosition(Vector2{m_Player->GetPosition().x, EnvironmentBox.getPosition().y + 20});
                 inPipe = true;
                 // std::cout << "Sliding Right" << std::endl;
             }
