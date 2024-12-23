@@ -917,7 +917,6 @@ void Level::reset()
         if (object) delete object;
     }
     m_EndPipes.clear();
-    m_Player = nullptr;
     isPlayerFinished = false;
     m_Paused = false;
     m_TouchedFlag = false;
