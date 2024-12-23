@@ -319,6 +319,7 @@ void Game::start() {
         state = LEVEL_RETURN_MESSAGE::LOSE;
     }
     else if (IsKeyPressed(KEY_C)) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         state = LEVEL_RETURN_MESSAGE::WIN;
     }
         
@@ -399,11 +400,13 @@ void Game::nextLevel() {
         level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        state = LEVEL_RETURN_MESSAGE::RUNNING;
     }
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
         level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        state = LEVEL_RETURN_MESSAGE::RUNNING;
     } 
     else {
         return;
