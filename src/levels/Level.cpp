@@ -231,6 +231,8 @@ void Level::resolveInteractiveEnvironmentCollisions()
                                     else
                                     {
                                         SoundManager::getInstance().PlaySoundEffect(COIN_SOUND);
+                                        m_Player->increaseScore();
+                                        
                                     }
                                 }
                             }
@@ -520,6 +522,7 @@ void Level::handleItemLogic()
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player->powerUp();
+                m_Player->increaseScore(200);
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 MushroomItem->setHit();
                 m_Player->increaseScore();
@@ -534,6 +537,7 @@ void Level::handleItemLogic()
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player->increLives();
+                m_Player->increaseScore(300);
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 FireFlowerItem->setHit();
                 m_Player->increaseScore();
@@ -548,6 +552,7 @@ void Level::handleItemLogic()
             if (isColliding(ItemBox, PlayerBox))
             {
                 m_Player->invincile();
+                m_Player->increaseScore(1000);
                 MusicManager::getInstance().PlayMusic(Invincible);
                 StarManItem->setHit();
                 m_Player->increaseScore();
