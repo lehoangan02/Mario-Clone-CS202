@@ -116,6 +116,7 @@ class Level : public Subject, public Component
     Vector2 m_CameraPosition = {0, 0};
     Ground* m_Ground;
     Background m_Background;
+    bool m_InSpecialPipe = false;
     
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
