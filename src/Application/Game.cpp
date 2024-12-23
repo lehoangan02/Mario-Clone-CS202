@@ -106,38 +106,32 @@ Game::Game(int characterMenu, int levelMenu)
 void Game::save(const std::string& filename)  {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "File not found" << std::endl;
+        std::cerr << "File not opened" << std::endl;
         return;
     }
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {
-        file << "0 ";
+        file << LevelFactory::LEVEL_101 << " ";
     } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-        file << "1 ";
+        file << LevelFactory::LEVEL_102 << " ";
     } else if (level->GetLevelType() == LevelFactory::LEVEL_103) {
-        file << "2 ";
+        file << LevelFactory::LEVEL_103 << " ";
     } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101) {
-        file << "3 ";
+        file << LevelFactory::LEVEL_101 << " ";
     } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102) {
-        file << "4 ";
+        file << LevelFactory::LEVEL_102 << " ";
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_TESTING) {
-        file << "5 ";
+        file << LevelFactory::LEVEL_TESTING << " ";
     }
 
-    if (player->getType() == 0) {
-        file << "0 ";
+    if (player->getType() == CharacterType::MARIO) {
+        file << CharacterType::MARIO << " ";
     } else {
-        file << "1 ";
+        file << CharacterType::LUIGI << " ";
     }
 
-    Vector2 position = player->GetPosition();
-    file << position.x << " " << position.y << " ";
-
-    file << player->getScore() << " ";
-    file << player->getCoins() << " ";
-    file << countdown << " ";
-    file << player->getLives() << " ";
-
+    // Vector2 position = player->GetPosition();
+    file << 0 << " " << 0 << " ";
     file.close();
 }
 
@@ -157,10 +151,10 @@ void Game::change(const std::string& filename)
         std::cerr << "File not found" << std::endl;
         return;
     }
-    int level, character, score, coins, lives, time;
+    int level, character;
     float x, y;
-    file >> level >> character >> x >> y >> score >> coins >> time >> lives;
-    countdown = time;
+    file >> level >> character >> x >> y;
+    countdown = 300;
     if (character == 0) {
         player = new Mario;
     } else {
@@ -169,24 +163,24 @@ void Game::change(const std::string& filename)
 
     if (level == 0) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
-    } else if (level == 1) {
-        this->level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
     } else if (level == 2) {
+        this->level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
+    } else if (level == 5) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
     }
-    else if (level == 3) {
+    else if (level == 1) {
         this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
     }
-    else if (level == 4) {
+    else if (level == 3) {
         this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
-    else if (level == 5) {
+    else if (level == 7) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
+    this->level->reset();
+    player->reset();
     player->setPosition(Vector2{x * 1.0f, y * 1.0f});
-    this->player->setScore(score);
-    this->player->setCoins(coins);
-    this->player->setLives(lives);
+    this->player->setLives(3);
     this->timer = 0.0f;
     this->level->attachPlayer(player);
 
