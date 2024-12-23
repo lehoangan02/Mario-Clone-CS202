@@ -479,8 +479,6 @@ void Game::handleState() {
             hiddenLevel();
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
-
-            state = LEVEL_RETURN_MESSAGE::RUNNING;
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
                 level -> reset();
                 saveScore("score.txt");
