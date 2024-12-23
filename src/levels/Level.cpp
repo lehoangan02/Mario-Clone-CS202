@@ -1102,6 +1102,7 @@ void Level::FireballHandler::update()
                 // std::cout << "Touching Ground" << std::endl;
                 if (m_Level->m_Ground->isInHole(AABBox(fireball.getPosition(), fireball.getSize())))
                 {
+                    fireball.Deactivate();
                     int HoleIndex = m_Level->m_Ground->findHole(AABBox(fireball.getPosition(), fireball.getSize()));
                     std::pair<int, int> Hole = m_Level->m_Ground->getHole(HoleIndex);
                     if (fireball.getPosition().x < Hole.first)
@@ -1122,11 +1123,11 @@ void Level::FireballHandler::update()
             }
             if (fireball.getPosition().x > m_Level->m_CameraPosition.x + 3000)
             {
-                // fireball.Deactivate();
+                fireball.Deactivate();
             }
             if (fireball.getPosition().x < m_Level->m_CameraPosition.x - 500)
             {
-                // fireball.Deactivate();
+                fireball.Deactivate();
             }
         }
         for (auto& Environment : m_Level->m_Environment)
@@ -1138,7 +1139,7 @@ void Level::FireballHandler::update()
             {
                 if (isCollidingHorizontally(FireballBox, EnvironmentBox))
                 {
-                    // fireball.Deactivate();
+                    fireball.Deactivate();
                 }
                 else if (isCollidingVertically(FireballBox, EnvironmentBox))
                 {
@@ -1157,7 +1158,7 @@ void Level::FireballHandler::update()
             {
                 if (isCollidingHorizontallyRawLess(FireballBox, EnvironmentBox, 20.0f))
                 {
-                    // fireball.Deactivate();
+                    fireball.Deactivate();
                 }
                 else if (isCollidingVertically(FireballBox, EnvironmentBox))
                 {
@@ -1174,7 +1175,7 @@ void Level::FireballHandler::update()
             AABBox EnemyBox = AABBox(Enemy->getPosition(), Enemy->getSize());
             if (isColliding(FireballBox, EnemyBox))
             {
-                // fireball.Deactivate();
+                fireball.Deactivate();
                 Enemy->hit();
             }
         }
