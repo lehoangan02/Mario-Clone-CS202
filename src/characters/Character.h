@@ -23,7 +23,7 @@ enum slidingDirection {
 class Character {
 public:
 	Character(float jumpHeight);
-	~Character();
+	virtual ~Character();
 	virtual void Update(float deltaTime)=0;
 	void Draw();
 
@@ -157,6 +157,7 @@ public:
 	void Update(float deltaTime) override;
 private:
 	Mario();
+    ~Mario() override {}
 	friend class CharacterFactory;
 };
 
@@ -165,6 +166,7 @@ public:
 	void Update(float deltaTime) override;
 private:
 	Luigi();
+    ~Luigi() override {}
 	friend class CharacterFactory;
 
 };

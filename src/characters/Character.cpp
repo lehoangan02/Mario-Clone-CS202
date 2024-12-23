@@ -462,7 +462,7 @@ void Luigi::Update(float deltaTime) {
 
 Character* CharacterFactory::currentCharacter = nullptr;
 void CharacterFactory::deleteCharacter() {
-	delete currentCharacter;
+	if (currentCharacter) delete currentCharacter;
 	currentCharacter = nullptr;
 }
 Character* CharacterFactory::createCharacter(CharacterType type) {
