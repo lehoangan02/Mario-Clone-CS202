@@ -689,8 +689,8 @@ void Level::produceSwitchSignal()
 {
     // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
     // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -731,6 +731,10 @@ void Level::produceSwitchSignal()
 }
 void Level::update(float DeltaTime)
 {
+    std::cout << "Is Player Finished: " << isPlayerFinished << std::endl;
+    std::cout << "In Control: " << m_InControl << std::endl;
+    std::cout << "Touched Flag: " << m_TouchedFlag << std::endl;
+    std::cout << "In End Pipe: " << m_EndPipeHandler.isPlayerInPipe() << std::endl;
     m_Ground->update(m_CameraPosition);
     doPauseLogic();
     if (IsKeyPressed(KEY_O))
@@ -915,6 +919,7 @@ void Level::reset()
     m_StartPosition = {0, 0};
     m_TouchedEndPipe = false;
     m_CameraPosition = {0, 0};
+    m_EndPipeHandler.reset();
     // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
@@ -929,8 +934,7 @@ bool Level::EndPipeHandler::update()
 {
     if (inPipe)
     {
-        // if (slidePipeComplete)
-        // return true;
+        std::cout << "In Pipe" << std::endl;
     }
     if (m_Player->isSliding())
     {
@@ -945,6 +949,7 @@ bool Level::EndPipeHandler::update()
         {
             if (isCollidingLeft(PlayerBox, EnvironmentBox))
             {
+                std::cout << "Sliding Right" << std::endl;
                 m_Player ->SlidePipe(slidingDirection::right);
                 m_Player ->powerDown();
                 m_Player->setPosition(Vector2{m_Player->GetPosition().x, EnvironmentBox.getPosition().y + 20});
