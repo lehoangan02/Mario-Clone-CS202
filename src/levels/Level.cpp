@@ -694,9 +694,18 @@ void Level::produceSwitchSignal()
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
-        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
-        m_Player->reset();
-        std::cout << "Notifying Lose" << std::endl;
+        if (m_Player->getLives() > 0)
+        {
+            this -> reset();
+            m_Player->reset();
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::RESTART);
+        }
+        else
+        {
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
+            m_Player->reset();
+            std::cout << "Notifying Lose" << std::endl; 
+        }
     }
     else if (m_Player->haveWon())
     {
