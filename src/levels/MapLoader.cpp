@@ -137,6 +137,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                 break;
             case Itemtype::FIREFLOWER:
             {
+                std::cout << "Creating Fire Flower" << std::endl;
                 Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
                 NewItem = new FireFlower(
                     Vector2{ X + 20, Y },
@@ -144,9 +145,11 @@ void MapLoader::LoadMap(Level* Level, int MapID)
                     Vector2{ 50, 50 },
                     fireflowerTexture
                 );
+                break;
             }
             case Itemtype::STARMAN:
             {
+                std::cout << "Creating Starman" << std::endl;
                 Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
                 NewItem = new StarMan(
                     Vector2{ X + 20, Y },

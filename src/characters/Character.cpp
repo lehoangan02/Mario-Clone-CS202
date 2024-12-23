@@ -292,6 +292,7 @@ void Character::reset() {
 	isFinished = false;
 	finishSliding = false;
 	isVisible = true;
+	sliding = false;
 }
 void Character::increLives() {
 	if (lives == 5) return;

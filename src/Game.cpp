@@ -234,7 +234,15 @@ void Game::hiddenLevel() {
         std::cout << "Set Position: " << 5100 << " " << 175 << std::endl;
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
     }
-    else return;
+    else
+    {
+        level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
+        level -> reset();
+        level->attachPlayer(player);
+        player->setPosition(Vector2{0, 0});
+        std::cout << "Set Position: " << 0 << " " << 0 << std::endl;
+        MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+    }
     level->update(0.01f);
     state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }

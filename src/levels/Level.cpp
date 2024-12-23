@@ -529,8 +529,7 @@ void Level::handleItemLogic()
             AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
             if (isColliding(ItemBox, PlayerBox))
             {
-                m_Player -> powerUp();
-                m_Player -> powerUp();
+                m_Player->increLives();
                 SoundManager::getInstance().PlaySoundEffect(POWERUP_SOUND);
                 FireFlowerItem->setHit();
                 m_Player->increaseScore();
@@ -687,10 +686,10 @@ void Level::render()
 }
 void Level::produceSwitchSignal()
 {
-    // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
-    // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
+    std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
+    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -914,6 +913,7 @@ void Level::reset()
     m_InControl = true;
     m_StartPosition = {0, 0};
     m_TouchedEndPipe = false;
+    m_CameraPosition = {0, 0};
     // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
