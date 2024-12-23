@@ -30,6 +30,7 @@ Game::Game()
     loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
 
     state = LEVEL_RETURN_MESSAGE::RUNNING;
+    isSaveScore = false;
 }
 
 Game::Game(int characterMenu, int levelMenu) 
@@ -101,6 +102,7 @@ Game::Game(int characterMenu, int levelMenu)
     default:
         break;
     }
+    isSaveScore = false;
 }
 
 void Game::save(const std::string& filename)  {
@@ -211,6 +213,7 @@ void Game::change(const std::string& filename)
         break;
     }
     file.close();
+    isSaveScore = false;
 }
 
 void Game::changeMenu(int characterMenu, int levelMenu) {
@@ -263,6 +266,8 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
     }
+
+    isSaveScore = false;
 }
 
 void Game::reset(int characterMenu) {
@@ -277,6 +282,7 @@ void Game::reset(int characterMenu) {
     countdown = 400;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+    isSaveScore = false;
 }
 
 Game::Game(const Game& other) 
@@ -472,14 +478,16 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
             nextLevel();
-            if (level->GetLevelType() == LevelFactory::LEVEL_103) {
+            if (level->GetLevelType() == LevelFactory::LEVEL_103 && !isSaveScore) {
                 saveScore("score.txt");
+                isSaveScore = true;
             }
-            else state = LEVEL_RETURN_MESSAGE::RUNNING;
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
-            //level->pauseLevel();
-            saveScore("score.txt");
+            if (!isSaveScore) {
+                saveScore("score.txt");
+                isSaveScore = true;
+            }
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             save("continue.txt");

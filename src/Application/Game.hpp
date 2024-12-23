@@ -30,6 +30,7 @@ private:
     Texture2D pauseGame;
     Texture2D winGame;
     Texture2D loseGame;
+    bool isSaveScore;
 public:
     Game();
     Game(int characterMenu, int levelMenu);
