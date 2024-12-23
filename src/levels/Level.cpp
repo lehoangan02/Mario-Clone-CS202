@@ -976,6 +976,27 @@ void Level::EnemyHandler::update()
     for (auto& enemy : m_Level->m_Enemies)
     {
         enemy->update(GetFrameTime());
+        if (enemy->getEnemyType() == EnemyType::LAKITU)
+        {
+            Lakitu* LakituEnemy = dynamic_cast<Lakitu*>(enemy);
+            if (LakituEnemy->getIsShoot())
+            {
+                m_Projectiles.push_back(std::weak_ptr(LakituEnemy->getLastProjectile()));
+            }
+        }
+    }
+    std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
+    for (auto& projectile : m_Projectiles)
+    {
+        for (auto &object : m_Level->m_Environment)
+        {
+            AABBox ProjectileBox = AABBox(projectile.lock()->getPosition(), projectile.lock()->getSize());
+            AABBox EnvironmentBox = AABBox(object->m_Position, object->getSize());
+            if (isColliding(ProjectileBox, EnvironmentBox))
+            {
+                projectile.lock()->hit();
+            }
+        }
     }
     for (auto& enemy : m_Level->m_Enemies)
     {
