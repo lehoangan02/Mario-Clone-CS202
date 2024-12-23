@@ -688,8 +688,8 @@ void Level::produceSwitchSignal()
 {
     // std::cout << "Is Dead: " << m_Player->isDead() << std::endl;
     // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
-    std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
-    std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
+    // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
+    // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
 
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
@@ -906,7 +906,6 @@ void Level::reset()
     m_TouchedFlag = false;
     m_InControl = true;
     m_StartPosition = {0, 0};
-    m_Player->setPosition(m_StartPosition);
     m_CameraPosition = {0, 0};
 
 }

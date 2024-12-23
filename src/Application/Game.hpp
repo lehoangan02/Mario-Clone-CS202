@@ -52,6 +52,7 @@ public:
     void nextLevel();
     void hiddenLevel();
     void restartLevel();
+    void reset();
 
     // Implement notify method
     void notify(Component* sender, int eventCode) override;
