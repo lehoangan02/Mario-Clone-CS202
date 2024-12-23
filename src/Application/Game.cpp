@@ -31,6 +31,7 @@ Game::Game()
     loseGame = ResourceManager::GetInstance()->GetTexture("loseGame");
 
     state = LEVEL_RETURN_MESSAGE::RUNNING;
+    isSaveScore = false;
 }
 
 Game::Game(int characterMenu, int levelMenu) 
@@ -102,6 +103,7 @@ Game::Game(int characterMenu, int levelMenu)
     default:
         break;
     }
+    isSaveScore = false;
 }
 
 void Game::save(const std::string& filename)  {
@@ -212,6 +214,7 @@ void Game::change(const std::string& filename)
         break;
     }
     file.close();
+    isSaveScore = false;
 }
 
 void Game::changeMenu(int characterMenu, int levelMenu) {
@@ -264,6 +267,23 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
     }
+
+    isSaveScore = false;
+}
+
+void Game::reset(int characterMenu) {
+    if (characterMenu == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+    level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
+    countdown = 400;
+    timer = 0.0f;
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+    isSaveScore = false;
 }
 
 Game::Game(const Game& other) 
@@ -305,7 +325,8 @@ void Game::start() {
     else if (IsKeyDown(KEY_B)) {
         state = LEVEL_RETURN_MESSAGE::LOSE;
     }
-    else if (IsKeyDown(KEY_C)) {
+    else if (IsKeyPressed(KEY_C)) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         state = LEVEL_RETURN_MESSAGE::WIN;
     }
         
@@ -336,7 +357,7 @@ void Game::draw() {
         drawContinueButton();
     } else if (state == LEVEL_RETURN_MESSAGE::CONTINUE) {
         drawPauseMenu();
-    } else if (state == LEVEL_RETURN_MESSAGE::WIN) {
+    } else if (state == LEVEL_RETURN_MESSAGE::WIN && level->GetLevelType() == LevelFactory::LEVEL_103) {
         drawWinButton();
     } else if (state == LEVEL_RETURN_MESSAGE::LOSE) {
         drawLoseButton();
@@ -387,23 +408,20 @@ void Game::nextLevel() {
         level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::FlowerGarden);
+        state = LEVEL_RETURN_MESSAGE::RUNNING;
     }
      else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
         level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
         level -> reset();
         MusicManager::getInstance().PlayMusic(MusicTrack::Athletic);
+        state = LEVEL_RETURN_MESSAGE::RUNNING;
     } 
     else {
-        //draw menu win
-        state = LEVEL_RETURN_MESSAGE::RESTART;
         return;
     }
-    //delete player;
-    //player = new Mario;
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
     level->update(0.01f);
-    state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::hiddenLevel() {
@@ -423,14 +441,6 @@ void Game::hiddenLevel() {
         level->attachPlayer(player);
         player->setPosition(Vector2{20, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
-    }
-    else if (level->GetLevelType() == LevelFactory::LEVEL_103) 
-    {
-        level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_103, this);
-        level -> reset();
-        level->attachPlayer(player);
-        player->setPosition(Vector2{20, 0});
-
     }
     else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101)
     {
@@ -474,13 +484,15 @@ void Game::handleState() {
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
                 level -> reset();
                 saveScore("score.txt");
+                isSaveScore = true;
             }
             else nextLevel();
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
-
-            level->pauseLevel();
-            saveScore("score.txt");
+            if (!isSaveScore) {
+                saveScore("score.txt");
+                isSaveScore = true;
+            }
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             save("continue.txt");
@@ -493,6 +505,7 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
             level->continueLevel();
+            state = LEVEL_RETURN_MESSAGE::RUNNING;
             break;
     }
 }

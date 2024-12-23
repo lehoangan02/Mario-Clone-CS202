@@ -30,6 +30,7 @@ private:
     Texture2D pauseGame;
     Texture2D winGame;
     Texture2D loseGame;
+    bool isSaveScore;
 public:
     Game();
     Game(int characterMenu, int levelMenu);
@@ -42,6 +43,7 @@ public:
     void start();
     void update(float deltaTime);
     void draw();
+    void reset(int characterMenu);
 
     void pause();
     void resume();

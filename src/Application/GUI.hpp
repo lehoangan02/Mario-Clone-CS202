@@ -71,6 +71,7 @@ private:
     Texture2D playTexture;
     Button continueButton;
     Button newGameButton;
+    Button selectedButton;
     QuitButton quitButton;
 
     Texture2D settingTexture;

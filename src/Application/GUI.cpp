@@ -65,9 +65,11 @@ Menu::Menu() {
     this->highScoreTexture = ResourceManager::GetInstance()->GetTexture("highScoreTexture");
     this->inforTexture = ResourceManager::GetInstance()->GetTexture("inforTexture");
  
-    continueButton = Button({450, 286, 141, 42}, Color{240, 193, 225, 255} ,"Continue", BLACK, 22,
+    continueButton = Button({450, 281, 141, 42}, Color{240, 193, 225, 255} ,"Continue", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
-    newGameButton = Button({450, 356, 141, 42}, Color{240, 193, 225, 255},"New Game", BLACK, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    newGameButton = Button({450, 342, 141, 42}, Color{240, 193, 225, 255},"New Game", BLACK, 22, ResourceManager::GetInstance()->GetFont(), 0);
+    selectedButton = Button({450, 403, 141, 42}, Color{240, 193, 225, 255} ,"Selected", BLACK, 22,
+        ResourceManager::GetInstance()->GetFont(), 0);
 
     characterButton = Button({450, 248, 141, 42}, Color{240, 193, 225, 255} ,"Character", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
@@ -121,6 +123,7 @@ void Menu::draw(){
         DrawTextureEx(playTexture, {236, 167}, 0, 0.125, WHITE);
         continueButton.draw();
         newGameButton.draw();
+        selectedButton.draw();
         quitButton.draw();
     }
     else if (type == 2) {
@@ -177,6 +180,9 @@ int Menu::handle() {
     }
     else if (continueButton.isClicked()) {
         type = 11;
+    }
+    else if (selectedButton.isClicked()) {
+        type = 12;
     }
     else if (characterButton.isClicked()) {
         type = 3;
