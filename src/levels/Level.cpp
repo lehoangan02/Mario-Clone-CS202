@@ -109,6 +109,7 @@ void Level::checkEnvironmentCollisions()
 void Level::resolveEnvironmentCollisions()
 {
     if (m_Player->isDead()) return;
+    if (m_InSpecialPipe) return;
     for (int i = 0; i < m_Environment.size(); i++)
     {
         AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
@@ -617,16 +618,17 @@ void Level::render()
     {
         m_FlagPole->render();
     }
+    for (auto& object : m_Drawables)
+    {
+        object->render();
+    }
+    m_Player->Draw();
     for (auto& object : m_Environment)
     {
         if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
         {
             // std::cout << "Warp Pipe at: " << object->m_Position.x << " " << object->m_Position.y << std::endl;
         }
-        object->render();
-    }
-    for (auto& object : m_Drawables)
-    {
         object->render();
     }
     for (auto& object : m_Enemies)
@@ -675,7 +677,6 @@ void Level::render()
         if (object->isHit()) continue;
         object->Draw();
     }
-    m_Player->Draw();
     for (auto& object : m_EndPipes)
     {
         object->render();
@@ -920,6 +921,7 @@ void Level::reset()
     m_TouchedEndPipe = false;
     m_CameraPosition = {0, 0};
     m_EndPipeHandler.reset();
+    m_InSpecialPipe = false;
     // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)
@@ -1198,6 +1200,7 @@ void Level101::update(float DeltaTime)
     {
         std::cout << "Trying Sliding Down" << std::endl;
         m_Player->SlidePipe(slidingDirection::down);
+        m_InSpecialPipe = true;
     }
     Level::update(DeltaTime);
 }
