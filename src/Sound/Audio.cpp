@@ -149,7 +149,7 @@ bool MusicManager::IsMusicPlaying() {
 void MusicManager::PlayPreviousTrack() {
 	if (prevTrack == -1) return;
 	PlayMusicStream(musicSet[prevTrack]);
-	std::cout << "prevTrack: " << prevTrack << std::endl;	
+	//std::cout << "prevTrack: " << prevTrack << std::endl;	
 	currentTrack = prevTrack;
 }
 

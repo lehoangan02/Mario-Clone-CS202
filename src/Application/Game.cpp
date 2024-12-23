@@ -496,7 +496,7 @@ void Game::handleState() {
                 saveScore("score.txt");
                 isSaveScore = true;
             }
-            level->reset();
+            level->pauseLevel();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
             save("continue.txt");

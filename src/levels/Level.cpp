@@ -696,14 +696,12 @@ void Level::produceSwitchSignal()
     {
         if (m_Player->getLives() > 0)
         {
-            this -> reset();
             m_Player->reset();
             m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::RESTART);
         }
         else
         {
             m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::LOSE);
-            m_Player->reset();
             std::cout << "Notifying Lose" << std::endl; 
         }
     }
@@ -1338,7 +1336,7 @@ void HiddenLevel102::render()
     Level::render();
 }
 void HiddenLevel102::reset()
-{
+ {
     Level::reset();
     this->setName("HiddenLevel102");
     MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
