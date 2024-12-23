@@ -329,7 +329,6 @@ void Game::update(float deltaTime) {
 void Game::draw() {
     // BeginDrawing();
     // ClearBackground(RAYWHITE);
-	drawInfo();
     if (level) {
         level->render();
     }
@@ -345,6 +344,7 @@ void Game::draw() {
     else if (state == LEVEL_RETURN_MESSAGE::RUNNING) {
         drawPauseMenu();
     }
+    drawInfo();
 }
 
 void Game::notify(Component* sender, int eventCode) {
@@ -374,6 +374,7 @@ void Game::notify(Component* sender, int eventCode) {
             break;
         case 7:
             state = LEVEL_RETURN_MESSAGE::RESTART;
+            restartLevel();
             break;
         default:
             break;
@@ -468,7 +469,7 @@ void Game::handleState() {
             hiddenLevel();
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
-        
+
             state = LEVEL_RETURN_MESSAGE::RUNNING;
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
                 level -> reset();
