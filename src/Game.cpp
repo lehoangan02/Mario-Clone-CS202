@@ -1,6 +1,6 @@
 #include "Game.hpp"
 
-Game::Game() 
+Game::Game()  
     : factory(LevelFactory::GetLevelFactory()), 
       level(factory.CreateLevel(LevelFactory::LEVEL_TESTING, this))
 {
@@ -14,6 +14,7 @@ Game::Game()
     myFont = LoadFont("assets/Font/MarioFont.ttf");
     countdown = 400;
 	timer = 0.0f;
+	state = LEVEL_RETURN_MESSAGE::RUNNING;
     infoIcons.push_back(LoadTexture("assets/textures/CoinForBlueBG.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/fullHeart.png"));
 	infoIcons.push_back(LoadTexture("assets/textures/noHeart.png"));
@@ -285,6 +286,7 @@ void Game::drawInfo() {
     deltaTime = GetFrameTime(); 
     timer += deltaTime;
     if (timer >= 1.0f) {
+        if (state == LEVEL_RETURN_MESSAGE::PAUSE) countdown++;
         countdown--;
         timer = 0.0f; 
         if (countdown <= 0) {
