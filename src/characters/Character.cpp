@@ -269,6 +269,10 @@ void Character::touchEnemy() {
 		DieAnimation();
 	}
 }
+void Character::increaseScore() {
+	this->score += 100;
+	this->coins++;
+}
 void Character::killEnemy() {
 	velocity.y = -sqrtf(2.0f * GRAVITY * 50.0f);
 	SoundManager::getInstance().PlaySoundEffect(KILL_SOUND);

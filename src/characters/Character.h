@@ -60,7 +60,7 @@ public:
 
 
 	void increaseScore(int Incre) { this->score += Incre; };
-	void increaseScore() { this->score += 1; this->coins += 1; };
+	void increaseScore();;
 	int getScore() { return score; }
 	void setScore(int score) { this->score = score; }
 
