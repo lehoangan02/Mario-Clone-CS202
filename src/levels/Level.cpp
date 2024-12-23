@@ -1103,7 +1103,6 @@ void Level::FireballHandler::update()
                 bool IsInHole = m_Level->m_Ground->isInHole(AABBox(fireball.getPosition(), fireball.getSize()));
                 if (IsInHole)
                 {
-                    // fireball.Deactivate();
                     int HoleIndex = m_Level->m_Ground->findHole(AABBox(fireball.getPosition(), fireball.getSize()));
                     std::pair<int, int> Hole = m_Level->m_Ground->getHolePosition(HoleIndex);
                     if (fireball.getPosition().x < Hole.first)
@@ -1114,7 +1113,7 @@ void Level::FireballHandler::update()
                     {
                         fireball.position.x = Hole.second - fireball.getSize().x;
                     }
-                    if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y + 300)
+                    if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y + 160)
                     {
                         fireball.Deactivate();
                     }
@@ -1131,7 +1130,7 @@ void Level::FireballHandler::update()
             {
                 fireball.Deactivate();
             }
-            if (fireball.getPosition().x < m_Level->m_Player->GetPosition().x - 500)
+            if (fireball.getPosition().x < m_Level->m_Player->GetPosition().x - 1000)
             {
                 fireball.Deactivate();
             }

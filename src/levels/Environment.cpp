@@ -170,7 +170,7 @@ bool Ground::isInHole(AABBox Box)
 {
     for (auto& hole : m_Holes)
     {
-        if (Box.getPosition().x + Box.getSize().x < hole.first + hole.second * 100 && Box.getPosition().x > hole.first)
+        if (Box.getPosition().x < hole.first + hole.second * 100 && Box.getPosition().x + Box.getSize().x > hole.first)
         {
             return true;
         }
@@ -181,7 +181,7 @@ int Ground::findHole(AABBox Box)
 {
     for (int i = 0; i < m_Holes.size(); ++i)
     {
-        if (Box.getPosition().x + Box.getSize().x < m_Holes[i].first + m_Holes[i].second * 100 && Box.getPosition().x > m_Holes[i].first)
+        if (Box.getPosition().x < m_Holes[i].first + m_Holes[i].second * 100 && Box.getPosition().x + Box.getSize().x > m_Holes[i].first)
         {
             return i;
         }
