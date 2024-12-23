@@ -25,7 +25,7 @@ private:
     QuitButton pauseButton;
     QuitButton continueButton;
     QuitButton homeButton;
-    QuitButton replayButton;
+    QuitButton homeButton2;
 
     Texture2D pauseGame;
     Texture2D winGame;
