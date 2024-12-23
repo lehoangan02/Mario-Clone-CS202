@@ -22,8 +22,8 @@ Game::Game()
 
     pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
     continueButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
-    replayButton = QuitButton(Rectangle{467, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
     homeButton = QuitButton(Rectangle{542, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
+    homeButton2 = QuitButton(Rectangle{508, 400, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
 
     pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
     winGame = ResourceManager::GetInstance()->GetTexture("winGame");
@@ -72,7 +72,7 @@ Game::Game(int characterMenu, int levelMenu)
 
     pauseButton = QuitButton(Rectangle{973, 20, 30, 30}, ResourceManager::GetInstance()->GetTexture("pause"));
     continueButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("continue"));
-    replayButton = QuitButton(Rectangle{467, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
+    homeButton2 = QuitButton(Rectangle{508, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("replay"));
     homeButton = QuitButton(Rectangle{542, 369, 30, 30}, ResourceManager::GetInstance()->GetTexture("home"));
 
     pauseGame = ResourceManager::GetInstance()->GetTexture("pauseGame");
@@ -339,8 +339,8 @@ void Game::update(float deltaTime) {
         state = LEVEL_RETURN_MESSAGE::PAUSE;
     } else if (continueButton.isClicked()) {
          state = LEVEL_RETURN_MESSAGE::CONTINUE;
-    } else if (replayButton.isClicked()) {
-        state = LEVEL_RETURN_MESSAGE::RESTART;
+    } else if (homeButton2.isClicked()) {
+        state = LEVEL_RETURN_MESSAGE::QUIT;
     } else if (homeButton.isClicked()) {
         state = LEVEL_RETURN_MESSAGE::QUIT;
     }
@@ -576,14 +576,12 @@ void Game::drawContinueButton() {
 
 void Game::drawWinButton() {
     DrawTextureEx(winGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
-    replayButton.draw();
-    homeButton.draw();
+    homeButton2.draw();
 }
 
 void Game::drawLoseButton() {
     DrawTextureEx(loseGame, {317, 255}, 0.0f, 0.125f, RAYWHITE);
-    replayButton.draw();
-    homeButton.draw();
+    homeButton2.draw();
 }
 void Game::reset()
 {
