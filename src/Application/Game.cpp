@@ -283,7 +283,6 @@ void Game::reset(int characterMenu) {
     countdown = 400;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
-    isSaveScore = false;
 }
 
 Game::Game(const Game& other) 
@@ -480,9 +479,11 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::WIN:
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
-                level -> reset();
-                saveScore("score.txt");
-                isSaveScore = true;
+                level->reset();
+                if (!isSaveScore) {
+                    saveScore("score.txt");
+                    isSaveScore = true;
+                }
             }
             else nextLevel();
             break;
