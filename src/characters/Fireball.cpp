@@ -27,7 +27,7 @@ void Fireball::Update(float deltaTime) {
 }
 
 void Fireball :: Bounce() {
-	velocity.y = -300.0f;
+	velocity.y = -velocity.y * 0.7f;
 }
 void Fireball::Draw() {
     if (active) {

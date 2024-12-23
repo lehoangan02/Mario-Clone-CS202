@@ -45,7 +45,20 @@ class Level : public Subject, public Component
         EnemyHandler() = default;
         void setLevel(Level* Level) { m_Level = Level; };
         void update();
+        void reset() {m_Projectiles.clear();};
         std::vector<std::weak_ptr<Projectile>> m_Projectiles = {};
+    };
+    class FireballHandler
+    {
+        Level* m_Level;
+        public:
+        FireballHandler() = default;
+        void setLevel(Level* Level);
+        void update();
+        void reset() {};
+        void draw();
+        private:
+        // std::vector<Fireball> m_Fireballs = {};
     };
     class Background
     {
@@ -126,6 +139,7 @@ class Level : public Subject, public Component
         bool m_Paused = false;
         EndPipeHandler m_EndPipeHandler;
         EnemyHandler m_EnemyHandler;
+        FireballHandler m_FireballHandler;
         bool m_InControl = true;
         bool m_TouchedFlag = false;
         Vector2 m_StartPosition = {0, 0};

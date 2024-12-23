@@ -58,7 +58,7 @@ Level::Level()
     m_CameraPosition = { 0, 0 };
     m_Ground = Ground::GetGround();
     m_EnemyHandler.setLevel(this);
-
+    m_FireballHandler.setLevel(this);
 }
 Level::~Level()
 {
@@ -681,6 +681,7 @@ void Level::render()
     {
         object->render();
     }
+    m_FireballHandler.draw();
     float HidePositionX = m_ScreenSize.x * 2;
     DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
@@ -772,6 +773,7 @@ void Level::update(float DeltaTime)
         Vector2 NewPosition = { m_CameraPosition.x, m_Player->GetPosition().y };
         m_Player->setPosition(NewPosition);
     }
+    m_FireballHandler.update();
     if (m_Ground->m_WorldType == Level::WorldType::OVERWORLD)
     {
         m_Background.update(m_CameraPosition, true);
@@ -921,6 +923,8 @@ void Level::reset()
     m_TouchedEndPipe = false;
     m_CameraPosition = {0, 0};
     m_EndPipeHandler.reset();
+    m_EnemyHandler.reset();
+    m_FireballHandler.reset();
     m_InSpecialPipe = false;
     // m_Player->reset();
 }
@@ -990,7 +994,7 @@ void Level::EnemyHandler::update()
             }
         }
     }
-    std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
+    // std::cout << "Projectile Count: " << m_Projectiles.size() << std::endl;
     for (auto& projectile : m_Projectiles)
     {
         for (auto &object : m_Level->m_Environment)
@@ -1070,6 +1074,100 @@ void Level::EnemyHandler::update()
 
             }
         }
+    }
+}
+void Level::FireballHandler::setLevel(Level* level)
+{
+    m_Level = level;
+}
+void Level::FireballHandler::update()
+{
+    // SetTargetFPS(10);
+    // m_Fireballs = 
+    // std::cout << "Fireball Count: " << m_Fireballs.size() << std::endl;
+    for (auto& fireball : m_Level->m_Player->firePool->fireballs)
+    {
+        if (!fireball.IsActive()) continue;
+        std::cout << "Ball is Active" << std::endl;
+        // fireball.position = {10, 10};
+        std::cout << "Position: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
+        if (fireball.IsActive())
+        {
+            std::cout << "Size: " << fireball.getSize().x << ", " << fireball.getSize().y << std::endl;
+            std::cout << "Ground Position: " << m_Level->m_Ground->m_Position.y << std::endl;
+            if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y)
+            {
+                std::cout << "Touching Ground" << std::endl;
+                fireball.position.y = m_Level->m_Ground->m_Position.y - fireball.getSize().y;
+                std::cout << "Position After Reset: " << fireball.getPosition().x << ", " << fireball.getPosition().y << std::endl;
+                fireball.Bounce();
+            }
+            if (fireball.getPosition().x > m_Level->m_CameraPosition.x + 3000)
+            {
+                fireball.Deactivate();
+            }
+            if (fireball.getPosition().x < m_Level->m_CameraPosition.x)
+            {
+                fireball.Deactivate();
+            }
+        }
+        for (auto& Environment : m_Level->m_Environment)
+        {
+            AABBox FireballBox = AABBox(fireball.getPosition(), fireball.getSize());
+            AABBox EnvironmentBox = AABBox(Environment->m_Position, Environment->getSize());
+            EnvironmentBox.setFixed(true);
+            if (isColliding(FireballBox, EnvironmentBox))
+            {
+                if (isCollidingHorizontally(FireballBox, EnvironmentBox))
+                {
+                    fireball.Deactivate();
+                }
+                else if (isCollidingVertically(FireballBox, EnvironmentBox))
+                {
+                    fireball.Bounce();
+                }
+                resolveCollisions(FireballBox, EnvironmentBox);
+                fireball.position = FireballBox.getPosition();
+            }
+        }
+        for (auto& Environment : m_Level->m_EnvironmentInteractive)
+        {
+            AABBox FireballBox = AABBox(fireball.getPosition(), fireball.getSize());
+            AABBox EnvironmentBox = AABBox(Environment.first->m_Position, Environment.first->getSize());
+            EnvironmentBox.setFixed(true);
+            if (isColliding(FireballBox, EnvironmentBox))
+            {
+                if (isCollidingHorizontallyRawLess(FireballBox, EnvironmentBox, 20.0f))
+                {
+                    fireball.Deactivate();
+                }
+                else if (isCollidingVertically(FireballBox, EnvironmentBox))
+                {
+                    fireball.Bounce();
+                }
+                resolveCollisions(FireballBox, EnvironmentBox);
+                fireball.position = FireballBox.getPosition();
+            }
+        }
+        for (auto& Enemy : m_Level->m_Enemies)
+        {
+            if (Enemy->getIsDead()) continue;
+            AABBox FireballBox = AABBox(fireball.getPosition(), fireball.getSize());
+            AABBox EnemyBox = AABBox(Enemy->getPosition(), Enemy->getSize());
+            if (isColliding(FireballBox, EnemyBox))
+            {
+                fireball.Deactivate();
+                Enemy->hit();
+            }
+        }
+    }
+}
+void Level::FireballHandler::draw()
+{
+    for (auto& fireball : m_Level->m_Player->firePool->fireballs)
+    {
+        AABBox FireballBox = AABBox(fireball.getPosition(), fireball.getSize());
+        DrawBoundingBox(FireballBox.getPosition(), FireballBox.getSize(), RED, 10);
     }
 }
 Level::Background::Background()
