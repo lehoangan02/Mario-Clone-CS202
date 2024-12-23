@@ -230,7 +230,10 @@ void Character::hitFlag() {
 	}
 }
 void Character::setPullFlag(bool pullFlag) {
-	//if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);	
+	//if (pullFlag) MusicManager::getInstance().PlayMusic(FlagDown);
+	if (pullFlag) {
+		/*std::cout << "cc" << std::endl;*/
+	}
 	this->pullFlag = pullFlag;
 	if (!this->pullFlag) {
 		position.y = 750.0f - size.y;
@@ -313,6 +316,8 @@ void Character::Draw()
 	Vector2 origin = { 0.0f,0.0f };
 	DrawTexturePro(textures[form], sourceRec, destRec, origin, rotation, InvincibleColor);
 	firePool->Draw();
+	//if (pullFlag) std::cout << "mmm" << std::endl;
+	//std::cout << "Instance1 " << this << std::endl;
 
 };
 
@@ -365,6 +370,8 @@ void Mario::Update(float deltaTime) {
 	hitFlag();
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();	
+	//if (pullFlag) std::cout << "pull" << std::endl;
+	//std::cout << "Instance2 " << this << std::endl;
 }
 
 void Character::SlidePipe(slidingDirection direction) {
@@ -414,7 +421,12 @@ Luigi::Luigi() : Character(500.0f) {
 }
 void Luigi::Update(float deltaTime) {
 	if (velocity.y > GRAVITY * deltaTime * 1.2f) canJump = false; //handle double jump 
-
+	if (isDie) deadTime += deltaTime;
+	if (deadTime > 3.2f) {
+		deadTime = 0.0f;
+		isFinished = true;
+	}
+	if (position.y > 30000.0f) isFinished = true;
 	if (pullFlag) state = 6;
 	else if (velocity.x == 0.0f || sliding) {
 		state = 0;
@@ -443,6 +455,8 @@ void Luigi::Update(float deltaTime) {
 	hitFlag();
 	setPosition(Vector2{ position.x + velocity.x * deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();
+	//if (pullFlag) std::cout << "pull" << std::endl;
+	//std::cout << "Instance2 " << this << std::endl;
 }
 
 
@@ -490,7 +504,7 @@ void InHole::execute(float deltaTime) {
 AutoMove* AutoMove::instance = nullptr;
 void AutoMove::execute(float deltaTime) {
 	if (!character->isPullFlag()) {
-		if (totalTime == 0.0f || totalTime < deltaTime*1.2f) {
+		if (totalTime < deltaTime*1.2f && totalTime > 0.0f) {
 			MusicManager::getInstance().PlayMusic(LevelFinished);
 		}
 		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {

@@ -5,7 +5,7 @@ Game::Game()
     : factory(LevelFactory::GetLevelFactory()), 
       level(factory.CreateLevel(LevelFactory::LEVEL_101, this))
 {
-    player = new Mario;
+	player = CharacterFactory::createCharacter(CharacterType::MARIO);
     if (level == nullptr) {
         std::cerr << "Level is null" << std::endl;
     }
@@ -39,9 +39,9 @@ Game::Game(int characterMenu, int levelMenu)
       level(nullptr)  
 {
     if (characterMenu == 0) {
-        player = new Mario;
+        player = CharacterFactory::createCharacter(CharacterType::MARIO);;
     } else {
-        player = new Luigi;
+        player = CharacterFactory::createCharacter(CharacterType::LUIGI);
     }
 
     if (levelMenu == 0) {
@@ -162,9 +162,9 @@ void Game::change(const std::string& filename)
     float x, y;
     file >> level >> character >> x >> y >> score >> coins >> lives >> time;
     if (character == 0) {
-        player = new Mario;
+        player = CharacterFactory::createCharacter(CharacterType::MARIO);;
     } else {
-        player = new Luigi;
+        player = CharacterFactory::createCharacter(CharacterType::LUIGI);
     }
 
     if (level == 0) {
@@ -225,9 +225,9 @@ void Game::change(const std::string& filename)
 
 void Game::changeMenu(int characterMenu, int levelMenu) {
     if (characterMenu == 0) {
-        player = new Mario;
+        player = CharacterFactory::createCharacter(CharacterType::MARIO);;
     } else {
-        player = new Luigi;
+        player = CharacterFactory::createCharacter(CharacterType::LUIGI);
     }
 
     if (levelMenu == 0) {
@@ -279,9 +279,9 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
 
 void Game::reset(int characterMenu) {
     if (characterMenu == 0) {
-        player = new Mario;
+        player = CharacterFactory::createCharacter(CharacterType::MARIO);;
     } else {
-        player = new Luigi;
+        player = CharacterFactory::createCharacter(CharacterType::LUIGI);
     }
     level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
     player->setPosition(Vector2{20, 0});

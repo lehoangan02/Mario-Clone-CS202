@@ -154,15 +154,18 @@ private:
 };
 class Mario : public Character {
 public:
-	Mario() ;
 	void Update(float deltaTime) override;
-
+private:
+	Mario();
+	friend class CharacterFactory;
 };
 
 class Luigi : public Character {
 public:
-	Luigi();
 	void Update(float deltaTime) override;
+private:
+	Luigi();
+	friend class CharacterFactory;
 
 };
 
