@@ -120,12 +120,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\animation\Animation.cpp" />
-    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Application\Application.cpp" />
+    <ClCompile Include="src\Application\Game.cpp" />
+    <ClCompile Include="src\Application\GUI.cpp" />
+    <ClCompile Include="src\Application\ResourceManager.cpp" />
     <ClCompile Include="src\characters\Character.cpp" />
     <ClCompile Include="src\characters\Enemy.cpp" />
     <ClCompile Include="src\characters\Fireball.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\item\Item.cpp" />
     <ClCompile Include="src\levels\AABBox.cpp" />
     <ClCompile Include="src\levels\Environment.cpp" />
@@ -134,8 +135,9 @@
     <ClCompile Include="src\levels\MapLoader.cpp" />
     <ClCompile Include="src\mario\main.cpp" />
     <ClCompile Include="src\Obstacle\Obstacle.cpp" />
-    <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\Sound\Audio.cpp" />
+    <ClCompile Include="src\State\GameState.cpp" />
+    <ClCompile Include="src\State\MenuState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\raylib.h" />
@@ -144,6 +146,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\animation\Animation.h" />
     <ClInclude Include="src\Application.hpp" />
+    <ClInclude Include="src\Application\Application.hpp" />
+    <ClInclude Include="src\Application\Game.hpp" />
+    <ClInclude Include="src\Application\GUI.hpp" />
+    <ClInclude Include="src\Application\ResourceManager.hpp" />
     <ClInclude Include="src\characters\Character.h" />
     <ClInclude Include="src\characters\Enemy.h" />
     <ClInclude Include="src\characters\Enemy.hpp" />
@@ -164,6 +170,15 @@
     <ClInclude Include="src\Obstacle\Obstacle.h" />
     <ClInclude Include="src\ResourceManager.hpp" />
     <ClInclude Include="src\Sound\Audio.h" />
+    <ClInclude Include="src\State\GameState.hpp" />
+    <ClInclude Include="src\State\MenuState.hpp" />
+    <ClInclude Include="src\State\State.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="continue.txt" />
+    <Text Include="note.txt" />
+    <Text Include="score.txt" />
+    <Text Include="source.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
