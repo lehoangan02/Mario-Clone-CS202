@@ -578,3 +578,9 @@ void Game::drawLoseButton() {
     replayButton.draw();
     homeButton.draw();
 }
+void Game::reset()
+{
+    level->reset();
+    player->reset();
+    state = LEVEL_RETURN_MESSAGE::RUNNING;
+}

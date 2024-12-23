@@ -906,7 +906,6 @@ void Level::reset()
     m_TouchedFlag = false;
     m_InControl = true;
     m_StartPosition = {0, 0};
-    m_Player->setPosition(m_StartPosition);
     m_CameraPosition = {0, 0};
 
 }
