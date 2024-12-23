@@ -271,6 +271,20 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
     }
 }
 
+void Game::reset(int characterMenu) {
+    if (characterMenu == 0) {
+        player = new Mario;
+    } else {
+        player = new Luigi;
+    }
+    level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    player->setPosition(Vector2{20, 0});
+    level->attachPlayer(player);
+    countdown = 400;
+    timer = 0.0f;
+    MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
+}
+
 Game::Game(const Game& other) 
     : factory(other.factory),  
       level(nullptr),          
@@ -407,7 +421,6 @@ void Game::nextLevel() {
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
     level->update(0.01f);
-    state = LEVEL_RETURN_MESSAGE::RUNNING; 
 }
 
 void Game::hiddenLevel() {
@@ -477,10 +490,10 @@ void Game::handleState() {
             if (level->GetLevelType() == LevelFactory::LEVEL_103) {
                 saveScore("score.txt");
             }
+            state = LEVEL_RETURN_MESSAGE::RUNNING; 
             break;
         case LEVEL_RETURN_MESSAGE::LOSE:
-
-            level->pauseLevel();
+            //level->pauseLevel();
             saveScore("score.txt");
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
@@ -494,6 +507,7 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
             level->continueLevel();
+            state = LEVEL_RETURN_MESSAGE::RUNNING;
             break;
     }
 }

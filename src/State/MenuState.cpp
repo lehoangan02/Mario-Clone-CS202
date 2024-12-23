@@ -17,8 +17,13 @@ void MenuState::handle(Application& app) {
         app.setState(new GameState());
         app.menu.reset();
     }
-    if (tab == 10) {
+    if (tab == 12) {
         app.game.changeMenu(app.menu.characterMenu(), app.menu.levelMenu());
+        app.setState(new GameState());
+        app.menu.reset();
+    }
+    if (tab == 10) {
+        app.game.reset(app.menu.characterMenu());
         app.setState(new GameState());
         app.menu.reset();
     }

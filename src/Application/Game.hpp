@@ -42,6 +42,7 @@ public:
     void start();
     void update(float deltaTime);
     void draw();
+    void reset(int characterMenu);
 
     void pause();
     void resume();
