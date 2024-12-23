@@ -460,6 +460,7 @@ void Game::restartLevel() {
     level->reset();
     // level->attachPlayer(player);
     // level->update(0.01f);
+	MusicManager::getInstance().PlayCurrentTrack();
     state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
