@@ -15,16 +15,19 @@ void MenuState::handle(Application& app) {
     if (tab == 11) {
         app.game.change("continue.txt");
         app.setState(new GameState());
+        app.game.reset();
         app.menu.reset();
     }
     if (tab == 12) {
         app.game.changeMenu(app.menu.characterMenu(), app.menu.levelMenu());
         app.setState(new GameState());
+        app.game.reset();
         app.menu.reset();
     }
     if (tab == 10) {
         app.game.reset(app.menu.characterMenu());
         app.setState(new GameState());
+        app.game.reset();
         app.menu.reset();
     }
     
