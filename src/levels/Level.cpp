@@ -659,21 +659,12 @@ void Level::render()
         if (object->isHit()) continue;
         object->Draw();
     }
-    for (auto& object : m_EndPipes)
+    for (auto& object : m_Drawables)
     {
         object->render();
     }
     m_FireballHandler.draw();
     float HidePositionX = m_ScreenSize.x * 2;
-    for (auto& object : m_Drawables)
-    {
-        object->render();
-    }
-    for (auto& object : m_Enemies)
-    {
-        // if (object->isHit()) continue;
-        object->render();
-    }
     for (auto& object : m_Environment)
     {
         if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
@@ -682,8 +673,17 @@ void Level::render()
         }
         object->render();
     }
+    for (auto& object : m_Enemies)
+    {
+        // if (object->isHit()) continue;
+        object->render();
+    }
     Ground::GetGround()->render();
     m_Player->Draw();
+    for (auto& object : m_EndPipes)
+    {
+        object->render();
+    }
     m_Player->firePool->Draw();
     DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
     EndMode2D();
