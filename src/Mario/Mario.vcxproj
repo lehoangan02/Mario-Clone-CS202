@@ -128,12 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\animation\Animation.cpp" />
-    <ClCompile Include="..\Application.cpp" />
+    <ClCompile Include="..\Application\Application.cpp" />
+    <ClCompile Include="..\Application\Game.cpp" />
+    <ClCompile Include="..\Application\GUI.cpp" />
+    <ClCompile Include="..\Application\ResourceManager.cpp" />
     <ClCompile Include="..\characters\Character.cpp" />
     <ClCompile Include="..\characters\Enemy.cpp" />
     <ClCompile Include="..\characters\Fireball.cpp" />
-    <ClCompile Include="..\Game.cpp" />
-    <ClCompile Include="..\GUI.cpp" />
     <ClCompile Include="..\Item\Item.cpp" />
     <ClCompile Include="..\levels\AABBox.cpp" />
     <ClCompile Include="..\levels\Environment.cpp" />
@@ -141,13 +142,18 @@
     <ClCompile Include="..\levels\Level.cpp" />
     <ClCompile Include="..\levels\MapLoader.cpp" />
     <ClCompile Include="..\Obstacle\Obstacle.cpp" />
-    <ClCompile Include="..\ResourceManager.cpp" />
     <ClCompile Include="..\Sound\Audio.cpp" />
+    <ClCompile Include="..\State\GameState.cpp" />
+    <ClCompile Include="..\State\MenuState.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\animation\Animation.h" />
     <ClInclude Include="..\Application.hpp" />
+    <ClInclude Include="..\Application\Application.hpp" />
+    <ClInclude Include="..\Application\Game.hpp" />
+    <ClInclude Include="..\Application\GUI.hpp" />
+    <ClInclude Include="..\Application\ResourceManager.hpp" />
     <ClInclude Include="..\characters\Character.h" />
     <ClInclude Include="..\characters\Enemy.h" />
     <ClInclude Include="..\characters\Enemy.hpp" />
@@ -166,6 +172,9 @@
     <ClInclude Include="..\Obstacle\Obstacle.h" />
     <ClInclude Include="..\ResourceManager.hpp" />
     <ClInclude Include="..\Sound\Audio.h" />
+    <ClInclude Include="..\State\GameState.hpp" />
+    <ClInclude Include="..\State\MenuState.hpp" />
+    <ClInclude Include="..\State\State.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\Maps\0.txt" />
