@@ -156,7 +156,7 @@ This is the question blocks or the breakable block in the map.
 
 Explanation for question blocks: 0 1200 400 0. This means that the object is type 0 (question block), followed by its coordinate. After that it's the enum of the item type (0 for coin, 1 for magic mushroom).
 
-For breakable block, there is no item so there will be no number after the coordninate.
+For breakable block, there is no item so you should input number 0 after the coordninate.
 
 ## Lift
 
