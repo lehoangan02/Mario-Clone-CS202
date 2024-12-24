@@ -286,7 +286,7 @@ void Game::reset(int characterMenu) {
     level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
     player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
-    countdown = 400;
+    countdown = 300;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
 }
@@ -544,6 +544,7 @@ void Game::drawInfo() {
             timer = 0.0f; 
             if (countdown <= 0) {
                 countdown = 0;
+				state = LEVEL_RETURN_MESSAGE::LOSE;
             }
         }
     }

@@ -295,6 +295,7 @@ void Character::reset() {
 	pullFlag = false;
 	isWin = false;
 	//powerDown();
+	changeForm(0);
 	deadTime = 0.0f;
 	isFinished = false;
 	finishSliding = false;

@@ -96,18 +96,22 @@ void MusicManager::PlayMusic(MusicTrack music) {
     case Invincible:
 		PlayMusicStream(musicSet[Invincible]);
 		currentTrack = 2;
+		SetMusicVolume(0.6f);
 		break;
 	case SuperBellHill:
 		PlayMusicStream(musicSet[SuperBellHill]);
 		currentTrack = 3;
+		SetMusicVolume(0.3f);
 		break;
 	case FlowerGarden:
 		PlayMusicStream(musicSet[FlowerGarden]);
 		currentTrack = 4;
+		SetMusicVolume(0.3f);
 		break;
 	case Athletic:
 		PlayMusicStream(musicSet[Athletic]);
 		currentTrack = 5;
+		SetMusicVolume(0.3f);
 		break;
 	case UnderGround:
 		PlayMusicStream(musicSet[UnderGround]);
@@ -156,4 +160,13 @@ void MusicManager::PlayPreviousTrack() {
 void MusicManager::PlayCurrentTrack() {
 	if (currentTrack == -1) return;
 	PlayMusicStream(musicSet[currentTrack]);
+}
+
+void MusicManager::SetMusicVolume(float volume) {
+	if (currentTrack == -1) {
+		return; 
+	}
+	if (volume < 0.0f) volume = 0.0f; 
+	if (volume > 1.0f) volume = 1.0f;
+	::SetMusicVolume(musicSet[currentTrack], volume); 
 }
