@@ -29,6 +29,9 @@ void Fireball::Update(float deltaTime) {
 void Fireball :: Bounce() {
 	velocity.y = -velocity.y * 0.7f;
 }
+void Fireball::BounceX() {
+    velocity.x = -velocity.x * 0.6f;
+}
 void Fireball::Draw() {
     if (active) {
         Rectangle sourceRect = animation.uvRect;

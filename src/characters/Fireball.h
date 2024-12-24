@@ -20,6 +20,7 @@ public:
     void Update(float deltaTime);
     void Draw();
     void Bounce();
+    void BounceX();
     Vector2 getPosition() { return position; };
     Vector2 getSize() { return { animation.uvRect.width*scale, animation.uvRect.height*scale }; };
 };

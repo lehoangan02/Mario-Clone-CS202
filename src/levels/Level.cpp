@@ -1084,8 +1084,13 @@ void Level::FireballHandler::setLevel(Level* level)
 }
 void Level::FireballHandler::update()
 {
-    // SetTargetFPS(10);
-    // m_Fireballs = 
+    // if (m_Level->m_Ground->isInHole(AABBox(m_Level->m_Player->GetPosition(), m_Level->m_Player->GetSize())))
+    // {
+    //     std::cout << "In Hole" << std::endl;
+    // }
+    // else {
+    //     std::cout << "Not In Hole" << std::endl;
+    // }
     // std::cout << "Fireball Count: " << m_Fireballs.size() << std::endl;
     for (auto& fireball : m_Level->m_Player->firePool->fireballs)
     {
@@ -1108,10 +1113,12 @@ void Level::FireballHandler::update()
                     if (fireball.getPosition().x < Hole.first)
                     {
                         fireball.position.x = Hole.first;
+                        fireball.BounceX();
                     }
                     else if (fireball.getPosition().x + fireball.getSize().x > Hole.second)
                     {
                         fireball.position.x = Hole.second - fireball.getSize().x;
+                        fireball.BounceX();
                     }
                     if (fireball.getPosition().y + fireball.getSize().y > m_Level->m_Ground->m_Position.y + 160)
                     {
