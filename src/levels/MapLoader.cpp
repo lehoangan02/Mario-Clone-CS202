@@ -232,3 +232,246 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     }
     fin.close();
 }
+MapLoaderBinary::MapLoaderBinary()
+{
+}
+MapLoaderBinary::~MapLoaderBinary()
+{
+}
+MapLoaderBinary& MapLoaderBinary::GetMapLoaderBinary()
+{
+    static MapLoaderBinary Loader;
+    return Loader;
+}
+void MapLoaderBinary::LoadMap(Level* Level, int MapID)
+{
+    std::fstream fin;
+    fin.open("Maps/" + std::to_string(MapID) + ".bin", std::ios::in | std::ios::binary);
+    if (!fin.is_open())
+    {
+        std::cerr << "Cannot open file" << std::endl;
+        return;
+    }
+    int CharacterSpawnX, CharacterSpawnY;
+    fin.read((char*)&CharacterSpawnX, sizeof(CharacterSpawnX));
+    fin.read((char*)&CharacterSpawnY, sizeof(CharacterSpawnY));
+    std::cout << "Character Spawn: " << CharacterSpawnX << ", " << CharacterSpawnY << std::endl;
+    Level -> m_StartPosition = Vector2{(float)CharacterSpawnX, (float)CharacterSpawnY};
+    int NumberOfEnemies;
+    fin.read((char*)&NumberOfEnemies, sizeof(NumberOfEnemies));
+    std::cout << "Number of Enemies: " << NumberOfEnemies << std::endl;
+    for (int i = 0; i < NumberOfEnemies; ++i)
+    {
+        int Enemytype;
+        fin.read((char*)&Enemytype, sizeof(int));
+        EnemyType Type = static_cast<EnemyType>(Enemytype);
+        int EnemyX, EnemyY;
+        fin.read((char*)&EnemyX, sizeof(EnemyX));
+        fin.read((char*)&EnemyY, sizeof(EnemyY));
+        int EnemyRangeX1, EnemyRangeX2;
+        fin.read((char*)&EnemyRangeX1, sizeof(EnemyRangeX1));
+        fin.read((char*)&EnemyRangeX2, sizeof(EnemyRangeX2));
+        EnemyFactory& Factory = EnemyFactory::GetEnemyFactory();
+        Factory.CreateEnemy(Type, Vector2{(float)EnemyX, (float)EnemyY}, EnemyRangeX1, EnemyRangeX2);
+
+    }
+    int NumberOfItems;
+    fin.read((char*)&NumberOfItems, sizeof(NumberOfItems));
+    std::cout << "Number of Items: " << NumberOfItems << std::endl;
+    for (int i = 0; i < NumberOfItems; ++i)
+    {
+        int ItemX, ItemY;
+        fin.read((char*)&ItemX, sizeof(ItemX));
+        fin.read((char*)&ItemY, sizeof(ItemY));
+        IdleCoin* Coin = new IdleCoin(Vector2{(float)ItemX, (float)ItemY}, Vector2{40, 100}, LoadTexture("assets/textures/Coin.png"));
+        Level -> m_IdleCoin.push_back(Coin);
+    }
+    int NumberOfStaticEnvironment;
+    fin.read((char*)&NumberOfStaticEnvironment, sizeof(NumberOfStaticEnvironment));
+    for (int i = 0; i < NumberOfStaticEnvironment; ++i)
+    {
+        int Type;
+        fin.read((char*)&Type, sizeof(Type));
+        int X, Y;
+        fin.read((char*)&X, sizeof(X));
+        fin.read((char*)&Y, sizeof(Y));
+        if (Type == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
+        {
+            Level -> m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE, Vector2{(float)X, (float)750 - Y}));
+        }
+        else
+        {
+            Level -> m_Environment.push_back(EnvironmentObjectFactory::GetEnvironmentFactory().CreateEnvironmentObject(Type, Vector2{(float)X, (float)Y}));
+        }
+    }
+    int NumberOfInteractiveEnvironment;
+    fin.read((char*)&NumberOfInteractiveEnvironment, sizeof(NumberOfInteractiveEnvironment));
+    std::cout << "Number of Interactive Environment: " << NumberOfInteractiveEnvironment << std::endl;
+
+    for (int i = 0; i < NumberOfInteractiveEnvironment; ++i)
+    {
+        std::cout << "i: " << i << std::endl;
+        int Type;
+        fin.read((char*)&Type, sizeof(Type));
+        switch (Type)
+        {
+        case EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK:
+        {
+            std::cout << "Creating Question Block" << std::endl;
+            break;
+        }
+        case EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::BREAKABLE_BRICK:
+        {
+            std::cout << "Creating Breakable Brick" << std::endl;
+            break;
+        }
+        default:
+            break;
+        }
+        int PositionX, PositionY;
+        fin.read((char*)&PositionX, sizeof(int));
+        fin.read((char*)&PositionY, sizeof(int));
+        float X = static_cast<float>(PositionX);
+        float Y = static_cast<float>(PositionY);
+        
+        std::cout << "Creating Interactive Environment Object at " << X << ", " << Y << std::endl;
+        int ItemType;
+        fin.read((char*)&ItemType, sizeof(ItemType));
+        std::cout << "Item Type: " << ItemType << std::endl;
+        Itemtype MyItemType = static_cast<Itemtype>(ItemType);
+        std::pair<EnvironmentObjectInteractive*, Item*> Pair;
+        Pair.first = EnvironmentInteractiveObjectFactory::GetEnvironmentInteractiveFactory().CreateEnvironmentInteractiveObject(Type, Vector2{X, Y});
+        Item* NewItem = nullptr;
+        if (Pair.first->getObjectID() == EnvironmentInteractiveObjectFactory::EnvironmentInteractiveObjectType::QUESTION_BLOCK)
+        {
+            switch (MyItemType)
+            {
+            case Itemtype::COIN:
+                {
+                    NewItem = new Coin(
+                    Vector2{ X + 40, Y },   //Start position
+                    Vector2{ X + 40, Y - 300 },    //End position
+                    Vector2{ 40,100},      // size of coin
+                    LoadTexture("assets/textures/Coin.png"),
+                    Vector2{ 0, 400 }     //velocity
+                    );
+                }
+                std::cout << "Creating Coin" << std::endl;
+                break;
+            case Itemtype::MUSHROOM:
+                {
+                    NewItem = new Mushroom(
+                    Vector2{ X + 20, Y},   //Start position
+                    Vector2{ 0, 0 },    //End position
+                    Vector2{ 50, 50},      // size of coin
+                    LoadTexture("assets/textures/MagicMushroom.png"),
+                    Vector2{ 100, 0 }     //velocity
+                    );
+                }
+                std::cout << "Creating Mushroom" << std::endl;
+                break;
+            case Itemtype::FIREFLOWER:
+            {
+                std::cout << "Creating Fire Flower" << std::endl;
+                Texture2D fireflowerTexture = LoadTexture("assets/textures/FireFlower.png");
+                NewItem = new FireFlower(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 50, 50 },
+                    fireflowerTexture
+                );
+
+                break;
+            }
+            case Itemtype::STARMAN:
+            {
+                std::cout << "Creating Starman" << std::endl;
+                Texture2D starmanTexture = LoadTexture("assets/textures/starman.png");
+                NewItem = new StarMan(
+                    Vector2{ X + 20, Y },
+                    Vector2{ 0, 0 },
+                    Vector2{ 60, 60 },
+                    starmanTexture,
+                    Vector2{ 3.0f, 3.0f }
+                );
+                break;
+            }
+            default:
+                NewItem = nullptr;
+                break;
+            }
+        }
+        Pair.second = NewItem;
+        Level -> m_EnvironmentInteractive.push_back(Pair);
+    }
+    int NumberOfDrawables;
+    std::cout << "Number of Drawables: " << NumberOfDrawables << std::endl;
+    fin.read((char*)&NumberOfDrawables, sizeof(NumberOfDrawables));
+    for (int i = 0; i < NumberOfDrawables; ++i)
+    {
+        int Type;
+        fin.read((char*)&Type, sizeof(Type));
+        int X, Y;
+        fin.read((char*)&X, sizeof(X));
+        fin.read((char*)&Y, sizeof(Y));
+        Level -> m_Drawables.push_back(DrawableObjectFactory::GetDrawableObjectFactory().CreateDrawableObject(Type, Vector2{(float)X, (float)Y}));
+    }
+    Level -> m_Ground -> reset();
+    int NumberOfHoles;
+    fin.read((char*)&NumberOfHoles, sizeof(NumberOfHoles));
+    std::cout << "Number of Holes: " << NumberOfHoles << std::endl;
+    for (int i = 0; i < NumberOfHoles; ++i)
+    {
+        int X;
+        unsigned int Y;
+        fin.read((char*)&X, sizeof(X));
+        fin.read((char*)&Y, sizeof(Y));
+        Level -> m_Ground -> addHole(X, Y);
+    }
+    int NumberOfLifts;
+    fin.read((char*)&NumberOfLifts, sizeof(NumberOfLifts));
+    for (int i = 0; i < NumberOfLifts; ++i)
+    {
+        int X, Y;
+        fin.read((char*)&X, sizeof(X));
+        fin.read((char*)&Y, sizeof(Y));
+        Level -> m_Lifts.push_back(new Lift(Vector2{float(X), float(Y)}));
+    }
+    int NumberOfEndPipes;
+    fin.read((char*)&NumberOfEndPipes, sizeof(NumberOfEndPipes));
+    for (int i = 0; i < NumberOfEndPipes; ++i)
+    {
+        int Type;
+        fin.read((char*)&Type, sizeof(Type));
+        int X, Y;
+        fin.read((char*)&X, sizeof(X));
+        fin.read((char*)&Y, sizeof(Y));
+        if (Type == EndPipeType::TOP)
+        {
+            EndPipeTop* Pipe = new EndPipeTop(Vector2{(float)X, (float)(750 - Y)});
+            Level -> m_EndPipeHandler.addEndPipe(Pipe);
+            Level -> m_EndPipes.push_back(Pipe);
+        }
+        else
+        {
+            EndPipeSide* Pipe = new EndPipeSide(Vector2{(float)X, float(750 - Y)});
+            Level -> m_EndPipeHandler.addEndPipe(Pipe);
+            Level -> m_EndPipes.push_back(Pipe);
+        }
+    }
+    int WorldType;
+    fin.read((char*)&WorldType, sizeof(WorldType));
+    std::cout << "World Type: " << WorldType << std::endl;
+    Level -> m_Ground -> setWorldType(WorldType);
+    int HaveFlagPole;
+    fin.read((char*)&HaveFlagPole, sizeof(HaveFlagPole));
+    if (HaveFlagPole)
+    {
+        int X;
+        fin.read((char*)&X, sizeof(X));
+        std::cout << "Creating Flag Pole at " << X << std::endl;
+        FlagPole* Pole = new FlagPole(X);
+        Level -> m_FlagPole = Pole;
+    }
+    fin.close();
+}

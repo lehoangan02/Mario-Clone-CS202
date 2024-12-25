@@ -112,6 +112,7 @@ class Level : public Subject, public Component
             UNDERGROUND
         };
     friend class MapLoader;
+    friend class MapLoaderBinary;
     // private:
     
     protected:

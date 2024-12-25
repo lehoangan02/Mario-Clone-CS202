@@ -9,8 +9,17 @@ class MapLoader
 {
     public:
         static MapLoader& GetMapLoader();
-        void LoadMap(Level* Level, int MapID);
-    private:
+        virtual void LoadMap(Level* Level, int MapID);
+    protected:
         MapLoader();
         ~MapLoader();
+};
+class MapLoaderBinary : public MapLoader
+{
+    public:
+        static MapLoaderBinary& GetMapLoaderBinary();
+        void LoadMap(Level* Level, int MapID) override;
+    private:
+        MapLoaderBinary();
+        ~MapLoaderBinary();
 };

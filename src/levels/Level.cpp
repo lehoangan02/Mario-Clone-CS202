@@ -1300,7 +1300,8 @@ Level101::~Level101()
 }
 void Level101::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 void Level101::update(float DeltaTime)
 {
@@ -1346,7 +1347,8 @@ void Level101::reset()
 {
     Level::reset();
     this->setName("Level101");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_101);
 }
 LevelTesting::LevelTesting()
 {
@@ -1395,7 +1397,8 @@ Level103* Level103::GetLevel103()
 }
 void Level103::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 void Level103::update(float DeltaTime)
 {
@@ -1409,7 +1412,8 @@ void Level103::reset()
 {
     Level::reset();
     this->setName("Level103");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_103);
 }
 HiddenLevel101::HiddenLevel101()
 {
@@ -1426,7 +1430,8 @@ HiddenLevel101* HiddenLevel101::GetHiddenLevel101()
 }
 void HiddenLevel101::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
 }
 void HiddenLevel101::update(float DeltaTime)
 {
@@ -1440,7 +1445,8 @@ void HiddenLevel101::reset()
 {
     Level::reset();
     this->setName("HiddenLevel101");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_101);
 }
 Level102::Level102()
 {
@@ -1457,7 +1463,8 @@ Level102* Level102::GetLevel102()
 }
 void Level102::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 void Level102::update(float DeltaTime)
 {
@@ -1471,7 +1478,8 @@ void Level102::reset()
 {
     Level::reset();
     this->setName("Level102");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_102);
 }
 HiddenLevel102::HiddenLevel102()
 {
@@ -1488,7 +1496,8 @@ HiddenLevel102* HiddenLevel102::GetHiddenLevel102()
 }
 void HiddenLevel102::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
 }
 void HiddenLevel102::update(float DeltaTime)
 {
@@ -1502,7 +1511,8 @@ void HiddenLevel102::reset()
  {
     Level::reset();
     this->setName("HiddenLevel102");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_102);
 }
 HiddenLevel103::HiddenLevel103()
 {
@@ -1519,7 +1529,8 @@ HiddenLevel103* HiddenLevel103::GetHiddenLevel103()
 }
 void HiddenLevel103::load()
 {
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }
 void HiddenLevel103::update(float DeltaTime)
 {
@@ -1533,5 +1544,6 @@ void HiddenLevel103::reset()
 {
     Level::reset();
     this->setName("HiddenLevel103");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::HIDDEN_LEVEL_103);
 }

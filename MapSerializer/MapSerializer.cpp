@@ -268,4 +268,5 @@ void MapSerializer::deserialize(std::string inputFile, std::string outputFile) {
     }
     fin.close();
     fout.close();
+    std::cout << "Deserialized!" << std::endl;
 }
