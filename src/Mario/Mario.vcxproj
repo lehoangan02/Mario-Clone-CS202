@@ -138,6 +138,7 @@
     <ClCompile Include="..\Item\Item.cpp" />
     <ClCompile Include="..\levels\AABBox.cpp" />
     <ClCompile Include="..\levels\Environment.cpp" />
+    <ClCompile Include="..\levels\FadeOut.cpp" />
     <ClCompile Include="..\levels\Flyweight.cpp" />
     <ClCompile Include="..\levels\Level.cpp" />
     <ClCompile Include="..\levels\MapLoader.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="..\Item\Item.h" />
     <ClInclude Include="..\levels\AABBox.hpp" />
     <ClInclude Include="..\levels\Environment.hpp" />
+    <ClInclude Include="..\levels\FadeOut.hpp" />
     <ClInclude Include="..\levels\Flyweight.hpp" />
     <ClInclude Include="..\levels\Level.hpp" />
     <ClInclude Include="..\levels\MapLoader.hpp" />
