@@ -614,7 +614,6 @@ void Level::render()
     camera.offset = { 0, Offset * (Zoom) };
     camera.zoom = Zoom;
     BeginMode2D(camera);
-
     m_Background.render();
     if (m_FlagPole != nullptr)
     {
@@ -686,6 +685,7 @@ void Level::render()
     }
     m_Player->firePool->Draw();
     DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
+    m_FadeOut.render();
     EndMode2D();
 
 }
@@ -695,7 +695,6 @@ void Level::produceSwitchSignal()
     // std::cout << "Is Dead Finished: " << m_Player->isDeadFinished() << std::endl;
     // std::cout << "Is Sliding: " << m_Player->isSliding() << std::endl;
     // std::cout << "Is Sliding Finished: " << m_Player->isSlidingFinished() << std::endl;
-
     if (m_Player->isDead() && m_Player->isDeadFinished())
     {
         if (m_Player->getLives() > 0)
@@ -711,9 +710,18 @@ void Level::produceSwitchSignal()
     }
     else if (m_Player->haveWon())
     {
-        m_Player->reset();
-        m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
-        std::cout << "Notifying Win" << std::endl;
+        if (!m_FadeOut.isActivated())
+        {
+            m_FadeOut.activate();
+        }
+        if (m_FadeOut.isActivated() && m_FadeOut.isFinished())
+        {   
+            m_Player->reset();
+            AutoMove* control = AutoMove::getInstance(m_Player);
+            control->reset();
+            m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
+            std::cout << "Notifying Win" << std::endl;
+        }
 
     }
     else if (m_Player->isSlidingFinished())
@@ -821,7 +829,8 @@ void Level::update(float DeltaTime)
         // SoundManager::getInstance().PlaySoundEffect(LEVELCOMPLETE_SOUND);
     }
     produceSwitchSignal();
-
+    m_FadeOut.update();
+    m_FadeOut.setPos(m_CameraPosition);
 }
 bool Level::isPlayerInHole()
 {
@@ -928,6 +937,8 @@ void Level::reset()
     m_EnemyHandler.reset();
     m_FireballHandler.reset();
     m_InSpecialPipe = false;
+    m_FadeOut.reset();
+    m_FadeOut.setRectangle({0, -1000, 1024 * 3, 768 * 3});
     // m_Player->reset();
 }
 void Level::EndPipeHandler::addEndPipe(EndPipe* Pipe)

@@ -526,7 +526,6 @@ void AutoMove::execute(float deltaTime) {
 			character->control(false);
 			character->setVelocity(Vector2{ 0.0f, 0.0f });
 			character->Update(deltaTime);
-			reset();
 		}
 	}
 	else {

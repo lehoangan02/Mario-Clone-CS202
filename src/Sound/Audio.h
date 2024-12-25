@@ -32,7 +32,7 @@ public:
     }
 
     void PlaySoundEffect(SoundTrack sound);
-
+    void StopSoundEffect(SoundTrack sound);
 private:
     SoundManager();
     ~SoundManager();

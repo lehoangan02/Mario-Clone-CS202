@@ -53,6 +53,37 @@ void SoundManager::PlaySoundEffect(SoundTrack sound) {
 		break;
     }
 }
+void SoundManager::StopSoundEffect(SoundTrack sound) {
+	switch (sound) {
+	case COIN_SOUND:
+		StopSound(soundSet[0]);
+		break;
+	case JUMP_SOUND:
+		StopSound(soundSet[1]);
+		break;
+	case HITBLOCK_SOUND:
+		StopSound(soundSet[2]);
+		break;
+	case KILL_SOUND:
+		StopSound(soundSet[3]);
+		break;
+	case POWERUP_SOUND:
+		StopSound(soundSet[4]);
+		break;
+	case POWERDOWN_SOUND:
+		StopSound(soundSet[5]);
+		break;
+	case DIE_SOUND:
+		StopSound(soundSet[6]);
+		break;
+	case ITEMPOPUP_SOUND:
+		StopSound(soundSet[7]);
+		break;
+	case FLAGDOWN_SOUND:
+		StopSound(soundSet[8]);
+		break;
+	}
+}
 
 
 std::vector<Music> MusicManager::musicSet;

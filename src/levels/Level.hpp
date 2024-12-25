@@ -7,6 +7,7 @@
 #include "../Item/Item.h"
 #include "../characters/Enemy.hpp"
 #include "../Mediator/Mediator.hpp"
+#include "FadeOut.hpp"
 class Enemy;
 class Item;
 enum LEVEL_RETURN_MESSAGE
@@ -131,7 +132,7 @@ class Level : public Subject, public Component
     Ground* m_Ground;
     Background m_Background;
     bool m_InSpecialPipe = false;
-    
+    FadeOut& m_FadeOut = FadeOut::getInstance();
     const float m_PlayerOffset = 1000;
     bool isPlayerFinished = false;
     Vector2 m_ScreenSize = {1200, 900};
