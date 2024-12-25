@@ -82,9 +82,9 @@ Menu::Menu() {
     // levelButton = Button({450, 380, 141, 42}, Color{240, 193, 225, 255} ,"Level", BLACK, 22,
     //     ResourceManager::GetInstance()->GetFont(), 0);
 
-    characterButtons[0] = Button({288, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
+    characterButtons[0] = Button({305, 422, 141, 42}, Color{240, 193, 225, 255} ,"Mario", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 1);
-    characterButtons[1] = Button({583, 422, 141, 42}, Color{240, 193, 225, 255} ,"Luigi", BLACK, 22,
+    characterButtons[1] = Button({575, 422, 141, 42}, Color{240, 193, 225, 255} ,"Luigi", BLACK, 22,
         ResourceManager::GetInstance()->GetFont(), 0);
     
     mapButtons[0] = Button({275.5, 251, 136, 101}, Color{240, 193, 225, 255} ,"Map 1", BLACK, 22,
