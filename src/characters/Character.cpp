@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "../levels/FadeOut.hpp"
 #include <iostream>
 
 #define MAX_SPEED 700.0f
@@ -507,7 +508,7 @@ void AutoMove::execute(float deltaTime) {
 		if (totalTime < deltaTime*1.2f && totalTime > 0.0f) {
 			MusicManager::getInstance().PlayMusic(LevelFinished);
 		}
-		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
+		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.6415f) {
 			MusicManager::getInstance().StopMusic();
 		}
 		if (totalTime < 5.0) {
@@ -526,6 +527,7 @@ void AutoMove::execute(float deltaTime) {
 			character->control(false);
 			character->setVelocity(Vector2{ 0.0f, 0.0f });
 			character->Update(deltaTime);
+			// reset();
 		}
 	}
 	else {

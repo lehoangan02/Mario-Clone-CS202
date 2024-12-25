@@ -716,6 +716,7 @@ void Level::produceSwitchSignal()
         }
         if (m_FadeOut.isActivated() && m_FadeOut.isFinished())
         {   
+            
             m_Player->reset();
             AutoMove* control = AutoMove::getInstance(m_Player);
             control->reset();
