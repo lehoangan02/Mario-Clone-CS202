@@ -621,6 +621,25 @@ void Level::render()
     }
     for (auto& object : m_EnvironmentInteractive)
     {
+        object.first->render();
+    }
+    for (auto& object : m_Lifts)
+    {
+        object->render();
+    }
+    AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
+    DrawBoundingBox(PlayerBox.getPosition(), PlayerBox.getSize(), RED, 10);
+    for (auto& object : m_IdleCoin)
+    {
+        if (object->isHit()) continue;
+        object->Draw();
+    }
+    for (auto& object : m_Drawables)
+    {
+        object->render();
+    }
+    for (auto& object : m_EnvironmentInteractive)
+    {
         if (object.second == nullptr) continue;
         object.second->Draw();
         if (object.second->getItemID() == Itemtype::MUSHROOM)
@@ -642,25 +661,6 @@ void Level::render()
             DrawBoundingBox(FireFlowerItem->GetPosition(), FireFlowerItem->GetSize(), RED);
         }
 
-    }
-    for (auto& object : m_EnvironmentInteractive)
-    {
-        object.first->render();
-    }
-    for (auto& object : m_Lifts)
-    {
-        object->render();
-    }
-    AABBox PlayerBox = AABBox(m_Player->GetPosition(), m_Player->GetSize());
-    DrawBoundingBox(PlayerBox.getPosition(), PlayerBox.getSize(), RED, 10);
-    for (auto& object : m_IdleCoin)
-    {
-        if (object->isHit()) continue;
-        object->Draw();
-    }
-    for (auto& object : m_Drawables)
-    {
-        object->render();
     }
     m_FireballHandler.draw();
     float HidePositionX = m_ScreenSize.x * 2;
