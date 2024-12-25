@@ -61,7 +61,7 @@ Game::Game(int characterMenu, int levelMenu)
         level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
     level -> reset();
-    player->setPosition(Vector2{20, 0});
+    player->setPosition(Vector2{200, 0});
     level->attachPlayer(player);
 
     countdown = 300;
@@ -438,7 +438,7 @@ void Game::hiddenLevel() {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
         level -> reset();
         level->attachPlayer(player);
-        player->setPosition(Vector2{20, 0});
+        player->setPosition(Vector2{200, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::UnderGround);
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_102) 
@@ -446,7 +446,7 @@ void Game::hiddenLevel() {
         level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
         level -> reset();
         level->attachPlayer(player);
-        player->setPosition(Vector2{20, 0});
+        player->setPosition(Vector2{200, 0});
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
     }
     else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101)
