@@ -405,7 +405,7 @@ void MapLoaderBinary::LoadMap(Level* Level, int MapID)
         Level -> m_EnvironmentInteractive.push_back(Pair);
     }
     int NumberOfDrawables;
-    std::cout << "Number of Drawables: " << NumberOfDrawables << std::endl;
+   /* std::cout << "Number of Drawables: " << NumberOfDrawables << std::endl;*/
     fin.read((char*)&NumberOfDrawables, sizeof(NumberOfDrawables));
     for (int i = 0; i < NumberOfDrawables; ++i)
     {

@@ -511,7 +511,7 @@ void AutoMove::execute(float deltaTime) {
 		if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.6415f) {
 			MusicManager::getInstance().StopMusic();
 		}
-		if (totalTime < 5.0) {
+		if (totalTime < 5.6415f) {
 			character->control(false);
 			character->setVelocity(Vector2{ 225.0f, 1.0f });
 			if (character->GetPosition().x - startPosition > 600.0f) {
