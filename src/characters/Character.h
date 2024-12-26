@@ -150,7 +150,8 @@ public:
 	static void deleteCharacter();
 
 private:
-	static Character* currentCharacter;
+	static Character* currentCharacter1;
+	static Character* currentCharacter2;
 };
 class Mario : public Character {
 public:
@@ -186,20 +187,15 @@ public:
 	void execute(float deltaTime) override;
 };
 
-class AutoMove : public Command {
+class AutoMove : public Command{
 private:
 	Character* character;
-	float totalTime; 
-	float startPosition;
-	static AutoMove* instance; 
-	AutoMove(Character* character) : totalTime(0.0f), startPosition(0.0f) { this->character = character; }
+	static float totalTime;
+	static float startPosition;
 
 public:
-	static AutoMove* getInstance(Character* character) {
-		if (instance == nullptr) {
-			instance = new AutoMove(character);
-		}
-		return instance;
+	AutoMove(Character* character) {
+		this->character = character;
 	}
 	void reset() { totalTime = 0.0f; }
 	void execute(float deltaTime) override;

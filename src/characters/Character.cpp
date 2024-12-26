@@ -372,7 +372,7 @@ void Mario::Update(float deltaTime) {
 	setPosition(Vector2{ position.x + velocity.x*deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();	
 	//if (pullFlag) std::cout << "pull" << std::endl;
-	//std::cout << "Instance2 " << this << std::endl;
+	/*std::cout << "Instance2 " << this << std::endl;*/
 }
 
 void Character::SlidePipe(slidingDirection direction) {
@@ -461,25 +461,30 @@ void Luigi::Update(float deltaTime) {
 }
 
 
-Character* CharacterFactory::currentCharacter = nullptr;
+Character* CharacterFactory::currentCharacter1 = nullptr;
+Character* CharacterFactory::currentCharacter2 = nullptr;	
 void CharacterFactory::deleteCharacter() {
-	if (currentCharacter) delete currentCharacter;
-	currentCharacter = nullptr;
+	//if (currentCharacter) delete currentCharacter;
+	//currentCharacter = nullptr;
 }
 Character* CharacterFactory::createCharacter(CharacterType type) {
-	deleteCharacter();
+	//deleteCharacter();
 	switch (type) {
 	case MARIO:
-		currentCharacter = new Mario();
+		if (currentCharacter1 == nullptr) {
+			currentCharacter1 = new Mario();
+		}
+		else return currentCharacter1;
 		break;
 	case LUIGI:
-		currentCharacter = new Luigi();
+		if (currentCharacter2 == nullptr) {
+			currentCharacter2 = new Luigi();
+		}
+		else return currentCharacter2;
 		break;
 	default:
-		currentCharacter = nullptr;
-	}
-	return currentCharacter;
-
+		return nullptr;
+	};
 }
 
 void FullControl::execute(float deltaTime) {
@@ -502,7 +507,8 @@ void InHole::execute(float deltaTime) {
 	character->Update(deltaTime);
 };
 
-AutoMove* AutoMove::instance = nullptr;
+float AutoMove::totalTime = 0.0f;
+float AutoMove::startPosition = 0.0f;
 void AutoMove::execute(float deltaTime) {
 	if (!character->isPullFlag()) {
 		if (totalTime < deltaTime*1.2f && totalTime > 0.0f) {
@@ -520,7 +526,6 @@ void AutoMove::execute(float deltaTime) {
 			}
 			character->Update(deltaTime);
 			totalTime += deltaTime;
-			//std::cout << totalTime;
 		}
 		else {
 			character->setWin();
@@ -534,30 +539,6 @@ void AutoMove::execute(float deltaTime) {
 		startPosition = character->GetPosition().x;
 		character->Update(deltaTime);
 	}
-
+	//std::cout << "Total: " << totalTime << std::endl;
 }
 
-
-//Backup 
-//AutoMove* AutoMove::instance = nullptr;
-//void AutoMove::execute(float deltaTime) {
-//	if (totalTime == 0.0f) {
-//		MusicManager::getInstance().PlayMusic(LevelFinished);
-//	}
-//	if (MusicManager::getInstance().IsMusicPlaying() && totalTime >= 5.0f) {
-//		MusicManager::getInstance().StopMusic();
-//	}
-//	if (totalTime < 5.0f) {
-//		character->control(false);
-//		character->accelerate(Vector2{ ACC_X, GRAVITY }, deltaTime);
-//		character->Update(deltaTime);
-//		totalTime += deltaTime;
-//		//std::cout << totalTime;
-//	}
-//	else {
-//		character->setWin();
-//		character->control(false);
-//		character->setVelocity(Vector2{ 0.0f, 0.0f });
-//		character->Update(deltaTime);
-//	}
-//}

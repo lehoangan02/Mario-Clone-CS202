@@ -718,8 +718,8 @@ void Level::produceSwitchSignal()
         {   
             
             m_Player->reset();
-            AutoMove* control = AutoMove::getInstance(m_Player);
-            control->reset();
+			AutoMove control(m_Player);
+            control.reset();
             m_Mediator->notify(this, LEVEL_RETURN_MESSAGE::WIN);
             std::cout << "Notifying Win" << std::endl;
         }
@@ -771,8 +771,8 @@ void Level::update(float DeltaTime)
     }
     else if (!isPlayerFinished && m_TouchedFlag)
     {
-        Command* control = AutoMove::getInstance(m_Player);
-        control->execute(DeltaTime);
+        AutoMove control(m_Player);
+        control.execute(DeltaTime);
     }
     if (m_Player->GetPosition().x > m_CameraPosition.x + m_PlayerOffset)
     {
