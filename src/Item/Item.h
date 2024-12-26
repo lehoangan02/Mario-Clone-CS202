@@ -71,21 +71,44 @@ public:
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
+class CoinSharedData {
+private:
+	static std::shared_ptr<CoinSharedData> instance;
+
+public:
+	Texture2D texture;
+	float switchTime;
+	int totalFrames;
+	Vector2 frameSize;
+
+	CoinSharedData(Texture2D tex, int frames, float switchT)
+		: texture(tex), totalFrames(frames), switchTime(switchT) {
+		frameSize = { (float)(tex.width / frames), (float)tex.height };
+	}
+
+	~CoinSharedData() {
+		UnloadTexture(texture);
+	}
+
+	static std::shared_ptr<CoinSharedData> getInstance(Texture2D tex = {}, int frames = 0, float switchT = 0) {
+		if (!instance) {
+			instance = std::make_shared<CoinSharedData>(tex, frames, switchT);
+		}
+		return instance;
+	}
+};
+
 class IdleCoin {
 private:
 	Vector2 position;
 	Vector2 size;
-	Texture2D texture;
-	Rectangle uvRect;
-	Vector2 frameSize;
-	int totalFrames;
 	int currentFrame;
-	float switchTime;
 	float elapsedTime;
 	bool APPEARED;
 	bool hit;
+	static std::shared_ptr<CoinSharedData> sharedData;
 public:
-	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
+	IdleCoin(Vector2 startPos, Vector2 size);
 	Itemtype getItemID() const;
 	void Update(float deltaTime);
 	void Draw();

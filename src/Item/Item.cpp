@@ -18,31 +18,36 @@ Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int to
 
     
 }
-IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
-    : position(pos), size(size), texture(tex), switchTime(COIN_FRAME_TIME), totalFrames(COIN_FRAME_COUNT), 
+IdleCoin::IdleCoin(Vector2 pos, Vector2 size)
+    : position(pos), size(size), 
     APPEARED(true), elapsedTime(0), currentFrame(0), hit(false) {
-    frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
-   
+    
+    sharedData = CoinSharedData::getInstance();
     
 }
+std::shared_ptr<CoinSharedData> CoinSharedData::instance = nullptr;
+std::shared_ptr<CoinSharedData> IdleCoin::sharedData = nullptr;
 void IdleCoin::Update(float deltaTime) {
-    if (!APPEARED) return;
+    if (!APPEARED || !sharedData) return;
+
     elapsedTime += deltaTime;
-    if (elapsedTime >= switchTime) {
-        currentFrame = (currentFrame + 1) % totalFrames;
+    if (elapsedTime >= sharedData->switchTime) {
+        currentFrame = (currentFrame + 1) % sharedData->totalFrames;
         elapsedTime = 0;
     }
 }
 void IdleCoin::Draw() {
+    if (!APPEARED || !sharedData) return;
+
     Rectangle sourceRect = {
-                frameSize.x * currentFrame,
+                sharedData->frameSize.x * currentFrame,
                 0.0f,
-                frameSize.x,
-                frameSize.y
+                sharedData->frameSize.x,
+                sharedData->frameSize.y
     };
     Rectangle destRect = { position.x + 25, position.y , size.x , size.y };
     Vector2 origin = { 0, 0 };
-    DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    DrawTexturePro(sharedData->texture, sourceRect, destRect, origin, 0.0f, WHITE);
 }
 bool IdleCoin::isHit() {
     return hit;
@@ -60,7 +65,7 @@ void IdleCoin::stopDrawing() {
     APPEARED = false;
 }
 IdleCoin::~IdleCoin() {
-    UnloadTexture(texture);
+    
 }
 Item::~Item() {
     UnloadTexture(texture);

@@ -1,62 +1,66 @@
-#include "../animation/Animation.h"
-#include "../Application/ResourceManager.hpp"
-#include "../Application/Application.hpp"
+//#include "../animation/Animation.h"
+//#include "../Application/ResourceManager.hpp"
+//#include "../Application/Application.hpp"
+//
+//int main() {
+//
+//	
+//    SetTargetFPS(60);
+//    InitAudioDevice();
+//    SetConfigFlags(FLAG_MSAA_4X_HINT);
+//    InitWindow(1024, 768, "Game Window");
+//    SetWindowState(FLAG_WINDOW_RESIZABLE);
+//    ResourceManager::GetInstance()->LoadResources();
+//    Application app;
+//    app.run();
+//    CloseAudioDevice();
+//}
 
-int main() {
+ #include "../characters/Enemy.hpp"
+ #include "raylib.h"
+ #include <thread>
+#include "../Item/Item.h"
+ int main() {
+     SetConfigFlags(FLAG_MSAA_4X_HINT);
+     InitWindow(1024, 768, "Game Window");
+     SetWindowState(FLAG_WINDOW_RESIZABLE);
+     SetTargetFPS(60);
 
-	
-    SetTargetFPS(60);
-    InitAudioDevice();
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
-    InitWindow(1024, 768, "Game Window");
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
-    ResourceManager::GetInstance()->LoadResources();
-    Application app;
-    app.run();
-    CloseAudioDevice();
-}
+     Texture2D coinTexture = LoadTexture("assets/textures/Coin.png");
+     CoinSharedData::getInstance(
+         coinTexture,
+         6,
+         0.05f
+     );
 
-// #include "../characters/Enemy.hpp"
-// #include "raylib.h"
-// #include <thread>
+     IdleCoin coin1({ 100, 100 }, { 64, 64 });
+     IdleCoin coin2({ 200, 200 }, { 64, 64 });
+     while(!WindowShouldClose()) {
+         BeginDrawing();
+         ClearBackground(RAYWHITE);
+         DrawRectangleLines(300, 300, 42, 58, RED);
+         DrawLineEx({300,300}, {300,400}, 2.0f, RED);
+         // DrawRectangleLines(400, 300, 48, 99, RED);
 
-// int main() {
-//     SetConfigFlags(FLAG_MSAA_4X_HINT);
-//     InitWindow(1024, 768, "Game Window");
-//     SetWindowState(FLAG_WINDOW_RESIZABLE);
-//     SetTargetFPS(60);
-//     Lakitu koopa({900, 100});
-    
-//     while(!WindowShouldClose()) {
-//         BeginDrawing();
-//         ClearBackground(RAYWHITE);
-//         DrawRectangleLines(300, 300, 42, 58, RED);
-//         DrawLineEx({300,300}, {300,400}, 2.0f, RED);
-//         // DrawRectangleLines(400, 300, 48, 99, RED);
+         // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
+         // goomba.test();
+         // goomba.update(0.01f);
+         // goomba.render();
+         // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
 
-//         // DrawRectangleLines(goomba.getBoundingBox().x, goomba.getBoundingBox().y, goomba.getBoundingBox().width,  goomba.getBoundingBox().height,BLUE);
-//         // goomba.test();
-//         // goomba.update(0.01f);
-//         // goomba.render();
-//         // DrawRectangleLines(goomba2.getBoundingBox().x, goomba2.getBoundingBox().y, goomba2.getBoundingBox().width,  goomba2.getBoundingBox().height,BLUE);
-
-//         // goomba2.test();
-//         // goomba2.update(0.01f);
-//         // goomba2.render();
-//         DrawLineEx({700,100}, {700,400}, 2.0f, RED);
-//         koopa.update(0.01f);
-//         koopa.render();
-//         if (IsKeyPressed(KEY_SPACE)) {
-//             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//             koopa.hit();
-//         }
-//         // shy.update(0.01f);
-//         // shy.render();
-//         EndDrawing();
+         // goomba2.test();
+         // goomba2.update(0.01f);
+         // goomba2.render();
+         DrawLineEx({700,100}, {700,400}, 2.0f, RED);
+     
+         
+         // shy.update(0.01f);
+         // shy.render();
+         EndDrawing();
         
-//     }
-//     CloseWindow();
-// }
+     }
+     CloseWindow();
+ }
 
 // // #include "../Application.hpp"
 
