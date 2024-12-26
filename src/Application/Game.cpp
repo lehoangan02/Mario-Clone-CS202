@@ -113,28 +113,32 @@ void Game::save(const std::string& filename)  {
         return;
     }
     if (level->GetLevelType() == LevelFactory::LEVEL_101) {
-        file << LevelFactory::LEVEL_101 << " ";
+        file  << "0 ";
     } else if (level->GetLevelType() == LevelFactory::LEVEL_102) {
-        file << LevelFactory::LEVEL_102 << " ";
+        file << "1 ";
     } else if (level->GetLevelType() == LevelFactory::LEVEL_103) {
-        file << LevelFactory::LEVEL_103 << " ";
+        file << "2 ";
     } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_101) {
-        file << LevelFactory::LEVEL_101 << " ";
+        file << "3 ";
     } else if (level->GetLevelType() == LevelFactory::HIDDEN_LEVEL_102) {
-        file << LevelFactory::LEVEL_102 << " ";
+        file << "4 ";
     }
     else if (level->GetLevelType() == LevelFactory::LEVEL_TESTING) {
-        file << LevelFactory::LEVEL_TESTING << " ";
+        file << "5 ";
     }
 
     if (player->getType() == CharacterType::MARIO) {
-        file << CharacterType::MARIO << " ";
+        file <<"0 ";
     } else {
-        file << CharacterType::LUIGI << " ";
+        file <<"1 ";
     }
 
-    // Vector2 position = player->GetPosition();
-    file << 0 << " " << 0 << " ";
+    Vector2 position = player->GetPosition();
+    file << position.x << " " << position.y << " ";
+    file << player->getScore() << " ";
+    file << player->getCoins() << " ";
+    file << player->getLives() << " ";
+    file << countdown << " ";
     file.close();
 }
 
@@ -154,10 +158,9 @@ void Game::change(const std::string& filename)
         std::cerr << "File not found" << std::endl;
         return;
     }
-    int level, character;
+    int level, character, score, coins, lives, time;
     float x, y;
-    file >> level >> character >> x >> y;
-    countdown = 300;
+    file >> level >> character >> x >> y >> score >> coins >> lives >> time;
     if (character == 0) {
         player = new Mario;
     } else {
@@ -166,24 +169,27 @@ void Game::change(const std::string& filename)
 
     if (level == 0) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
-    } else if (level == 2) {
+    } else if (level == 1) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_102, this);
-    } else if (level == 5) {
+    } else if (level == 2) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_103, this);
     }
-    else if (level == 1) {
+    else if (level == 3) {
         this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_101, this);
     }
-    else if (level == 3) {
+    else if (level == 4) {
         this->level = factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this);
     }
-    else if (level == 7) {
+    else if (level == 5) {
         this->level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
     this->level->reset();
     player->reset();
     player->setPosition(Vector2{x * 1.0f, y * 1.0f});
-    this->player->setLives(3);
+    this->player->setScore(score);
+    this->player->setLives(lives);
+    this->player->setCoins(coins);
+    this->countdown = time;
     this->timer = 0.0f;
     this->level->attachPlayer(player);
 
@@ -340,8 +346,10 @@ void Game::update(float deltaTime) {
     } else if (continueButton.isClicked()) {
          state = LEVEL_RETURN_MESSAGE::CONTINUE;
     } else if (homeButton2.isClicked()) {
+        save("./continue.txt");
         state = LEVEL_RETURN_MESSAGE::QUIT;
     } else if (homeButton.isClicked()) {
+        save("./continue.txt");
         state = LEVEL_RETURN_MESSAGE::QUIT;
     }
 }
@@ -371,11 +379,9 @@ void Game::notify(Component* sender, int eventCode) {
     switch (eventCode) {
         case 0:
             state = LEVEL_RETURN_MESSAGE::PAUSE;
-            level->pauseLevel();
             break;
         case 1:
             state = LEVEL_RETURN_MESSAGE::CONTINUE;
-            level -> continueLevel();
             break;
         case 2:
             state = LEVEL_RETURN_MESSAGE::RUNNING;
@@ -495,8 +501,7 @@ void Game::handleState() {
             level->reset();
             break;
         case LEVEL_RETURN_MESSAGE::QUIT:
-            save("continue.txt");
-            level->reset();
+            //level->reset();
             break;
         case LEVEL_RETURN_MESSAGE::RESTART:
             restartLevel();
