@@ -559,6 +559,11 @@ void Game::drawInfo() {
         { sectionWidth * 3.5f, 20 },  // TIME
         { sectionWidth * 4.5f, 20 }   // LIVES
     };
+    static bool display = true;
+    if (IsKeyPressed(KEY_U)) {
+        display = !display;
+    }
+    if (!display) return;
     DrawTextCentered(myFont, "SCORE", std::to_string(score), sectionPositions[0], 24, 1, WHITE);
     DrawTextCentered(myFont, "COINS", "x", sectionPositions[1], 24, 1, WHITE);
     DrawTextureEx(infoIcons[0], { sectionPositions[1].x - 40, sectionPositions[1].y + 28 }, 0.0f, 2.0f, WHITE);
