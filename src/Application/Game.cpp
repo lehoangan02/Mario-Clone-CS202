@@ -135,9 +135,14 @@ void Game::save(const std::string& filename)  {
 
     Vector2 position = player->GetPosition();
     file << position.x << " " << position.y << " ";
-    file << player->getScore() << " ";
-    file << player->getCoins() << " ";
-    file << player->getLives() << " ";
+    if (player->getLives() != 0) {
+        file << player->getScore() << " ";
+        file << player->getCoins() << " ";
+        file << player->getLives() << " ";
+    }
+	else {
+		file << "0 0 3 ";
+	}
     file << countdown << " ";
     file.close();
 }
@@ -287,6 +292,9 @@ void Game::reset(int characterMenu) {
     level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
     level->attachPlayer(player);
     player->setPosition(Vector2{200, 0});
+	player->setLives(3); //restart with 3 lives
+	player->setScore(0); //restart with 0 score
+	player->setCoins(0); //restart with 0 coins , chau added this
     countdown = 300;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
