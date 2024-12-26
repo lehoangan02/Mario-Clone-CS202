@@ -3,7 +3,7 @@
 
 Game::Game()  
     : factory(LevelFactory::GetLevelFactory()), 
-      level(factory.CreateLevel(LevelFactory::LEVEL_101, this))
+      level(factory.CreateLevel(LevelFactory::HIDDEN_LEVEL_102, this))
 {
 	player = CharacterFactory::createCharacter(CharacterType::MARIO);
     if (level == nullptr) {
