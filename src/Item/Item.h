@@ -52,7 +52,7 @@ public:
 	virtual ~Item();
 	void onNotify() override {}
 	virtual void applyEffect(Character* character) = 0;
-	virtual void Update(float deltaTime); 
+	virtual void Update(float deltaTime);
 	virtual void Draw(); // not animation
 	float norm(Vector2 vector1, Vector2 vector2);
 	virtual Itemtype getItemID() const = 0;
@@ -71,44 +71,21 @@ public:
 	static Item* Transform(Item* currentItem, const std::string& newItemType,
 		Texture2D newTexture, int newTotalFrames, float newSwitchTime);
 };
-class CoinSharedData {
-private:
-	static std::shared_ptr<CoinSharedData> instance;
-
-public:
-	Texture2D texture;
-	float switchTime;
-	int totalFrames;
-	Vector2 frameSize;
-
-	CoinSharedData(Texture2D tex, int frames, float switchT)
-		: texture(tex), totalFrames(frames), switchTime(switchT) {
-		frameSize = { (float)(tex.width / frames), (float)tex.height };
-	}
-
-	~CoinSharedData() {
-		UnloadTexture(texture);
-	}
-
-	static std::shared_ptr<CoinSharedData> getInstance(Texture2D tex = {}, int frames = 0, float switchT = 0) {
-		if (!instance) {
-			instance = std::make_shared<CoinSharedData>(tex, frames, switchT);
-		}
-		return instance;
-	}
-};
-
 class IdleCoin {
 private:
 	Vector2 position;
 	Vector2 size;
+	Texture2D texture;
+	Rectangle uvRect;
+	Vector2 frameSize;
+	int totalFrames;
 	int currentFrame;
+	float switchTime;
 	float elapsedTime;
 	bool APPEARED;
 	bool hit;
-	static std::shared_ptr<CoinSharedData> sharedData;
 public:
-	IdleCoin(Vector2 startPos, Vector2 size);
+	IdleCoin(Vector2 startPos, Vector2 size, Texture2D texture);
 	Itemtype getItemID() const;
 	void Update(float deltaTime);
 	void Draw();
@@ -143,7 +120,7 @@ private:
 	float riseProgress;
 	float riseSpeed;
 public:
-	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
+	Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void onNotify() override;
 	void applyEffect(Character* character);
 	void Accelerate(float deltatime);
@@ -163,9 +140,9 @@ private:
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
-	
+
 public:
-	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0, 0 });
 	void applyEffect(Character* character);
 	void onNotify() override;
 	void Update(float deltaTime) override;
@@ -186,9 +163,9 @@ private:
 	float riseProgress;
 	float riseSpeed;
 	bool onFalling;
-	
+
 public:
-	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0, 0 });
 	void onNotify() override;
 	void applyEffect(Character* character);
 	void Update(float deltaTime) override;
@@ -212,4 +189,3 @@ public:
 	void FlipDirectionY();
 	virtual ~StarMan() {}
 };
-

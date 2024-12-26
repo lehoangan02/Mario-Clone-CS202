@@ -72,7 +72,7 @@ void MapLoader::LoadMap(Level* Level, int MapID)
     
         float X, Y;
         fin >> X >> Y;
-        IdleCoin* Coin = new IdleCoin(Vector2{X, Y}, Vector2{40, 100});
+        IdleCoin* Coin = new IdleCoin(Vector2{X, Y}, Vector2{40, 100}, LoadTexture("assets/textures/Coin.png"));
         Level -> m_IdleCoin.push_back(Coin);
     }
     int NumberOfStaticEnvironment;

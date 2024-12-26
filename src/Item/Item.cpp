@@ -7,47 +7,42 @@
 Item::Item(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, int totalFrames, float switchTime, Vector2 velocity, bool appeared)
     : startPosition(startPos), endPosition(endPos), size(size), texture(tex),
     totalFrames(totalFrames), switchTime(switchTime), velocity(velocity),
-     elapsedTime(0), currentFrame(0), isReturning(false), APPEARED(appeared),
+    elapsedTime(0), currentFrame(0), isReturning(false), APPEARED(appeared),
     Notify(false), hit(false), FinishedSpawning(false)
 {
     position = startPosition;
-    frameSize = { (float)(tex.width / totalFrames), (float)tex.height }; 
+    frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
     moves = 0;
 
-    
 
-    
+
+
 }
-IdleCoin::IdleCoin(Vector2 pos, Vector2 size)
-    : position(pos), size(size), 
+IdleCoin::IdleCoin(Vector2 pos, Vector2 size, Texture2D tex)
+    : position(pos), size(size), texture(tex), switchTime(COIN_FRAME_TIME), totalFrames(COIN_FRAME_COUNT),
     APPEARED(true), elapsedTime(0), currentFrame(0), hit(false) {
-    
-    sharedData = CoinSharedData::getInstance();
-    
-}
-std::shared_ptr<CoinSharedData> CoinSharedData::instance = nullptr;
-std::shared_ptr<CoinSharedData> IdleCoin::sharedData = nullptr;
-void IdleCoin::Update(float deltaTime) {
-    if (!APPEARED || !sharedData) return;
+    frameSize = { (float)(tex.width / totalFrames), (float)tex.height };
 
+
+}
+void IdleCoin::Update(float deltaTime) {
+    if (!APPEARED) return;
     elapsedTime += deltaTime;
-    if (elapsedTime >= sharedData->switchTime) {
-        currentFrame = (currentFrame + 1) % sharedData->totalFrames;
+    if (elapsedTime >= switchTime) {
+        currentFrame = (currentFrame + 1) % totalFrames;
         elapsedTime = 0;
     }
 }
 void IdleCoin::Draw() {
-    if (!APPEARED || !sharedData) return;
-
     Rectangle sourceRect = {
-                sharedData->frameSize.x * currentFrame,
+                frameSize.x * currentFrame,
                 0.0f,
-                sharedData->frameSize.x,
-                sharedData->frameSize.y
+                frameSize.x,
+                frameSize.y
     };
     Rectangle destRect = { position.x + 25, position.y , size.x , size.y };
     Vector2 origin = { 0, 0 };
-    DrawTexturePro(sharedData->texture, sourceRect, destRect, origin, 0.0f, WHITE);
+    DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
 }
 bool IdleCoin::isHit() {
     return hit;
@@ -65,7 +60,7 @@ void IdleCoin::stopDrawing() {
     APPEARED = false;
 }
 IdleCoin::~IdleCoin() {
-    
+    UnloadTexture(texture);
 }
 Item::~Item() {
     UnloadTexture(texture);
@@ -84,7 +79,7 @@ void Coin::onNotify() {
 void Item::Draw() {};
 void Item::Update(float deltaTime) {};
 Coin::Coin(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
-    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true){
+    : Item(startPos, endPos, size, tex, COIN_FRAME_COUNT, COIN_FRAME_TIME, velocity, true) {
     if (startPosition.x < endPosition.x) {
         this->velocity.x = fabs(this->velocity.x);
     }
@@ -117,7 +112,7 @@ Item* Item::Transform(Item* currentItem, const std::string& newItemType, Texture
     if (newItemType == "FireFlower") {
         return new FireFlower(startPosition, endPosition, size, newTexture, velocity);
     }
-    
+
 
     return nullptr;
 }
@@ -180,7 +175,7 @@ void Coin::Draw() { //animation
         }
     }
 }
-Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity )
+Mushroom::Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity)
     : Item(startPos, endPos, size, tex, MUSHROOM_FRAME_COUNT, MUSHROOM_FRAME_TIME, velocity, false)
     , isRising(false), riseProgress(0.0f), riseSpeed(1.0f) {}
 
@@ -249,16 +244,16 @@ void Mushroom::Draw() {
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
     if (APPEARED) {
-        Rectangle sourceRect = { 
-            0.0f, 
+        Rectangle sourceRect = {
             0.0f,
-            (float)texture.width, 
-            (float)texture.height 
+            0.0f,
+            (float)texture.width,
+            (float)texture.height
         };
-        Rectangle destRect = { position.x, 
+        Rectangle destRect = { position.x,
             position.y,
-            size.x, 
-            size.y};
+            size.x,
+            size.y };
         Vector2 origin = { 0, 0 };
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
@@ -298,8 +293,8 @@ void FireFlower::Update(float deltaTime) {
         }
         elapsedTime = 0.0f;
     }
-    
-    
+
+
 }
 void FireFlower::Draw() {
     if (isRising) {
@@ -391,8 +386,8 @@ void StarMan::FlipDirectionY() {
     velocity.y *= -1;
 }
 void StarMan::Move(float upperBoundary, float lowerBoundary, float deltaTime) {
-    
-    
+
+
 }
 void StarMan::Draw() {
     if (isRising) {
@@ -421,4 +416,3 @@ void StarMan::Draw() {
         DrawTexturePro(texture, sourceRect, destRect, origin, 0.0f, WHITE);
     }
 }
-
