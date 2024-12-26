@@ -122,6 +122,7 @@ Explanation:
 You have to input lists in a specified order (shown after this part). Each list contain similar-type entites.
 
 **Order of types:**
+
 0. Start Position
 1. Enemy
 2. Item

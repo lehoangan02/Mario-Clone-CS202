@@ -664,6 +664,7 @@ void Level::render()
     }
     m_FireballHandler.draw();
     float HidePositionX = m_ScreenSize.x * 2;
+    m_Player->Draw();
     for (auto& object : m_Environment)
     {
         if (object->getType() == EnvironmentObjectFactory::EnvironmentObjectType::WARP_PIPE)
@@ -674,11 +675,10 @@ void Level::render()
     }
     for (auto& object : m_Enemies)
     {
-        // if (object->isHit()) continue;
+        // std::cout << "Drawing Enemy" << std::endl;
         object->render();
     }
     Ground::GetGround()->render();
-    m_Player->Draw();
     for (auto& object : m_EndPipes)
     {
         object->render();

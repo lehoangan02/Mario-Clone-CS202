@@ -272,8 +272,38 @@ void MapLoaderBinary::LoadMap(Level* Level, int MapID)
         fin.read((char*)&EnemyRangeX1, sizeof(EnemyRangeX1));
         fin.read((char*)&EnemyRangeX2, sizeof(EnemyRangeX2));
         EnemyFactory& Factory = EnemyFactory::GetEnemyFactory();
-        Factory.CreateEnemy(Type, Vector2{(float)EnemyX, (float)EnemyY}, EnemyRangeX1, EnemyRangeX2);
-
+        Enemy* NewEnemy =  Factory.CreateEnemy(Type, Vector2{(float)EnemyX, (float)EnemyY}, EnemyRangeX1, EnemyRangeX2);
+        switch (Enemytype)
+        {
+            case EnemyType::GOOMBA:
+                {
+                std::cout << "Creating Goomba" << std::endl;    
+                }
+                break;
+            case EnemyType::KOOPA_TROOPA:
+                {
+                std::cout << "Creating Koopa Troopa" << std::endl;
+                }
+                break;
+            case EnemyType::PIRANHA_PLANT:
+                {
+                std::cout << "Creating Piranha Plant" << std::endl;
+                }
+                break;
+            case EnemyType::SHY_GUY:
+                {
+                std::cout << "Creating Shy Guy" << std::endl;
+                }
+                break;
+            case EnemyType::LAKITU:
+                {
+                std::cout << "Creating Lakitu" << std::endl;
+                }
+                break;
+            default:
+                break;
+        }
+        Level -> m_Enemies.push_back(NewEnemy);
     }
     int NumberOfItems;
     fin.read((char*)&NumberOfItems, sizeof(NumberOfItems));
