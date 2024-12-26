@@ -159,7 +159,7 @@ public:
 class StarMan : public Item {
 private:
 	bool isRising;
-	float gravity = 150;
+	float gravity = 4;
 	float riseProgress;
 	float riseSpeed;
 	bool onFalling;
