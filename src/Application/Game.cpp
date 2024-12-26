@@ -283,9 +283,10 @@ void Game::reset(int characterMenu) {
     } else {
         player = CharacterFactory::createCharacter(CharacterType::LUIGI);
     }
+    player -> reset();
     level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
-    player->setPosition(Vector2{20, 0});
     level->attachPlayer(player);
+    player->setPosition(Vector2{200, 0});
     countdown = 300;
     timer = 0.0f;
     MusicManager::getInstance().PlayMusic(MusicTrack::SuperBellHill);
@@ -601,8 +602,13 @@ void Game::drawLoseButton() {
 }
 void Game::reset()
 {
-    level->reset();
-    player->reset();
+    player -> reset();
+    level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+    level -> reset();
+    level->attachPlayer(player);
+    player->setPosition(Vector2{200, 0});
+    countdown = 300;
+    timer = 0.0f;
     state = LEVEL_RETURN_MESSAGE::RUNNING;
 }
 
