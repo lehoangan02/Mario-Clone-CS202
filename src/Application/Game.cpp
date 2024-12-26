@@ -608,7 +608,7 @@ void Game::drawLoseButton() {
 void Game::reset()
 {
     player -> reset();
-    level = factory.CreateLevel(LevelFactory::LEVEL_101, this);
+	level = factory.CreateLevel(level->GetLevelType(), this);
     level -> reset();
     level->attachPlayer(player);
     player->setPosition(Vector2{200, 0});
