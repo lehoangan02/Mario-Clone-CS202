@@ -110,7 +110,7 @@ public:
 		hit = true;
 		APPEARED = false;
 	}
-
+	virtual ~Coin() {}
 };
 class Mushroom : public Item {
 private:
@@ -133,7 +133,7 @@ public:
 	bool isFinishSpawning() { return FinishedSpawning; }
 	bool isHit() override;
 	void setHit() override;
-
+	virtual ~Mushroom() {}
 };
 class FireFlower : public Item {
 private:
@@ -154,6 +154,7 @@ public:
 		APPEARED = false;
 	}
 	bool isHit() override { return hit; }
+	virtual ~FireFlower() {}
 };
 class StarMan : public Item {
 private:
@@ -186,5 +187,6 @@ public:
 	void setFalling();
 	void FlipDirectionX();
 	void FlipDirectionY();
+	virtual ~StarMan() {}
 };
 
