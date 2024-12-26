@@ -52,7 +52,7 @@ public:
 	virtual ~Item();
 	void onNotify() override {}
 	virtual void applyEffect(Character* character) = 0;
-	virtual void Update(float deltaTime); 
+	virtual void Update(float deltaTime);
 	virtual void Draw(); // not animation
 	float norm(Vector2 vector1, Vector2 vector2);
 	virtual Itemtype getItemID() const = 0;
@@ -110,7 +110,7 @@ public:
 		hit = true;
 		APPEARED = false;
 	}
-
+	virtual ~Coin() {}
 };
 class Mushroom : public Item {
 private:
@@ -120,7 +120,7 @@ private:
 	float riseProgress;
 	float riseSpeed;
 public:
-	Mushroom(Vector2 startPos, Vector2 endPos , Vector2 size, Texture2D tex, Vector2 velocity);
+	Mushroom(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity);
 	void onNotify() override;
 	void applyEffect(Character* character);
 	void Accelerate(float deltatime);
@@ -133,16 +133,16 @@ public:
 	bool isFinishSpawning() { return FinishedSpawning; }
 	bool isHit() override;
 	void setHit() override;
-
+	virtual ~Mushroom() {}
 };
 class FireFlower : public Item {
 private:
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
-	
+
 public:
-	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	FireFlower(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0, 0 });
 	void applyEffect(Character* character);
 	void onNotify() override;
 	void Update(float deltaTime) override;
@@ -154,6 +154,7 @@ public:
 		APPEARED = false;
 	}
 	bool isHit() override { return hit; }
+	virtual ~FireFlower() {}
 };
 class StarMan : public Item {
 private:
@@ -162,9 +163,9 @@ private:
 	float riseProgress;
 	float riseSpeed;
 	bool onFalling;
-	
+
 public:
-	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = {0, 0});
+	StarMan(Vector2 startPos, Vector2 endPos, Vector2 size, Texture2D tex, Vector2 velocity = { 0, 0 });
 	void onNotify() override;
 	void applyEffect(Character* character);
 	void Update(float deltaTime) override;
@@ -186,5 +187,5 @@ public:
 	void setFalling();
 	void FlipDirectionX();
 	void FlipDirectionY();
+	virtual ~StarMan() {}
 };
-
