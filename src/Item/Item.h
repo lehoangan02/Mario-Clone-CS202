@@ -115,7 +115,7 @@ public:
 class Mushroom : public Item {
 private:
 	bool isFalling;
-	float gravity = 100;
+	float gravity = 150;
 	bool isRising;
 	float riseProgress;
 	float riseSpeed;
@@ -159,7 +159,7 @@ public:
 class StarMan : public Item {
 private:
 	bool isRising;
-	float gravity = 2.0;
+	float gravity = 150;
 	float riseProgress;
 	float riseSpeed;
 	bool onFalling;
