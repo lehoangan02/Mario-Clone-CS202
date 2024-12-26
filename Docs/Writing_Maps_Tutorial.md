@@ -2,7 +2,7 @@
 ## List of Enums used
 Many of the data used to classified elements in maps are defined by enums.
 
-Here are the list of enums used:
+Here are the list of enums used (some are place more appropriately placed close to the specific part relating to that enum):
 ```cpp
 class EnvironmentObjectFactory // Singleton Factory
 {
@@ -44,31 +44,6 @@ class DrawableObjectFactory
         DIRT
     };
 ```
-```cpp
-class LevelFactory
-{
-    public:
-        enum LevelType
-        {
-            LEVEL_101 = 0,
-            HIDDEN_LEVEL_101,
-            LEVEL_102,
-            HIDDEN_LEVEL_102,
-            HIDDEN_LEVEL_112,
-            LEVEL_103,
-            HIDDEN_LEVEL_103,
-            
-        };
-```
-
-```
-enum EndPipeType
-{
-    TOP,
-    SIDE
-};
-```
-
 ``` cpp
 class EnemyFactory
 {
@@ -97,6 +72,23 @@ enum Itemtype {
 ## Format of the map file
 All map files should be .txt files, with their name corresponding with the enum specified.
 
+```cpp
+class LevelFactory
+{
+    public:
+        enum LevelType
+        {
+            LEVEL_101 = 0,
+            HIDDEN_LEVEL_101,
+            LEVEL_102,
+            HIDDEN_LEVEL_102,
+            HIDDEN_LEVEL_112,
+            LEVEL_103,
+            HIDDEN_LEVEL_103,
+            
+        };
+```
+
 Files should be organised into list of many types of entities.
 
 For example, the first number in the file is the number of enemies, followed by the list of enemies. It is the same for all distince type of entities (items, drawables, etc.).
@@ -110,7 +102,7 @@ Following this number, there should be a pair of integer (**not float**) specify
 
 Example:
 
-![Example_1](/Docs/Images/Figure1.png)
+![Example_1](./Images/Figure1.png)
 Explanation:
 - This map doesn't have any enemy or item
 - There are 28 static environment object
@@ -141,7 +133,7 @@ Simply input the XY coordinate where you want Mario to spawn at.
 
 Example:
 
-![Example_2](/Docs/Images/Figure2.png)
+![Example_2](./Images/Figure2.png)
 
 Explanation:
 - There are 5 animated environment objects
@@ -162,6 +154,18 @@ For breakable block, there is no item so you should input number 0 after the coo
 ## Lift
 
 With lifts, you do not need to input the type, just the coordinate
+
+## End Pipe
+
+
+
+```cpp
+enum EndPipeType
+{
+    TOP,
+    SIDE
+};
+```
 
 ## Type of level
 
