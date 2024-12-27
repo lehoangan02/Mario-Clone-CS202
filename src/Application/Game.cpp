@@ -552,7 +552,7 @@ void Game::drawInfo() {
         worldString = "1-3";
 	}
 	else if (world == LevelFactory::LEVEL_TESTING) {
-		worldString = "Custom-???";
+		worldString = "??-??";
 	}
 
     if (state != LEVEL_RETURN_MESSAGE::PAUSE && state != LEVEL_RETURN_MESSAGE::WIN && state != LEVEL_RETURN_MESSAGE::LOSE) {
