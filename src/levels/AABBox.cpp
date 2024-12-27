@@ -254,6 +254,7 @@ bool isCollidingHorizontally(const AABBox &AABBox1, const AABBox &AABBox2)
     return false;
 }
 void DrawBoundingBox(Vector2 position, Vector2 size, Color color) {
+    return;
     // Calculate the four corners of the bounding box
     Vector2 topLeft = position;
     Vector2 topRight = { position.x + size.x, position.y };
@@ -268,6 +269,7 @@ void DrawBoundingBox(Vector2 position, Vector2 size, Color color) {
 }
 void DrawBoundingBox(Vector2 position, Vector2 size, Color color, float Thickness)
 {
+    return;
     Vector2 topLeft = position;
     Vector2 topRight = { position.x + size.x, position.y };
     Vector2 bottomLeft = { position.x, position.y + size.y };

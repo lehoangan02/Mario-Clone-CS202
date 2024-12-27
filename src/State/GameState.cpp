@@ -15,7 +15,7 @@ void GameState::handle(Application& app) {
     }
     if (app.getStateType() == StateType::MENU_STATE)
     {
-        std::cout << "Menu state" << std::endl;
+        // std::cout << "Menu state" << std::endl;
     }
     app.game.start();
     

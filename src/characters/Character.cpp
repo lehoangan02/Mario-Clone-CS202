@@ -96,15 +96,15 @@ void Character::control(bool enabled) {
 	if (IsKeyPressed(KEY_J)) {
 		powerUp();
 	}
+	if (IsKeyPressed(KEY_I)) {
+		invincile();
+		MusicManager::getInstance().PlayMusic(Invincible);
+	}
 	/*if (IsKeyPressed(KEY_K)) {
 		powerDown();
 	}*/
 	/*if (IsKeyPressed(KEY_H)) {
 		touchEnemy();
-	}
-	if (IsKeyPressed(KEY_I)) {
-		invincile();
-		MusicManager::getInstance().PlayMusic(Invincible);
 	}
 	if (IsKeyPressed(KEY_L)) {
 		killEnemy();
