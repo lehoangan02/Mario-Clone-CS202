@@ -76,6 +76,7 @@ public:
 	int getType() { return Chartype; };
 	int getLives() { return lives; }
 	bool getEndGame() { return endGame; }
+	bool getPause() { return paused; }
 	void increLives();
 	void setLives(int lives) { this->lives = lives; }
 	
@@ -86,6 +87,8 @@ public:
 
 	void setInvisible() { isVisible = false; };
 	void reset();
+	void pausePlayer() { paused = true; };
+	void continuePlayer() { paused = false; velocity.y = 0; };
 protected:
 	std::vector<Texture2D> textures;
 	std::vector<Vector2> imageCounts;
@@ -116,6 +119,7 @@ protected:
 	bool isFinished;
 	bool isWin;
 	bool endGame;
+	bool paused;
 	bool pullFlag;
 
 	int Chartype;

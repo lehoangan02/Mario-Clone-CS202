@@ -521,9 +521,11 @@ void Game::handleState() {
             break;
         case LEVEL_RETURN_MESSAGE::PAUSE:
             level->pauseLevel();
+            player->pausePlayer();
             break;
         case LEVEL_RETURN_MESSAGE::CONTINUE:
             level->continueLevel();
+			player->continuePlayer();
             state = LEVEL_RETURN_MESSAGE::RUNNING;
             break;
     }

@@ -43,6 +43,7 @@ Character::Character(float jumpHeight) : firePool(nullptr)
 	this->isFinished = false;
 	this->deadTime = 0.0f;
 	this->finishSliding = false;
+	this->paused = false;
 	if (this->firePool == nullptr) {
 		this->firePool = new FirePool(2);
 	}
@@ -57,7 +58,10 @@ void Character::accelerate(Vector2 acceleration, float deltaTime) {
 			velocity.x = MAX_SPEED;
 	else if (velocity.x < -MAX_SPEED) 
 		velocity.x = -MAX_SPEED;
-	velocity.y += acceleration.y * deltaTime;
+	if (acceleration.y * deltaTime > 80.0f) {
+		velocity.y += 20.0f;
+	}
+	else velocity.y += acceleration.y * deltaTime;
 	/*std::cout << "velocity: " << velocity.x << " " << velocity.y << std::endl;*/
 }
 void Character::control(bool enabled) {
@@ -302,6 +306,7 @@ void Character::reset() {
 	finishSliding = false;
 	isVisible = true;
 	sliding = false;
+	paused = false;
 }
 void Character::increLives() {
 	if (lives == 5) return;
@@ -336,7 +341,7 @@ Mario::Mario() : Character(400.0f) {
 	this->SlideDist = { size.x,size.y };
 }
 void Mario::Update(float deltaTime) {
-	if (velocity.y > GRAVITY*deltaTime*1.2f) canJump = false; //handle double jump 
+	if (velocity.y > GRAVITY*deltaTime*6.0f) canJump = false; //handle double jump 
 	if (isDie) deadTime += deltaTime;
 	if (deadTime > 3.2f) {
 		deadTime = 0.0f;
@@ -421,7 +426,7 @@ Luigi::Luigi() : Character(500.0f) {
 	
 }
 void Luigi::Update(float deltaTime) {
-	if (velocity.y > GRAVITY * deltaTime * 1.2f) canJump = false; //handle double jump 
+	if (velocity.y > GRAVITY * deltaTime * 6.0f) canJump = false; //handle double jump 
 	if (isDie) deadTime += deltaTime;
 	if (deadTime > 3.2f) {
 		deadTime = 0.0f;
@@ -457,7 +462,7 @@ void Luigi::Update(float deltaTime) {
 	setPosition(Vector2{ position.x + velocity.x * deltaTime, position.y + velocity.y * deltaTime });
 	firePool->Update();
 	//if (pullFlag) std::cout << "pull" << std::endl;
-	//std::cout << "Instance2 " << this << std::endl;
+	/*std::cout << "Instance2 " << this << std::endl;*/
 }
 
 
@@ -488,6 +493,7 @@ Character* CharacterFactory::createCharacter(CharacterType type) {
 }
 
 void FullControl::execute(float deltaTime) {
+	if (character->getPause()) return;
 	if (character->isSliding()) {
 		character->SlidePipe(character->slideDirection);
 	}
@@ -498,6 +504,7 @@ void FullControl::execute(float deltaTime) {
 	character->Update(deltaTime);
 }
 void InHole::execute(float deltaTime) {
+	if (character->getPause()) return;
 	character->control(false);
 	if (!character->isDead() && character->GetPosition().y > 850.0f) {
 		character->resetVelocity();
@@ -510,6 +517,7 @@ void InHole::execute(float deltaTime) {
 float AutoMove::totalTime = 0.0f;
 float AutoMove::startPosition = 0.0f;
 void AutoMove::execute(float deltaTime) {
+	if (character->getPause()) return;
 	if (!character->isPullFlag()) {
 		if (totalTime < deltaTime*1.2f && totalTime > 0.0f) {
 			MusicManager::getInstance().PlayMusic(LevelFinished);
