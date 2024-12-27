@@ -684,7 +684,8 @@ void Level::render()
         object->render();
     }
     m_Player->firePool->Draw();
-    DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, RED);
+    DrawRectangle((HidePositionX)+m_CameraPosition.x, -Offset, INT_MAX, INT_MAX, YELLOW);
+    DrawRectangle(0, Offset + 50, INT_MAX, INT_MAX, YELLOW);
     m_FadeOut.render();
     EndMode2D();
 
