@@ -2,7 +2,7 @@
 int main()
 {
     MapSerializer& Serializer = MapSerializer::getInstance();
-    Serializer.serialize("3.txt", "3.bin");
-    Serializer.deserialize("3.bin", "3.txt");
+    Serializer.serialize("7.txt", "7.bin");
+    Serializer.deserialize("7.bin", "7.txt");
     return 0;
 }

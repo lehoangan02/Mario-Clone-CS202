@@ -1392,7 +1392,8 @@ void LevelTesting::reset()
 {
     Level::reset();
     this->setName("LevelTesting");
-    MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+    // MapLoader::GetMapLoader().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
+    MapLoaderBinary::GetMapLoaderBinary().LoadMap(this, LevelFactory::LevelType::LEVEL_TESTING);
 }
 Level103::Level103()
 {
