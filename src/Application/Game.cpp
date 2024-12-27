@@ -251,8 +251,8 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
     else if (levelMenu == 5) {
         level = factory.CreateLevel(LevelFactory::LEVEL_TESTING, this);
     }
-    player->setPosition(Vector2{20, 0});
-    level->attachPlayer(player);
+    //player->reset();
+    //level->attachPlayer(player);
 
     countdown = 300;
     timer = 0.0f;
