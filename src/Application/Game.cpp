@@ -550,7 +550,10 @@ void Game::drawInfo() {
     }
     else if (world == LevelFactory::LEVEL_103 || world == LevelFactory::HIDDEN_LEVEL_103) {
         worldString = "1-3";
-    }
+	}
+	else if (world == LevelFactory::LEVEL_TESTING) {
+		worldString = "Custom-???";
+	}
 
     if (state != LEVEL_RETURN_MESSAGE::PAUSE && state != LEVEL_RETURN_MESSAGE::WIN && state != LEVEL_RETURN_MESSAGE::LOSE) {
         float deltaTime;
