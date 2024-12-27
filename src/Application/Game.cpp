@@ -630,3 +630,9 @@ void Game::reset()
 void Game::resetCountdown() {
 	countdown = 300;
 }
+
+void Game::PlayerInfoReset() {
+    player->setLives(3);
+    player->setScore(0);
+    player->setCoins(0);
+}

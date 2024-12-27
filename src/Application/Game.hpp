@@ -54,6 +54,7 @@ public:
     void hiddenLevel();
     void restartLevel();
     void reset();
+	void PlayerInfoReset();//chau added this
 
     // Implement notify method
     void notify(Component* sender, int eventCode) override;
