@@ -2,17 +2,17 @@
 #include "../levels/FadeOut.hpp"
 #include <iostream>
 
-#define MAX_SPEED 700.0f
 #define FAST_BRAKE 1400.0f
 #define ACC_X 600.0f
 #define SLOW_BRAKE 800.0f
 #define GRAVITY 3500.0f
 
-Character::Character(float jumpHeight) : firePool(nullptr)
+Character::Character(float jumpHeight, float maxSpeed) : firePool(nullptr)
 {
 	this->form = 0;
 	this->accX = 0.0f;
 	this->jumpHeight = jumpHeight;
+	this->maxSpeed = maxSpeed;
 	this->faceRight = true;
 	this->state = 0;
 	this->velocity = { 0.0f, 0.0f };
@@ -54,10 +54,10 @@ Character::~Character()
 }
 void Character::accelerate(Vector2 acceleration, float deltaTime) {
 	velocity.x += acceleration.x * deltaTime;
-	if (velocity.x > MAX_SPEED)
-			velocity.x = MAX_SPEED;
-	else if (velocity.x < -MAX_SPEED) 
-		velocity.x = -MAX_SPEED;
+	if (velocity.x > maxSpeed)
+			velocity.x = maxSpeed;
+	else if (velocity.x < -maxSpeed) 
+		velocity.x = -maxSpeed;
 	if (acceleration.y * deltaTime > 80.0f) {
 		velocity.y += 20.0f;
 	}
@@ -70,36 +70,36 @@ void Character::control(bool enabled) {
 		return;
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		if (velocity.x < - MAX_SPEED * 3 / 5) brake = true;
+		if (velocity.x < - maxSpeed * 3 / 5) brake = true;
 		if (brake) accX = fabs(FAST_BRAKE);
 		else accX = fabs(ACC_X);
 	}
 	else if (IsKeyDown(KEY_LEFT)) {
-		if (velocity.x > MAX_SPEED * 3 / 5) brake = true;
+		if (velocity.x > maxSpeed * 3 / 5) brake = true;
 		if (brake) accX = -fabs(FAST_BRAKE);
 		else accX = -fabs(ACC_X);
 	}
 	else {
 		if (faceRight) accX = -fabs(SLOW_BRAKE);
 		else accX = fabs(SLOW_BRAKE);
-		if (fabs(velocity.x) < MAX_SPEED*1/10) {
+		if (fabs(velocity.x) < maxSpeed*1/10) {
 			velocity.x = 0.0f;
 			accX = 0;
 		}
 	}
-	if (teleport) {
-		if (IsKeyPressed(KEY_S)) {
-			sliding = true;
-			slideDirection = slidingDirection::down;
-		}
-	}
+	//if (teleport) {
+	//	if (IsKeyPressed(KEY_S)) {
+	//		sliding = true;
+	//		slideDirection = slidingDirection::down;
+	//	}
+	//}
 	if (IsKeyPressed(KEY_J)) {
 		powerUp();
 	}
-	if (IsKeyPressed(KEY_K)) {
+	/*if (IsKeyPressed(KEY_K)) {
 		powerDown();
-	}
-	if (IsKeyPressed(KEY_H)) {
+	}*/
+	/*if (IsKeyPressed(KEY_H)) {
 		touchEnemy();
 	}
 	if (IsKeyPressed(KEY_I)) {
@@ -138,7 +138,7 @@ void Character::control(bool enabled) {
 	}
 	if (IsKeyPressed(KEY_F9)) {
 		MusicManager::getInstance().StopMusic();
-	}
+	}*/
 
 	if (IsKeyPressed(KEY_SPACE) && canJump) {
 		canJump = false;
@@ -153,20 +153,6 @@ void Character::control(bool enabled) {
 		Vector2 firePos = { position.x + size.x, position.y + size.y / 2 };
 		firePool->GetAvailableFireBall(firePos, direction);
 	}
-		/*for (int i = 0; i < this->firePool->fireballs.size(); i++) {
-			if (firePool->fireballs[i].IsActive()) {
-				if (firePool->fireballs[i].getPosition().y > 600.0f) {
-					firePool->fireballs[i].Bounce();
-					std::cout << "bounce" << " ball " << i + 1 << std::endl;
-				}
-				if (firePool->fireballs[i].getPosition().x > 1200.0f) {
-					firePool->fireballs[i].Deactivate();
-					std::cout << "Deact" << std::endl;
-				}
-			}
-		}*/
-	// Deactivate if out of bounds
-
 }
 void Character::changeForm(int form) {
 	this->form = form;
@@ -327,7 +313,7 @@ void Character::Draw()
 
 };
 
-Mario::Mario() : Character(400.0f) {
+Mario::Mario() : Character(400.0f, 700.0f) {
 	Chartype = MARIO;
 	textures.push_back(LoadTexture("assets/textures/marioSmall3.png"));
 	textures.push_back(LoadTexture("assets/textures/marioBig3.png"));
@@ -411,7 +397,7 @@ void Character::SlidePipe(slidingDirection direction) {
 	}
 };
 
-Luigi::Luigi() : Character(500.0f) {
+Luigi::Luigi() : Character(520.0f, 550.0f) {
 	Chartype = LUIGI;
 	textures.push_back(LoadTexture("assets/textures/luigiSmall.png"));
 	textures.push_back(LoadTexture("assets/textures/luigiBig.png"));

@@ -22,7 +22,7 @@ enum slidingDirection {
 
 class Character {
 public:
-	Character(float jumpHeight);
+	Character(float jumpHeight, float maxSpeed);
 	virtual ~Character();
 	virtual void Update(float deltaTime)=0;
 	void Draw();
@@ -103,6 +103,7 @@ protected:
 	Vector2 SlideDist;
 
 	float jumpHeight;
+	float maxSpeed;
 	float scale;
 	float accX;
 	float deadTime;
