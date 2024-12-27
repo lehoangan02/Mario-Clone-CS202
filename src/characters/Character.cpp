@@ -151,7 +151,7 @@ void Character::control(bool enabled) {
 		if (faceRight) direction = { 1,0.3f };
 		else direction = { -1,0.3f };
 		Vector2 firePos = { position.x + size.x, position.y + size.y / 2 };
-		firePool->GetAvailableFireBall(firePos, direction);
+		if(firePool->GetAvailableFireBall(firePos, direction)) SoundManager::getInstance().PlaySoundEffect(SoundTrack::FIREBALL_SOUND);
 	}
 }
 void Character::changeForm(int form) {

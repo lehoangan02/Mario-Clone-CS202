@@ -12,7 +12,8 @@ SoundManager::SoundManager() {
 	soundSet.push_back(LoadSound("assets/audio/die.wav"));
 	soundSet.push_back(LoadSound("assets/audio/itemPopUp.wav"));
 	soundSet.push_back(LoadSound("assets/audio/flag_down.wav"));
-
+	soundSet.push_back(LoadSound("assets/audio/fireball_popped.wav"));
+	soundSet.push_back(LoadSound("assets/audio/fireworks.wav"));
 }
 
 SoundManager::~SoundManager() {
@@ -50,6 +51,12 @@ void SoundManager::PlaySoundEffect(SoundTrack sound) {
 		break;
 	case FLAGDOWN_SOUND:
 		PlaySound(soundSet[8]);
+		break;
+	case FIREBALL_SOUND:
+		PlaySound(soundSet[9]);
+		break;
+	case BOOM_SOUND:
+		PlaySound(soundSet[10]);
 		break;
     }
 }
