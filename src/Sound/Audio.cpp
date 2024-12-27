@@ -101,7 +101,7 @@ MusicManager::MusicManager() {
 	musicSet.push_back(LoadMusicStream("assets/audio/background_SMB.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/level_finished.wav"));
 	musicSet.push_back(LoadMusicStream("assets/audio/flag_down.wav"));
-
+	musicSet.push_back(LoadMusicStream("assets/audio/OIIAOIIA_CATxAFTER_DARK.wav"));
 }
 
 MusicManager::~MusicManager() {
@@ -159,6 +159,10 @@ void MusicManager::PlayMusic(MusicTrack music) {
 	case FlagDown:
 		PlayMusicStream(musicSet[FlagDown]);
 		currentTrack = 9;
+		break;
+	case UIA:
+		PlayMusicStream(musicSet[UIA]);
+		currentTrack = 10;
 		break;
 	}
 }

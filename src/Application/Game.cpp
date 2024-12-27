@@ -99,7 +99,9 @@ Game::Game(int characterMenu, int levelMenu)
     case LevelFactory::HIDDEN_LEVEL_102:
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
-        
+    case LevelFactory::LEVEL_TESTING:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UIA);
+        break;
     default:
         break;
     }
@@ -220,7 +222,9 @@ void Game::change(const std::string& filename)
     case LevelFactory::HIDDEN_LEVEL_102:
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
-        
+    case LevelFactory::LEVEL_TESTING:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UIA);
+        break;
     default:
         break;
     }
@@ -277,8 +281,10 @@ void Game::changeMenu(int characterMenu, int levelMenu) {
     case LevelFactory::HIDDEN_LEVEL_102:
         MusicManager::getInstance().PlayMusic(MusicTrack::SMB);
         break;
+    case LevelFactory::LEVEL_TESTING:
+        MusicManager::getInstance().PlayMusic(MusicTrack::UIA);
+        break;
     }
-
     isSaveScore = false;
 }
 

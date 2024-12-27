@@ -52,7 +52,8 @@ enum MusicTrack {
 	UnderGround,
 	SMB,
 	LevelFinished,
-    FlagDown
+    FlagDown,
+    UIA
 };
 
 class MusicManager {
